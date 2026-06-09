@@ -1,0 +1,19 @@
+# Lessons
+
+- Henüz oturum içi bir düzeltme kaynaklı ders kaydı oluşmadı.
+- Publish çıktısı için kök `bin/Release/publish` ile RID bazlı `bin/Release/net8.0-windows/win-x64/publish` klasörlerini karıştırma; kullanıcıya teslim edilecek klasör hash veya tam yol ile doğrulanmalı.
+- `ObservableRangeCollection.ReplaceRange()` kullanan modüllerde `CollectionChangedAction.Reset` sonrası `PropertyChanged` abonelikleri yeniden kurulmalı; aksi halde yüklü kayıt düzenlemeleri dirty-state üretmeyebilir.
+- Tadilat ve Aksiyon gibi seed ilçe grupları oluşturan modüllerde testler `DistrictGroups[0]` varsayımıyla yazılmamalı; gerçek kayıt satırı `HasItems` veya `!IsPlaceholder` üzerinden bulunmalı.
+- Başarısız rollback akışlarında yalnız veri snapshot'ı değil, modül bazlı dirty-state de geri yüklenmeli; aksi halde UI'da kaydedilmemiş değişiklik göstergeleri sessizce temizlenebilir.
+- SQLite repository kullanan testlerde temp `.db` dosyalarını test sonunda zorla silmeye çalışma; bağlantı serbest bırakılmadan oluşan `IOException` için cleanup toleranslı olmalı.
+- Eksik Proje görünümü ayrı section dosyasında değil `MainWindow.xaml` içinde tutuluyor; hücre davranışı eklenecekse önce bu yüzey kontrol edilmeli.
+- Global kayıt durumu gibi birleşik UI göstergelerinde yalnız ana viewmodel'in kendi dirty-state'i değil, alt modüllerin `HasUnsavedChanges` değişimleri de gözlenmeli; aksi halde sol alttaki durum bilgisi bayatlar.
+- Başlangıçta gösterilen kayıt zamanı oturum içi placeholder'dan değil kalıcı dosyaların son yazılma zamanından türetilmeli; aksi halde kullanıcı uygulama açılır açılmaz verinin gerçekten güncel olup olmadığını göremez.
+- Dosya tabanlı ayar yükleme akışlarında `Load()` yalnız model dönmemeli; eksik/geçerli/bozuk ayrımını taşıyan sonuç nesnesi dönmeli ki startup sessiz fallback yapmadan kurtarma ve kullanıcı bildirimi üretebilsin.
+- Windows pano entegrasyonu olan özelliklerde doğrudan `Clipboard` çağrısı yerine testlenebilir bir servis soyutlaması kullanılmalı; aksi halde hücre kopyala/yapıştır regresyonları headless testlerde doğrulanamaz.
+- Startup'ta gösterilen global kayıt zamanı yalnız oturum içi state'e bakmamalı; görev verisi yoksa boş veritabanı oluşturma zamanını "son kayıt" diye göstermemek için kalıcı içerik ve ayar dosyası zaman damgaları birlikte değerlendirilmelidir.
+- Undo snapshot ile çalışan modül testlerinde hücre/satır referansları mutasyon sonrası stale kalabilir; assert ve sonraki komutlar için satırları koleksiyondan tekrar çözmek sahte negatifleri önler.
+- Popup tabanlı context menu komutları gerekiyorsa satır görselindeki `Tag` alanını doğrudan komut kaynağı için ayırmak yerine seçim vurgusunu veri trigger'a taşımak daha temizdir; aksi halde detached context menu içinde viewmodel komutlarına bağlanmak zorlaşır.
+- Açılışta gösterilen "Son kayıt" bilgisi SQLite `tasks.db-wal` gibi runtime sırasında dokunulabilen dosyaların zaman damgasından türetilmemeli; gerçek son kayıt zamanı için ayrı kalıcı metadata tutulmalı ve startup yalnız onu okumalıdır.
+- Kaydetmeden önce yalnız odaktaki WPF editörü flush etmek yeterli olmayabilir; draft tabanlı modüllerde edit modunda kalan hücreler model seviyesinde ayrıca commit edilmelidir, aksi halde kullanıcı doğrudan `Kaydet` dediğinde mevcut kayıt güncellemesi sessizce kaybolabilir.
+- Genel İş Takibi gibi WPF `DataGrid` ve detay paneli birlikte kullanılan yüzeylerde dirty-state'i sadece commit/lost-focus anına bırakma; `TextChanged` seviyesinde dirty işaretlemek, butona basarken focus geçişinden doğan yanlış "Kaydedilecek değişiklik yok" durumlarını kapatır.

@@ -1,0 +1,8 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Thickness x:Key="Space.XSmall">4</Thickness>
+    <Thickness x:Key="Space.Small">8</Thickness>
+    <Thickness x:Key="Space.Medium">12</Thickness>
+    <Thickness x:Key="Space.Large">16</Thickness>
+    <Thickness x:Key="Space.XLarge">24</Thickness>
+</ResourceDictionary>

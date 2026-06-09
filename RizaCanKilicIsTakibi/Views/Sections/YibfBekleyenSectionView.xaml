@@ -1,0 +1,221 @@
+<UserControl x:Class="RizaCanKilicIsTakibi.Views.Sections.YibfBekleyenSectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="clr-namespace:RizaCanKilicIsTakibi.Models"
+             xmlns:viewModels="clr-namespace:RizaCanKilicIsTakibi.ViewModels"
+             xmlns:behaviors="clr-namespace:RizaCanKilicIsTakibi.Behaviors"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/RizaCanKilicIsTakibi;component/Views/Sections/Shared/YibfSurfaceResources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <CollectionViewSource x:Key="AcilIsOzetGroupedItems" Source="{Binding AcilIsOzetItems}">
+                <CollectionViewSource.GroupDescriptions>
+                    <PropertyGroupDescription PropertyName="Category"/>
+                </CollectionViewSource.GroupDescriptions>
+            </CollectionViewSource>
+        </ResourceDictionary>
+    </UserControl.Resources>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0" Style="{StaticResource CardBorderStyle}">
+                                    <DockPanel>
+                                        <StackPanel DockPanel.Dock="Left">
+                                            <TextBlock Text="ACİL İŞ ÖZET" FontFamily="{StaticResource Font.Primary}" FontSize="24" FontWeight="SemiBold"/>
+                                            <TextBlock Text="Kırmızı ve sarı işaretli işlerin kategori bazlı özeti." Foreground="{StaticResource Brush.TextSecondary}" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                                            <Button Content="Excel Dışa" Command="{Binding ExportExcelCommand}"/>
+                                            <Button Content="Kaydet" Command="{Binding SaveActiveTabCommand}" Style="{StaticResource GhostButton}"/>
+                                        </WrapPanel>
+                                    </DockPanel>
+                                </Border>
+
+                                <Grid Grid.Row="1" Margin="0,8,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="12"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border Grid.Column="0" Style="{StaticResource CardBorderStyle}">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+                                            <DockPanel>
+                                                <TextBlock Text="Acil İş Özeti" FontFamily="{StaticResource Font.Primary}" FontSize="18" FontWeight="SemiBold" DockPanel.Dock="Left"/>
+                                                <Border Style="{StaticResource MissingProjectToolbarChipStyle}" DockPanel.Dock="Right">
+                                                    <TextBlock Text="{Binding AcilIsOzetItems.Count, StringFormat=Kayıt: {0}}" FontWeight="SemiBold" Foreground="#FF20344C"/>
+                                                </Border>
+                                            </DockPanel>
+                                            <ListBox Grid.Row="1"
+                                                     ItemsSource="{Binding Source={StaticResource AcilIsOzetGroupedItems}}"
+                                                     Margin="0,12,0,0"
+                                                     Focusable="False"
+                                                     BorderThickness="0"
+                                                     Background="Transparent"
+                                                     ScrollViewer.IsDeferredScrollingEnabled="False"
+                                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                     Style="{StaticResource VirtualizedListBoxStyle}">
+                                                <ListBox.GroupStyle>
+                                                    <GroupStyle>
+                                                        <GroupStyle.ContainerStyle>
+                                                            <Style TargetType="{x:Type GroupItem}">
+                                                                <Setter Property="Template">
+                                                                    <Setter.Value>
+                                                                        <ControlTemplate TargetType="{x:Type GroupItem}">
+                                                                            <Expander IsExpanded="False" Margin="0,0,0,10">
+                                                                                <Expander.Header>
+                                                                                    <Border Style="{StaticResource YibfPassiveSurfaceStyle}" Padding="12,10">
+                                                                                        <DockPanel>
+                                                                                            <TextBlock Text="{Binding Name}"
+                                                                                                       FontFamily="{StaticResource Font.Primary}"
+                                                                                                       FontSize="16"
+                                                                                                       FontWeight="SemiBold"
+                                                                                                       DockPanel.Dock="Left"/>
+                                                                                            <Border Style="{StaticResource MissingProjectToolbarChipStyle}" DockPanel.Dock="Right">
+                                                                                                <TextBlock Text="{Binding ItemCount, StringFormat=Kayıt: {0}}"
+                                                                                                           FontWeight="SemiBold"
+                                                                                                           Foreground="#FF20344C"/>
+                                                                                            </Border>
+                                                                                        </DockPanel>
+                                                                                    </Border>
+                                                                                </Expander.Header>
+                                                                                <ItemsPresenter Margin="0,10,0,0"/>
+                                                                            </Expander>
+                                                                        </ControlTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Style>
+                                                        </GroupStyle.ContainerStyle>
+                                                    </GroupStyle>
+                                                </ListBox.GroupStyle>
+                                                <ListBox.ItemContainerStyle>
+                                                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource VirtualizedListBoxItemStyle}">
+                                                        <Setter Property="Focusable" Value="False"/>
+                                                        <Setter Property="IsTabStop" Value="False"/>
+                                                    </Style>
+                                                </ListBox.ItemContainerStyle>
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate DataType="{x:Type viewModels:AcilIsOzetItemViewModel}">
+                                                        <Border Style="{StaticResource YibfPassiveSurfaceStyle}"
+                                                                Margin="0,0,0,8">
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="92"/>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <Border Grid.Column="0"
+                                                                        Background="{Binding PriorityBrush}"
+                                                                        CornerRadius="8"
+                                                                        Padding="8,6"
+                                                                        HorizontalAlignment="Left"
+                                                                        VerticalAlignment="Top">
+                                                                    <TextBlock Text="{Binding PriorityLabel}"
+                                                                               Foreground="{Binding PriorityForegroundBrush}"
+                                                                               FontWeight="SemiBold"/>
+                                                                </Border>
+                                                                <TextBlock Grid.Column="1"
+                                                                           Margin="12,0,0,0"
+                                                                           Text="{Binding Summary}"
+                                                                           VerticalAlignment="Top"
+                                                                           FontWeight="SemiBold"
+                                                                           TextWrapping="Wrap"
+                                                                           TextAlignment="Left"/>
+                                                            </Grid>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </Grid>
+                                    </Border>
+
+                                    <Border Grid.Column="2" Style="{StaticResource CardBorderStyle}">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+                                            <DockPanel>
+                                                <TextBlock Text="Proje Onay Takibi" FontFamily="{StaticResource Font.Primary}" FontSize="18" FontWeight="SemiBold" DockPanel.Dock="Left"/>
+                                                <Border Style="{StaticResource MissingProjectToolbarChipStyle}" DockPanel.Dock="Right">
+                                                    <TextBlock Text="{Binding YibfModule.BekleyenIsler.Count, StringFormat=Kayıt: {0}}" FontWeight="SemiBold" Foreground="#FF20344C"/>
+                                                </Border>
+                                            </DockPanel>
+                                            <ListBox Grid.Row="1"
+                                                     ItemsSource="{Binding YibfModule.BekleyenIsler}"
+                                                     Margin="0,12,0,0"
+                                                     ScrollViewer.IsDeferredScrollingEnabled="False"
+                                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                     Style="{StaticResource VirtualizedListBoxStyle}"
+                                                     ItemContainerStyle="{StaticResource VirtualizedListBoxItemStyle}">
+                                                <ListBox.ItemTemplate>
+                                                     <DataTemplate DataType="{x:Type viewModels:YibfPendingItemViewModel}">
+                                                         <Border Style="{StaticResource YibfPassiveSurfaceStyle}"
+                                                                 HorizontalAlignment="Stretch"
+                                                                 Margin="0,0,0,8"
+                                                                 behaviors:ClickCommandBehavior.Command="{Binding DataContext.YibfModule.SelectPendingItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                 behaviors:ClickCommandBehavior.CommandParameter="{Binding}">
+                                                            <Grid>
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="Auto"/>
+                                                                    <RowDefinition Height="Auto"/>
+                                                                    <RowDefinition Height="Auto"/>
+                                                                </Grid.RowDefinitions>
+                                                                <Grid Grid.Row="0">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="Auto"/>
+                                                                        <ColumnDefinition Width="*"/>
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <Border Background="{Binding StatusBrush}"
+                                                                            CornerRadius="8"
+                                                                            Padding="8,6"
+                                                                            HorizontalAlignment="Left"
+                                                                            VerticalAlignment="Top">
+                                                                        <TextBlock Text="{Binding StatusLabel}" Foreground="#FF111111" FontWeight="SemiBold"/>
+                                                                    </Border>
+                                                                    <TextBlock Grid.Column="1"
+                                                                               Text="{Binding EventDateText}"
+                                                                               Foreground="{StaticResource Brush.TextSecondary}"
+                                                                               Margin="12,4,0,0"
+                                                                               TextAlignment="Left"
+                                                                               TextWrapping="Wrap"
+                                                                               VerticalAlignment="Top"/>
+                                                                </Grid>
+                                                                <TextBlock Grid.Row="1"
+                                                                           Margin="0,10,0,0"
+                                                                           FontWeight="SemiBold"
+                                                                           TextAlignment="Left"
+                                                                           TextWrapping="Wrap">
+                                                                    <Run Text="{Binding Entry.AdaParsel}"/>
+                                                                    <Run Text="   "/>
+                                                                    <Run Text="{Binding Entry.YapiSahibi}"/>
+                                                                </TextBlock>
+                                                                <TextBlock Grid.Row="2"
+                                                                           Text="{Binding Summary}"
+                                                                           Margin="0,8,0,0"
+                                                                           TextWrapping="Wrap"
+                                                                           FontWeight="SemiBold"
+                                                                           TextAlignment="Left"/>
+                                                            </Grid>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+</UserControl>
+
+

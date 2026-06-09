@@ -1,0 +1,357 @@
+<UserControl x:Class="RizaCanKilicIsTakibi.Views.Sections.ActionSectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="clr-namespace:RizaCanKilicIsTakibi.Models"
+             xmlns:viewModels="clr-namespace:RizaCanKilicIsTakibi.ViewModels"
+             xmlns:behaviors="clr-namespace:RizaCanKilicIsTakibi.Behaviors"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style x:Key="ActionDistrictButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource Brush.SurfaceAlt}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Tag" Value="{Binding DataContext.ActionModule.OpenAddActionEntryDialogCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.9"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ContextMenu">
+                <Setter.Value>
+                    <ContextMenu>
+                        <MenuItem Header="Görev Ekle"
+                                  Command="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  CommandParameter="{Binding PlacementTarget.DataContext.District, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                    </ContextMenu>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ActionEntryRowBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource Brush.Surface}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="#FF7EA4D6"/>
+                </Trigger>
+                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                    <Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>
+                    <Setter Property="BorderThickness" Value="2"/>
+                </DataTrigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.9"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ActionCellBorderStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="#FFD3DDE9"/>
+            <Setter Property="BorderThickness" Value="0,0,1,0"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="MinHeight" Value="42"/>
+        </Style>
+
+        <Style x:Key="ActionCellDisplayTextStyle" TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+
+        <DataTemplate x:Key="ActionOwnerParcelDisplayTemplate" DataType="{x:Type viewModels:ActionEntryRow}">
+            <TextBlock Text="{Binding OwnerParcelText}"
+                       Foreground="{Binding RowForeground}"
+                       Style="{StaticResource ActionCellDisplayTextStyle}"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ActionOwnerParcelEditorTemplate" DataType="{x:Type viewModels:ActionEntryRow}">
+            <TextBox Text="{Binding OwnerParcelDraft, UpdateSourceTrigger=PropertyChanged}"
+                     Foreground="{Binding RowForeground}"
+                     BorderBrush="#FF5F84C7"
+                     Padding="6,4"
+                     TextWrapping="Wrap"
+                     AcceptsReturn="True"
+                     TextAlignment="Center"
+                     HorizontalContentAlignment="Center"
+                     VerticalContentAlignment="Center"
+                     Background="White"
+                     BorderThickness="1"
+                     Focusable="True"
+                     behaviors:TextBoxEditCommitBehavior.CommitCommand="{Binding DataContext.ActionModule.CommitOwnerParcelEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                     behaviors:TextBoxEditCommitBehavior.CancelCommand="{Binding DataContext.ActionModule.CancelOwnerParcelEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                     behaviors:TextBoxEditCommitBehavior.CommandParameter="{Binding}"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ActionWorkDisplayTemplate" DataType="{x:Type viewModels:ActionEntryRow}">
+            <TextBlock Text="{Binding WorkText}"
+                       Foreground="{Binding RowForeground}"
+                       Style="{StaticResource ActionCellDisplayTextStyle}"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ActionWorkEditorTemplate" DataType="{x:Type viewModels:ActionEntryRow}">
+            <TextBox Text="{Binding WorkDraft, UpdateSourceTrigger=PropertyChanged}"
+                     Foreground="{Binding RowForeground}"
+                     BorderBrush="#FF5F84C7"
+                     Padding="6,4"
+                     VerticalContentAlignment="Center"
+                     TextWrapping="Wrap"
+                     AcceptsReturn="True"
+                     Background="White"
+                     BorderThickness="1"
+                     Focusable="True"
+                     behaviors:TextBoxEditCommitBehavior.CommitCommand="{Binding DataContext.ActionModule.CommitWorkEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                     behaviors:TextBoxEditCommitBehavior.CancelCommand="{Binding DataContext.ActionModule.CancelWorkEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                     behaviors:TextBoxEditCommitBehavior.CommandParameter="{Binding}"/>
+        </DataTemplate>
+    </UserControl.Resources>
+                            <Grid>
+                            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Style="{StaticResource CardBorderStyle}">
+                        <DockPanel>
+                            <TextBlock Text="Aksiyon" FontFamily="{StaticResource Font.Primary}" FontSize="24" FontWeight="SemiBold" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+                            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" DockPanel.Dock="Left" Margin="18,0,0,0">
+                                <Button Content="Aksiyon" Command="{Binding ActionModule.SelectActionSubTabCommand}" CommandParameter="{x:Static models:ActionSubTab.Aksiyon}">
+                                    <Button.Style>
+                                        <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ActionModule.SelectedSubTab}" Value="{x:Static models:ActionSubTab.Aksiyon}">
+                                                    <Setter Property="Background" Value="{StaticResource Brush.Primary}"/>
+                                                    <Setter Property="Foreground" Value="White"/>
+                                                    <Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                                <Button Content="Aksiyona Eklenecekler" Command="{Binding ActionModule.SelectActionSubTabCommand}" CommandParameter="{x:Static models:ActionSubTab.AksiyonaEklenecekler}">
+                                    <Button.Style>
+                                        <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ActionModule.SelectedSubTab}" Value="{x:Static models:ActionSubTab.AksiyonaEklenecekler}">
+                                                    <Setter Property="Background" Value="{StaticResource Brush.Primary}"/>
+                                                    <Setter Property="Foreground" Value="White"/>
+                                                    <Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                            </WrapPanel>
+                            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                                <Button Content="Excel Dışa" Command="{Binding ExportExcelCommand}" Style="{StaticResource GhostButton}"/>
+                                <Button Content="Kaydet" Command="{Binding SaveActiveTabCommand}"/>
+                            </WrapPanel>
+                        </DockPanel>
+                    </Border>
+
+                    <Grid Grid.Row="1" Margin="0,8,0,0">
+                        <Border Style="{StaticResource CardBorderStyle}" Margin="8,6,6,6">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <DockPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                                        <Button Content="Görev Ekle" Command="{Binding ActionModule.OpenAddActionEntryDialogCommand}" CommandParameter="{Binding ActionModule.SelectedDistrict}"/>
+                                        <Button Content="Aksiyona Aktar" Command="{Binding ActionModule.MoveToAksiyonCommand}" Style="{StaticResource GhostButton}"/>
+                                        <Button Content="PNG Aktar" Command="{Binding ExportActionListPngCommand}" CommandParameter="{Binding ElementName=ActionExportVisualRoot}" Style="{StaticResource GhostButton}"/>
+                                        <Button Content="Sil" Command="{Binding ActionModule.DeleteActionEntryCommand}" Style="{StaticResource GhostButton}"/>
+                                        <Button Content="↑" Command="{Binding ActionModule.MoveActionEntryUpCommand}" Style="{StaticResource IconButton}"/>
+                                        <Button Content="↓" Command="{Binding ActionModule.MoveActionEntryDownCommand}" Style="{StaticResource IconButton}"/>
+                                    </WrapPanel>
+                                </DockPanel>
+
+                                <Grid x:Name="ActionExportVisualRoot" Grid.Row="1" Grid.RowSpan="2">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0" Background="#FF121A22" Margin="0,0,0,8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="170"/>
+                                            <ColumnDefinition Width="300"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="İLÇE" Foreground="White" FontWeight="SemiBold" Margin="10,8" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center"/>
+                                        <TextBlock Grid.Column="1" Text="ADA PARSEL YAPI SAHİBİ" Foreground="White" FontWeight="SemiBold" Margin="10,8" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center"/>
+                                        <TextBlock Grid.Column="2" Text="YAPILACAK İŞ" Foreground="White" FontWeight="SemiBold" Margin="10,8" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center"/>
+                                    </Grid>
+
+                                    <ListBox x:Name="ActionListExportVisual"
+                                         Grid.Row="1"
+                                         ItemsSource="{Binding ActionModule.DistrictGroups}"
+                                         behaviors:MouseWheelScrollBehavior.IsEnabled="True"
+                                         Style="{StaticResource VirtualizedListBoxStyle}"
+                                         ItemContainerStyle="{StaticResource VirtualizedListBoxItemStyle}"
+                                         ScrollViewer.IsDeferredScrollingEnabled="False"
+                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                         ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border BorderBrush="{Binding DistrictBorderBrush}" BorderThickness="0,0,0,1">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="170"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Border Grid.Column="0"
+                                                                BorderBrush="{Binding DistrictBorderBrush}"
+                                                                BorderThickness="0,0,1,0"
+                                                                Background="{Binding DistrictBackground}"
+                                                                VerticalAlignment="Stretch">
+                                                            <Button Style="{StaticResource ActionDistrictButtonStyle}"
+                                                                    Foreground="{Binding DistrictForeground}"
+                                                                    Background="{Binding DistrictBackground}"
+                                                                    Content="{Binding District}"
+                                                                    Command="{Binding DataContext.ActionModule.SelectDistrictCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                    CommandParameter="{Binding District}"/>
+                                                        </Border>
+
+                                                        <Grid Grid.Column="1">
+                                                        <ListBox ItemsSource="{Binding Rows}"
+                                                                 behaviors:MouseWheelScrollBehavior.IsEnabled="True"
+                                                                 behaviors:MouseWheelScrollBehavior.TargetElementName="ActionListExportVisual"
+                                                                 behaviors:SynchronizedVerticalScrollBehavior.TargetElementName="ActionListExportVisual"
+                                                                 ItemContainerStyle="{StaticResource VirtualizedListBoxItemStyle}"
+                                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                                 ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                                                            <ListBox.Style>
+                                                                <Style TargetType="ListBox" BasedOn="{StaticResource VirtualizedListBoxStyle}">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding HasItems}" Value="False">
+                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </ListBox.Style>
+                                                            <ListBox.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Border Style="{StaticResource ActionEntryRowBorderStyle}"
+                                                                            Background="{Binding RowBackground}"
+                                                                            BorderBrush="{Binding RowBorderBrush}"
+                                                                            IsEnabled="{Binding IsInteractive}"
+                                                                            Tag="{Binding DataContext.ActionModule, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                            MinHeight="42"
+                                                                            behaviors:ClickCommandBehavior.Command="{Binding DataContext.ActionModule.SelectEntryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                            behaviors:ClickCommandBehavior.CommandParameter="{Binding Entry}">
+                                                                        <Border.ContextMenu>
+                                                                            <ContextMenu>
+                                                                                <MenuItem Header="Üste Satır Ekle"
+                                                                                          Command="{Binding PlacementTarget.Tag.InsertActionEntryAboveCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                                                          CommandParameter="{Binding PlacementTarget.DataContext.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                                                                <MenuItem Header="Alta Satır Ekle"
+                                                                                          Command="{Binding PlacementTarget.Tag.InsertActionEntryBelowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                                                          CommandParameter="{Binding PlacementTarget.DataContext.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                                                            </ContextMenu>
+                                                                        </Border.ContextMenu>
+                                                                        <Grid>
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition Width="300"/>
+                                                                                <ColumnDefinition Width="*"/>
+                                                                            </Grid.ColumnDefinitions>
+
+                                                                            <Border Grid.Column="0"
+                                                                                    Style="{StaticResource ActionCellBorderStyle}"
+                                                                                    BorderBrush="{Binding RowBorderBrush}"
+                                                                                    behaviors:InlineEditActivatorBehavior.BeginEditCommand="{Binding DataContext.ActionModule.BeginOwnerParcelEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                                    behaviors:InlineEditActivatorBehavior.CommandParameter="{Binding}">
+                                                                                <ContentControl Content="{Binding}">
+                                                                                    <ContentControl.Style>
+                                                                                        <Style TargetType="ContentControl">
+                                                                                            <Setter Property="ContentTemplate" Value="{StaticResource ActionOwnerParcelDisplayTemplate}"/>
+                                                                                            <Style.Triggers>
+                                                                                                <DataTrigger Binding="{Binding IsEditingOwnerParcel}" Value="True">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource ActionOwnerParcelEditorTemplate}"/>
+                                                                                                </DataTrigger>
+                                                                                            </Style.Triggers>
+                                                                                        </Style>
+                                                                                    </ContentControl.Style>
+                                                                                </ContentControl>
+                                                                            </Border>
+
+                                                                            <Border Grid.Column="1"
+                                                                                    Style="{StaticResource ActionCellBorderStyle}"
+                                                                                    BorderThickness="0,0,0,0"
+                                                                                    BorderBrush="{Binding RowBorderBrush}"
+                                                                                    behaviors:InlineEditActivatorBehavior.BeginEditCommand="{Binding DataContext.ActionModule.BeginWorkEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                                    behaviors:InlineEditActivatorBehavior.CommandParameter="{Binding}">
+                                                                                <ContentControl Content="{Binding}">
+                                                                                    <ContentControl.Style>
+                                                                                        <Style TargetType="ContentControl">
+                                                                                            <Setter Property="ContentTemplate" Value="{StaticResource ActionWorkDisplayTemplate}"/>
+                                                                                            <Style.Triggers>
+                                                                                                <DataTrigger Binding="{Binding IsEditingWork}" Value="True">
+                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource ActionWorkEditorTemplate}"/>
+                                                                                                </DataTrigger>
+                                                                                            </Style.Triggers>
+                                                                                        </Style>
+                                                                                    </ContentControl.Style>
+                                                                                </ContentControl>
+                                                                            </Border>
+                                                                        </Grid>
+                                                                    </Border>
+                                                                </DataTemplate>
+                                                            </ListBox.ItemTemplate>
+                                                        </ListBox>
+                                                            <Border Background="#FFF7FAFD"
+                                                                    BorderBrush="{Binding DistrictBorderBrush}"
+                                                                    BorderThickness="1"
+                                                                    Padding="14,12">
+                                                                <Border.Style>
+                                                                    <Style TargetType="Border">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding HasItems}" Value="False">
+                                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Border.Style>
+                                                                <DockPanel LastChildFill="False">
+                                                                    <TextBlock Text="Henüz kayıt yok"
+                                                                               Foreground="{StaticResource Brush.TextSecondary}"
+                                                                               VerticalAlignment="Center"
+                                                                               DockPanel.Dock="Left"/>
+                                                                    <Button Content="Görev Ekle"
+                                                                            DockPanel.Dock="Right"
+                                                                            Style="{StaticResource GhostButton}"
+                                                                            Command="{Binding DataContext.ActionModule.OpenAddActionEntryDialogCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                            CommandParameter="{Binding District}"/>
+                                                                </DockPanel>
+                                                            </Border>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                        </Grid>
+                        </Grid>
+</UserControl>
+

@@ -1,0 +1,43 @@
+# Build outputs
+bin/
+obj/
+**/bin/
+**/obj/
+
+# User/runtime data
+**/Data/
+**/Backup/
+**/Logs/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+last-save.json
+settings.json
+
+# IDE and OS files
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+Thumbs.db
+Desktop.ini
+
+# Test and coverage artifacts
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+*.trx
+
+# Publish/temp artifacts
+artifacts/
+publish/
+*.tmp
+*.bak
+*.corrupt.json

@@ -1,0 +1,190 @@
+<UserControl x:Class="RizaCanKilicIsTakibi.Views.Sections.YibfAnaBilgiSectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="clr-namespace:RizaCanKilicIsTakibi.Models"
+             xmlns:viewModels="clr-namespace:RizaCanKilicIsTakibi.ViewModels"
+             xmlns:behaviors="clr-namespace:RizaCanKilicIsTakibi.Behaviors"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/RizaCanKilicIsTakibi;component/Views/Sections/Shared/YibfSurfaceResources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+<Grid>
+    <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+
+    <Border Grid.Row="0" Style="{StaticResource CardBorderStyle}">
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Left">
+                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="YİBF ANA BİLGİ" FontFamily="{StaticResource Font.Primary}" FontSize="24" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    <Border Style="{StaticResource MissingProjectToolbarChipStyle}" Margin="14,0,0,0">
+                        <TextBlock Text="{Binding YibfModule.TumIsler.Count, StringFormat=Toplam İş: {0}}" FontWeight="SemiBold" Foreground="#FF20344C"/>
+                    </Border>
+                    <Border Style="{StaticResource MissingProjectToolbarChipStyle}" Margin="8,0,0,0">
+                        <TextBlock Text="{Binding YibfModule.BekleyenIsler.Count, StringFormat=Bekleyen İş: {0}}" FontWeight="SemiBold" Foreground="#FF20344C"/>
+                    </Border>
+                </WrapPanel>
+                <TextBlock Text="Ana bilgi kartı ve olay akışı." Foreground="{StaticResource Brush.TextSecondary}" Margin="0,2,0,0"/>
+            </StackPanel>
+            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                <Button Content="Excel Dışa" Command="{Binding ExportExcelCommand}"/>
+                <Button Content="Kaydet" Command="{Binding SaveActiveTabCommand}" Style="{StaticResource GhostButton}"/>
+                <Button Content="Sil" Command="{Binding DeleteActiveSelectionCommand}" Style="{StaticResource GhostButton}"/>
+                <Border Style="{StaticResource MissingProjectToolbarChipStyle}"
+                        Visibility="{Binding YibfModule.HasUnsavedChanges, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <TextBlock Text="Kaydedilmemiş değişiklik var" FontWeight="SemiBold" Foreground="#FF9B6E11"/>
+                </Border>
+            </WrapPanel>
+        </DockPanel>
+    </Border>
+
+    <Grid Grid.Row="1" x:Name="YibfAnaBilgiPanel" Margin="0,8,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="12"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Style="{StaticResource CardBorderStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <DockPanel>
+                    <TextBlock Text="Tüm İşler" FontFamily="{StaticResource Font.Primary}" FontSize="18" FontWeight="SemiBold" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                        <Button Content="Yeni İş Ekle" Command="{Binding YibfModule.AddAnaBilgiEntryCommand}"/>
+                        <Button Content="Düzenle" Command="{Binding YibfModule.EditAnaBilgiEntryCommand}" Style="{StaticResource GhostButton}"/>
+                        <Button Content="Sil" Command="{Binding YibfModule.DeleteAnaBilgiEntryCommand}" Style="{StaticResource GhostButton}"/>
+                    </WrapPanel>
+                </DockPanel>
+                <TextBox Grid.Row="1" Margin="0,12,0,12" Height="38" Text="{Binding YibfModule.SearchQuery, UpdateSourceTrigger=PropertyChanged}"/>
+                <ListBox Grid.Row="2"
+                         x:Name="TumIslerListBox"
+                         ItemsSource="{Binding YibfModule.TumIslerView}"
+                         ScrollViewer.IsDeferredScrollingEnabled="False"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         Style="{StaticResource VirtualizedListBoxStyle}"
+                         ItemContainerStyle="{StaticResource VirtualizedListBoxItemStyle}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewModels:YibfAnaBilgiListItemViewModel}">
+                            <Border Style="{StaticResource YibfSelectableSurfaceStyle}"
+                                    HorizontalAlignment="Stretch"
+                                    Margin="0,0,12,8"
+                                    behaviors:ClickCommandBehavior.Command="{Binding DataContext.YibfModule.SelectAnaBilgiEntryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                    behaviors:ClickCommandBehavior.CommandParameter="{Binding Entry}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Width="10" Height="10" Background="{Binding StatusBrush}" CornerRadius="5" Margin="0,4,10,0" VerticalAlignment="Top"/>
+                                    <Grid Grid.Column="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="{Binding Entry.AdaParsel}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                                        <TextBlock Grid.Row="1" Text="{Binding Entry.YapiSahibi}" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                                        <TextBlock Grid.Row="2" Text="{Binding LastSummary}" Foreground="{StaticResource Brush.TextSecondary}" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Border>
+
+        <Border Grid.Column="2" Style="{StaticResource CardBorderStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="{Binding YibfModule.SelectedAnaBilgiEntry.AdaParsel, TargetNullValue=İş seçin}"
+                           FontFamily="{StaticResource Font.Primary}"
+                           FontSize="20"
+                           FontWeight="SemiBold"/>
+                <Grid Grid.Row="1" Margin="0,12,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="160"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Ada Parsel" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Column="1" Text="{Binding YibfModule.SelectedAnaBilgiEntry.AdaParsel}" Margin="12,0,0,0" HorizontalAlignment="Left" TextAlignment="Left"/>
+                    <TextBlock Grid.Row="1" Text="YİBF No" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding YibfModule.SelectedAnaBilgiEntry.YibfNo}" Margin="12,0,0,0" HorizontalAlignment="Left" TextAlignment="Left"/>
+                    <TextBlock Grid.Row="2" Text="İdare" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding YibfModule.SelectedAnaBilgiEntry.Idare}" Margin="12,0,0,0" HorizontalAlignment="Left" TextAlignment="Left" TextWrapping="Wrap"/>
+                    <TextBlock Grid.Row="3" Text="Yapı Sahibi" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding YibfModule.SelectedAnaBilgiEntry.YapiSahibi}" Margin="12,0,0,0" HorizontalAlignment="Left" TextAlignment="Left" TextWrapping="Wrap"/>
+                    <TextBlock Grid.Row="4" Text="Müteahhit" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding YibfModule.SelectedAnaBilgiEntry.Muteahhit}" Margin="12,0,0,0" HorizontalAlignment="Left" TextAlignment="Left" TextWrapping="Wrap"/>
+                </Grid>
+                <DockPanel Grid.Row="2" Margin="0,0,0,10">
+                    <TextBlock Text="Olay Akışı" FontFamily="{StaticResource Font.Primary}" FontSize="17" FontWeight="SemiBold" DockPanel.Dock="Left"/>
+                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                        <Button Content="Olay Ekle" Command="{Binding YibfModule.AddAnaBilgiEventCommand}"/>
+                        <Button Content="Düzenle" Command="{Binding YibfModule.EditAnaBilgiEventCommand}" Style="{StaticResource GhostButton}"/>
+                        <Button Content="Sil" Command="{Binding YibfModule.DeleteAnaBilgiEventCommand}" Style="{StaticResource GhostButton}"/>
+                    </WrapPanel>
+                </DockPanel>
+                <ListBox Grid.Row="3"
+                         x:Name="VisibleEventsListBox"
+                         ItemsSource="{Binding YibfModule.VisibleEvents}"
+                         behaviors:MouseWheelScrollBehavior.IsEnabled="True"
+                         ScrollViewer.IsDeferredScrollingEnabled="False"
+                         Style="{StaticResource VirtualizedListBoxStyle}"
+                         ItemContainerStyle="{StaticResource VirtualizedListBoxItemStyle}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewModels:YibfTimelineEventViewModel}">
+                            <Border Style="{StaticResource YibfSelectableSurfaceStyle}"
+                                    Padding="0"
+                                    Margin="0,0,0,8"
+                                    behaviors:ClickCommandBehavior.Command="{Binding DataContext.YibfModule.SelectAnaBilgiEventCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                    behaviors:ClickCommandBehavior.CommandParameter="{Binding Model}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="110"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                        <Border Width="86" MinHeight="26" Background="{Binding AccentBrush}" CornerRadius="8" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="12,12,0,12">
+                            <TextBlock Text="{Binding DateText}" Foreground="{Binding AccentForegroundBrush}" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                                    <StackPanel Grid.Column="1" Margin="12,12,12,12">
+                                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" TextAlignment="Left" HorizontalAlignment="Left" FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding NoteText}" Margin="0,6,0,0" Foreground="{StaticResource Brush.TextSecondary}" TextWrapping="Wrap" TextAlignment="Left" HorizontalAlignment="Left" Visibility="{Binding HasNote, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Border>
+    </Grid>
+</Grid>
+</UserControl>
+
+
