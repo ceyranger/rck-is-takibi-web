@@ -768,6 +768,7 @@
                                 <DockPanel Margin="0,0,0,8">
                                     <TextBlock Text="Acil İşler" FontFamily="{StaticResource Font.Primary}" FontWeight="SemiBold" FontSize="16" DockPanel.Dock="Left"/>
                                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                        <Button Content="Hızlı" Command="{Binding OpenQuickUrgentTaskDialogCommand}" Style="{StaticResource GhostButton}" ToolTip="Şablondan Hızlı İş Ekle"/>
                                         <Button Content="+" Command="{Binding AddUrgentTaskCommand}" Style="{StaticResource IconButton}" ToolTip="Yeni Görev Ekle"/>
                                         <Button Content="Sil" Command="{Binding DeleteUrgentTaskCommand}" Style="{StaticResource GhostButton}" ToolTip="Seçili Görevi Sil (Delete)"/>
                                         <Button Content="↑" Command="{Binding MoveTaskUpCommand}" Style="{StaticResource IconButton}" ToolTip="Yukarı Taşı"/>

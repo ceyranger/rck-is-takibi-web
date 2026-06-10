@@ -25,6 +25,16 @@ public class BackupServiceTests
                     Notes = { new TaskNote { Text = "not1" } }
                 }
             };
+            var quickTaskTemplates = new List<QuickTaskTemplate>
+            {
+                new()
+                {
+                    Title = "Eksik evrak istenecek",
+                    SortOrder = 0,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
+                }
+            };
             var karotEntries = new List<KarotEntry>
             {
                 new()
@@ -110,11 +120,14 @@ public class BackupServiceTests
                 yibfAnaBilgiEvents: yibfAnaBilgiEvents,
                 yibfIsTakibiEntries: yibfIsTakibiEntries,
                 yibfCellStates: yibfCellStates,
-                tadilatCellStates: tadilatCellStates);
+                tadilatCellStates: tadilatCellStates,
+                quickTaskTemplates: quickTaskTemplates);
             var restored = await service.RestoreBackupAsync(backup.BackupFilePath);
 
             Assert.Single(restored.Tasks);
             Assert.Equal("Deneme görev", restored.Tasks[0].Title);
+            Assert.Single(restored.QuickTaskTemplates);
+            Assert.Equal("Eksik evrak istenecek", restored.QuickTaskTemplates[0].Title);
             Assert.Single(restored.Tasks[0].Notes);
             Assert.Empty(restored.ActionEntries);
             Assert.Single(restored.KarotEntries);

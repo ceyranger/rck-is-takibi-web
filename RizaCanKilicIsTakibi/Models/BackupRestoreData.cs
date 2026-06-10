@@ -3,6 +3,7 @@ namespace RizaCanKilicIsTakibi.Models;
 public sealed class BackupRestoreData
 {
     public IReadOnlyList<TaskItem> Tasks { get; init; } = Array.Empty<TaskItem>();
+    public IReadOnlyList<QuickTaskTemplate> QuickTaskTemplates { get; init; } = Array.Empty<QuickTaskTemplate>();
     public IReadOnlyList<ActionEntry> ActionEntries { get; init; } = Array.Empty<ActionEntry>();
     public IReadOnlyList<MissingProjectEntry> MissingProjectEntries { get; init; } = Array.Empty<MissingProjectEntry>();
     public IReadOnlyList<MissingProjectCellState> MissingProjectCellStates { get; init; } = Array.Empty<MissingProjectCellState>();

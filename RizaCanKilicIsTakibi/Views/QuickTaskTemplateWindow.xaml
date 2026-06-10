@@ -1,0 +1,104 @@
+<Window x:Class="RizaCanKilicIsTakibi.Views.QuickTaskTemplateWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:viewModels="clr-namespace:RizaCanKilicIsTakibi.ViewModels"
+        Title="Hızlı İş Ekle"
+        Width="620"
+        Height="560"
+        MinWidth="560"
+        MinHeight="480"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResizeWithGrip"
+        Background="{StaticResource Brush.AppBackground}">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0" Margin="0,0,0,10">
+            <TextBlock Text="Hızlı İş Ekle"
+                       FontFamily="{StaticResource Font.Primary}"
+                       FontWeight="SemiBold"
+                       FontSize="22"
+                       DockPanel.Dock="Left"
+                       VerticalAlignment="Center" />
+            <TextBlock Text="{Binding Templates.Count, StringFormat=Şablon: {0}}"
+                       DockPanel.Dock="Right"
+                       VerticalAlignment="Center"
+                       FontWeight="SemiBold"
+                       Foreground="{StaticResource Brush.TextSecondary}" />
+        </DockPanel>
+
+        <Border Grid.Row="1"
+                Background="White"
+                BorderBrush="{StaticResource Brush.Border}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="8">
+            <ListBox ItemsSource="{Binding Templates}"
+                     SelectedItem="{Binding SelectedTemplate, Mode=TwoWay}"
+                     BorderThickness="0"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     HorizontalContentAlignment="Stretch">
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type viewModels:QuickTaskTemplateSelectionViewModel}">
+                        <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  Content="{Binding Title}"
+                                  Padding="8,6"
+                                  VerticalContentAlignment="Center" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Border>
+
+        <Grid Grid.Row="2" Margin="0,12,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0"
+                     Margin="0,4,8,4"
+                     MinHeight="40"
+                     VerticalContentAlignment="Center"
+                     Text="{Binding NewTemplateTitle, UpdateSourceTrigger=PropertyChanged}" />
+            <Button Grid.Column="1"
+                    Content="Şablon Ekle"
+                    Width="130"
+                    Command="{Binding AddTemplateCommand}" />
+        </Grid>
+
+        <TextBlock Grid.Row="3"
+                   Text="{Binding ValidationMessage}"
+                   Foreground="{StaticResource Brush.Danger}"
+                   TextWrapping="Wrap"
+                   Margin="0,4,0,8" />
+
+        <DockPanel Grid.Row="4" Margin="0,6,0,0">
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                <Button Content="Hepsini Seç"
+                        Style="{StaticResource GhostButton}"
+                        Command="{Binding SelectAllCommand}" />
+                <Button Content="Seçimi Temizle"
+                        Style="{StaticResource GhostButton}"
+                        Command="{Binding ClearSelectionCommand}" />
+                <Button Content="Şablon Sil"
+                        Style="{StaticResource GhostButton}"
+                        Command="{Binding DeleteSelectedTemplateCommand}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                <Button Content="İptal"
+                        Style="{StaticResource GhostButton}"
+                        Width="96"
+                        Command="{Binding CancelCommand}" />
+                <Button Content="Seçilenleri Ekle"
+                        Width="150"
+                        Command="{Binding AddSelectedTasksCommand}" />
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</Window>

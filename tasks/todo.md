@@ -1,6 +1,25 @@
 # Todo
 
 ## Current Task
+- [x] Acil İşler hızlı iş şablonları için veritabanı model/repository/migration ekle.
+- [x] Hızlı İş Ekle dialogunu ve Acil İşler kartındaki butonu ekle.
+- [x] Seçili/Hepsini Seç şablonlarını Acil İşler'e toplu ve undo/redo uyumlu ekle.
+- [x] Şablonları JSON yedek/geri yükleme kapsamına al.
+- [x] Hedefli/tam testleri çalıştır, güvenli Release publish al ve Git commit oluştur.
+
+## Review Update
+- Acil İşler kartına `Hızlı` butonu eklendi; kayıtlı şablonlardan checkbox ile tekli/çoklu seçim yapılabiliyor, `Hepsini Seç` ve `Seçimi Temizle` komutları çalışıyor.
+- Kullanıcı dialog içinde sadece başlık taşıyan hızlı iş şablonu ekleyip seçili şablonu silebiliyor; şablonlar `QuickTaskTemplates` SQLite tablosunda soft-delete ile kalıcı tutuluyor.
+- Hızlı ekleme seçili şablonları Acil İşler listesinin üstüne sırayla ekliyor ve undo/redo tek işlem olarak geri alıp yeniden uyguluyor.
+- JSON yedek şeması v2'ye çıkarıldı; hızlı iş şablonları yedek/geri yükleme kapsamına alındı ve v1 checksum uyumluluğu korundu.
+- `dotnet build RizaCanKilicIsTakibi.sln` geçti.
+- `dotnet test RizaCanKilicIsTakibi.Tests\RizaCanKilicIsTakibi.Tests.csproj --filter "QuickTaskTemplate|QuickUrgent|Backup"` geçti: 24/24.
+- `dotnet test RizaCanKilicIsTakibi.sln` geçti: 147/147.
+- Release publish geçici klasöre alındı, uygulama çalışmadığı doğrulanınca canonical `RizaCanKilicIsTakibi\bin\Release\publish\RizaCanKilicIsTakibi.exe` güncellendi.
+- Canlı `Data\tasks.db` ve `Data\last-save.json` size/timestamp değerleri değişmedi; hash değerleri doğrulandı.
+- Geçici publish klasörü ve Debug/Release ara exe çıktıları temizlendi; repo içinde tek exe canonical publish exe olarak kaldı.
+
+## Current Task
 - [x] Tadilat Takibi ilçe sütunundaki birleşik grup görünümünün neden bozulduğunu doğrula.
 - [x] Satır/hücre komutlarını bozmadan boş ilçe hücrelerini kaldırıp satır bazlı sanallaştırmayı koru.
 - [x] Tadilat hedefli/tam testleri çalıştır, güvenli Release publish al ve Git commit oluştur.

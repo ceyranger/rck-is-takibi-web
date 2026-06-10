@@ -31,6 +31,76 @@ public sealed partial class MainViewModel
         MarkTaskDirty();
     }
 
+    private bool CanOpenQuickUrgentTaskDialog()
+        => _quickTaskTemplateRepository is not null && _quickTaskTemplateDialogService is not null;
+
+    private async Task OpenQuickUrgentTaskDialogAsync()
+    {
+        if (_quickTaskTemplateDialogService is null)
+        {
+            return;
+        }
+
+        FocusBoard(TaskBoardType.Acil);
+        var selectedTitles = await _quickTaskTemplateDialogService.ShowDialogAsync();
+        if (selectedTitles is null || selectedTitles.Count == 0)
+        {
+            return;
+        }
+
+        AddQuickUrgentTasks(selectedTitles);
+    }
+
+    private void AddQuickUrgentTasks(IReadOnlyList<string> titles)
+    {
+        var normalizedTitles = titles
+            .Select(title => title.Trim())
+            .Where(title => !string.IsNullOrWhiteSpace(title))
+            .ToList();
+
+        if (normalizedTitles.Count == 0)
+        {
+            return;
+        }
+
+        var board = UrgentBoard;
+        var now = DateTime.Now;
+        var tasks = normalizedTitles
+            .Select(title => new TaskItem
+            {
+                Id = Guid.NewGuid(),
+                Title = title,
+                Description = string.Empty,
+                BoardType = TaskBoardType.Acil,
+                CreatedAt = now,
+                UpdatedAt = now,
+                SortOrder = 0
+            })
+            .ToList();
+
+        var action = new DelegateUndoableAction(
+            "Hızlı acil iş ekle",
+            () =>
+            {
+                FocusBoard(TaskBoardType.Acil);
+                for (var i = 0; i < tasks.Count; i++)
+                {
+                    board.InsertTask(i, tasks[i]);
+                }
+            },
+            () =>
+            {
+                foreach (var task in tasks.AsEnumerable().Reverse())
+                {
+                    board.RemoveTask(task);
+                }
+            });
+
+        _undoRedoService.Execute(action);
+        _notificationService.ShowToast($"{tasks.Count} hızlı iş eklendi.", ToastType.Success);
+        MarkTaskDirty();
+    }
+
     private void DeleteSelectedTask(bool showToast = true, bool requireConfirmation = true)
     {
         var board = _activeBoard;

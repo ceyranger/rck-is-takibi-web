@@ -10,7 +10,7 @@ namespace RizaCanKilicIsTakibi.Services;
 
 public sealed class BackupService : IBackupService
 {
-    private const int CurrentBackupSchemaVersion = 1;
+    private const int CurrentBackupSchemaVersion = 2;
     private readonly string _backupRoot;
     private readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web)
     {
@@ -41,6 +41,7 @@ public sealed class BackupService : IBackupService
         IEnumerable<YibfIsTakibiEntry>? yibfIsTakibiEntries = null,
         IEnumerable<YibfCellState>? yibfCellStates = null,
         IEnumerable<TadilatCellState>? tadilatCellStates = null,
+        IEnumerable<QuickTaskTemplate>? quickTaskTemplates = null,
         CancellationToken cancellationToken = default)
     {
         var payload = new BackupEnvelope
@@ -48,6 +49,7 @@ public sealed class BackupService : IBackupService
             SchemaVersion = CurrentBackupSchemaVersion,
             AppVersion = typeof(BackupService).Assembly.GetName().Version?.ToString() ?? "unknown",
             Tasks = tasks.Select(MapTaskToDto).ToList(),
+            QuickTaskTemplates = (quickTaskTemplates ?? Array.Empty<QuickTaskTemplate>()).Select(MapQuickTaskTemplateToDto).ToList(),
             ActionEntries = (actionEntries ?? Array.Empty<ActionEntry>()).Select(MapActionToDto).ToList(),
             MissingProjectEntries = (missingProjectEntries ?? Array.Empty<MissingProjectEntry>()).Select(MapMissingProjectToDto).ToList(),
             MissingProjectCellStates = (missingProjectCellStates ?? Array.Empty<MissingProjectCellState>()).Select(MapMissingProjectCellStateToDto).ToList(),
@@ -113,19 +115,21 @@ public sealed class BackupService : IBackupService
             throw new InvalidDataException("Yedek dosyası okunamadı veya boş.");
         }
 
-        if (payload.SchemaVersion != 0 && payload.SchemaVersion != CurrentBackupSchemaVersion)
+        if (payload.SchemaVersion != 0 && payload.SchemaVersion != 1 && payload.SchemaVersion != CurrentBackupSchemaVersion)
         {
             throw new InvalidDataException($"Desteklenmeyen yedek sürümü: {payload.SchemaVersion}");
         }
 
-        if (payload.SchemaVersion == CurrentBackupSchemaVersion)
+        if (payload.SchemaVersion is 1 or CurrentBackupSchemaVersion)
         {
             if (string.IsNullOrWhiteSpace(payload.Checksum))
             {
                 throw new InvalidDataException("Yedek doğrulama bilgisi eksik.");
             }
 
-            var expectedChecksum = ComputeChecksum(payload);
+            var expectedChecksum = payload.SchemaVersion == 1
+                ? ComputeChecksumV1(payload)
+                : ComputeChecksum(payload);
             if (!string.Equals(payload.Checksum, expectedChecksum, StringComparison.Ordinal))
             {
                 throw new InvalidDataException("Yedek dosyası bozuk veya değiştirilmiş görünüyor.");
@@ -139,6 +143,7 @@ public sealed class BackupService : IBackupService
         return new BackupRestoreData
         {
             Tasks = payload.Tasks.Select(MapTaskToModel).ToList(),
+            QuickTaskTemplates = payload.QuickTaskTemplates.Select(MapQuickTaskTemplateToModel).ToList(),
             ActionEntries = payload.ActionEntries.Select(MapActionToModel).ToList(),
             MissingProjectEntries = payload.MissingProjectEntries.Select(MapMissingProjectToModel).ToList(),
             MissingProjectCellStates = payload.MissingProjectCellStates.Select(MapMissingProjectCellStateToModel).ToList(),
@@ -154,6 +159,31 @@ public sealed class BackupService : IBackupService
     }
 
     private string ComputeChecksum(BackupEnvelope envelope)
+    {
+        var payloadBytes = JsonSerializer.SerializeToUtf8Bytes(new
+        {
+            envelope.SchemaVersion,
+            envelope.AppVersion,
+            envelope.CreatedAt,
+            envelope.Tasks,
+            envelope.QuickTaskTemplates,
+            envelope.ActionEntries,
+            envelope.MissingProjectEntries,
+            envelope.MissingProjectCellStates,
+            envelope.KarotEntries,
+            envelope.KarotCellStates,
+            envelope.TadilatEntries,
+            envelope.YibfAnaBilgiEntries,
+            envelope.YibfAnaBilgiEvents,
+            envelope.YibfIsTakibiEntries,
+            envelope.YibfCellStates,
+            envelope.TadilatCellStates
+        }, _jsonOptions);
+
+        return Convert.ToHexString(SHA256.HashData(payloadBytes));
+    }
+
+    private string ComputeChecksumV1(BackupEnvelope envelope)
     {
         var payloadBytes = JsonSerializer.SerializeToUtf8Bytes(new
         {
@@ -179,6 +209,7 @@ public sealed class BackupService : IBackupService
 
     private static bool HasAnyData(BackupEnvelope envelope)
         => envelope.Tasks.Count > 0
+           || envelope.QuickTaskTemplates.Count > 0
            || envelope.ActionEntries.Count > 0
            || envelope.MissingProjectEntries.Count > 0
            || envelope.MissingProjectCellStates.Count > 0
@@ -712,6 +743,28 @@ public sealed class BackupService : IBackupService
         };
     }
 
+    private static BackupQuickTaskTemplateDto MapQuickTaskTemplateToDto(QuickTaskTemplate template)
+        => new()
+        {
+            Id = template.Id,
+            Title = template.Title,
+            SortOrder = template.SortOrder,
+            CreatedAt = template.CreatedAt,
+            UpdatedAt = template.UpdatedAt,
+            IsDeleted = template.IsDeleted
+        };
+
+    private static QuickTaskTemplate MapQuickTaskTemplateToModel(BackupQuickTaskTemplateDto dto)
+        => new()
+        {
+            Id = dto.Id,
+            Title = dto.Title,
+            SortOrder = dto.SortOrder,
+            CreatedAt = dto.CreatedAt,
+            UpdatedAt = dto.UpdatedAt,
+            IsDeleted = dto.IsDeleted
+        };
+
     private sealed class BackupEnvelope
     {
         public int SchemaVersion { get; set; }
@@ -719,6 +772,7 @@ public sealed class BackupService : IBackupService
         public string Checksum { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public List<BackupTaskDto> Tasks { get; set; } = new();
+        public List<BackupQuickTaskTemplateDto> QuickTaskTemplates { get; set; } = new();
         public List<BackupActionEntryDto> ActionEntries { get; set; } = new();
         public List<BackupMissingProjectEntryDto> MissingProjectEntries { get; set; } = new();
         public List<BackupMissingProjectCellStateDto> MissingProjectCellStates { get; set; } = new();
@@ -743,6 +797,16 @@ public sealed class BackupService : IBackupService
         public TaskBoardType BoardType { get; set; }
         public int SortOrder { get; set; }
         public List<BackupTaskNoteDto> Notes { get; set; } = new();
+    }
+
+    private sealed class BackupQuickTaskTemplateDto
+    {
+        public Guid Id { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public int SortOrder { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public bool IsDeleted { get; set; }
     }
 
     private sealed class BackupTaskNoteDto

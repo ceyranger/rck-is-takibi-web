@@ -84,6 +84,7 @@ public partial class App : Application
         var karotRepository = new SqliteKarotRepository(_dbPath);
         var tadilatRepository = new SqliteTadilatRepository(_dbPath);
         var yibfRepository = new SqliteYibfRepository(_dbPath);
+        var quickTaskTemplateRepository = new SqliteQuickTaskTemplateRepository(_dbPath);
 
         services.AddSingleton(pathService);
         services.AddSingleton<IAppSettingsService>(settingsService);
@@ -97,6 +98,7 @@ public partial class App : Application
         services.AddSingleton<IKarotRepository>(karotRepository);
         services.AddSingleton<ITadilatRepository>(tadilatRepository);
         services.AddSingleton<IYibfRepository>(yibfRepository);
+        services.AddSingleton<IQuickTaskTemplateRepository>(quickTaskTemplateRepository);
         services.AddSingleton<IBackupService>(_ => new BackupService(pathService.BackupDirectory));
         services.AddSingleton<IImportExportService, ImportExportService>();
         services.AddSingleton<ITadilatImportService, TadilatExcelImportService>();
@@ -113,6 +115,7 @@ public partial class App : Application
         services.AddSingleton<ITadilatCellNoteDialogService, TadilatCellNoteDialogService>();
         services.AddSingleton<IYibfAnaBilgiEventDialogService, YibfAnaBilgiEventDialogService>();
         services.AddSingleton<IYibfAnaBilgiEntryDialogService, YibfAnaBilgiEntryDialogService>();
+        services.AddSingleton<IQuickTaskTemplateDialogService, QuickTaskTemplateDialogService>();
 
         services.AddSingleton<DashboardViewModel>();
         services.AddSingleton<SearchOverlayViewModel>();

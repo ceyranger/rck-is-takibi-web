@@ -31,6 +31,8 @@ public sealed partial class MainViewModel : ViewModelBase
     private readonly IContextInsightBuilder _contextInsightBuilder;
     private readonly IUndoRedoService _undoRedoService;
     private readonly IFileDialogService _fileDialogService;
+    private readonly IQuickTaskTemplateRepository? _quickTaskTemplateRepository;
+    private readonly IQuickTaskTemplateDialogService? _quickTaskTemplateDialogService;
     private readonly AppSettings _settings;
     private readonly SemaphoreSlim _operationGate = new(1, 1);
     private readonly AsyncLocal<int> _operationGateDepth = new();
@@ -141,7 +143,9 @@ public sealed partial class MainViewModel : ViewModelBase
         MissingProjectModuleViewModel missingProjectModule,
         KarotModuleViewModel karotModule,
         TadilatModuleViewModel tadilatModule,
-        YibfModuleViewModel yibfModule)
+        YibfModuleViewModel yibfModule,
+        IQuickTaskTemplateRepository? quickTaskTemplateRepository = null,
+        IQuickTaskTemplateDialogService? quickTaskTemplateDialogService = null)
     {
         _taskRepository = taskRepository;
         _backupService = backupService;
@@ -155,6 +159,8 @@ public sealed partial class MainViewModel : ViewModelBase
         _contextInsightBuilder = contextInsightBuilder;
         _undoRedoService = undoRedoService;
         _fileDialogService = fileDialogService;
+        _quickTaskTemplateRepository = quickTaskTemplateRepository;
+        _quickTaskTemplateDialogService = quickTaskTemplateDialogService;
         _settings = settings;
 
         Dashboard = dashboard;
@@ -178,6 +184,7 @@ public sealed partial class MainViewModel : ViewModelBase
 
         AddGeneralTaskCommand = new RelayCommand(() => AddTask(TaskBoardType.Genel));
         AddUrgentTaskCommand = new RelayCommand(() => AddTask(TaskBoardType.Acil));
+        OpenQuickUrgentTaskDialogCommand = new AsyncRelayCommand(OpenQuickUrgentTaskDialogAsync, CanOpenQuickUrgentTaskDialog);
         DeleteGeneralTaskCommand = new RelayCommand(() => DeleteTask(GeneralBoard.SelectedTask), () => GeneralBoard.SelectedTask is not null);
         DeleteUrgentTaskCommand = new RelayCommand(() => DeleteTask(UrgentBoard.SelectedTask), () => UrgentBoard.SelectedTask is not null);
         DeleteSelectedTaskCommand = new RelayCommand(() => DeleteSelectedTask(), () => SelectedTask is not null);
@@ -456,6 +463,7 @@ public sealed partial class MainViewModel : ViewModelBase
 
     public RelayCommand AddGeneralTaskCommand { get; }
     public RelayCommand AddUrgentTaskCommand { get; }
+    public AsyncRelayCommand OpenQuickUrgentTaskDialogCommand { get; }
     public RelayCommand DeleteGeneralTaskCommand { get; }
     public RelayCommand DeleteUrgentTaskCommand { get; }
     public RelayCommand DeleteSelectedTaskCommand { get; }
@@ -736,7 +744,8 @@ public sealed partial class MainViewModel : ViewModelBase
                     yibfAnaBilgiEvents: YibfModule.GetAnaBilgiEventsSnapshot(),
                     yibfIsTakibiEntries: YibfModule.GetIsTakibiEntriesSnapshot(),
                     yibfCellStates: YibfModule.GetCellStatesSnapshot(),
-                    tadilatCellStates: TadilatModule.GetCellStatesSnapshot());
+                    tadilatCellStates: TadilatModule.GetCellStatesSnapshot(),
+                    quickTaskTemplates: _quickTaskTemplateRepository?.GetAll());
                 
                 await _backupService.CleanOldBackupsAsync(30);
                 
@@ -754,6 +763,7 @@ public sealed partial class MainViewModel : ViewModelBase
         => new()
         {
             Tasks = AllTasks().Select(task => task.Clone()).ToList(),
+            QuickTaskTemplates = _quickTaskTemplateRepository?.GetAll().Select(template => template.Clone()).ToList() ?? [],
             ActionEntries = ActionModule.GetAllEntriesSnapshot(),
             MissingProjectEntries = MissingProjectModule.GetEntriesSnapshot(),
             MissingProjectCellStates = MissingProjectModule.GetCellStatesSnapshot(),
@@ -844,6 +854,7 @@ public sealed partial class MainViewModel : ViewModelBase
         KarotModule.LoadFromBackup(restored.KarotEntries, restored.KarotCellStates, markModulesDirty);
         TadilatModule.LoadFromBackup(restored.TadilatEntries, restored.TadilatCellStates, markModulesDirty);
         YibfModule.LoadFromBackup(restored.YibfAnaBilgiEntries, restored.YibfAnaBilgiEvents, restored.YibfIsTakibiEntries, restored.YibfCellStates, markModulesDirty);
+        _quickTaskTemplateRepository?.ReplaceAll(restored.QuickTaskTemplates.Select(template => template.Clone()));
         MarkAllModulesStateLoadedFromSnapshot();
         InvalidateSearchCorpus();
         RefreshAcilIsOzet();
@@ -875,6 +886,7 @@ public sealed partial class MainViewModel : ViewModelBase
         KarotModule.LoadFromBackup(snapshot.Data.KarotEntries, snapshot.Data.KarotCellStates, snapshot.HasUnsavedKarotChanges);
         TadilatModule.LoadFromBackup(snapshot.Data.TadilatEntries, snapshot.Data.TadilatCellStates, snapshot.HasUnsavedTadilatChanges);
         YibfModule.LoadFromBackup(snapshot.Data.YibfAnaBilgiEntries, snapshot.Data.YibfAnaBilgiEvents, snapshot.Data.YibfIsTakibiEntries, snapshot.Data.YibfCellStates, snapshot.HasUnsavedYibfChanges);
+        _quickTaskTemplateRepository?.ReplaceAll(snapshot.Data.QuickTaskTemplates.Select(template => template.Clone()));
         MarkAllModulesStateLoadedFromSnapshot();
         InvalidateSearchCorpus();
         RefreshAcilIsOzet();
@@ -2393,7 +2405,8 @@ public sealed partial class MainViewModel : ViewModelBase
                     YibfModule.GetAnaBilgiEventsSnapshot(),
                     YibfModule.GetIsTakibiEntriesSnapshot(),
                     YibfModule.GetCellStatesSnapshot(),
-                    TadilatModule.GetCellStatesSnapshot());
+                    TadilatModule.GetCellStatesSnapshot(),
+                    _quickTaskTemplateRepository?.GetAll());
                 _notificationService.ShowToast($"Yedek alındı ({metadata.TaskCount} kayıt).", ToastType.Success);
             }
             catch (Exception ex)
@@ -3205,6 +3218,7 @@ public sealed partial class MainViewModel : ViewModelBase
     {
         InvalidateSearchCorpus();
         RefreshDashboard();
+        RefreshAcilIsOzet();
         MoveTaskUpCommand.NotifyCanExecuteChanged();
         MoveTaskDownCommand.NotifyCanExecuteChanged();
 

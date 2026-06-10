@@ -227,6 +227,75 @@ public class MainViewModelTaskManagementTests
     }
 
     [Fact]
+    public async Task QuickUrgentTaskDialog_Adds_Selected_Templates_To_Top_With_UndoRedo()
+    {
+        var root = CreateTempRoot();
+        var databasePath = Path.Combine(root, "quick-urgent.db");
+
+        try
+        {
+            var taskRepository = new SqliteTaskRepository(databasePath);
+            await taskRepository.SaveManyAsync(
+            [
+                CreateTask("Mevcut acil", TaskBoardType.Acil, 0)
+            ]);
+
+            var dialogService = new TestQuickTaskTemplateDialogService(["Birinci hızlı iş", "İkinci hızlı iş"]);
+            var mainViewModel = await CreateMainViewModelAsync(
+                databasePath,
+                quickTaskTemplateRepository: new SqliteQuickTaskTemplateRepository(databasePath),
+                quickTaskTemplateDialogService: dialogService);
+
+            await mainViewModel.OpenQuickUrgentTaskDialogCommand.ExecuteAsync(null);
+
+            Assert.Equal(
+                ["Birinci hızlı iş", "İkinci hızlı iş", "Mevcut acil"],
+                mainViewModel.UrgentBoard.Tasks.Select(task => task.Title).ToArray());
+            Assert.Equal([0, 1, 2], mainViewModel.UrgentBoard.Tasks.Select(task => task.SortOrder).ToArray());
+            Assert.True(mainViewModel.HasAnyUnsavedChanges);
+
+            mainViewModel.UndoCommand.Execute(null);
+            Assert.Equal(["Mevcut acil"], mainViewModel.UrgentBoard.Tasks.Select(task => task.Title).ToArray());
+
+            mainViewModel.RedoCommand.Execute(null);
+            Assert.Equal(
+                ["Birinci hızlı iş", "İkinci hızlı iş", "Mevcut acil"],
+                mainViewModel.UrgentBoard.Tasks.Select(task => task.Title).ToArray());
+        }
+        finally
+        {
+            await DeleteDirectoryWithRetriesAsync(root);
+        }
+    }
+
+    [Fact]
+    public async Task QuickTaskTemplateDialog_SelectAll_Returns_All_Template_Titles()
+    {
+        var root = CreateTempRoot();
+        var databasePath = Path.Combine(root, "quick-dialog.db");
+
+        try
+        {
+            var repository = new SqliteQuickTaskTemplateRepository(databasePath);
+            repository.ReplaceAll(
+            [
+                new QuickTaskTemplate { Title = "Acil kontrol", SortOrder = 0, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
+                new QuickTaskTemplate { Title = "Evrak iste", SortOrder = 1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now }
+            ]);
+            var viewModel = new QuickTaskTemplateDialogViewModel(repository, repository.GetAll());
+
+            viewModel.SelectAllCommand.Execute(null);
+            viewModel.AddSelectedTasksCommand.Execute(null);
+
+            Assert.Equal(["Acil kontrol", "Evrak iste"], viewModel.SelectedTitles);
+        }
+        finally
+        {
+            await DeleteDirectoryWithRetriesAsync(root);
+        }
+    }
+
+    [Fact]
     public async Task PasteTask_Still_Appends_To_End_Of_List()
     {
         var root = CreateTempRoot();
@@ -1464,7 +1533,13 @@ public class MainViewModelTaskManagementTests
         }
     }
 
-    private static async Task<MainViewModel> CreateMainViewModelAsync(string databasePath, IAppSettingsService? appSettingsService = null, ILastSaveMetadataService? lastSaveMetadataService = null, AppSettings? settings = null)
+    private static async Task<MainViewModel> CreateMainViewModelAsync(
+        string databasePath,
+        IAppSettingsService? appSettingsService = null,
+        ILastSaveMetadataService? lastSaveMetadataService = null,
+        AppSettings? settings = null,
+        IQuickTaskTemplateRepository? quickTaskTemplateRepository = null,
+        IQuickTaskTemplateDialogService? quickTaskTemplateDialogService = null)
     {
         settings ??= new AppSettings
         {
@@ -1549,7 +1624,9 @@ public class MainViewModelTaskManagementTests
             missingProjectModule,
             karotModule,
             tadilatModule,
-            yibfModule);
+            yibfModule,
+            quickTaskTemplateRepository,
+            quickTaskTemplateDialogService);
 
         await viewModel.InitializeAsync();
         return viewModel;
@@ -1615,7 +1692,7 @@ public class MainViewModelTaskManagementTests
     {
         public Task<int> ClearManagedBackupsAsync(CancellationToken cancellationToken = default) => Task.FromResult(0);
         public Task<int> CleanOldBackupsAsync(int keepCount = 30, CancellationToken cancellationToken = default) => Task.FromResult(0);
-        public Task<BackupMetadata> CreateBackupAsync(IEnumerable<TaskItem> tasks, string? backupPath = null, IEnumerable<ActionEntry>? actionEntries = null, IEnumerable<MissingProjectEntry>? missingProjectEntries = null, IEnumerable<MissingProjectCellState>? missingProjectCellStates = null, IEnumerable<KarotEntry>? karotEntries = null, IEnumerable<KarotCellState>? karotCellStates = null, IEnumerable<TadilatEntry>? tadilatEntries = null, IEnumerable<YibfAnaBilgiEntry>? yibfAnaBilgiEntries = null, IEnumerable<YibfAnaBilgiEvent>? yibfAnaBilgiEvents = null, IEnumerable<YibfIsTakibiEntry>? yibfIsTakibiEntries = null, IEnumerable<YibfCellState>? yibfCellStates = null, IEnumerable<TadilatCellState>? tadilatCellStates = null, CancellationToken cancellationToken = default)
+        public Task<BackupMetadata> CreateBackupAsync(IEnumerable<TaskItem> tasks, string? backupPath = null, IEnumerable<ActionEntry>? actionEntries = null, IEnumerable<MissingProjectEntry>? missingProjectEntries = null, IEnumerable<MissingProjectCellState>? missingProjectCellStates = null, IEnumerable<KarotEntry>? karotEntries = null, IEnumerable<KarotCellState>? karotCellStates = null, IEnumerable<TadilatEntry>? tadilatEntries = null, IEnumerable<YibfAnaBilgiEntry>? yibfAnaBilgiEntries = null, IEnumerable<YibfAnaBilgiEvent>? yibfAnaBilgiEvents = null, IEnumerable<YibfIsTakibiEntry>? yibfIsTakibiEntries = null, IEnumerable<YibfCellState>? yibfCellStates = null, IEnumerable<TadilatCellState>? tadilatCellStates = null, IEnumerable<QuickTaskTemplate>? quickTaskTemplates = null, CancellationToken cancellationToken = default)
             => Task.FromResult(new BackupMetadata { BackupFilePath = backupPath ?? string.Empty, CreatedAt = DateTime.Now, TaskCount = tasks.Count() });
         public Task<BackupRestoreData> RestoreBackupAsync(string backupPath, CancellationToken cancellationToken = default) => Task.FromResult(new BackupRestoreData());
         public void ScheduleAutoBackup(TimeSpan interval, Func<Task> callback) { }
@@ -1689,6 +1766,19 @@ public class MainViewModelTaskManagementTests
             NextEntry = null;
             return Task.FromResult<ActionEntry?>(nextEntry);
         }
+    }
+
+    private sealed class TestQuickTaskTemplateDialogService : IQuickTaskTemplateDialogService
+    {
+        private readonly IReadOnlyList<string>? _titles;
+
+        public TestQuickTaskTemplateDialogService(IReadOnlyList<string>? titles)
+        {
+            _titles = titles;
+        }
+
+        public Task<IReadOnlyList<string>?> ShowDialogAsync(CancellationToken cancellationToken = default)
+            => Task.FromResult(_titles);
     }
 
     private sealed class TestKarotStatusDialogService : IKarotStatusDialogService
