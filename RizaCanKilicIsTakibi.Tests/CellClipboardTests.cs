@@ -104,7 +104,7 @@ public class CellClipboardTests
             var saved = await repository.GetAllAsync();
             Assert.Equal("Kaynak açıklama", saved.Single(item => item.Id == module.Rows[1].Entry.Id).Description);
             var states = await repository.GetCellStatesAsync();
-            var targetState = Assert.Single(states.Where(item => item.EntryId == module.Rows[1].Entry.Id && item.ColumnKey == MissingProjectColumnKeys.Description));
+            var targetState = Assert.Single(states, item => item.EntryId == module.Rows[1].Entry.Id && item.ColumnKey == MissingProjectColumnKeys.Description);
             Assert.Equal("#FF4F81BD", targetState.BackgroundColor);
             Assert.Equal("Kaynak not", targetState.NoteText);
         }
@@ -280,9 +280,11 @@ public class CellClipboardTests
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
             };
+            var sourceEntry = row.Entry ?? throw new InvalidOperationException("Expected a loaded tadilat row entry.");
+
             module.LoadFromBackup(
             [
-                row.Entry,
+                sourceEntry,
                 targetEntry
             ],
             module.GetCellStatesSnapshot(),
@@ -293,7 +295,7 @@ public class CellClipboardTests
             module.CopyCellCommand.Execute(sourceRow.JobNameCell);
             module.PasteCellCommand.Execute(targetRow.JobNameCell);
 
-            var refreshedTargetRow = module.DistrictGroups.SelectMany(group => group.Rows).Single(item => !item.IsPlaceholder && item.Entry.Id == targetEntry.Id);
+            var refreshedTargetRow = module.DistrictGroups.SelectMany(group => group.Rows).Single(item => !item.IsPlaceholder && item.Entry is not null && item.Entry.Id == targetEntry.Id);
             Assert.True(module.HasUnsavedChanges);
             Assert.Equal("Yeni İş", refreshedTargetRow.JobNameCell.Text);
             Assert.Equal("#FFFFFF00", refreshedTargetRow.JobNameCell.BackgroundColor);
@@ -305,7 +307,7 @@ public class CellClipboardTests
             var saved = await repository.GetAllAsync();
             Assert.Equal("Yeni İş", saved.Single(item => item.Id == targetEntry.Id).JobName);
             var states = await repository.GetCellStatesAsync();
-            var targetState = Assert.Single(states.Where(item => item.EntryId == targetEntry.Id && item.ColumnKey == TadilatColumnKeys.JobName));
+            var targetState = Assert.Single(states, item => item.EntryId == targetEntry.Id && item.ColumnKey == TadilatColumnKeys.JobName);
             Assert.Equal("#FFFFFF00", targetState.BackgroundColor);
             Assert.Equal("Tadilat notu", targetState.NoteText);
         }
@@ -417,7 +419,7 @@ public class CellClipboardTests
             var saved = await repository.GetIsTakibiEntriesAsync();
             Assert.Equal("Yeni YİBF İş", saved.Single(item => item.Id == targetRow.Entry.Id).JobName);
             var states = await repository.GetCellStatesAsync();
-            var targetState = Assert.Single(states.Where(item => item.EntryId == targetRow.Entry.Id && item.ColumnKey == YibfIsTakibiColumnKeys.JobName));
+            var targetState = Assert.Single(states, item => item.EntryId == targetRow.Entry.Id && item.ColumnKey == YibfIsTakibiColumnKeys.JobName);
             Assert.Equal("#FFFF0000", targetState.BackgroundColor);
             Assert.Equal("YİBF notu", targetState.NoteText);
         }

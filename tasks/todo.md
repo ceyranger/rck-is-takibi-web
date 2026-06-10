@@ -1,6 +1,36 @@
 # Todo
 
 ## Current Task
+- [x] Test kodundaki nullable build uyarılarının kök nedenini düzelt.
+- [x] Test projesindeki geçişli NuGet güvenlik uyarılarını uygulamayı etkilemeden temizle.
+- [x] Release build, test ve vulnerability taramasını tekrar çalıştır.
+- [x] Canonical publish ve canlı veri dosyalarının değişmediğini doğrula.
+- [x] Sonucu notlara işle ve Git checkpoint oluştur.
+
+## Review Update
+- `CellClipboardTests` içindeki Tadilat satırında placeholder olmayan satırın `Entry` değeri açık null kontrolüyle çözüldü; nullable build uyarıları kapandı.
+- Test projesi paketleri güncellendi: `coverlet.collector 10.0.1`, `Microsoft.NET.Test.Sdk 18.6.0`, `xunit 2.9.3`, `xunit.runner.visualstudio 3.1.5`.
+- Yeni xUnit analyzer uyarıları test mantığı değiştirilmeden `Assert.Single(collection, predicate)` kullanımıyla düzeltildi.
+- `dotnet build RizaCanKilicIsTakibi.sln -c Release` geçti: 0 uyarı, 0 hata.
+- `dotnet test RizaCanKilicIsTakibi.sln -c Release --no-build` geçti: 147/147.
+- `dotnet list RizaCanKilicIsTakibi.sln package --vulnerable --include-transitive` hem uygulama hem test projesi için güvenlik açığı bulmadı.
+- Canonical publish exe güncellenmedi; canlı `Data\tasks.db` ve `Data\last-save.json` hash/size/timestamp değerleri değişmedi.
+
+## Current Task
+- [x] Çalışan publish programına dokunmadan repo durumunu ve riskli alanları kontrol et.
+- [x] Statik tarama ile bariz bug/tehlikeli paternleri ara.
+- [x] Build ve testleri canonical publish klasörünü güncellemeden çalıştır.
+- [x] Sonuçları veri güvenliği notuyla özetle.
+
+## Review Update
+- Canonical `RizaCanKilicIsTakibi\bin\Release\publish\RizaCanKilicIsTakibi.exe` güncellenmedi; publish `Data`, `Backup`, `Logs` klasörlerine dokunulmadı.
+- Statik taramada `TODO/FIXME/NotImplemented` gibi yarım kalmış kod bulunmadı; silme/shutdown çağrıları temp/snapshot, backup temizliği veya kullanıcı onaylı reset/temizlik akışlarıyla sınırlı göründü.
+- `dotnet build RizaCanKilicIsTakibi.sln -c Release` geçti; uygulama kodu hatası yok, test dosyasında iki nullable uyarı var.
+- `dotnet test RizaCanKilicIsTakibi.sln -c Release --no-build` geçti: 147/147.
+- `dotnet list RizaCanKilicIsTakibi.sln package --vulnerable --include-transitive` uygulama projesinde açık bulmadı; test projesinde geçişli `System.Net.Http 4.3.0` ve `System.Text.RegularExpressions 4.3.0` için high advisory bildirdi.
+- Release build/test ara çıktıları canonical publish klasörü dışarıda bırakılarak temizlendi; canlı `Data\tasks.db` ve `Data\last-save.json` hash/size/timestamp değerleri değişmedi.
+
+## Current Task
 - [x] Hızlı eklede önceki varsayılan şablonları kaldır ve mevcut veride bir kere temizle.
 - [x] Hızlı iş şablonlarına grup alanı ekle; kullanıcı grup oluşturup silebilsin.
 - [x] Grup içindeki işleri tekli/toplu veya grup tamamı olarak Acil İşler'e ekle.

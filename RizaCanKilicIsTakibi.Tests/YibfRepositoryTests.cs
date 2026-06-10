@@ -115,8 +115,8 @@ public class YibfRepositoryTests
             var isTakibiRows = await repository.GetIsTakibiEntriesAsync();
 
             var persistedAnaBilgi = Assert.Single(anaBilgiRows);
-            var persistedExact = Assert.Single(isTakibiRows.Where(entry => entry.Id == exact.Id));
-            var persistedVariant = Assert.Single(isTakibiRows.Where(entry => entry.Id == variant.Id));
+            var persistedExact = Assert.Single(isTakibiRows, entry => entry.Id == exact.Id);
+            var persistedVariant = Assert.Single(isTakibiRows, entry => entry.Id == variant.Id);
 
             Assert.Equal(persistedAnaBilgi.WorkGroupId, persistedExact.WorkGroupId);
             Assert.Equal(persistedAnaBilgi.WorkIdentityId, persistedExact.WorkIdentityId);

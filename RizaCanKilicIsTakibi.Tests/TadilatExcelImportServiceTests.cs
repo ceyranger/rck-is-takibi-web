@@ -47,13 +47,13 @@ public class TadilatExcelImportServiceTests
 
             Assert.Equal(3, result.Entries.Count);
             Assert.Equal(2, result.Entries.Count(item => item.SubTab == TadilatSubTab.Aktif));
-            Assert.Single(result.Entries.Where(item => item.SubTab == TadilatSubTab.Biten));
+            Assert.Single(result.Entries, item => item.SubTab == TadilatSubTab.Biten);
             Assert.All(result.Entries.Take(2), item => Assert.Equal("GERZE", item.District));
 
-            var noteState = Assert.Single(result.CellStates.Where(item => item.ColumnKey == TadilatColumnKeys.InspectorApproved));
+            var noteState = Assert.Single(result.CellStates, item => item.ColumnKey == TadilatColumnKeys.InspectorApproved);
             Assert.Equal("Denetçi notu", noteState.NoteText);
 
-            var colorState = Assert.Single(result.CellStates.Where(item => item.ColumnKey == TadilatColumnKeys.DigitalReceived));
+            var colorState = Assert.Single(result.CellStates, item => item.ColumnKey == TadilatColumnKeys.DigitalReceived);
             Assert.False(string.IsNullOrWhiteSpace(colorState.BackgroundColor));
             Assert.Contains(result.CellStates, item => item.ColumnKey == TadilatColumnKeys.OutputAndReportArrived && !string.IsNullOrWhiteSpace(item.BackgroundColor));
         }
