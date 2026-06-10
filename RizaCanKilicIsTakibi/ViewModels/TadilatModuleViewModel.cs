@@ -132,6 +132,8 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         ClearRowColorCommand = new RelayCommand<TadilatEntry?>(entry => SetRowColor(entry, string.Empty));
         MoveToBitenCommand = new AsyncRelayCommand<TadilatEntry?>(entry => MoveEntryToSubTabAsync(entry, TadilatSubTab.Biten));
         MoveToAktifCommand = new AsyncRelayCommand<TadilatEntry?>(entry => MoveEntryToSubTabAsync(entry, TadilatSubTab.Aktif));
+        MoveEntryUpCommand = new AsyncRelayCommand<TadilatEntry?>(entry => MoveEntryAsync(entry, -1), CanMoveEntryUp);
+        MoveEntryDownCommand = new AsyncRelayCommand<TadilatEntry?>(entry => MoveEntryAsync(entry, 1), CanMoveEntryDown);
     }
 
     public ObservableRangeCollection<TadilatEntry> AktifEntries { get; }
@@ -155,6 +157,8 @@ public sealed class TadilatModuleViewModel : ViewModelBase
             if (SetProperty(ref _selectedSubTab, value))
             {
                 RefreshDistrictGroups();
+                MoveEntryUpCommand.NotifyCanExecuteChanged();
+                MoveEntryDownCommand.NotifyCanExecuteChanged();
             }
         }
     }
@@ -168,6 +172,8 @@ public sealed class TadilatModuleViewModel : ViewModelBase
             {
                 UpdateRowSelections();
                 DeleteEntryCommand.NotifyCanExecuteChanged();
+                MoveEntryUpCommand.NotifyCanExecuteChanged();
+                MoveEntryDownCommand.NotifyCanExecuteChanged();
             }
         }
     }
@@ -199,6 +205,8 @@ public sealed class TadilatModuleViewModel : ViewModelBase
     public RelayCommand<TadilatEntry?> ClearRowColorCommand { get; }
     public AsyncRelayCommand<TadilatEntry?> MoveToBitenCommand { get; }
     public AsyncRelayCommand<TadilatEntry?> MoveToAktifCommand { get; }
+    public AsyncRelayCommand<TadilatEntry?> MoveEntryUpCommand { get; }
+    public AsyncRelayCommand<TadilatEntry?> MoveEntryDownCommand { get; }
 
     public async Task InitializeAsync()
     {
@@ -442,6 +450,71 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         var destinationLabel = targetSubTab == TadilatSubTab.Biten ? "BİTEN" : "AKTİF";
         _notificationService.ShowToast($"Tadilat satırı {destinationLabel} sekmesine taşındı.", ToastType.Success, TimeSpan.FromSeconds(2));
         await Task.CompletedTask;
+    }
+
+    private async Task MoveEntryAsync(TadilatEntry? entry, int direction)
+    {
+        var targetEntry = ResolveCurrentEntry(entry ?? SelectedEntry);
+        if (targetEntry is null || targetEntry.SubTab != SelectedSubTab)
+        {
+            return;
+        }
+
+        var collection = GetCollection(targetEntry.SubTab);
+        var ordered = GetOrderedDistrictEntries(collection, targetEntry.District);
+        var currentIndex = ordered.FindIndex(item => item.Id == targetEntry.Id);
+        var targetIndex = currentIndex + direction;
+        if (currentIndex < 0 || targetIndex < 0 || targetIndex >= ordered.Count)
+        {
+            return;
+        }
+
+        ExecuteUndoableMutation("Tadilat sıralama değiştir", () =>
+        {
+            CloseAllEditors();
+
+            var currentCollection = GetCollection(targetEntry.SubTab);
+            var currentOrdered = GetOrderedDistrictEntries(currentCollection, targetEntry.District);
+            var sourceIndex = currentOrdered.FindIndex(item => item.Id == targetEntry.Id);
+            var destinationIndex = sourceIndex + direction;
+            if (sourceIndex < 0 || destinationIndex < 0 || destinationIndex >= currentOrdered.Count)
+            {
+                return;
+            }
+
+            (currentOrdered[sourceIndex], currentOrdered[destinationIndex]) = (currentOrdered[destinationIndex], currentOrdered[sourceIndex]);
+            for (var index = 0; index < currentOrdered.Count; index++)
+            {
+                currentOrdered[index].DisplayOrder = index;
+                currentOrdered[index].UpdatedAt = DateTime.Now;
+            }
+
+            SelectedEntry = currentCollection.FirstOrDefault(item => item.Id == targetEntry.Id);
+            HasUnsavedChanges = true;
+            RefreshDistrictGroups();
+        });
+
+        await Task.CompletedTask;
+    }
+
+    private bool CanMoveEntryUp(TadilatEntry? entry)
+        => CanMoveEntry(entry ?? SelectedEntry, -1);
+
+    private bool CanMoveEntryDown(TadilatEntry? entry)
+        => CanMoveEntry(entry ?? SelectedEntry, 1);
+
+    private bool CanMoveEntry(TadilatEntry? entry, int direction)
+    {
+        var targetEntry = ResolveCurrentEntry(entry);
+        if (targetEntry is null || targetEntry.SubTab != SelectedSubTab)
+        {
+            return false;
+        }
+
+        var ordered = GetOrderedDistrictEntries(GetCollection(targetEntry.SubTab), targetEntry.District);
+        var currentIndex = ordered.FindIndex(item => item.Id == targetEntry.Id);
+        var targetIndex = currentIndex + direction;
+        return currentIndex >= 0 && targetIndex >= 0 && targetIndex < ordered.Count;
     }
 
     private void BeginCellEdit(TadilatCellViewModel? cell)
@@ -750,6 +823,8 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         RefreshDistrictCounts(collection);
         OnPropertyChanged(nameof(VisibleEntryCount));
         DeleteEntryCommand.NotifyCanExecuteChanged();
+        MoveEntryUpCommand.NotifyCanExecuteChanged();
+        MoveEntryDownCommand.NotifyCanExecuteChanged();
     }
 
     private List<string> GetOrderedDistricts(IEnumerable<TadilatEntry> collection)
@@ -1084,6 +1159,15 @@ public sealed class TadilatModuleViewModel : ViewModelBase
 
     private ObservableRangeCollection<TadilatEntry> GetCollection(TadilatSubTab subTab)
         => subTab == TadilatSubTab.Aktif ? AktifEntries : BitenEntries;
+
+    private TadilatEntry? ResolveCurrentEntry(TadilatEntry? entry)
+        => entry is null ? null : GetCollection(entry.SubTab).FirstOrDefault(item => item.Id == entry.Id);
+
+    private static List<TadilatEntry> GetOrderedDistrictEntries(IEnumerable<TadilatEntry> entries, string district)
+        => entries.Where(item => item.District.Equals(district, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(item => item.DisplayOrder)
+            .ThenBy(item => item.UpdatedAt)
+            .ToList();
 
     private static int NextDisplayOrder(IEnumerable<TadilatEntry> entries, string district)
         => entries.Where(item => item.District.Equals(district, StringComparison.OrdinalIgnoreCase))

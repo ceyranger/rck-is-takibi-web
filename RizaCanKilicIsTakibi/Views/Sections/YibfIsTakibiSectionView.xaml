@@ -60,6 +60,13 @@
                                       Command="{Binding PlacementTarget.Tag.PasteCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                             <Separator/>
+                            <MenuItem Header="Yukarı Taşı"
+                                      Command="{Binding PlacementTarget.Tag.MoveIsTakibiEntryUpCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                            <MenuItem Header="Aşağı Taşı"
+                                      Command="{Binding PlacementTarget.Tag.MoveIsTakibiEntryDownCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                            <Separator/>
                             <MenuItem Header="Not Düzenle"
                                       Command="{Binding PlacementTarget.Tag.EditCellNoteCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
@@ -138,6 +145,14 @@
                         <TextBlock Text="Kaydedilmemiş değişiklik var" FontWeight="SemiBold" Foreground="#FF9B6E11"/>
                     </Border>
                     <Button Content="Ara" Command="{Binding YibfModule.OpenIsTakibiSearchCommand}" Style="{StaticResource GhostButton}"/>
+                    <Button Content="Yukarı"
+                            Command="{Binding YibfModule.MoveIsTakibiEntryUpCommand}"
+                            CommandParameter="{Binding YibfModule.SelectedIsTakibiEntry}"
+                            Style="{StaticResource GhostButton}"/>
+                    <Button Content="Aşağı"
+                            Command="{Binding YibfModule.MoveIsTakibiEntryDownCommand}"
+                            CommandParameter="{Binding YibfModule.SelectedIsTakibiEntry}"
+                            Style="{StaticResource GhostButton}"/>
                     <Button Content="Satır Ekle" Command="{Binding YibfModule.AddIsTakibiEntryCommand}"/>
                 </WrapPanel>
             </DockPanel>

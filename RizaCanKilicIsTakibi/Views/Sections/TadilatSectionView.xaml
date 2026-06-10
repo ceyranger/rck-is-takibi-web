@@ -120,6 +120,13 @@
                                 </MenuItem.Style>
                             </MenuItem>
                             <Separator/>
+                            <MenuItem Header="Yukarı Taşı"
+                                      Command="{Binding PlacementTarget.Tag.MoveEntryUpCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                            <MenuItem Header="Aşağı Taşı"
+                                      Command="{Binding PlacementTarget.Tag.MoveEntryDownCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                            <Separator/>
                             <MenuItem Header="BİTEN'E TAŞI"
                                       Command="{Binding PlacementTarget.Tag.MoveToBitenCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
@@ -419,6 +426,14 @@
                                             </Style>
                                         </Button.Style>
                                     </Button>
+                                    <Button Content="Yukarı"
+                                            Command="{Binding TadilatModule.MoveEntryUpCommand}"
+                                            CommandParameter="{Binding TadilatModule.SelectedEntry}"
+                                            Style="{StaticResource TadilatSecondBarButtonStyle}"/>
+                                    <Button Content="Aşağı"
+                                            Command="{Binding TadilatModule.MoveEntryDownCommand}"
+                                            CommandParameter="{Binding TadilatModule.SelectedEntry}"
+                                            Style="{StaticResource TadilatSecondBarButtonStyle}"/>
                                     <ItemsControl ItemsSource="{Binding TadilatModule.DistrictCounts}" Margin="0,0,6,0">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>

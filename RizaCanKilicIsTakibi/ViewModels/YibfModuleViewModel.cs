@@ -110,8 +110,12 @@ public sealed class YibfModuleViewModel : ViewModelBase
         EditAnaBilgiEventCommand = new AsyncRelayCommand(EditSelectedAnaBilgiEventAsync, () => SelectedAnaBilgiEvent is not null);
         DeleteAnaBilgiEventCommand = new AsyncRelayCommand(DeleteSelectedAnaBilgiEventAsync, () => SelectedAnaBilgiEvent is not null);
         DeleteAnaBilgiEntryCommand = new AsyncRelayCommand(DeleteSelectedAnaBilgiEntryAsync, () => SelectedAnaBilgiEntry is not null);
+        MoveAnaBilgiEntryUpCommand = new AsyncRelayCommand<YibfAnaBilgiEntry?>(entry => MoveAnaBilgiEntryAsync(entry, -1), CanMoveAnaBilgiEntryUp);
+        MoveAnaBilgiEntryDownCommand = new AsyncRelayCommand<YibfAnaBilgiEntry?>(entry => MoveAnaBilgiEntryAsync(entry, 1), CanMoveAnaBilgiEntryDown);
         AddIsTakibiEntryCommand = new AsyncRelayCommand(AddIsTakibiEntryAsync);
         DeleteIsTakibiEntryCommand = new AsyncRelayCommand(DeleteSelectedIsTakibiAsync, () => SelectedIsTakibiEntry is not null);
+        MoveIsTakibiEntryUpCommand = new AsyncRelayCommand<YibfIsTakibiEntry?>(entry => MoveIsTakibiEntryAsync(entry, -1), CanMoveIsTakibiEntryUp);
+        MoveIsTakibiEntryDownCommand = new AsyncRelayCommand<YibfIsTakibiEntry?>(entry => MoveIsTakibiEntryAsync(entry, 1), CanMoveIsTakibiEntryDown);
         OpenIsTakibiSearchCommand = new RelayCommand(OpenIsTakibiSearch);
         CloseIsTakibiSearchCommand = new RelayCommand(CloseIsTakibiSearch);
         SelectIsTakibiSearchResultCommand = new RelayCommand<SearchResultItem?>(SelectIsTakibiSearchResult);
@@ -191,6 +195,8 @@ public sealed class YibfModuleViewModel : ViewModelBase
                 EditAnaBilgiEntryCommand.NotifyCanExecuteChanged();
                 AddAnaBilgiEventCommand.NotifyCanExecuteChanged();
                 DeleteAnaBilgiEntryCommand.NotifyCanExecuteChanged();
+                MoveAnaBilgiEntryUpCommand.NotifyCanExecuteChanged();
+                MoveAnaBilgiEntryDownCommand.NotifyCanExecuteChanged();
                 DeleteActiveSelectionCommand.NotifyCanExecuteChanged();
             }
         }
@@ -220,6 +226,8 @@ public sealed class YibfModuleViewModel : ViewModelBase
             {
                 RefreshIsTakibiSelection();
                 DeleteIsTakibiEntryCommand.NotifyCanExecuteChanged();
+                MoveIsTakibiEntryUpCommand.NotifyCanExecuteChanged();
+                MoveIsTakibiEntryDownCommand.NotifyCanExecuteChanged();
                 DeleteActiveSelectionCommand.NotifyCanExecuteChanged();
             }
         }
@@ -244,8 +252,12 @@ public sealed class YibfModuleViewModel : ViewModelBase
     public AsyncRelayCommand EditAnaBilgiEventCommand { get; }
     public AsyncRelayCommand DeleteAnaBilgiEventCommand { get; }
     public AsyncRelayCommand DeleteAnaBilgiEntryCommand { get; }
+    public AsyncRelayCommand<YibfAnaBilgiEntry?> MoveAnaBilgiEntryUpCommand { get; }
+    public AsyncRelayCommand<YibfAnaBilgiEntry?> MoveAnaBilgiEntryDownCommand { get; }
     public AsyncRelayCommand AddIsTakibiEntryCommand { get; }
     public AsyncRelayCommand DeleteIsTakibiEntryCommand { get; }
+    public AsyncRelayCommand<YibfIsTakibiEntry?> MoveIsTakibiEntryUpCommand { get; }
+    public AsyncRelayCommand<YibfIsTakibiEntry?> MoveIsTakibiEntryDownCommand { get; }
     public RelayCommand OpenIsTakibiSearchCommand { get; }
     public RelayCommand CloseIsTakibiSearchCommand { get; }
     public RelayCommand<SearchResultItem?> SelectIsTakibiSearchResultCommand { get; }
@@ -638,6 +650,69 @@ public sealed class YibfModuleViewModel : ViewModelBase
         await Task.CompletedTask;
     }
 
+    private async Task MoveAnaBilgiEntryAsync(YibfAnaBilgiEntry? entry, int direction)
+    {
+        var target = ResolveAnaBilgiEntry(entry ?? SelectedAnaBilgiEntry);
+        if (target is null)
+        {
+            return;
+        }
+
+        var ordered = GetAnaBilgiVisualOrder();
+        var currentIndex = ordered.FindIndex(item => item.Id == target.Id);
+        var targetIndex = currentIndex + direction;
+        if (currentIndex < 0 || targetIndex < 0 || targetIndex >= ordered.Count)
+        {
+            return;
+        }
+
+        ExecuteUndoableMutation("YİBF ana bilgi sıralama değiştir", () =>
+        {
+            var currentTarget = ResolveAnaBilgiEntry(target);
+            if (currentTarget is null)
+            {
+                return;
+            }
+
+            var currentOrdered = GetAnaBilgiVisualOrder();
+            var sourceIndex = currentOrdered.FindIndex(item => item.Id == currentTarget.Id);
+            var destinationIndex = sourceIndex + direction;
+            if (sourceIndex < 0 || destinationIndex < 0 || destinationIndex >= currentOrdered.Count)
+            {
+                return;
+            }
+
+            (currentOrdered[sourceIndex], currentOrdered[destinationIndex]) = (currentOrdered[destinationIndex], currentOrdered[sourceIndex]);
+            ApplyAnaBilgiVisualOrder(currentOrdered);
+
+            SelectedAnaBilgiEntry = AnaBilgiEntries.FirstOrDefault(item => item.Id == currentTarget.Id);
+            HasUnsavedChanges = true;
+            RefreshAnaBilgiCollections();
+        });
+
+        await Task.CompletedTask;
+    }
+
+    private bool CanMoveAnaBilgiEntryUp(YibfAnaBilgiEntry? entry)
+        => CanMoveAnaBilgiEntry(entry ?? SelectedAnaBilgiEntry, -1);
+
+    private bool CanMoveAnaBilgiEntryDown(YibfAnaBilgiEntry? entry)
+        => CanMoveAnaBilgiEntry(entry ?? SelectedAnaBilgiEntry, 1);
+
+    private bool CanMoveAnaBilgiEntry(YibfAnaBilgiEntry? entry, int direction)
+    {
+        var target = ResolveAnaBilgiEntry(entry);
+        if (target is null)
+        {
+            return false;
+        }
+
+        var ordered = GetAnaBilgiVisualOrder();
+        var currentIndex = ordered.FindIndex(item => item.Id == target.Id);
+        var targetIndex = currentIndex + direction;
+        return currentIndex >= 0 && targetIndex >= 0 && targetIndex < ordered.Count;
+    }
+
     private async Task DeleteSelectedAnaBilgiEventAsync()
     {
         var target = SelectedAnaBilgiEvent;
@@ -736,6 +811,71 @@ public sealed class YibfModuleViewModel : ViewModelBase
         });
         _notificationService.ShowToast("YİBF iş takibi satırı silindi.", ToastType.Warning, TimeSpan.FromSeconds(2));
         await Task.CompletedTask;
+    }
+
+    private async Task MoveIsTakibiEntryAsync(YibfIsTakibiEntry? entry, int direction)
+    {
+        var target = ResolveIsTakibiEntry(entry ?? SelectedIsTakibiEntry);
+        if (target is null)
+        {
+            return;
+        }
+
+        var ordered = GetIsTakibiVisualOrder();
+        var currentIndex = ordered.FindIndex(item => item.Id == target.Id);
+        var targetIndex = currentIndex + direction;
+        if (currentIndex < 0 || targetIndex < 0 || targetIndex >= ordered.Count)
+        {
+            return;
+        }
+
+        ExecuteUndoableMutation("YİBF iş takibi sıralama değiştir", () =>
+        {
+            CloseAllEditors();
+
+            var currentTarget = ResolveIsTakibiEntry(target);
+            if (currentTarget is null)
+            {
+                return;
+            }
+
+            var currentOrdered = GetIsTakibiVisualOrder();
+            var sourceIndex = currentOrdered.FindIndex(item => item.Id == currentTarget.Id);
+            var destinationIndex = sourceIndex + direction;
+            if (sourceIndex < 0 || destinationIndex < 0 || destinationIndex >= currentOrdered.Count)
+            {
+                return;
+            }
+
+            (currentOrdered[sourceIndex], currentOrdered[destinationIndex]) = (currentOrdered[destinationIndex], currentOrdered[sourceIndex]);
+            ApplyIsTakibiVisualOrder(currentOrdered);
+
+            RefreshIsTakibiRows();
+            SelectedIsTakibiEntry = IsTakibiEntries.FirstOrDefault(item => item.Id == currentTarget.Id);
+            HasUnsavedChanges = true;
+        });
+
+        await Task.CompletedTask;
+    }
+
+    private bool CanMoveIsTakibiEntryUp(YibfIsTakibiEntry? entry)
+        => CanMoveIsTakibiEntry(entry ?? SelectedIsTakibiEntry, -1);
+
+    private bool CanMoveIsTakibiEntryDown(YibfIsTakibiEntry? entry)
+        => CanMoveIsTakibiEntry(entry ?? SelectedIsTakibiEntry, 1);
+
+    private bool CanMoveIsTakibiEntry(YibfIsTakibiEntry? entry, int direction)
+    {
+        var target = ResolveIsTakibiEntry(entry);
+        if (target is null)
+        {
+            return false;
+        }
+
+        var ordered = GetIsTakibiVisualOrder();
+        var currentIndex = ordered.FindIndex(item => item.Id == target.Id);
+        var targetIndex = currentIndex + direction;
+        return currentIndex >= 0 && targetIndex >= 0 && targetIndex < ordered.Count;
     }
 
     private async Task DeleteActiveSelectionAsync()
@@ -1085,6 +1225,9 @@ public sealed class YibfModuleViewModel : ViewModelBase
             RefreshVisibleEvents();
             RefreshAllJobSelection();
         }
+
+        MoveAnaBilgiEntryUpCommand.NotifyCanExecuteChanged();
+        MoveAnaBilgiEntryDownCommand.NotifyCanExecuteChanged();
     }
     private void RefreshVisibleEvents()
     {
@@ -1318,6 +1461,8 @@ public sealed class YibfModuleViewModel : ViewModelBase
 
         RefreshIsTakibiSearchResults();
         OnPropertyChanged(nameof(VisibleIsTakibiCount));
+        MoveIsTakibiEntryUpCommand.NotifyCanExecuteChanged();
+        MoveIsTakibiEntryDownCommand.NotifyCanExecuteChanged();
     }
 
     private void UpdateIsTakibiRow(YibfIsTakibiRow row, YibfIsTakibiEntry entry)
@@ -1451,6 +1596,22 @@ public sealed class YibfModuleViewModel : ViewModelBase
         AnaBilgiEntries.ReplaceRange(entries.OrderBy(item => item.DisplayOrder).Select(CloneAnaBilgiEntry));
     }
 
+    private YibfAnaBilgiEntry? ResolveAnaBilgiEntry(YibfAnaBilgiEntry? entry)
+        => entry is null ? null : AnaBilgiEntries.FirstOrDefault(item => item.Id == entry.Id);
+
+    private List<YibfAnaBilgiEntry> GetAnaBilgiVisualOrder()
+        => AnaBilgiEntries.OrderByDescending(item => item.DisplayOrder).ToList();
+
+    private static void ApplyAnaBilgiVisualOrder(IReadOnlyList<YibfAnaBilgiEntry> orderedEntries)
+    {
+        var now = DateTime.Now;
+        for (var index = 0; index < orderedEntries.Count; index++)
+        {
+            orderedEntries[index].DisplayOrder = orderedEntries.Count - 1 - index;
+            orderedEntries[index].UpdatedAt = now;
+        }
+    }
+
     private void ReplaceAnaBilgiEvents(IEnumerable<YibfAnaBilgiEvent> events)
     {
         AnaBilgiEvents.ReplaceRange(events.Where(evt => !IsEmptyAnaBilgiEvent(evt)).OrderBy(evt => evt.EntryId).ThenBy(evt => evt.DisplayOrder).Select(CloneAnaBilgiEvent));
@@ -1460,6 +1621,22 @@ public sealed class YibfModuleViewModel : ViewModelBase
     {
         IsTakibiEntries.ReplaceRange(entries.OrderBy(item => item.DisplayOrder).Select(CloneIsTakibiEntry));
         NormalizeIsTakibiOrder();
+    }
+
+    private YibfIsTakibiEntry? ResolveIsTakibiEntry(YibfIsTakibiEntry? entry)
+        => entry is null ? null : IsTakibiEntries.FirstOrDefault(item => item.Id == entry.Id);
+
+    private List<YibfIsTakibiEntry> GetIsTakibiVisualOrder()
+        => IsTakibiEntries.OrderBy(item => item.DisplayOrder).ToList();
+
+    private static void ApplyIsTakibiVisualOrder(IReadOnlyList<YibfIsTakibiEntry> orderedEntries)
+    {
+        var now = DateTime.Now;
+        for (var index = 0; index < orderedEntries.Count; index++)
+        {
+            orderedEntries[index].DisplayOrder = index;
+            orderedEntries[index].UpdatedAt = now;
+        }
     }
 
     private void ReplaceCellStates(IEnumerable<YibfCellState> states)
@@ -2003,9 +2180,6 @@ public sealed class YibfCellViewModel : ViewModelBase
         }
     }
 }
-
-
-
 
 
 

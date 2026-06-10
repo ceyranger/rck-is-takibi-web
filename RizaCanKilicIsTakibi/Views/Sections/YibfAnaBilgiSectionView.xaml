@@ -66,6 +66,14 @@
                         <Button Content="Yeni İş Ekle" Command="{Binding YibfModule.AddAnaBilgiEntryCommand}"/>
                         <Button Content="Düzenle" Command="{Binding YibfModule.EditAnaBilgiEntryCommand}" Style="{StaticResource GhostButton}"/>
                         <Button Content="Sil" Command="{Binding YibfModule.DeleteAnaBilgiEntryCommand}" Style="{StaticResource GhostButton}"/>
+                        <Button Content="Yukarı"
+                                Command="{Binding YibfModule.MoveAnaBilgiEntryUpCommand}"
+                                CommandParameter="{Binding YibfModule.SelectedAnaBilgiEntry}"
+                                Style="{StaticResource GhostButton}"/>
+                        <Button Content="Aşağı"
+                                Command="{Binding YibfModule.MoveAnaBilgiEntryDownCommand}"
+                                CommandParameter="{Binding YibfModule.SelectedAnaBilgiEntry}"
+                                Style="{StaticResource GhostButton}"/>
                     </WrapPanel>
                 </DockPanel>
                 <TextBox Grid.Row="1" Margin="0,12,0,12" Height="38" Text="{Binding YibfModule.SearchQuery, UpdateSourceTrigger=PropertyChanged}"/>
@@ -79,10 +87,21 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="{x:Type viewModels:YibfAnaBilgiListItemViewModel}">
                             <Border Style="{StaticResource YibfSelectableSurfaceStyle}"
+                                    Tag="{Binding DataContext.YibfModule, RelativeSource={RelativeSource AncestorType=Window}}"
                                     HorizontalAlignment="Stretch"
                                     Margin="0,0,12,8"
                                     behaviors:ClickCommandBehavior.Command="{Binding DataContext.YibfModule.SelectAnaBilgiEntryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                     behaviors:ClickCommandBehavior.CommandParameter="{Binding Entry}">
+                                <Border.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Yukarı Taşı"
+                                                  Command="{Binding PlacementTarget.Tag.MoveAnaBilgiEntryUpCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                  CommandParameter="{Binding PlacementTarget.DataContext.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                        <MenuItem Header="Aşağı Taşı"
+                                                  Command="{Binding PlacementTarget.Tag.MoveAnaBilgiEntryDownCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                  CommandParameter="{Binding PlacementTarget.DataContext.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                    </ContextMenu>
+                                </Border.ContextMenu>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>

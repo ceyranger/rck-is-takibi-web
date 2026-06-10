@@ -1,6 +1,23 @@
 # Todo
 
 ## Current Task
+- [x] Tadilat Takibi satırlarına aynı ilçe/sekme içinde yukarı-aşağı taşıma ekle.
+- [x] YİBF Ana Bilgi iş listesine yukarı-aşağı taşıma ekle.
+- [x] YİBF İş Takibi satırlarına yukarı-aşağı taşıma ekle.
+- [x] Sıralama davranışını undo/redo, persist/reload ve sınır senaryolarıyla test et.
+- [x] Testleri çalıştır, güvenli Release publish al ve Git commit oluştur.
+
+## Review Update
+- Tadilat Takibi ekranında seçili satır artık aynı ilçe ve aynı Aktif/Biten sekmesi içinde `Yukarı` / `Aşağı` komutlarıyla taşınabiliyor; ilçe sınırı geçilmiyor.
+- YİBF Ana Bilgi `Tüm İşler` listesine ve YİBF İş Takibi satırlarına aynı yukarı/aşağı sıralama komutları eklendi; mevcut `DisplayOrder`, undo/redo ve persist akışı korunuyor.
+- Tadilat, YİBF Ana Bilgi ve YİBF İş Takibi için sıra değişimi, undo/redo ve persist/reload regresyon testleri `ModuleGuardTests` içine eklendi.
+- `dotnet test RizaCanKilicIsTakibi.Tests\RizaCanKilicIsTakibi.Tests.csproj --filter "Tadilat|Yibf"` geçti: 34/34.
+- `dotnet test RizaCanKilicIsTakibi.sln` geçti: 125/125.
+- Release publish geçici klasöre alındı, uygulama çalışmadığı doğrulanınca canonical `RizaCanKilicIsTakibi\bin\Release\publish\RizaCanKilicIsTakibi.exe` güncellendi.
+- Canlı `Data\tasks.db` ve `Data\last-save.json` hash/size/timestamp değerleri publish öncesi ve sonrası aynı kaldı.
+- Gereksiz test/debug/RID build çıktıları temizlendi; repo içinde tek exe canonical publish exe olarak kaldı.
+
+## Current Task
 - [x] YİBF ana bilgi olay silme akışındaki stale timeline model referansını düzelt.
 - [x] İki olay ekleme/kaydetme ve ardışık silme/persist regresyonlarını testlerle kilitle.
 - [x] AGENTS.md ve PROJECT_RULES.md dosyalarını bu repo exe/publish/veri koruma kurallarına göre düzelt.

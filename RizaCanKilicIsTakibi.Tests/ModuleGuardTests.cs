@@ -270,6 +270,114 @@ public class ModuleGuardTests
         Assert.Empty(stored);
     }
 
+    [Fact]
+    public async Task Tadilat_Move_Entry_Up_Stays_Within_District_And_Persists_Order()
+    {
+        var databasePath = BuildDatabasePath();
+        var undoRedo = new UndoRedoService();
+        var module = new TadilatModuleViewModel(
+            new SqliteTadilatRepository(databasePath),
+            new TestTadilatImportService(),
+            new TestFileDialogService(),
+            new NotificationService(),
+            new CallbackConfirmationService(),
+            new TestTadilatCellNoteDialogService(),
+            undoRedo);
+
+        var otherDistrict = new TadilatEntry { Id = Guid.NewGuid(), District = "AYANCIK", JobName = "Başka ilçe", SubTab = TadilatSubTab.Aktif, DisplayOrder = 0, CreatedAt = DateTime.Now.AddMinutes(-3), UpdatedAt = DateTime.Now.AddMinutes(-3) };
+        var first = new TadilatEntry { Id = Guid.NewGuid(), District = "SİNOP", JobName = "İlk", SubTab = TadilatSubTab.Aktif, DisplayOrder = 0, CreatedAt = DateTime.Now.AddMinutes(-2), UpdatedAt = DateTime.Now.AddMinutes(-2) };
+        var second = new TadilatEntry { Id = Guid.NewGuid(), District = "SİNOP", JobName = "İkinci", SubTab = TadilatSubTab.Aktif, DisplayOrder = 1, CreatedAt = DateTime.Now.AddMinutes(-1), UpdatedAt = DateTime.Now.AddMinutes(-1) };
+        module.LoadFromBackup([otherDistrict, first, second], Array.Empty<TadilatCellState>(), markDirty: false);
+        module.SelectedEntry = module.AktifEntries.Single(item => item.Id == first.Id);
+
+        await module.MoveEntryUpCommand.ExecuteAsync(module.SelectedEntry);
+        Assert.Equal(["İlk", "İkinci"], module.AktifEntries.Where(item => item.District == "SİNOP").OrderBy(item => item.DisplayOrder).Select(item => item.JobName).ToArray());
+
+        module.SelectedEntry = module.AktifEntries.Single(item => item.Id == second.Id);
+        await module.MoveEntryUpCommand.ExecuteAsync(module.SelectedEntry);
+        Assert.Equal(["İkinci", "İlk"], module.AktifEntries.Where(item => item.District == "SİNOP").OrderBy(item => item.DisplayOrder).Select(item => item.JobName).ToArray());
+
+        undoRedo.Undo();
+        Assert.Equal(["İlk", "İkinci"], module.AktifEntries.Where(item => item.District == "SİNOP").OrderBy(item => item.DisplayOrder).Select(item => item.JobName).ToArray());
+
+        undoRedo.Redo();
+        await module.PersistAsync();
+
+        var stored = await new SqliteTadilatRepository(databasePath).GetAllAsync();
+        Assert.Equal(["İkinci", "İlk"], stored.Where(item => item.District == "SİNOP").OrderBy(item => item.DisplayOrder).Select(item => item.JobName).ToArray());
+        Assert.Equal("Başka ilçe", stored.Single(item => item.District == "AYANCIK").JobName);
+    }
+
+    [Fact]
+    public async Task Yibf_Move_AnaBilgi_Entry_Uses_Visible_Order_And_Persists()
+    {
+        var databasePath = BuildDatabasePath();
+        var undoRedo = new UndoRedoService();
+        var module = new YibfModuleViewModel(
+            new SqliteYibfRepository(databasePath),
+            new TestYibfImportService(),
+            new TestFileDialogService(),
+            new NotificationService(),
+            new CallbackConfirmationService(),
+            new TestTadilatCellNoteDialogService(),
+            new CallbackYibfAnaBilgiEventDialogService(),
+            new TestYibfAnaBilgiEntryDialogService(),
+            undoRedo);
+
+        var first = new YibfAnaBilgiEntry { Id = Guid.NewGuid(), AdaParsel = "1", YapiSahibi = "Alt", DisplayOrder = 0, CreatedAt = DateTime.Now.AddMinutes(-3), UpdatedAt = DateTime.Now.AddMinutes(-3) };
+        var second = new YibfAnaBilgiEntry { Id = Guid.NewGuid(), AdaParsel = "2", YapiSahibi = "Orta", DisplayOrder = 1, CreatedAt = DateTime.Now.AddMinutes(-2), UpdatedAt = DateTime.Now.AddMinutes(-2) };
+        var third = new YibfAnaBilgiEntry { Id = Guid.NewGuid(), AdaParsel = "3", YapiSahibi = "Üst", DisplayOrder = 2, CreatedAt = DateTime.Now.AddMinutes(-1), UpdatedAt = DateTime.Now.AddMinutes(-1) };
+        module.LoadFromBackup([first, second, third], Array.Empty<YibfAnaBilgiEvent>(), Array.Empty<YibfIsTakibiEntry>(), Array.Empty<YibfCellState>(), markDirty: false);
+        module.SelectedAnaBilgiEntry = module.AnaBilgiEntries.Single(item => item.Id == second.Id);
+
+        await module.MoveAnaBilgiEntryUpCommand.ExecuteAsync(module.SelectedAnaBilgiEntry);
+        Assert.Equal(["2", "3", "1"], module.TumIsler.Select(item => item.Entry.AdaParsel).ToArray());
+
+        undoRedo.Undo();
+        Assert.Equal(["3", "2", "1"], module.TumIsler.Select(item => item.Entry.AdaParsel).ToArray());
+
+        undoRedo.Redo();
+        await module.PersistAsync();
+
+        var stored = await new SqliteYibfRepository(databasePath).GetAnaBilgiEntriesAsync();
+        Assert.Equal(["2", "3", "1"], stored.OrderByDescending(item => item.DisplayOrder).Select(item => item.AdaParsel).ToArray());
+    }
+
+    [Fact]
+    public async Task Yibf_Move_IsTakibi_Entry_Uses_Row_Order_And_Persists()
+    {
+        var databasePath = BuildDatabasePath();
+        var undoRedo = new UndoRedoService();
+        var module = new YibfModuleViewModel(
+            new SqliteYibfRepository(databasePath),
+            new TestYibfImportService(),
+            new TestFileDialogService(),
+            new NotificationService(),
+            new CallbackConfirmationService(),
+            new TestTadilatCellNoteDialogService(),
+            new CallbackYibfAnaBilgiEventDialogService(),
+            new TestYibfAnaBilgiEntryDialogService(),
+            undoRedo);
+
+        var first = new YibfIsTakibiEntry { Id = Guid.NewGuid(), JobName = "İlk", DisplayOrder = 0, CreatedAt = DateTime.Now.AddMinutes(-3), UpdatedAt = DateTime.Now.AddMinutes(-3) };
+        var second = new YibfIsTakibiEntry { Id = Guid.NewGuid(), JobName = "İkinci", DisplayOrder = 1, CreatedAt = DateTime.Now.AddMinutes(-2), UpdatedAt = DateTime.Now.AddMinutes(-2) };
+        var third = new YibfIsTakibiEntry { Id = Guid.NewGuid(), JobName = "Üçüncü", DisplayOrder = 2, CreatedAt = DateTime.Now.AddMinutes(-1), UpdatedAt = DateTime.Now.AddMinutes(-1) };
+        module.LoadFromBackup(Array.Empty<YibfAnaBilgiEntry>(), Array.Empty<YibfAnaBilgiEvent>(), [first, second, third], Array.Empty<YibfCellState>(), markDirty: false);
+        module.SelectedIsTakibiEntry = module.IsTakibiEntries.Single(item => item.Id == second.Id);
+
+        await module.MoveIsTakibiEntryDownCommand.ExecuteAsync(module.SelectedIsTakibiEntry);
+        Assert.Equal(["İlk", "Üçüncü", "İkinci"], module.IsTakibiRows.Select(item => item.Entry.JobName).ToArray());
+
+        undoRedo.Undo();
+        Assert.Equal(["İlk", "İkinci", "Üçüncü"], module.IsTakibiRows.Select(item => item.Entry.JobName).ToArray());
+
+        undoRedo.Redo();
+        await module.PersistAsync();
+
+        var stored = await new SqliteYibfRepository(databasePath).GetIsTakibiEntriesAsync();
+        Assert.Equal(["İlk", "Üçüncü", "İkinci"], stored.OrderBy(item => item.DisplayOrder).Select(item => item.JobName).ToArray());
+    }
+
     private static string BuildDatabasePath()
         => Path.Combine(Path.GetTempPath(), "RizaCanKilicIsTakibiTests", $"{Guid.NewGuid():N}.db");
 
