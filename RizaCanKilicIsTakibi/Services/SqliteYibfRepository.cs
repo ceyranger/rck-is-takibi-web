@@ -24,6 +24,7 @@ public sealed class SqliteYibfRepository : IYibfRepository
         await using var command = connection.CreateCommand();
         command.CommandText = """
 SELECT Id, AdaParsel, YibfNo, Idare, YapiSahibi, Muteahhit, DisplayOrder, CreatedAt, UpdatedAt
+       , WorkGroupId, WorkIdentityId
 FROM YibfAnaBilgiEntries
 WHERE IsDeleted = 0
 ORDER BY DisplayOrder, UpdatedAt DESC;
@@ -42,7 +43,9 @@ ORDER BY DisplayOrder, UpdatedAt DESC;
                 Muteahhit = reader.IsDBNull(5) ? string.Empty : reader.GetString(5),
                 DisplayOrder = reader.GetInt32(6),
                 CreatedAt = DateTime.Parse(reader.GetString(7)),
-                UpdatedAt = DateTime.Parse(reader.GetString(8))
+                UpdatedAt = DateTime.Parse(reader.GetString(8)),
+                WorkGroupId = ReadGuidOrDefault(reader, 9),
+                WorkIdentityId = ReadGuidOrDefault(reader, 10)
             });
         }
 
@@ -91,7 +94,8 @@ ORDER BY EntryId, DisplayOrder;
 SELECT Id, JobName, MuellifBilgileriGeldiMi, DenetciAtamalariYapildiMi, TumProjelerinDijitaliVarMi,
        EvraklarTamMi, YibfSozlesmeHazirlandiMi, DekontAlindiMi, RuhsatBasvurusuYapildiMi,
        RuhsatNushasiAlindiMi, IsyeriTeslimTutangiHazirlandiMi, IsgYazisiHazirlandiMi,
-       SaglikGuvenlikPlaniGeldiMi, TemelTopraklamaTutanagiHazirlandiMi, DisplayOrder, CreatedAt, UpdatedAt
+       SaglikGuvenlikPlaniGeldiMi, TemelTopraklamaTutanagiHazirlandiMi, DisplayOrder, CreatedAt, UpdatedAt,
+       WorkGroupId, WorkIdentityId, WorkVariantLabel
 FROM YibfIsTakibiEntries
 WHERE IsDeleted = 0
 ORDER BY DisplayOrder, UpdatedAt DESC;
@@ -118,7 +122,10 @@ ORDER BY DisplayOrder, UpdatedAt DESC;
                 TemelTopraklamaTutanagiHazirlandiMi = reader.IsDBNull(13) ? string.Empty : reader.GetString(13),
                 DisplayOrder = reader.GetInt32(14),
                 CreatedAt = DateTime.Parse(reader.GetString(15)),
-                UpdatedAt = DateTime.Parse(reader.GetString(16))
+                UpdatedAt = DateTime.Parse(reader.GetString(16)),
+                WorkGroupId = ReadGuidOrDefault(reader, 17),
+                WorkIdentityId = ReadGuidOrDefault(reader, 18),
+                WorkVariantLabel = reader.IsDBNull(19) ? string.Empty : reader.GetString(19)
             });
         }
 
@@ -193,6 +200,8 @@ ORDER BY EntryId, ColumnKey;
             })
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
+        YibfWorkIdentityService.NormalizeIdentities(entries, rows);
+
         var currentIsTakibiIds = rows
             .Select(item =>
             {
@@ -261,9 +270,11 @@ ORDER BY EntryId, ColumnKey;
                 await using var insert = connection.CreateCommand();
                 insert.Transaction = transaction;
                 insert.CommandText = @"
-INSERT INTO YibfAnaBilgiEntries (Id, AdaParsel, YibfNo, Idare, YapiSahibi, Muteahhit, DisplayOrder, CreatedAt, UpdatedAt)
-VALUES ($id, $adaParsel, $yibfNo, $idare, $yapiSahibi, $muteahhit, $displayOrder, $createdAt, $updatedAt)
+INSERT INTO YibfAnaBilgiEntries (Id, WorkGroupId, WorkIdentityId, AdaParsel, YibfNo, Idare, YapiSahibi, Muteahhit, DisplayOrder, CreatedAt, UpdatedAt)
+VALUES ($id, $workGroupId, $workIdentityId, $adaParsel, $yibfNo, $idare, $yapiSahibi, $muteahhit, $displayOrder, $createdAt, $updatedAt)
 ON CONFLICT(Id) DO UPDATE SET
+    WorkGroupId = excluded.WorkGroupId,
+    WorkIdentityId = excluded.WorkIdentityId,
     AdaParsel = excluded.AdaParsel,
     YibfNo = excluded.YibfNo,
     Idare = excluded.Idare,
@@ -275,6 +286,8 @@ ON CONFLICT(Id) DO UPDATE SET
     IsDeleted = 0;
 ";
                 insert.Parameters.AddWithValue("$id", entry.Id.ToString());
+                insert.Parameters.AddWithValue("$workGroupId", entry.WorkGroupId.ToString());
+                insert.Parameters.AddWithValue("$workIdentityId", entry.WorkIdentityId.ToString());
                 insert.Parameters.AddWithValue("$adaParsel", entry.AdaParsel);
                 insert.Parameters.AddWithValue("$yibfNo", entry.YibfNo);
                 insert.Parameters.AddWithValue("$idare", entry.Idare);
@@ -343,11 +356,16 @@ INSERT INTO YibfIsTakibiEntries (
     Id, JobName, MuellifBilgileriGeldiMi, DenetciAtamalariYapildiMi, TumProjelerinDijitaliVarMi,
     EvraklarTamMi, YibfSozlesmeHazirlandiMi, DekontAlindiMi, RuhsatBasvurusuYapildiMi,
     RuhsatNushasiAlindiMi, IsyeriTeslimTutangiHazirlandiMi, IsgYazisiHazirlandiMi,
-    SaglikGuvenlikPlaniGeldiMi, TemelTopraklamaTutanagiHazirlandiMi, DisplayOrder, CreatedAt, UpdatedAt)
+    SaglikGuvenlikPlaniGeldiMi, TemelTopraklamaTutanagiHazirlandiMi, DisplayOrder, CreatedAt, UpdatedAt,
+    WorkGroupId, WorkIdentityId, WorkVariantLabel)
 VALUES (
     $id, $jobName, $muellif, $denetci, $tumDijital, $evrak, $sozlesme, $dekont, $ruhsatBasvuru,
-    $ruhsatNusha, $isyeriTeslim, $isg, $saglik, $topraklama, $displayOrder, $createdAt, $updatedAt)
+    $ruhsatNusha, $isyeriTeslim, $isg, $saglik, $topraklama, $displayOrder, $createdAt, $updatedAt,
+    $workGroupId, $workIdentityId, $workVariantLabel)
 ON CONFLICT(Id) DO UPDATE SET
+    WorkGroupId = excluded.WorkGroupId,
+    WorkIdentityId = excluded.WorkIdentityId,
+    WorkVariantLabel = excluded.WorkVariantLabel,
     JobName = excluded.JobName,
     MuellifBilgileriGeldiMi = excluded.MuellifBilgileriGeldiMi,
     DenetciAtamalariYapildiMi = excluded.DenetciAtamalariYapildiMi,
@@ -367,6 +385,9 @@ ON CONFLICT(Id) DO UPDATE SET
     IsDeleted = 0;
 ";
                 insert.Parameters.AddWithValue("$id", entry.Id.ToString());
+                insert.Parameters.AddWithValue("$workGroupId", entry.WorkGroupId.ToString());
+                insert.Parameters.AddWithValue("$workIdentityId", entry.WorkIdentityId.ToString());
+                insert.Parameters.AddWithValue("$workVariantLabel", entry.WorkVariantLabel);
                 insert.Parameters.AddWithValue("$jobName", entry.JobName);
                 insert.Parameters.AddWithValue("$muellif", entry.MuellifBilgileriGeldiMi);
                 insert.Parameters.AddWithValue("$denetci", entry.DenetciAtamalariYapildiMi);
@@ -481,6 +502,16 @@ ON CONFLICT(EntryId, ColumnKey) DO UPDATE SET
     private static string BuildCellStateKey(Guid entryId, string columnKey)
         => $"{entryId:N}|{columnKey.Trim().ToUpperInvariant()}";
 
+    private static Guid ReadGuidOrDefault(SqliteDataReader reader, int ordinal)
+    {
+        if (reader.IsDBNull(ordinal))
+        {
+            return Guid.Empty;
+        }
+
+        return Guid.TryParse(reader.GetString(ordinal), out var value) ? value : Guid.Empty;
+    }
+
     public async Task DeleteIsTakibiAsync(Guid id, CancellationToken cancellationToken = default)
     {
         await using var connection = await SqliteConnectionSettings.OpenAsync(_connectionString, cancellationToken);
@@ -501,11 +532,17 @@ ON CONFLICT(EntryId, ColumnKey) DO UPDATE SET
         }
 
         using var connection = SqliteConnectionSettings.Open(_connectionString);
+        if (NeedsWorkIdentityMigrationBackup(connection))
+        {
+            CreateWorkIdentityMigrationBackup(databasePath);
+        }
 
         using var command = connection.CreateCommand();
         command.CommandText = """
 CREATE TABLE IF NOT EXISTS YibfAnaBilgiEntries (
     Id TEXT PRIMARY KEY,
+    WorkGroupId TEXT NOT NULL DEFAULT '',
+    WorkIdentityId TEXT NOT NULL DEFAULT '',
     AdaParsel TEXT NOT NULL DEFAULT '',
     YibfNo TEXT NOT NULL DEFAULT '',
     Idare TEXT NOT NULL DEFAULT '',
@@ -528,6 +565,9 @@ CREATE TABLE IF NOT EXISTS YibfAnaBilgiEvents (
 
 CREATE TABLE IF NOT EXISTS YibfIsTakibiEntries (
     Id TEXT PRIMARY KEY,
+    WorkGroupId TEXT NOT NULL DEFAULT '',
+    WorkIdentityId TEXT NOT NULL DEFAULT '',
+    WorkVariantLabel TEXT NOT NULL DEFAULT '',
     JobName TEXT NOT NULL DEFAULT '',
     MuellifBilgileriGeldiMi TEXT NOT NULL DEFAULT '',
     DenetciAtamalariYapildiMi TEXT NOT NULL DEFAULT '',
@@ -572,6 +612,100 @@ WHERE NOT EXISTS (
 
         SqliteConnectionSettings.EnsureColumnExists(connection, "YibfAnaBilgiEntries", "IsDeleted", "INTEGER NOT NULL DEFAULT 0");
         SqliteConnectionSettings.EnsureColumnExists(connection, "YibfIsTakibiEntries", "IsDeleted", "INTEGER NOT NULL DEFAULT 0");
+        SqliteConnectionSettings.EnsureColumnExists(connection, "YibfAnaBilgiEntries", "WorkGroupId", "TEXT NOT NULL DEFAULT ''");
+        SqliteConnectionSettings.EnsureColumnExists(connection, "YibfAnaBilgiEntries", "WorkIdentityId", "TEXT NOT NULL DEFAULT ''");
+        SqliteConnectionSettings.EnsureColumnExists(connection, "YibfIsTakibiEntries", "WorkGroupId", "TEXT NOT NULL DEFAULT ''");
+        SqliteConnectionSettings.EnsureColumnExists(connection, "YibfIsTakibiEntries", "WorkIdentityId", "TEXT NOT NULL DEFAULT ''");
+        SqliteConnectionSettings.EnsureColumnExists(connection, "YibfIsTakibiEntries", "WorkVariantLabel", "TEXT NOT NULL DEFAULT ''");
+        BackfillWorkIdentityColumns(connection);
+    }
+
+    private static bool NeedsWorkIdentityMigrationBackup(SqliteConnection connection)
+    {
+        return TableExists(connection, "YibfAnaBilgiEntries") && (!ColumnExists(connection, "YibfAnaBilgiEntries", "WorkGroupId") || !ColumnExists(connection, "YibfAnaBilgiEntries", "WorkIdentityId"))
+            || TableExists(connection, "YibfIsTakibiEntries") && (!ColumnExists(connection, "YibfIsTakibiEntries", "WorkGroupId") || !ColumnExists(connection, "YibfIsTakibiEntries", "WorkIdentityId") || !ColumnExists(connection, "YibfIsTakibiEntries", "WorkVariantLabel"));
+    }
+
+    private static bool TableExists(SqliteConnection connection, string tableName)
+    {
+        using var command = connection.CreateCommand();
+        command.CommandText = "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = $tableName LIMIT 1;";
+        command.Parameters.AddWithValue("$tableName", tableName);
+        return command.ExecuteScalar() is not null;
+    }
+
+    private static bool ColumnExists(SqliteConnection connection, string tableName, string columnName)
+    {
+        using var command = connection.CreateCommand();
+        command.CommandText = $"PRAGMA table_info({tableName});";
+        using var reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+            if (string.Equals(reader.GetString(1), columnName, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static void CreateWorkIdentityMigrationBackup(string databasePath)
+    {
+        if (!File.Exists(databasePath))
+        {
+            return;
+        }
+
+        var dataDirectory = Path.GetDirectoryName(databasePath);
+        if (string.IsNullOrWhiteSpace(dataDirectory))
+        {
+            return;
+        }
+
+        var parent = Directory.GetParent(dataDirectory);
+        var backupRoot = string.Equals(Path.GetFileName(dataDirectory), "Data", StringComparison.OrdinalIgnoreCase) && parent is not null
+            ? Path.Combine(parent.FullName, "Backup")
+            : Path.Combine(dataDirectory, "Backup");
+        var backupDirectory = Path.Combine(backupRoot, $"schema-migration-yibf-work-id-{DateTime.Now:yyyyMMdd-HHmmss}");
+        Directory.CreateDirectory(backupDirectory);
+
+        foreach (var sourcePath in new[] { databasePath, databasePath + "-wal", databasePath + "-shm", Path.Combine(dataDirectory, "last-save.json") })
+        {
+            if (!File.Exists(sourcePath))
+            {
+                continue;
+            }
+
+            File.Copy(sourcePath, Path.Combine(backupDirectory, Path.GetFileName(sourcePath)), overwrite: true);
+        }
+    }
+
+    private static void BackfillWorkIdentityColumns(SqliteConnection connection)
+    {
+        using var command = connection.CreateCommand();
+        command.CommandText = """
+UPDATE YibfAnaBilgiEntries
+SET WorkGroupId = Id
+WHERE WorkGroupId IS NULL OR WorkGroupId = '';
+
+UPDATE YibfAnaBilgiEntries
+SET WorkIdentityId = Id
+WHERE WorkIdentityId IS NULL OR WorkIdentityId = '';
+
+UPDATE YibfIsTakibiEntries
+SET WorkGroupId = Id
+WHERE WorkGroupId IS NULL OR WorkGroupId = '';
+
+UPDATE YibfIsTakibiEntries
+SET WorkIdentityId = Id
+WHERE WorkIdentityId IS NULL OR WorkIdentityId = '';
+
+UPDATE YibfIsTakibiEntries
+SET WorkVariantLabel = ''
+WHERE WorkVariantLabel IS NULL;
+""";
+        command.ExecuteNonQuery();
     }
 }
 

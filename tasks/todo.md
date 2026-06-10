@@ -1,6 +1,24 @@
 # Todo
 
 ## Current Task
+- [x] YİBF Ana Bilgi / YİBF İş Takibi için ortak `WorkGroupId` ve `WorkIdentityId` modelini ekle.
+- [x] SQLite migration, backup/restore DTO ve eski veri kimlik doldurma akışını canlı veriyi koruyacak şekilde uygula.
+- [x] YİBF ViewModel yükleme/düzenleme/kaydetme akışında iş kimliği normalize işlemini çalıştır.
+- [x] `TÜM EKSİKLER` eşleştirmesini mümkün olduğunda yeni iş kimliği alanlarını kullanacak şekilde güncelle.
+- [x] Hedefli/tam testleri çalıştır, güvenli Release publish al ve Git commit oluştur.
+
+## Review Update
+- YİBF Ana Bilgi ve YİBF İş Takibi kayıtlarına `WorkGroupId` / `WorkIdentityId` eklendi; exact ana iş satırları aynı kimliği, istinat/blok gibi suffix'li satırlar aynı grup içinde ayrı kimliği alıyor.
+- SQLite migration eski şemalara kolon ekliyor, boş kimlikleri mevcut satır `Id` değerleriyle dolduruyor ve eski şema tespitinde pre-migration yedeği oluşturuyor.
+- Backup/restore, undo/redo snapshot ve kaydetme akışları yeni kimlik alanlarını koruyor.
+- `TÜM EKSİKLER` YİBF İş Takibi kayıtlarını önce `WorkGroupId` ile bağlıyor, fallback olarak eski güvenli metin eşleştirmesini kullanıyor; satır bağlamında `İş Kimliği` etiketi gösteriliyor.
+- `dotnet test RizaCanKilicIsTakibi.Tests\RizaCanKilicIsTakibi.Tests.csproj --filter "Yibf|TumEksikler"` geçti: 39/39.
+- `dotnet test RizaCanKilicIsTakibi.sln` geçti: 142/142.
+- Release publish geçici klasöre alındı, uygulama çalışmadığı doğrulanınca canonical `RizaCanKilicIsTakibi\bin\Release\publish\RizaCanKilicIsTakibi.exe` güncellendi.
+- Canlı `Data\tasks.db` ve `Data\last-save.json` hash/size/timestamp değerleri publish öncesi ve sonrası aynı kaldı.
+- Gereksiz test/debug/RID build çıktıları ve geçici publish klasörü temizlendi; repo içinde tek exe canonical publish exe olarak kaldı.
+
+## Current Task
 - [x] Tadilat Takibi scroll kasmasının kök nedenini incele.
 - [x] İç içe ilçe/satır listelerini tek sanallaştırılmış satır listesine çevir.
 - [x] İlçe etiketi, boş ilçe için görev ekleme ve mevcut hücre düzenleme davranışını koru.

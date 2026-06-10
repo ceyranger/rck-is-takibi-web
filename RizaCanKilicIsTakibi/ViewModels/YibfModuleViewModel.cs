@@ -290,6 +290,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
             ReplaceAnaBilgiEvents(await _repository.GetAnaBilgiEventsAsync());
             ReplaceIsTakibiEntries(await _repository.GetIsTakibiEntriesAsync());
             ReplaceCellStates(await _repository.GetCellStatesAsync());
+            NormalizeWorkIdentities();
             RefreshAnaBilgiCollections();
             RefreshIsTakibiRows();
             HasUnsavedChanges = false;
@@ -324,6 +325,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
         ReplaceAnaBilgiEvents((anaBilgiEvents ?? Array.Empty<YibfAnaBilgiEvent>()).Select(CloneAnaBilgiEvent));
         ReplaceIsTakibiEntries((isTakibiEntries ?? Array.Empty<YibfIsTakibiEntry>()).Select(CloneIsTakibiEntry));
         ReplaceCellStates((cellStates ?? Array.Empty<YibfCellState>()).Select(CloneCellState));
+        NormalizeWorkIdentities();
         RefreshAnaBilgiCollections();
         RefreshIsTakibiRows();
         HasUnsavedChanges = markDirty;
@@ -333,6 +335,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
     {
         try
         {
+            NormalizeWorkIdentities();
             await _repository.SaveManyAsync(GetAnaBilgiEntriesSnapshot(), GetAnaBilgiEventsSnapshot(), GetIsTakibiEntriesSnapshot(), GetCellStatesSnapshot());
             HasUnsavedChanges = false;
         }
@@ -497,8 +500,11 @@ public sealed class YibfModuleViewModel : ViewModelBase
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
             };
+            entry.WorkGroupId = entry.Id;
+            entry.WorkIdentityId = entry.Id;
 
             AnaBilgiEntries.Add(entry);
+            NormalizeWorkIdentities();
             HasUnsavedChanges = true;
             RefreshAnaBilgiCollections();
             SelectedAnaBilgiEntry = entry;
@@ -551,6 +557,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
             target.Muteahhit = result.Muteahhit;
             target.UpdatedAt = DateTime.Now;
 
+            NormalizeWorkIdentities();
             HasUnsavedChanges = true;
             RefreshAnaBilgiCollections();
             RefreshVisibleEvents();
@@ -769,8 +776,11 @@ public sealed class YibfModuleViewModel : ViewModelBase
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
             };
+            entry.WorkGroupId = entry.Id;
+            entry.WorkIdentityId = entry.Id;
 
             IsTakibiEntries.Add(entry);
+            NormalizeWorkIdentities();
             NormalizeIsTakibiOrder();
             RefreshIsTakibiRows();
             SelectedIsTakibiEntry = entry;
@@ -944,6 +954,11 @@ public sealed class YibfModuleViewModel : ViewModelBase
         ExecuteUndoableMutation("YİBF hücre düzenle", () =>
         {
             cell.Row.SetCellValue(cell.ColumnKey, newValue);
+            if (cell.ColumnKey == YibfIsTakibiColumnKeys.JobName)
+            {
+                NormalizeWorkIdentities();
+            }
+
             cell.Text = newValue;
             cell.IsEditing = false;
             cell.Row.Entry.UpdatedAt = DateTime.Now;
@@ -1026,6 +1041,11 @@ public sealed class YibfModuleViewModel : ViewModelBase
         ExecuteUndoableMutation("YİBF hücre yapıştır", () =>
         {
             cell.Row.SetCellValue(cell.ColumnKey, normalizedText);
+            if (cell.ColumnKey == YibfIsTakibiColumnKeys.JobName)
+            {
+                NormalizeWorkIdentities();
+            }
+
             cell.Text = normalizedText;
             cell.DraftText = normalizedText;
             var state = GetOrCreateCellState(cell.Row.Entry.Id, cell.ColumnKey);
@@ -1690,6 +1710,9 @@ public sealed class YibfModuleViewModel : ViewModelBase
         }
     }
 
+    private bool NormalizeWorkIdentities()
+        => YibfWorkIdentityService.NormalizeIdentities(AnaBilgiEntries.ToList(), IsTakibiEntries.ToList());
+
     private void SortBekleyenItems()
     {
         var ordered = BekleyenIsler
@@ -1761,6 +1784,8 @@ public sealed class YibfModuleViewModel : ViewModelBase
         return new YibfAnaBilgiEntry
         {
             Id = entry.Id,
+            WorkGroupId = entry.WorkGroupId,
+            WorkIdentityId = entry.WorkIdentityId,
             AdaParsel = entry.AdaParsel,
             YibfNo = entry.YibfNo,
             Idare = entry.Idare,
@@ -1791,6 +1816,9 @@ public sealed class YibfModuleViewModel : ViewModelBase
         return new YibfIsTakibiEntry
         {
             Id = entry.Id,
+            WorkGroupId = entry.WorkGroupId,
+            WorkIdentityId = entry.WorkIdentityId,
+            WorkVariantLabel = entry.WorkVariantLabel,
             JobName = entry.JobName,
             MuellifBilgileriGeldiMi = entry.MuellifBilgileriGeldiMi,
             DenetciAtamalariYapildiMi = entry.DenetciAtamalariYapildiMi,
@@ -2180,9 +2208,6 @@ public sealed class YibfCellViewModel : ViewModelBase
         }
     }
 }
-
-
-
 
 
 

@@ -577,6 +577,8 @@ public sealed class BackupService : IBackupService
         return new BackupYibfAnaBilgiEntryDto
         {
             Id = item.Id,
+            WorkGroupId = item.WorkGroupId,
+            WorkIdentityId = item.WorkIdentityId,
             AdaParsel = item.AdaParsel,
             YibfNo = item.YibfNo,
             Idare = item.Idare,
@@ -593,6 +595,8 @@ public sealed class BackupService : IBackupService
         return new YibfAnaBilgiEntry
         {
             Id = dto.Id,
+            WorkGroupId = dto.WorkGroupId,
+            WorkIdentityId = dto.WorkIdentityId,
             AdaParsel = dto.AdaParsel,
             YibfNo = dto.YibfNo,
             Idare = dto.Idare,
@@ -637,6 +641,9 @@ public sealed class BackupService : IBackupService
         return new BackupYibfIsTakibiEntryDto
         {
             Id = item.Id,
+            WorkGroupId = item.WorkGroupId,
+            WorkIdentityId = item.WorkIdentityId,
+            WorkVariantLabel = item.WorkVariantLabel,
             JobName = item.JobName,
             MuellifBilgileriGeldiMi = item.MuellifBilgileriGeldiMi,
             DenetciAtamalariYapildiMi = item.DenetciAtamalariYapildiMi,
@@ -661,6 +668,9 @@ public sealed class BackupService : IBackupService
         return new YibfIsTakibiEntry
         {
             Id = dto.Id,
+            WorkGroupId = dto.WorkGroupId,
+            WorkIdentityId = dto.WorkIdentityId,
+            WorkVariantLabel = dto.WorkVariantLabel,
             JobName = dto.JobName,
             MuellifBilgileriGeldiMi = dto.MuellifBilgileriGeldiMi,
             DenetciAtamalariYapildiMi = dto.DenetciAtamalariYapildiMi,
@@ -833,6 +843,8 @@ public sealed class BackupService : IBackupService
     private sealed class BackupYibfAnaBilgiEntryDto
     {
         public Guid Id { get; set; }
+        public Guid WorkGroupId { get; set; }
+        public Guid WorkIdentityId { get; set; }
         public string AdaParsel { get; set; } = string.Empty;
         public string YibfNo { get; set; } = string.Empty;
         public string Idare { get; set; } = string.Empty;
@@ -857,6 +869,9 @@ public sealed class BackupService : IBackupService
     private sealed class BackupYibfIsTakibiEntryDto
     {
         public Guid Id { get; set; }
+        public Guid WorkGroupId { get; set; }
+        public Guid WorkIdentityId { get; set; }
+        public string WorkVariantLabel { get; set; } = string.Empty;
         public string JobName { get; set; } = string.Empty;
         public string MuellifBilgileriGeldiMi { get; set; } = string.Empty;
         public string DenetciAtamalariYapildiMi { get; set; } = string.Empty;

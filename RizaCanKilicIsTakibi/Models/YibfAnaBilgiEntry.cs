@@ -5,6 +5,8 @@ namespace RizaCanKilicIsTakibi.Models;
 public sealed class YibfAnaBilgiEntry : ObservableObject
 {
     private Guid _id = Guid.NewGuid();
+    private Guid _workGroupId;
+    private Guid _workIdentityId;
     private string _adaParsel = string.Empty;
     private string _yibfNo = string.Empty;
     private string _idare = string.Empty;
@@ -15,6 +17,8 @@ public sealed class YibfAnaBilgiEntry : ObservableObject
     private DateTime _updatedAt = DateTime.Now;
 
     public Guid Id { get => _id; set => SetProperty(ref _id, value); }
+    public Guid WorkGroupId { get => _workGroupId; set => SetProperty(ref _workGroupId, value); }
+    public Guid WorkIdentityId { get => _workIdentityId; set => SetProperty(ref _workIdentityId, value); }
     public string AdaParsel { get => _adaParsel; set => SetProperty(ref _adaParsel, value); }
     public string YibfNo { get => _yibfNo; set => SetProperty(ref _yibfNo, value); }
     public string Idare { get => _idare; set => SetProperty(ref _idare, value); }

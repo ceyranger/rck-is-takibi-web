@@ -170,6 +170,29 @@ public sealed class TumEksiklerViewModelTests
     }
 
     [Fact]
+    public void RefreshFrom_UsesWorkGroupId_ForExactAndVariantYibfIsTakibiRows()
+    {
+        var entry = CreateAnaBilgiEntry(adaParsel: "725-4", yapiSahibi: "CEMALETTİN ERSOY", yibfNo: string.Empty);
+        var exact = new YibfIsTakibiEntry
+        {
+            Id = Guid.NewGuid(),
+            JobName = "725-4 CEMALETTİN ERSOY"
+        };
+        var variant = new YibfIsTakibiEntry
+        {
+            Id = Guid.NewGuid(),
+            JobName = "725-4 CEMALETTİN ERSOY İSTİNAT"
+        };
+
+        var vm = CreateViewModel([entry], isTakibiEntries: [exact, variant]);
+
+        var group = Assert.Single(vm.Groups);
+        Assert.Equal(entry.Id, group.EntryId);
+        Assert.Contains(group.Items, item => item.SourceContext.Contains("İş Kimliği: Ana İş", StringComparison.Ordinal));
+        Assert.Contains(group.Items, item => item.SourceContext.Contains("İş Kimliği: İSTİNAT", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void RefreshFrom_SortsCriticalGroupsBeforeWarningsAndBlanks()
     {
         var criticalEntry = CreateAnaBilgiEntry(adaParsel: "1/1", yapiSahibi: "Kritik", yibfNo: "11111");

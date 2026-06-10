@@ -67,6 +67,8 @@ public class BackupServiceTests
                     Muteahhit = "SEKVAN"
                 }
             };
+            yibfAnaBilgiEntries[0].WorkGroupId = yibfAnaBilgiEntries[0].Id;
+            yibfAnaBilgiEntries[0].WorkIdentityId = yibfAnaBilgiEntries[0].Id;
             var yibfAnaBilgiEvents = new List<YibfAnaBilgiEvent>
             {
                 new()
@@ -83,6 +85,8 @@ public class BackupServiceTests
             {
                 new()
                 {
+                    WorkGroupId = yibfAnaBilgiEntries[0].WorkGroupId,
+                    WorkIdentityId = yibfAnaBilgiEntries[0].WorkIdentityId,
                     JobName = "235-1 ORSA ENERJİ",
                     MuellifBilgileriGeldiMi = "EVET"
                 }
@@ -125,6 +129,8 @@ public class BackupServiceTests
             Assert.Single(restored.YibfIsTakibiEntries);
             Assert.Single(restored.YibfCellStates);
             Assert.Equal("235-1", restored.YibfAnaBilgiEntries[0].AdaParsel);
+            Assert.Equal(yibfAnaBilgiEntries[0].WorkGroupId, restored.YibfAnaBilgiEntries[0].WorkGroupId);
+            Assert.Equal(yibfAnaBilgiEntries[0].WorkIdentityId, restored.YibfIsTakibiEntries[0].WorkIdentityId);
             Assert.Equal("Ana bilgi notu", restored.YibfAnaBilgiEvents[0].NoteText);
             Assert.Equal("Dijital eksik", restored.YibfCellStates[0].NoteText);
         }

@@ -5,6 +5,9 @@ namespace RizaCanKilicIsTakibi.Models;
 public sealed class YibfIsTakibiEntry : ObservableObject
 {
     private Guid _id = Guid.NewGuid();
+    private Guid _workGroupId;
+    private Guid _workIdentityId;
+    private string _workVariantLabel = string.Empty;
     private string _jobName = string.Empty;
     private string _muellifBilgileriGeldiMi = string.Empty;
     private string _denetciAtamalariYapildiMi = string.Empty;
@@ -23,6 +26,9 @@ public sealed class YibfIsTakibiEntry : ObservableObject
     private DateTime _updatedAt = DateTime.Now;
 
     public Guid Id { get => _id; set => SetProperty(ref _id, value); }
+    public Guid WorkGroupId { get => _workGroupId; set => SetProperty(ref _workGroupId, value); }
+    public Guid WorkIdentityId { get => _workIdentityId; set => SetProperty(ref _workIdentityId, value); }
+    public string WorkVariantLabel { get => _workVariantLabel; set => SetProperty(ref _workVariantLabel, value); }
     public string JobName { get => _jobName; set => SetProperty(ref _jobName, value); }
     public string MuellifBilgileriGeldiMi { get => _muellifBilgileriGeldiMi; set => SetProperty(ref _muellifBilgileriGeldiMi, value); }
     public string DenetciAtamalariYapildiMi { get => _denetciAtamalariYapildiMi; set => SetProperty(ref _denetciAtamalariYapildiMi, value); }

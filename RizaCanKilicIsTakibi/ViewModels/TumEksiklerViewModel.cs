@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.Input;
 using RizaCanKilicIsTakibi.Helpers;
 using RizaCanKilicIsTakibi.Models;
+using RizaCanKilicIsTakibi.Services;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
@@ -167,6 +168,8 @@ public sealed class TumEksiklerViewModel : ViewModelBase
         IReadOnlyList<MissingProjectEntry> missingProjectEntries,
         IReadOnlyList<KarotEntry> karotEntries)
     {
+        YibfWorkIdentityService.NormalizeIdentities(anaBilgiEntries, isTakibiEntries);
+
         var groupsByEntryId = anaBilgiEntries.ToDictionary(
             entry => entry.Id,
             entry => new EksikIsGroupViewModel(
@@ -175,14 +178,19 @@ public sealed class TumEksiklerViewModel : ViewModelBase
                 FirstNonEmpty(entry.YapiSahibi, "(Yapı sahibi yok)"),
                 entry.YibfNo,
                 entry.Muteahhit,
-                EksikMatchStatus.Matched));
+                EksikMatchStatus.Matched,
+                GetEffectiveWorkGroupId(entry)));
+        var groupsByWorkGroupId = groupsByEntryId.Values
+            .Where(group => group.WorkGroupId.HasValue)
+            .GroupBy(group => group.WorkGroupId!.Value)
+            .ToDictionary(group => group.Key, group => group.First());
 
         var unmatched = new EksikIsGroupViewModel(null, UnmatchedGroupTitle, string.Empty, string.Empty, string.Empty, EksikMatchStatus.Unmatched);
         var yibfStateLookup = yibfCellStates.ToDictionary(state => BuildCellStateKey(state.EntryId, state.ColumnKey), StringComparer.OrdinalIgnoreCase);
         var tadilatStateLookup = tadilatCellStates.ToDictionary(state => BuildCellStateKey(state.EntryId, state.ColumnKey), StringComparer.OrdinalIgnoreCase);
 
         AppendYibfAnaBilgiEvents(groupsByEntryId, anaBilgiEntries, anaBilgiEvents);
-        AppendYibfIsTakibi(groupsByEntryId, unmatched, anaBilgiEntries, isTakibiEntries, yibfStateLookup);
+        AppendYibfIsTakibi(groupsByEntryId, groupsByWorkGroupId, unmatched, anaBilgiEntries, isTakibiEntries, yibfStateLookup);
         AppendTadilat(groupsByEntryId, unmatched, anaBilgiEntries, aktifTadilatEntries, tadilatStateLookup);
         AppendMissingProject(groupsByEntryId, unmatched, anaBilgiEntries, missingProjectEntries);
         AppendKarot(groupsByEntryId, unmatched, anaBilgiEntries, karotEntries);
@@ -232,6 +240,7 @@ public sealed class TumEksiklerViewModel : ViewModelBase
 
     private static void AppendYibfIsTakibi(
         IReadOnlyDictionary<Guid, EksikIsGroupViewModel> groupsByEntryId,
+        IReadOnlyDictionary<Guid, EksikIsGroupViewModel> groupsByWorkGroupId,
         EksikIsGroupViewModel unmatched,
         IReadOnlyList<YibfAnaBilgiEntry> anaBilgiEntries,
         IEnumerable<YibfIsTakibiEntry> entries,
@@ -239,8 +248,8 @@ public sealed class TumEksiklerViewModel : ViewModelBase
     {
         foreach (var entry in entries)
         {
-            var group = ResolveGroup(anaBilgiEntries, groupsByEntryId, unmatched, CombineSearchText(GetYibfIsTakibiValues(entry)));
-            var sourceContext = BuildSourceContext(("İş", entry.JobName));
+            var group = ResolveYibfIsTakibiGroup(anaBilgiEntries, groupsByEntryId, groupsByWorkGroupId, unmatched, entry);
+            var sourceContext = BuildSourceContext(("İş", entry.JobName), ("İş Kimliği", BuildWorkIdentityLabel(entry)));
             foreach (var field in RequiredYibfFields)
             {
                 stateLookup.TryGetValue(BuildCellStateKey(entry.Id, field.ColumnKey), out var state);
@@ -436,6 +445,21 @@ public sealed class TumEksiklerViewModel : ViewModelBase
         return match.Count == 1 && groupsByEntryId.TryGetValue(match[0].Id, out var group) ? group : unmatched;
     }
 
+    private static EksikIsGroupViewModel ResolveYibfIsTakibiGroup(
+        IReadOnlyList<YibfAnaBilgiEntry> anaBilgiEntries,
+        IReadOnlyDictionary<Guid, EksikIsGroupViewModel> groupsByEntryId,
+        IReadOnlyDictionary<Guid, EksikIsGroupViewModel> groupsByWorkGroupId,
+        EksikIsGroupViewModel unmatched,
+        YibfIsTakibiEntry entry)
+    {
+        if (entry.WorkGroupId != Guid.Empty && groupsByWorkGroupId.TryGetValue(entry.WorkGroupId, out var group))
+        {
+            return group;
+        }
+
+        return ResolveGroup(anaBilgiEntries, groupsByEntryId, unmatched, CombineSearchText(GetYibfIsTakibiValues(entry)));
+    }
+
     private void ApplyFilters()
     {
         var query = SearchQuery.Trim();
@@ -555,6 +579,19 @@ public sealed class TumEksiklerViewModel : ViewModelBase
         return visibleParts.Count == 0 ? string.Empty : $"Satır: {string.Join(" | ", visibleParts)}";
     }
 
+    private static string BuildWorkIdentityLabel(YibfIsTakibiEntry entry)
+    {
+        if (!string.IsNullOrWhiteSpace(entry.WorkVariantLabel))
+        {
+            return entry.WorkVariantLabel.Trim();
+        }
+
+        return entry.WorkGroupId != Guid.Empty && entry.WorkIdentityId == entry.WorkGroupId ? "Ana İş" : string.Empty;
+    }
+
+    private static Guid GetEffectiveWorkGroupId(YibfAnaBilgiEntry entry)
+        => entry.WorkGroupId == Guid.Empty ? entry.Id : entry.WorkGroupId;
+
     private static string[] GetYibfIsTakibiValues(YibfIsTakibiEntry entry)
         =>
         [
@@ -639,9 +676,10 @@ public sealed class TumEksiklerViewModel : ViewModelBase
 
 public sealed class EksikIsGroupViewModel
 {
-    public EksikIsGroupViewModel(Guid? entryId, string adaParsel, string yapiSahibi, string yibfNo, string muteahhit, EksikMatchStatus matchStatus)
+    public EksikIsGroupViewModel(Guid? entryId, string adaParsel, string yapiSahibi, string yibfNo, string muteahhit, EksikMatchStatus matchStatus, Guid? workGroupId = null)
     {
         EntryId = entryId;
+        WorkGroupId = workGroupId;
         AdaParsel = adaParsel;
         YapiSahibi = yapiSahibi;
         YibfNo = yibfNo;
@@ -650,13 +688,14 @@ public sealed class EksikIsGroupViewModel
         Items = [];
     }
 
-    private EksikIsGroupViewModel(Guid? entryId, string adaParsel, string yapiSahibi, string yibfNo, string muteahhit, EksikMatchStatus matchStatus, IEnumerable<EksikItemViewModel> items)
-        : this(entryId, adaParsel, yapiSahibi, yibfNo, muteahhit, matchStatus)
+    private EksikIsGroupViewModel(Guid? entryId, string adaParsel, string yapiSahibi, string yibfNo, string muteahhit, EksikMatchStatus matchStatus, Guid? workGroupId, IEnumerable<EksikItemViewModel> items)
+        : this(entryId, adaParsel, yapiSahibi, yibfNo, muteahhit, matchStatus, workGroupId)
     {
         Items.ReplaceRange(items);
     }
 
     public Guid? EntryId { get; }
+    public Guid? WorkGroupId { get; }
     public string AdaParsel { get; }
     public string YapiSahibi { get; }
     public string YibfNo { get; }
@@ -682,7 +721,7 @@ public sealed class EksikIsGroupViewModel
         => WithItems(Items.OrderBy(item => item.SeverityRank).ThenByDescending(item => item.UpdatedAt).ThenBy(item => item.SourceModule).ThenBy(item => item.FieldLabel));
 
     public EksikIsGroupViewModel WithItems(IEnumerable<EksikItemViewModel> items)
-        => new(EntryId, AdaParsel, YapiSahibi, YibfNo, Muteahhit, MatchStatus, items);
+        => new(EntryId, AdaParsel, YapiSahibi, YibfNo, Muteahhit, MatchStatus, WorkGroupId, items);
 }
 
 public sealed class EksikItemViewModel
