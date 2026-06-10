@@ -608,6 +608,19 @@
                             </Style>
                         </Button.Style>
                     </Button>
+                    <Button Content="TÜM EKSİKLER" Command="{Binding SelectMainTabCommand}" CommandParameter="{x:Static models:MainNavigationTab.TumEksikler}" Margin="0,0,0,8">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SelectedMainTab}" Value="{x:Static models:MainNavigationTab.TumEksikler}">
+                                        <Setter Property="Background" Value="{StaticResource Brush.Primary}"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
                     <Button Content="GENEL İŞ TAKİBİ" Command="{Binding SelectMainTabCommand}" CommandParameter="{x:Static models:MainNavigationTab.GenelIsTakibi}" Margin="0,0,0,8">
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
@@ -1112,6 +1125,27 @@
                     <controls:DeferredContentControl.DeferredTemplate>
                         <DataTemplate>
                             <sections:YibfBekleyenSectionView/>
+                        </DataTemplate>
+                    </controls:DeferredContentControl.DeferredTemplate>
+                </controls:DeferredContentControl>
+            </Grid>
+
+            <Grid Grid.Column="1" x:Name="TumEksiklerTabHost">
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedMainTab}" Value="{x:Static models:MainNavigationTab.TumEksikler}">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <controls:DeferredContentControl IsActive="{Binding IsTumEksiklerViewActivated}"
+                                                 UnloadWhenInactive="True">
+                    <controls:DeferredContentControl.DeferredTemplate>
+                        <DataTemplate>
+                            <sections:TumEksiklerSectionView/>
                         </DataTemplate>
                     </controls:DeferredContentControl.DeferredTemplate>
                 </controls:DeferredContentControl>

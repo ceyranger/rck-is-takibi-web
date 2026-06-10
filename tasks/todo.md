@@ -1,6 +1,25 @@
 # Todo
 
 ## Current Task
+- [x] `TÜM EKSİKLER` ana sekmesini navigasyona ekle.
+- [x] YİBF Ana Bilgi, YİBF İş Takibi, Tadilat, Eksik Proje ve Karot kaynaklarından eksik özetini üret.
+- [x] Zorunlu takip alanlarındaki boş hücreleri kontrollü şekilde eksik olarak göster.
+- [x] Net eşleşmeyen kayıtları ayrı bölümde göster ve yanlış otomatik eşleştirme yapma.
+- [x] Filtre/arama ve ilgili kayda gitme davranışını ekle.
+- [x] Hedefli/tam testleri, güvenli publish doğrulamasını ve Git commit'i tamamla.
+
+## Review Update
+- `TÜM EKSİKLER` ana sekmesi eklendi; YİBF Ana Bilgi ana grup kaynağı olarak kullanılıyor, YİBF İş Takibi/Tadilat/Eksik Proje/Karot eksikleri tek ekranda gruplanıyor.
+- Zorunlu takip alanlarındaki boş hücreler `Boş takip alanı` olarak, kırmızı/sarı hücreler ve YİBF olayları ise kritik/uyarı olarak gösteriliyor.
+- Net eşleşmeyen kayıtlar otomatik tahminle bağlanmadan `Eşleşmeyen Eksikler` altında tutuluyor.
+- Filtreler ve çift tıkla ilgili sekmeye gitme davranışı eklendi; ekran salt okunur kaldı.
+- `dotnet test RizaCanKilicIsTakibi.Tests\RizaCanKilicIsTakibi.Tests.csproj --filter "TumEksikler|Yibf|Tadilat"` geçti: 40/40.
+- `dotnet test RizaCanKilicIsTakibi.sln` geçti: 131/131.
+- Release publish geçici klasöre alındı, uygulama çalışmadığı doğrulanınca canonical `RizaCanKilicIsTakibi\bin\Release\publish\RizaCanKilicIsTakibi.exe` güncellendi.
+- Canlı `Data\tasks.db` ve `Data\last-save.json` hash/size/timestamp değerleri publish öncesi ve sonrası aynı kaldı.
+- Gereksiz test/debug/RID build çıktıları ve geçici publish klasörü temizlendi; canlı `Data`, `Backup`, `Logs` korunuyor.
+
+## Current Task
 - [x] Tadilat Takibi satırlarına aynı ilçe/sekme içinde yukarı-aşağı taşıma ekle.
 - [x] YİBF Ana Bilgi iş listesine yukarı-aşağı taşıma ekle.
 - [x] YİBF İş Takibi satırlarına yukarı-aşağı taşıma ekle.

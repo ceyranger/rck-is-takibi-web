@@ -47,6 +47,7 @@ public sealed partial class MainViewModel : ViewModelBase
     private bool _isYibfAnaBilgiViewActivated;
     private bool _isYibfIsTakibiViewActivated;
     private bool _isYibfPendingViewActivated;
+    private bool _isTumEksiklerViewActivated;
     private bool _isSettingsViewActivated;
     private bool _hasUnsavedSettings;
     private DateTime? _lastSuccessfulSaveAt;
@@ -165,6 +166,7 @@ public sealed partial class MainViewModel : ViewModelBase
         KarotModule = karotModule;
         TadilatModule = tadilatModule;
         YibfModule = yibfModule;
+        TumEksikler = new TumEksiklerViewModel();
         ClearableTabs = BuildClearableTabs();
         _selectedClearTab = ClearableTabs.FirstOrDefault();
 
@@ -206,6 +208,7 @@ public sealed partial class MainViewModel : ViewModelBase
         ExportMissingProjectPngCommand = new AsyncRelayCommand<UIElement?>(ExportMissingProjectPngAsync);
         ExportKarotPngCommand = new AsyncRelayCommand<UIElement?>(ExportKarotPngAsync);
         ExportYibfIsTakibiPngCommand = new AsyncRelayCommand<UIElement?>(ExportYibfIsTakibiPngAsync);
+        RefreshTumEksiklerCommand = new AsyncRelayCommand(RefreshTumEksiklerAsync);
         CleanupBuildArtifactsCommand = new AsyncRelayCommand(CleanupBuildArtifactsAsync);
         SaveSettingsCommand = new AsyncRelayCommand(SaveSettingsWithConfirmationAsync, () => HasUnsavedSettings);
         ResetLiveDataCommand = new AsyncRelayCommand(() => ResetApplicationDataAsync(includeBackups: false));
@@ -217,6 +220,7 @@ public sealed partial class MainViewModel : ViewModelBase
 
         MoveTaskToBoardCommand = new RelayCommand<DragDropTaskMoveRequest>(MoveTaskToBoard);
         SelectSearchResultCommand = new RelayCommand<SearchResultItem>(SelectSearchResult);
+        SelectEksikItemCommand = new RelayCommand<EksikItemViewModel?>(SelectEksikItem);
         FocusBoardCommand = new RelayCommand<TaskBoardType>(FocusBoard);
 
         UrgentBoard.SelectedTaskChanged += OnBoardSelectedTaskChanged;
@@ -264,6 +268,7 @@ public sealed partial class MainViewModel : ViewModelBase
     public KarotModuleViewModel KarotModule { get; }
     public TadilatModuleViewModel TadilatModule { get; }
     public YibfModuleViewModel YibfModule { get; }
+    public TumEksiklerViewModel TumEksikler { get; }
     public TaskBoardViewModel UrgentBoard { get; }
     public TaskBoardViewModel GeneralBoard { get; }
     public ObservableRangeCollection<AcilIsOzetItemViewModel> AcilIsOzetItems { get; } = [];
@@ -367,6 +372,12 @@ public sealed partial class MainViewModel : ViewModelBase
     {
         get => _isYibfPendingViewActivated;
         private set => SetProperty(ref _isYibfPendingViewActivated, value);
+    }
+
+    public bool IsTumEksiklerViewActivated
+    {
+        get => _isTumEksiklerViewActivated;
+        private set => SetProperty(ref _isTumEksiklerViewActivated, value);
     }
 
     public bool IsSettingsViewActivated
@@ -475,6 +486,7 @@ public sealed partial class MainViewModel : ViewModelBase
     public AsyncRelayCommand<UIElement?> ExportMissingProjectPngCommand { get; }
     public AsyncRelayCommand<UIElement?> ExportKarotPngCommand { get; }
     public AsyncRelayCommand<UIElement?> ExportYibfIsTakibiPngCommand { get; }
+    public AsyncRelayCommand RefreshTumEksiklerCommand { get; }
     public AsyncRelayCommand CleanupBuildArtifactsCommand { get; }
     public AsyncRelayCommand SaveSettingsCommand { get; }
     public AsyncRelayCommand ResetLiveDataCommand { get; }
@@ -486,6 +498,7 @@ public sealed partial class MainViewModel : ViewModelBase
 
     public RelayCommand<DragDropTaskMoveRequest> MoveTaskToBoardCommand { get; }
     public RelayCommand<SearchResultItem> SelectSearchResultCommand { get; }
+    public RelayCommand<EksikItemViewModel?> SelectEksikItemCommand { get; }
     public RelayCommand<TaskBoardType> FocusBoardCommand { get; }
 
     public async Task InitializeAsync()
@@ -695,6 +708,9 @@ public sealed partial class MainViewModel : ViewModelBase
                 break;
             case MainNavigationTab.YibfBekleyenIsler:
                 IsYibfPendingViewActivated = true;
+                break;
+            case MainNavigationTab.TumEksikler:
+                IsTumEksiklerViewActivated = true;
                 break;
             case MainNavigationTab.Ayarlar:
                 IsSettingsViewActivated = true;
@@ -1148,6 +1164,10 @@ public sealed partial class MainViewModel : ViewModelBase
         {
             RefreshAcilIsOzet();
         }
+        else if (tab == MainNavigationTab.TumEksikler)
+        {
+            RefreshTumEksikler();
+        }
     }
 
     private Task EnsureActionModuleInitializedAsync()
@@ -1186,9 +1206,29 @@ public sealed partial class MainViewModel : ViewModelBase
                 await EnsureYibfModuleInitializedAsync();
                 break;
             case MainNavigationTab.YibfBekleyenIsler:
+            case MainNavigationTab.TumEksikler:
                 await EnsureAllModulesInitializedAsync();
                 break;
         }
+    }
+
+    private async Task RefreshTumEksiklerAsync()
+    {
+        await EnsureAllModulesInitializedAsync();
+        RefreshTumEksikler();
+    }
+
+    private void RefreshTumEksikler()
+    {
+        TumEksikler.RefreshFrom(
+            YibfModule.AnaBilgiEntries,
+            YibfModule.AnaBilgiEvents,
+            YibfModule.IsTakibiEntries,
+            YibfModule.CellStates,
+            TadilatModule.AktifEntries,
+            TadilatModule.CellStates,
+            MissingProjectModule.Entries,
+            KarotModule.Entries);
     }
 
     private Task EnsureAllModulesInitializedAsync()
@@ -1829,6 +1869,9 @@ public sealed partial class MainViewModel : ViewModelBase
                         _notificationService.ShowToast("YİBF kayıtları kaydedildi.", ToastType.Success, TimeSpan.FromSeconds(2));
                     }
                     break;
+                case MainNavigationTab.TumEksikler:
+                    _notificationService.ShowToast("TÜM EKSİKLER ekranı salt okunur; kaydedilecek değişiklik yok.", ToastType.Info, TimeSpan.FromSeconds(2));
+                    break;
                 case MainNavigationTab.Ayarlar:
                     await SaveSettingsAsync();
                     break;
@@ -1860,6 +1903,9 @@ public sealed partial class MainViewModel : ViewModelBase
             case MainNavigationTab.YibfIsTakibi:
             case MainNavigationTab.YibfBekleyenIsler:
                 YibfModule.CommitPendingEdits();
+                break;
+            case MainNavigationTab.TumEksikler:
+                await CommitPendingEditsAcrossAllTabsAsync();
                 break;
         }
     }
@@ -3088,6 +3134,11 @@ public sealed partial class MainViewModel : ViewModelBase
         SearchOverlay.Close();
     }
 
+    private void SelectEksikItem(EksikItemViewModel? item)
+    {
+        SelectSearchResult(item?.NavigationTarget);
+    }
+
     // FocusBoard and GetBoard moved to MainViewModel.TaskManagement.cs
 
     private async Task<bool> PersistGeneralTasksAsync(bool showSuccessToast)
@@ -3246,6 +3297,7 @@ public sealed partial class MainViewModel : ViewModelBase
             MainNavigationTab.YibfAnaBilgi => SearchScope.YibfAnaBilgi,
             MainNavigationTab.YibfIsTakibi => SearchScope.YibfIsTakibi,
             MainNavigationTab.YibfBekleyenIsler => SearchScope.YibfAnaBilgi,
+            MainNavigationTab.TumEksikler => SearchScope.All,
             MainNavigationTab.Ayarlar => SearchScope.All,
             _ => SearchScope.All
         };
