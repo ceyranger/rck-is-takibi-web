@@ -7,7 +7,9 @@
 
 ## Review Update
 - Tadilat Takibi ekranı tekrar `DisplayRows` üstünden satır bazlı sanallaştırılmış listeye döndürüldü; aynı ilçenin alt satırlarında boş ilçe hücresi yerine ilçe etiketi görünür kalıyor.
+- Aşırı hızlı scroll sorunu için Tadilat listesindeki `VirtualizingPanel.ScrollUnit="Item"` override'ı kaldırıldı; liste global piksel tabanlı scroll ayarını kullanıyor.
 - Satır/hücre düzenleme, sağ tık menüleri, renk/not, taşıma ve boş ilçe için `Görev Ekle` davranışı mevcut `TadilatCellTemplate` ve komutlarıyla korunuyor.
+- `dotnet build RizaCanKilicIsTakibi.sln` geçti.
 - `dotnet test RizaCanKilicIsTakibi.Tests\RizaCanKilicIsTakibi.Tests.csproj --filter "Tadilat"` geçti: 14/14.
 - `dotnet test RizaCanKilicIsTakibi.sln` geçti: 142/142.
 - Release publish geçici klasöre alındı; uygulama açık olduğu için exe swap bekletildi, program kapandıktan sonra canonical `RizaCanKilicIsTakibi\bin\Release\publish\RizaCanKilicIsTakibi.exe` güncellendi.
