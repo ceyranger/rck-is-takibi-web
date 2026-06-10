@@ -510,7 +510,7 @@
                             </Grid>
 
 <ListBox Grid.Row="1"
-         ItemsSource="{Binding TadilatModule.DistrictGroups}"
+         ItemsSource="{Binding TadilatModule.DisplayRows}"
          behaviors:MouseWheelScrollBehavior.IsEnabled="True"
          x:Name="TadilatDistrictGroupsList"
          Style="{StaticResource VirtualizedListBoxStyle}"
@@ -523,104 +523,87 @@
          VirtualizingPanel.VirtualizationMode="Recycling"
          VirtualizingPanel.ScrollUnit="Item">
     <ListBox.ItemTemplate>
-        <DataTemplate DataType="{x:Type viewModels:TadilatDistrictGroup}">
-            <Border BorderBrush="#FFB7C9DE"
-                    BorderThickness="0,0,0,1"
-                    Margin="0,0,0,2">
-            <Grid>
+        <DataTemplate DataType="{x:Type viewModels:TadilatEntryRow}">
+            <Grid Margin="0,0,0,2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="84"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Border Grid.Column="0"
-                        BorderBrush="#FFB7C9DE"
-                        BorderThickness="0,0,1,0"
-                        Background="#FFE9EFF7"
-                        VerticalAlignment="Stretch">
-                    <Button Tag="{Binding DataContext.TadilatModule, RelativeSource={RelativeSource AncestorType=Window}}"
-                            Content="{Binding District}"
-                            MinHeight="44"
-                            VerticalAlignment="Stretch"
-                            HorizontalAlignment="Stretch"
-                            Style="{StaticResource TadilatDistrictButtonStyle}"/>
-                </Border>
+                <Button Grid.Column="0"
+                        Tag="{Binding DataContext.TadilatModule, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Content="{Binding District}"
+                        MinHeight="44"
+                        Style="{StaticResource TadilatDistrictButtonStyle}"/>
 
-                <Grid Grid.Column="1">
-                    <ItemsControl ItemsSource="{Binding Rows}">
-                        <ItemsControl.Style>
-                            <Style TargetType="ItemsControl">
+                <Border Grid.Column="1"
+                        Style="{StaticResource TadilatRowBorderStyle}"
+                        Tag="{Binding IsSelected}"
+                        behaviors:ClickCommandBehavior.Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.TadilatModule.SelectEntryCommand}"
+                        behaviors:ClickCommandBehavior.CommandParameter="{Binding Entry}">
+                    <Grid>
+                        <Grid.Style>
+                            <Style TargetType="Grid">
                                 <Setter Property="Visibility" Value="Visible"/>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding HasItems}" Value="False">
+                                    <DataTrigger Binding="{Binding IsPlaceholder}" Value="True">
                                         <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </ItemsControl.Style>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="{x:Type viewModels:TadilatEntryRow}">
-                                <Border Style="{StaticResource TadilatRowBorderStyle}"
-                                        Tag="{Binding IsSelected}"
-                                        behaviors:ClickCommandBehavior.Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.TadilatModule.SelectEntryCommand}"
-                                        behaviors:ClickCommandBehavior.CommandParameter="{Binding Entry}">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="1.45*"/>
-                                            <ColumnDefinition Width="0.82*"/>
-                                            <ColumnDefinition Width="0.74*"/>
-                                            <ColumnDefinition Width="0.74*"/>
-                                            <ColumnDefinition Width="0.96*"/>
-                                            <ColumnDefinition Width="0.92*"/>
-                                            <ColumnDefinition Width="0.98*"/>
-                                            <ColumnDefinition Width="0.80*"/>
-                                            <ColumnDefinition Width="0.80*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <ContentPresenter Grid.Column="0" Content="{Binding JobNameCell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>
-                                        <ContentPresenter Grid.Column="1" Content="{Binding ProjectTypeCell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>
-                                        <ContentPresenter Grid.Column="2" Content="{Binding DigitalReceivedCell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>
-                                        <ContentPresenter Grid.Column="3" Content="{Binding InspectorApprovedCell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>
-                                        <ContentPresenter Grid.Column="4" Content="{Binding OutputAndReportArrivedCell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>
-                                        <ContentPresenter Grid.Column="5" Content="{Binding OfficialLetterSubmittedCell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>
-                                        <ContentPresenter Grid.Column="6" Content="{Binding ArchivedFromMunicipalityCell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>
-                                        <ContentPresenter Grid.Column="7" Content="{Binding Description1Cell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>
-                                        <ContentPresenter Grid.Column="8" Content="{Binding Description2Cell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                        </Grid.Style>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.45*"/>
+                            <ColumnDefinition Width="0.82*"/>
+                            <ColumnDefinition Width="0.74*"/>
+                            <ColumnDefinition Width="0.74*"/>
+                            <ColumnDefinition Width="0.96*"/>
+                            <ColumnDefinition Width="0.92*"/>
+                            <ColumnDefinition Width="0.98*"/>
+                            <ColumnDefinition Width="0.80*"/>
+                            <ColumnDefinition Width="0.80*"/>
+                        </Grid.ColumnDefinitions>
+                        <ContentPresenter Grid.Column="0" Content="{Binding JobNameCell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>
+                        <ContentPresenter Grid.Column="1" Content="{Binding ProjectTypeCell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>
+                        <ContentPresenter Grid.Column="2" Content="{Binding DigitalReceivedCell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>
+                        <ContentPresenter Grid.Column="3" Content="{Binding InspectorApprovedCell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>
+                        <ContentPresenter Grid.Column="4" Content="{Binding OutputAndReportArrivedCell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>
+                        <ContentPresenter Grid.Column="5" Content="{Binding OfficialLetterSubmittedCell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>
+                        <ContentPresenter Grid.Column="6" Content="{Binding ArchivedFromMunicipalityCell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>
+                        <ContentPresenter Grid.Column="7" Content="{Binding Description1Cell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>
+                        <ContentPresenter Grid.Column="8" Content="{Binding Description2Cell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>
+                    </Grid>
+                </Border>
 
-                    <Border Padding="14,12"
-                            Background="#FFF7FAFE"
-                            BorderBrush="#FFD6E3F2"
-                            BorderThickness="1"
-                            CornerRadius="10">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Visibility" Value="Collapsed"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding HasItems}" Value="False">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                        <DockPanel LastChildFill="False">
-                            <TextBlock Text="Henüz kayıt yok"
-                                       Foreground="{StaticResource Brush.TextSecondary}"
-                                       VerticalAlignment="Center"
-                                       DockPanel.Dock="Left"/>
-                            <Button Content="Görev Ekle"
-                                    DockPanel.Dock="Right"
-                                    Style="{StaticResource GhostButton}"
-                                    Command="{Binding DataContext.TadilatModule.AddEntryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                    CommandParameter="{Binding District}"/>
-                        </DockPanel>
-                    </Border>
-                </Grid>
+                <Border Grid.Column="1"
+                        Padding="14,12"
+                        Background="#FFF7FAFE"
+                        BorderBrush="#FFD6E3F2"
+                        BorderThickness="1"
+                        CornerRadius="10">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsPlaceholder}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <DockPanel LastChildFill="False">
+                        <TextBlock Text="Henüz kayıt yok"
+                                   Foreground="{StaticResource Brush.TextSecondary}"
+                                   VerticalAlignment="Center"
+                                   DockPanel.Dock="Left"/>
+                        <Button Content="Görev Ekle"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource GhostButton}"
+                                Command="{Binding DataContext.TadilatModule.AddEntryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding District}"/>
+                    </DockPanel>
+                </Border>
             </Grid>
-            </Border>
         </DataTemplate>
     </ListBox.ItemTemplate>
 </ListBox>

@@ -2,16 +2,16 @@
 
 ## Current Task
 - [x] Tadilat Takibi ilçe sütunundaki birleşik grup görünümünün neden bozulduğunu doğrula.
-- [x] Satır/hücre komutlarını bozmadan ilçe bloğunu tekrar birleşik görünecek şekilde düzelt.
+- [x] Satır/hücre komutlarını bozmadan boş ilçe hücrelerini kaldırıp satır bazlı sanallaştırmayı koru.
 - [x] Tadilat hedefli/tam testleri çalıştır, güvenli Release publish al ve Git commit oluştur.
 
 ## Review Update
-- Tadilat Takibi ekranında ilçe sütunu tekrar ilçe grubu başına tek birleşik blok olarak çiziliyor; aynı ilçenin alt satırlarında boş ilçe hücresi görünmüyor.
+- Tadilat Takibi ekranı tekrar `DisplayRows` üstünden satır bazlı sanallaştırılmış listeye döndürüldü; aynı ilçenin alt satırlarında boş ilçe hücresi yerine ilçe etiketi görünür kalıyor.
 - Satır/hücre düzenleme, sağ tık menüleri, renk/not, taşıma ve boş ilçe için `Görev Ekle` davranışı mevcut `TadilatCellTemplate` ve komutlarıyla korunuyor.
 - `dotnet test RizaCanKilicIsTakibi.Tests\RizaCanKilicIsTakibi.Tests.csproj --filter "Tadilat"` geçti: 14/14.
 - `dotnet test RizaCanKilicIsTakibi.sln` geçti: 142/142.
-- Release publish geçici klasöre alındı; uygulama açık olduğu için exe swap bekletildi, kullanıcı programı kapattıktan sonra canonical `RizaCanKilicIsTakibi\bin\Release\publish\RizaCanKilicIsTakibi.exe` güncellendi.
-- Kullanıcının program açıkken eklediği yeni veri sonrası alınan canlı `Data\tasks.db` ve `Data\last-save.json` hash/size/timestamp değerleri exe güncellemesi öncesi ve sonrası aynı kaldı.
+- Release publish geçici klasöre alındı; uygulama açık olduğu için exe swap bekletildi, program kapandıktan sonra canonical `RizaCanKilicIsTakibi\bin\Release\publish\RizaCanKilicIsTakibi.exe` güncellendi.
+- Canlı `Data\tasks.db` ve `Data\last-save.json` hash/size/timestamp değerleri exe güncellemesi öncesi ve sonrası aynı kaldı.
 - Gereksiz test/debug/RID build çıktıları ve geçici publish klasörü temizlendi; repo içinde tek exe canonical publish exe olarak kaldı.
 
 ## Current Task
