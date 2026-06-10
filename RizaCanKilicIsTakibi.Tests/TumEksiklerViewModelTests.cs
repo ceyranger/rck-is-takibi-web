@@ -70,8 +70,11 @@ public sealed class TumEksiklerViewModelTests
         {
             Id = Guid.NewGuid(),
             SubTab = TadilatSubTab.Aktif,
+            District = "Merkez",
             JobName = "10/20 tadilat",
+            ProjectType = "Tadilat Projesi",
             DigitalReceived = "Geldi",
+            Description1 = "Rapor bekleniyor",
             UpdatedAt = new DateTime(2026, 6, 4)
         };
         var biten = new TadilatEntry
@@ -93,7 +96,59 @@ public sealed class TumEksiklerViewModelTests
         var group = Assert.Single(vm.Groups);
         Assert.Contains(group.Items, item => item.SourceModule == "Tadilat" && item.Severity == EksikSeverity.Warning);
         Assert.Contains(group.Items, item => item.SourceModule == "Tadilat" && item.Severity == EksikSeverity.BlankRequired);
+        Assert.Contains(group.Items, item => item.SourceModule == "Tadilat" &&
+                                             item.SourceContext == "Satır: İlçe: Merkez | İş: 10/20 tadilat | Proje Türü: Tadilat Projesi | Açıklama: Rapor bekleniyor");
+        Assert.DoesNotContain(group.Items, item => item.SourceModule == "Tadilat" && item.SourceContext.Contains("(boş)", StringComparison.OrdinalIgnoreCase));
         Assert.DoesNotContain(group.Items, item => item.NavigationTarget.ItemId == biten.Id);
+    }
+
+    [Fact]
+    public void RefreshFrom_AddsDistinctTadilatSourceContextForSameColumnIssues()
+    {
+        var entry = CreateAnaBilgiEntry(adaParsel: "10/20");
+        var first = new TadilatEntry
+        {
+            Id = Guid.NewGuid(),
+            SubTab = TadilatSubTab.Aktif,
+            District = "Merkez",
+            JobName = "10/20 A Blok tadilat",
+            DigitalReceived = "Geldi"
+        };
+        var second = new TadilatEntry
+        {
+            Id = Guid.NewGuid(),
+            SubTab = TadilatSubTab.Aktif,
+            District = "Çarşı",
+            JobName = "10/20 B Blok tadilat",
+            DigitalReceived = "Geldi"
+        };
+        var states = new[]
+        {
+            new TadilatCellState
+            {
+                EntryId = first.Id,
+                ColumnKey = TadilatColumnKeys.DigitalReceived,
+                BackgroundColor = "#FFFFFF00"
+            },
+            new TadilatCellState
+            {
+                EntryId = second.Id,
+                ColumnKey = TadilatColumnKeys.DigitalReceived,
+                BackgroundColor = "#FFFFFF00"
+            }
+        };
+
+        var vm = CreateViewModel([entry], aktifTadilatEntries: [first, second], tadilatCellStates: states);
+
+        var contexts = vm.Groups
+            .Single()
+            .Items
+            .Where(item => item.SourceModule == "Tadilat" && item.FieldLabel == "Projenin dijitali geldi mi?" && item.Severity == EksikSeverity.Warning)
+            .Select(item => item.SourceContext)
+            .ToList();
+
+        Assert.Contains("Satır: İlçe: Merkez | İş: 10/20 A Blok tadilat", contexts);
+        Assert.Contains("Satır: İlçe: Çarşı | İş: 10/20 B Blok tadilat", contexts);
     }
 
     [Fact]
@@ -169,8 +224,25 @@ public sealed class TumEksiklerViewModelTests
         var group = Assert.Single(vm.Groups);
         Assert.Contains(group.Items, item => item.SourceModule == "Eksik Proje" && item.NavigationTarget.Kind == SearchResultKind.MissingProjectEntry);
         Assert.Contains(group.Items, item => item.SourceModule == "Karot" && item.Severity == EksikSeverity.Critical);
-        Assert.Contains(group.Items, item => item.SourceModule == "Karot" && item.Reason.Contains("Kat Bilgisi: Bodrum Kat", StringComparison.Ordinal));
+        Assert.Contains(group.Items, item => item.SourceModule == "Karot" && item.SourceContext.Contains("Kat Bilgisi: Bodrum Kat", StringComparison.Ordinal));
         Assert.DoesNotContain(group.Items, item => item.NavigationTarget.ItemId == positiveKarot.Id);
+    }
+
+    [Fact]
+    public void SearchQuery_MatchesYibfIsTakibiSourceContext()
+    {
+        var entry = CreateAnaBilgiEntry(yibfNo: "12345");
+        var isTakibi = new YibfIsTakibiEntry
+        {
+            Id = Guid.NewGuid(),
+            JobName = "12345 ruhsat özel takip"
+        };
+        var vm = CreateViewModel([entry], isTakibiEntries: [isTakibi]);
+
+        vm.SearchQuery = "özel takip";
+
+        var group = Assert.Single(vm.Groups);
+        Assert.All(group.Items, item => Assert.Contains("Satır: İş: 12345 ruhsat özel takip", item.SourceContext, StringComparison.Ordinal));
     }
 
     private static TumEksiklerViewModel CreateViewModel(

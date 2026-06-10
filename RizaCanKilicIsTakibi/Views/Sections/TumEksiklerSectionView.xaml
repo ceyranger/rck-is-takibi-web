@@ -223,6 +223,21 @@
                                                                        Margin="0,4,0,0"
                                                                        TextWrapping="Wrap"
                                                                        Foreground="{StaticResource Brush.TextSecondary}"/>
+                                                            <TextBlock Text="{Binding SourceContext}"
+                                                                       Margin="0,4,0,0"
+                                                                       TextWrapping="Wrap"
+                                                                       Foreground="{StaticResource Brush.TextSecondary}">
+                                                                <TextBlock.Style>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding HasSourceContext}" Value="True">
+                                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </TextBlock.Style>
+                                                            </TextBlock>
                                                             <TextBlock Text="{Binding NoteText}"
                                                                        Margin="0,4,0,0"
                                                                        TextWrapping="Wrap"

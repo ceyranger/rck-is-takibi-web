@@ -8,3 +8,4 @@
 - 2026-06-10: Tadilat Takibi, YİBF Ana Bilgi, and YİBF İş Takibi row reorder commands completed. Live publish exe was updated after full tests; `Data\tasks.db` and `Data\last-save.json` hashes were verified unchanged.
 - 2026-06-10: `TÜM EKSİKLER` tab completed. It is read-only, uses YİBF Ana Bilgi as the primary grouping source, and shows unmatched YİBF İş Takibi/Tadilat/Eksik Proje/Karot records separately instead of guessing identity matches. Live publish `Data`, `Backup`, and `Logs` remain protected during build cleanup and publish updates.
 - 2026-06-10: `TÜM EKSİKLER` Karot items now include visible `Kat Bilgisi: ...` text in the deficiency reason. Full tests passed and live publish data hashes stayed unchanged.
+- 2026-06-10: `TÜM EKSİKLER` deficiency rows now show a separate `Satır: ...` source context line built only from non-empty source columns. Search includes this context. Full tests passed and live publish data hashes stayed unchanged.

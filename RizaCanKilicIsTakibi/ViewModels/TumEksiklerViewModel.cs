@@ -240,6 +240,7 @@ public sealed class TumEksiklerViewModel : ViewModelBase
         foreach (var entry in entries)
         {
             var group = ResolveGroup(anaBilgiEntries, groupsByEntryId, unmatched, CombineSearchText(GetYibfIsTakibiValues(entry)));
+            var sourceContext = BuildSourceContext(("İş", entry.JobName));
             foreach (var field in RequiredYibfFields)
             {
                 stateLookup.TryGetValue(BuildCellStateKey(entry.Id, field.ColumnKey), out var state);
@@ -254,7 +255,8 @@ public sealed class TumEksiklerViewModel : ViewModelBase
                     entry.UpdatedAt == default ? entry.CreatedAt : entry.UpdatedAt,
                     MainNavigationTab.YibfIsTakibi,
                     entry.Id,
-                    SearchResultKind.YibfIsTakibiEntry);
+                    SearchResultKind.YibfIsTakibiEntry,
+                    sourceContext);
             }
         }
     }
@@ -269,6 +271,12 @@ public sealed class TumEksiklerViewModel : ViewModelBase
         foreach (var entry in entries)
         {
             var group = ResolveGroup(anaBilgiEntries, groupsByEntryId, unmatched, CombineSearchText(entry.JobName, entry.ProjectType, entry.Description1, entry.Description2));
+            var sourceContext = BuildSourceContext(
+                ("İlçe", entry.District),
+                ("İş", entry.JobName),
+                ("Proje Türü", entry.ProjectType),
+                ("Açıklama", entry.Description1),
+                ("Açıklama 2", entry.Description2));
             foreach (var field in RequiredTadilatFields)
             {
                 stateLookup.TryGetValue(BuildCellStateKey(entry.Id, field.ColumnKey), out var state);
@@ -283,7 +291,8 @@ public sealed class TumEksiklerViewModel : ViewModelBase
                     entry.UpdatedAt == default ? entry.CreatedAt : entry.UpdatedAt,
                     MainNavigationTab.TadilatTakibi,
                     entry.Id,
-                    SearchResultKind.TadilatEntry);
+                    SearchResultKind.TadilatEntry,
+                    sourceContext);
             }
         }
     }
@@ -307,7 +316,12 @@ public sealed class TumEksiklerViewModel : ViewModelBase
                 entry.UpdatedAt == default ? entry.CreatedAt : entry.UpdatedAt,
                 MainNavigationTab.EksikProje,
                 entry.Id,
-                SearchResultKind.MissingProjectEntry));
+                SearchResultKind.MissingProjectEntry,
+                sourceContext: BuildSourceContext(
+                    ("Ada Parsel", entry.AdaParsel),
+                    ("Yapı Sahibi", entry.YapiSahibi),
+                    ("Ortam", entry.RecordMediumText),
+                    ("Açıklama", entry.Description))));
         }
     }
 
@@ -338,24 +352,25 @@ public sealed class TumEksiklerViewModel : ViewModelBase
                 KarotStatus.KarotAlindiSonucBekleniyor => "Karot sonucu bekleniyor",
                 _ => "Karot alınacak"
             };
-            var katBilgisiText = string.IsNullOrWhiteSpace(entry.KatBilgisi)
-                ? string.Empty
-                : $"Kat Bilgisi: {entry.KatBilgisi.Trim()}";
-            var reasonWithKatBilgisi = string.IsNullOrWhiteSpace(katBilgisiText)
-                ? reason
-                : $"{reason} - {katBilgisiText}";
+            var sourceContext = BuildSourceContext(
+                ("Kat Bilgisi", entry.KatBilgisi),
+                ("Beton Sınıfı", entry.BetonSinifi),
+                ("Beton Firması", entry.BetonFirmasi),
+                ("Laboratuvar", entry.Laboratuvar),
+                ("Açıklama", entry.Aciklama));
 
             group.Items.Add(new EksikItemViewModel(
                 "Karot",
                 "Karot Durumu",
-                reasonWithKatBilgisi,
+                reason,
                 FirstNonEmpty(entry.KatBilgisi, entry.Aciklama, "-"),
                 entry.Aciklama,
                 severity.Value,
                 entry.UpdatedAt == default ? entry.CreatedAt : entry.UpdatedAt,
                 MainNavigationTab.KarotTakibi,
                 entry.Id,
-                SearchResultKind.KarotEntry));
+                SearchResultKind.KarotEntry,
+                sourceContext: sourceContext));
         }
     }
 
@@ -370,7 +385,8 @@ public sealed class TumEksiklerViewModel : ViewModelBase
         DateTime updatedAt,
         MainNavigationTab targetTab,
         Guid targetId,
-        SearchResultKind targetKind)
+        SearchResultKind targetKind,
+        string sourceContext = "")
     {
         var normalizedColor = NormalizeColor(backgroundColor);
         var hasPendingColor = IsPendingColor(normalizedColor);
@@ -394,7 +410,8 @@ public sealed class TumEksiklerViewModel : ViewModelBase
             updatedAt,
             targetTab,
             targetId,
-            targetKind));
+            targetKind,
+            sourceContext: sourceContext));
     }
 
     private static EksikIsGroupViewModel ResolveGroup(
@@ -490,7 +507,8 @@ public sealed class TumEksiklerViewModel : ViewModelBase
            || Contains(item.FieldLabel, query)
            || Contains(item.Reason, query)
            || Contains(item.CurrentValue, query)
-           || Contains(item.NoteText, query);
+           || Contains(item.NoteText, query)
+           || Contains(item.SourceContext, query);
 
     private static bool Contains(string? source, string query)
         => !string.IsNullOrWhiteSpace(source) && source.Contains(query, StringComparison.CurrentCultureIgnoreCase);
@@ -526,6 +544,16 @@ public sealed class TumEksiklerViewModel : ViewModelBase
 
     private static string CombineSearchText(params string?[] values)
         => string.Join(' ', values.Where(value => !string.IsNullOrWhiteSpace(value)).Select(value => value!.Trim()));
+
+    private static string BuildSourceContext(params (string Label, string? Value)[] parts)
+    {
+        var visibleParts = parts
+            .Where(part => !string.IsNullOrWhiteSpace(part.Value))
+            .Select(part => $"{part.Label}: {part.Value!.Trim()}")
+            .ToList();
+
+        return visibleParts.Count == 0 ? string.Empty : $"Satır: {string.Join(" | ", visibleParts)}";
+    }
 
     private static string[] GetYibfIsTakibiValues(YibfIsTakibiEntry entry)
         =>
@@ -670,13 +698,15 @@ public sealed class EksikItemViewModel
         MainNavigationTab targetTab,
         Guid targetId,
         SearchResultKind targetKind,
-        Guid? parentTargetId = null)
+        Guid? parentTargetId = null,
+        string sourceContext = "")
     {
         SourceModule = sourceModule;
         FieldLabel = fieldLabel;
         Reason = reason;
         CurrentValue = currentValue;
         NoteText = noteText;
+        SourceContext = sourceContext;
         Severity = severity;
         UpdatedAt = updatedAt;
         TargetTab = targetTab;
@@ -692,8 +722,8 @@ public sealed class EksikItemViewModel
             BoardLabel = sourceModule,
             Title = fieldLabel,
             Summary = reason,
-            SearchText = $"{sourceModule} {fieldLabel} {reason} {currentValue} {noteText}",
-            RawSearchText = $"{sourceModule} {fieldLabel} {reason} {currentValue} {noteText}"
+            SearchText = $"{sourceModule} {fieldLabel} {reason} {currentValue} {noteText} {sourceContext}",
+            RawSearchText = $"{sourceModule} {fieldLabel} {reason} {currentValue} {noteText} {sourceContext}"
         };
     }
 
@@ -702,6 +732,7 @@ public sealed class EksikItemViewModel
     public string Reason { get; }
     public string CurrentValue { get; }
     public string NoteText { get; }
+    public string SourceContext { get; }
     public EksikSeverity Severity { get; }
     public DateTime UpdatedAt { get; }
     public MainNavigationTab TargetTab { get; }
@@ -710,6 +741,7 @@ public sealed class EksikItemViewModel
     public Guid? ParentTargetId { get; }
     public SearchResultItem NavigationTarget { get; }
     public bool HasNote => !string.IsNullOrWhiteSpace(NoteText);
+    public bool HasSourceContext => !string.IsNullOrWhiteSpace(SourceContext);
     public int SeverityRank => Severity switch
     {
         EksikSeverity.Critical => 0,

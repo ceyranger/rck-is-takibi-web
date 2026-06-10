@@ -1,6 +1,21 @@
 # Todo
 
 ## Current Task
+- [x] `TÜM EKSİKLER` eksik maddelerine kaynak satır bağlamı ekle.
+- [x] Tadilat, YİBF İş Takibi, Karot ve Eksik Proje için dolu sütunlardan `Satır: ...` metni üret.
+- [x] UI'da eksik nedeni altında ayrı bağlam satırı göster.
+- [x] Hedefli/tam testleri çalıştır, güvenli Release publish al ve Git commit oluştur.
+
+## Review Update
+- `TÜM EKSİKLER` maddelerinde eksik nedeni altında ayrı `Satır: ...` bağlam satırı gösteriliyor.
+- Tadilat, YİBF İş Takibi, Karot ve Eksik Proje için yalnız dolu kaynak sütunları bağlama ekleniyor; boş alanlar `(boş)` olarak yazılmıyor.
+- Arama filtresi artık satır bağlamı içinde de arama yapıyor.
+- `dotnet test RizaCanKilicIsTakibi.Tests\RizaCanKilicIsTakibi.Tests.csproj --filter "TumEksikler"` geçti: 8/8.
+- `dotnet test RizaCanKilicIsTakibi.sln` geçti: 133/133.
+- Release publish geçici klasöre alındı, uygulama çalışmadığı doğrulanınca canonical `RizaCanKilicIsTakibi\bin\Release\publish\RizaCanKilicIsTakibi.exe` güncellendi.
+- Canlı `Data\tasks.db` ve `Data\last-save.json` hash/size/timestamp değerleri publish öncesi ve sonrası aynı kaldı.
+
+## Current Task
 - [x] `TÜM EKSİKLER` listesindeki Karot maddelerinde `Kat Bilgisi` metnini görünür yap.
 - [x] Hedefli/tam testleri çalıştır, güvenli Release publish al ve Git commit oluştur.
 
