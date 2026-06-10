@@ -1,6 +1,19 @@
 # Todo
 
 ## Current Task
+- [x] Tadilat Takibi scroll kasmasının kök nedenini incele.
+- [x] İç içe ilçe/satır listelerini tek sanallaştırılmış satır listesine çevir.
+- [x] İlçe etiketi, boş ilçe için görev ekleme ve mevcut hücre düzenleme davranışını koru.
+- [x] Tadilat hedefli/tam testleri çalıştır, güvenli Release publish al ve Git commit oluştur.
+
+## Review Update
+- Tadilat ekranındaki iç içe `ListBox` yapısı kaldırıldı; satırlar `DisplayRows` üzerinden tek sanallaştırılmış listede çiziliyor.
+- İlçe adı ilk satırda gösteriliyor, aynı ilçenin devam satırlarında ilçe sütunu boş kalıyor; boş ilçeler için `Görev Ekle` satırı korunuyor.
+- Satır seçim, hücre düzenleme, sağ tık renk/not işlemleri mevcut satır ve hücre ViewModel'leriyle devam ediyor.
+- `dotnet test RizaCanKilicIsTakibi.Tests\RizaCanKilicIsTakibi.Tests.csproj --filter "Tadilat"` geçti: 14/14.
+- `dotnet test RizaCanKilicIsTakibi.sln` geçti: 134/134.
+
+## Current Task
 - [x] `TÜM EKSİKLER` eksik maddelerine kaynak satır bağlamı ekle.
 - [x] Tadilat, YİBF İş Takibi, Karot ve Eksik Proje için dolu sütunlardan `Satır: ...` metni üret.
 - [x] UI'da eksik nedeni altında ayrı bağlam satırı göster.

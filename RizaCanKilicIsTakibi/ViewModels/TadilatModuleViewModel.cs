@@ -102,6 +102,7 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         BitenEntries = [];
         CellStates = [];
         DistrictGroups = [];
+        DisplayRows = [];
         Districts = [];
         DistrictCounts = [];
         ReplaceDistricts(DefaultDistricts);
@@ -142,6 +143,7 @@ public sealed class TadilatModuleViewModel : ViewModelBase
     public ObservableRangeCollection<string> Districts { get; }
     public ObservableRangeCollection<TadilatDistrictCountItem> DistrictCounts { get; }
     public ObservableRangeCollection<TadilatDistrictGroup> DistrictGroups { get; }
+    public ObservableRangeCollection<TadilatEntryRow> DisplayRows { get; }
 
     public bool HasUnsavedChanges
     {
@@ -820,6 +822,7 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         }
 
         UpdateRowSelections();
+        RefreshDisplayRows(orderedDistricts);
         RefreshDistrictCounts(collection);
         OnPropertyChanged(nameof(VisibleEntryCount));
         DeleteEntryCommand.NotifyCanExecuteChanged();
@@ -907,6 +910,30 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         }
 
         group.HasItems = true;
+    }
+
+    private void RefreshDisplayRows(IReadOnlyList<string> orderedDistricts)
+    {
+        var rows = new List<TadilatEntryRow>();
+        foreach (var district in orderedDistricts)
+        {
+            if (!_districtGroupLookup.TryGetValue(district, out var group) || !group.HasItems)
+            {
+                var placeholder = TadilatEntryRow.CreatePlaceholder(district);
+                placeholder.IsFirstInDistrict = true;
+                rows.Add(placeholder);
+                continue;
+            }
+
+            for (var index = 0; index < group.Rows.Count; index++)
+            {
+                var row = group.Rows[index];
+                row.IsFirstInDistrict = index == 0;
+                rows.Add(row);
+            }
+        }
+
+        DisplayRows.ReplaceRange(rows);
     }
 
     private void UpdateRow(TadilatEntryRow row, TadilatEntry entry)
@@ -1282,6 +1309,7 @@ public sealed class TadilatDistrictGroup : ViewModelBase
 public sealed class TadilatEntryRow : ViewModelBase
 {
     private bool _isSelected;
+    private bool _isFirstInDistrict;
 
     public TadilatEntryRow(
         TadilatEntry entry,
@@ -1328,6 +1356,12 @@ public sealed class TadilatEntryRow : ViewModelBase
     public TadilatEntry? Entry { get; private set; }
     public string District { get; }
     public bool IsPlaceholder { get; }
+
+    public bool IsFirstInDistrict
+    {
+        get => _isFirstInDistrict;
+        set => SetProperty(ref _isFirstInDistrict, value);
+    }
 
     public bool IsSelected
     {

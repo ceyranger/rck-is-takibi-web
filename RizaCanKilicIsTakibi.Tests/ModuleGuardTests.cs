@@ -309,6 +309,32 @@ public class ModuleGuardTests
     }
 
     [Fact]
+    public void Tadilat_DisplayRows_Flattens_Districts_For_Row_Level_Virtualization()
+    {
+        var module = new TadilatModuleViewModel(
+            new SqliteTadilatRepository(BuildDatabasePath()),
+            new TestTadilatImportService(),
+            new TestFileDialogService(),
+            new NotificationService(),
+            new CallbackConfirmationService(),
+            new TestTadilatCellNoteDialogService(),
+            new UndoRedoService());
+
+        var ayancik = new TadilatEntry { Id = Guid.NewGuid(), District = "AYANCIK", JobName = "Ayancık işi", SubTab = TadilatSubTab.Aktif, DisplayOrder = 0, CreatedAt = DateTime.Now.AddMinutes(-3), UpdatedAt = DateTime.Now.AddMinutes(-3) };
+        var firstSinop = new TadilatEntry { Id = Guid.NewGuid(), District = "SİNOP", JobName = "Sinop ilk", SubTab = TadilatSubTab.Aktif, DisplayOrder = 0, CreatedAt = DateTime.Now.AddMinutes(-2), UpdatedAt = DateTime.Now.AddMinutes(-2) };
+        var secondSinop = new TadilatEntry { Id = Guid.NewGuid(), District = "SİNOP", JobName = "Sinop ikinci", SubTab = TadilatSubTab.Aktif, DisplayOrder = 1, CreatedAt = DateTime.Now.AddMinutes(-1), UpdatedAt = DateTime.Now.AddMinutes(-1) };
+
+        module.LoadFromBackup([ayancik, secondSinop, firstSinop], Array.Empty<TadilatCellState>(), markDirty: false);
+
+        var realRows = module.DisplayRows.Where(row => !row.IsPlaceholder).ToList();
+        Assert.Equal(["Ayancık işi", "Sinop ilk", "Sinop ikinci"], realRows.Select(row => row.Entry!.JobName).ToArray());
+        Assert.True(realRows.Single(row => row.Entry!.Id == ayancik.Id).IsFirstInDistrict);
+        Assert.True(realRows.Single(row => row.Entry!.Id == firstSinop.Id).IsFirstInDistrict);
+        Assert.False(realRows.Single(row => row.Entry!.Id == secondSinop.Id).IsFirstInDistrict);
+        Assert.Contains(module.DisplayRows, row => row.IsPlaceholder && row.IsFirstInDistrict);
+    }
+
+    [Fact]
     public async Task Yibf_Move_AnaBilgi_Entry_Uses_Visible_Order_And_Persists()
     {
         var databasePath = BuildDatabasePath();
