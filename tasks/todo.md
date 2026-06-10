@@ -1,6 +1,18 @@
 # Todo
 
 ## Current Task
+- [x] `TÜM EKSİKLER` listesindeki Karot maddelerinde `Kat Bilgisi` metnini görünür yap.
+- [x] Hedefli/tam testleri çalıştır, güvenli Release publish al ve Git commit oluştur.
+
+## Review Update
+- Karot kaynaklı eksik maddelerinde durum metnine `Kat Bilgisi: ...` eklendi; liste satırında doğrudan okunuyor.
+- `dotnet test RizaCanKilicIsTakibi.Tests\RizaCanKilicIsTakibi.Tests.csproj --filter "TumEksikler"` geçti: 6/6.
+- `dotnet test RizaCanKilicIsTakibi.sln` geçti: 131/131.
+- Release publish geçici klasöre alındı, uygulama çalışmadığı doğrulanınca canonical `RizaCanKilicIsTakibi\bin\Release\publish\RizaCanKilicIsTakibi.exe` güncellendi.
+- Canlı `Data\tasks.db` ve `Data\last-save.json` hash/size/timestamp değerleri publish öncesi ve sonrası aynı kaldı.
+- Gereksiz test/debug/RID build çıktıları ve geçici publish klasörü temizlendi; canlı `Data`, `Backup`, `Logs` korunuyor.
+
+## Current Task
 - [x] `TÜM EKSİKLER` ana sekmesini navigasyona ekle.
 - [x] YİBF Ana Bilgi, YİBF İş Takibi, Tadilat, Eksik Proje ve Karot kaynaklarından eksik özetini üret.
 - [x] Zorunlu takip alanlarındaki boş hücreleri kontrollü şekilde eksik olarak göster.

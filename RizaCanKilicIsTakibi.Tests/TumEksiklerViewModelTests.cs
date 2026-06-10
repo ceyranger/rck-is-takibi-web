@@ -153,6 +153,7 @@ public sealed class TumEksiklerViewModelTests
         {
             Id = Guid.NewGuid(),
             YibfNo = "12345",
+            KatBilgisi = "Bodrum Kat",
             Status = KarotStatus.KarotAlindiOlumsuz,
             UpdatedAt = new DateTime(2026, 6, 6)
         };
@@ -168,6 +169,7 @@ public sealed class TumEksiklerViewModelTests
         var group = Assert.Single(vm.Groups);
         Assert.Contains(group.Items, item => item.SourceModule == "Eksik Proje" && item.NavigationTarget.Kind == SearchResultKind.MissingProjectEntry);
         Assert.Contains(group.Items, item => item.SourceModule == "Karot" && item.Severity == EksikSeverity.Critical);
+        Assert.Contains(group.Items, item => item.SourceModule == "Karot" && item.Reason.Contains("Kat Bilgisi: Bodrum Kat", StringComparison.Ordinal));
         Assert.DoesNotContain(group.Items, item => item.NavigationTarget.ItemId == positiveKarot.Id);
     }
 

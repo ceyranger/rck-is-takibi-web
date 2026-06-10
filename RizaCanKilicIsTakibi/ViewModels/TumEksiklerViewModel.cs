@@ -338,11 +338,17 @@ public sealed class TumEksiklerViewModel : ViewModelBase
                 KarotStatus.KarotAlindiSonucBekleniyor => "Karot sonucu bekleniyor",
                 _ => "Karot alınacak"
             };
+            var katBilgisiText = string.IsNullOrWhiteSpace(entry.KatBilgisi)
+                ? string.Empty
+                : $"Kat Bilgisi: {entry.KatBilgisi.Trim()}";
+            var reasonWithKatBilgisi = string.IsNullOrWhiteSpace(katBilgisiText)
+                ? reason
+                : $"{reason} - {katBilgisiText}";
 
             group.Items.Add(new EksikItemViewModel(
                 "Karot",
                 "Karot Durumu",
-                reason,
+                reasonWithKatBilgisi,
                 FirstNonEmpty(entry.KatBilgisi, entry.Aciklama, "-"),
                 entry.Aciklama,
                 severity.Value,
