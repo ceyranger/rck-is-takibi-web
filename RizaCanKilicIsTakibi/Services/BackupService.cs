@@ -130,7 +130,11 @@ public sealed class BackupService : IBackupService
             var expectedChecksum = payload.SchemaVersion == 1
                 ? ComputeChecksumV1(payload)
                 : ComputeChecksum(payload);
-            if (!string.Equals(payload.Checksum, expectedChecksum, StringComparison.Ordinal))
+            var legacyV2Checksum = payload.SchemaVersion == CurrentBackupSchemaVersion
+                ? ComputeChecksumV2WithoutTemplateGroups(payload)
+                : null;
+            if (!string.Equals(payload.Checksum, expectedChecksum, StringComparison.Ordinal)
+                && !string.Equals(payload.Checksum, legacyV2Checksum, StringComparison.Ordinal))
             {
                 throw new InvalidDataException("Yedek dosyası bozuk veya değiştirilmiş görünüyor.");
             }
@@ -191,6 +195,39 @@ public sealed class BackupService : IBackupService
             envelope.AppVersion,
             envelope.CreatedAt,
             envelope.Tasks,
+            envelope.ActionEntries,
+            envelope.MissingProjectEntries,
+            envelope.MissingProjectCellStates,
+            envelope.KarotEntries,
+            envelope.KarotCellStates,
+            envelope.TadilatEntries,
+            envelope.YibfAnaBilgiEntries,
+            envelope.YibfAnaBilgiEvents,
+            envelope.YibfIsTakibiEntries,
+            envelope.YibfCellStates,
+            envelope.TadilatCellStates
+        }, _jsonOptions);
+
+        return Convert.ToHexString(SHA256.HashData(payloadBytes));
+    }
+
+    private string ComputeChecksumV2WithoutTemplateGroups(BackupEnvelope envelope)
+    {
+        var payloadBytes = JsonSerializer.SerializeToUtf8Bytes(new
+        {
+            envelope.SchemaVersion,
+            envelope.AppVersion,
+            envelope.CreatedAt,
+            envelope.Tasks,
+            QuickTaskTemplates = envelope.QuickTaskTemplates.Select(template => new
+            {
+                template.Id,
+                template.Title,
+                template.SortOrder,
+                template.CreatedAt,
+                template.UpdatedAt,
+                template.IsDeleted
+            }),
             envelope.ActionEntries,
             envelope.MissingProjectEntries,
             envelope.MissingProjectCellStates,
@@ -747,6 +784,7 @@ public sealed class BackupService : IBackupService
         => new()
         {
             Id = template.Id,
+            GroupName = template.GroupName,
             Title = template.Title,
             SortOrder = template.SortOrder,
             CreatedAt = template.CreatedAt,
@@ -758,6 +796,7 @@ public sealed class BackupService : IBackupService
         => new()
         {
             Id = dto.Id,
+            GroupName = dto.GroupName,
             Title = dto.Title,
             SortOrder = dto.SortOrder,
             CreatedAt = dto.CreatedAt,
@@ -802,6 +841,7 @@ public sealed class BackupService : IBackupService
     private sealed class BackupQuickTaskTemplateDto
     {
         public Guid Id { get; set; }
+        public string GroupName { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;
         public int SortOrder { get; set; }
         public DateTime CreatedAt { get; set; }

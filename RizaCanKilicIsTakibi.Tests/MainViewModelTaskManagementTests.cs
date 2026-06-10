@@ -279,13 +279,13 @@ public class MainViewModelTaskManagementTests
             var repository = new SqliteQuickTaskTemplateRepository(databasePath);
             repository.ReplaceAll(
             [
-                new QuickTaskTemplate { Title = "Acil kontrol", SortOrder = 0, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
-                new QuickTaskTemplate { Title = "Evrak iste", SortOrder = 1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now }
+                new QuickTaskTemplate { GroupName = "Aybaşı İşlemleri", Title = "Acil kontrol", SortOrder = 0, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
+                new QuickTaskTemplate { GroupName = "Aybaşı İşlemleri", Title = "Evrak iste", SortOrder = 1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now }
             ]);
             var viewModel = new QuickTaskTemplateDialogViewModel(repository, repository.GetAll());
 
-            viewModel.SelectAllCommand.Execute(null);
-            viewModel.AddSelectedTasksCommand.Execute(null);
+            viewModel.SelectedGroup = viewModel.Groups.Single(group => group.Name == "Aybaşı İşlemleri");
+            viewModel.AddSelectedGroupTasksCommand.Execute(null);
 
             Assert.Equal(["Acil kontrol", "Evrak iste"], viewModel.SelectedTitles);
         }

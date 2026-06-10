@@ -5,6 +5,7 @@ namespace RizaCanKilicIsTakibi.Models;
 public sealed class QuickTaskTemplate : ObservableObject
 {
     private Guid _id = Guid.NewGuid();
+    private string _groupName = string.Empty;
     private string _title = string.Empty;
     private int _sortOrder;
     private DateTime _createdAt = DateTime.Now;
@@ -15,6 +16,12 @@ public sealed class QuickTaskTemplate : ObservableObject
     {
         get => _id;
         set => SetProperty(ref _id, value);
+    }
+
+    public string GroupName
+    {
+        get => _groupName;
+        set => SetProperty(ref _groupName, value);
     }
 
     public string Title
@@ -51,6 +58,7 @@ public sealed class QuickTaskTemplate : ObservableObject
         => new()
         {
             Id = Id,
+            GroupName = GroupName,
             Title = Title,
             SortOrder = SortOrder,
             CreatedAt = CreatedAt,

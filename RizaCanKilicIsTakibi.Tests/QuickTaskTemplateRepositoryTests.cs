@@ -1,12 +1,13 @@
 using RizaCanKilicIsTakibi.Models;
 using RizaCanKilicIsTakibi.Services;
+using Microsoft.Data.Sqlite;
 
 namespace RizaCanKilicIsTakibi.Tests;
 
 public class QuickTaskTemplateRepositoryTests
 {
     [Fact]
-    public void Constructor_Creates_Table_And_Seeds_Default_Templates()
+    public void Constructor_Creates_Table_Without_Default_Templates()
     {
         var root = CreateTempRoot();
         var databasePath = Path.Combine(root, "quick-templates.db");
@@ -17,9 +18,7 @@ public class QuickTaskTemplateRepositoryTests
 
             var templates = repository.GetAll();
 
-            Assert.Contains(templates, item => item.Title == "Eksik evrak istenecek");
-            Assert.Contains(templates, item => item.Title == "YİBF takibi yapılacak");
-            Assert.Equal(Enumerable.Range(0, templates.Count), templates.Select(item => item.SortOrder));
+            Assert.Empty(templates);
         }
         finally
         {
@@ -39,6 +38,7 @@ public class QuickTaskTemplateRepositoryTests
             var template = new QuickTaskTemplate
             {
                 Title = "Yeni hızlı iş",
+                GroupName = "Aybaşı İşlemleri",
                 SortOrder = repository.GetAll().Count,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
@@ -47,7 +47,7 @@ public class QuickTaskTemplateRepositoryTests
             await repository.SaveAsync(template);
 
             var reloaded = new SqliteQuickTaskTemplateRepository(databasePath);
-            Assert.Contains(reloaded.GetAll(), item => item.Id == template.Id && item.Title == "Yeni hızlı iş");
+            Assert.Contains(reloaded.GetAll(), item => item.Id == template.Id && item.GroupName == "Aybaşı İşlemleri" && item.Title == "Yeni hızlı iş");
 
             await reloaded.DeleteAsync(template.Id);
 
@@ -61,22 +61,41 @@ public class QuickTaskTemplateRepositoryTests
     }
 
     [Fact]
-    public async Task Deleted_Defaults_Are_Not_Seeded_Again()
+    public void Existing_Seed_Defaults_Are_Removed_Once()
     {
         var root = CreateTempRoot();
         var databasePath = Path.Combine(root, "quick-template-delete-defaults.db");
 
         try
         {
-            var repository = new SqliteQuickTaskTemplateRepository(databasePath);
-            foreach (var template in repository.GetAll())
+            var connectionString = SqliteConnectionSettings.BuildConnectionString(databasePath);
+            using (var connection = SqliteConnectionSettings.Open(connectionString))
             {
-                await repository.DeleteAsync(template.Id);
+                using var command = connection.CreateCommand();
+                command.CommandText = @"
+CREATE TABLE QuickTaskTemplates (
+    Id TEXT PRIMARY KEY,
+    Title TEXT NOT NULL,
+    SortOrder INTEGER NOT NULL,
+    CreatedAt TEXT NOT NULL,
+    UpdatedAt TEXT NOT NULL,
+    IsDeleted INTEGER NOT NULL DEFAULT 0
+);
+
+INSERT INTO QuickTaskTemplates (Id, Title, SortOrder, CreatedAt, UpdatedAt, IsDeleted)
+VALUES ($defaultId, 'Eksik evrak istenecek', 0, $now, $now, 0),
+       ($userId, 'Kullanıcı işi', 1, $now, $now, 0);";
+                command.Parameters.AddWithValue("$defaultId", Guid.NewGuid().ToString());
+                command.Parameters.AddWithValue("$userId", Guid.NewGuid().ToString());
+                command.Parameters.AddWithValue("$now", DateTime.Now.ToString("O"));
+                command.ExecuteNonQuery();
             }
 
-            var reloaded = new SqliteQuickTaskTemplateRepository(databasePath);
+            var repository = new SqliteQuickTaskTemplateRepository(databasePath);
+            var templates = repository.GetAll();
 
-            Assert.Empty(reloaded.GetAll());
+            Assert.DoesNotContain(templates, item => item.Title == "Eksik evrak istenecek");
+            Assert.Contains(templates, item => item.GroupName == "Genel" && item.Title == "Kullanıcı işi");
         }
         finally
         {

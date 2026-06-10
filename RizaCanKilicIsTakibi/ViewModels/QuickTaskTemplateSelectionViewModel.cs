@@ -16,6 +16,8 @@ public sealed class QuickTaskTemplateSelectionViewModel : ViewModelBase
 
     public Guid Id => Template.Id;
 
+    public string GroupName => Template.GroupName;
+
     public string Title => Template.Title;
 
     public bool IsSelected

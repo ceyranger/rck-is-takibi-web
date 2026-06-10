@@ -29,6 +29,7 @@ public class BackupServiceTests
             {
                 new()
                 {
+                    GroupName = "Aybaşı İşlemleri",
                     Title = "Eksik evrak istenecek",
                     SortOrder = 0,
                     CreatedAt = DateTime.Now,
@@ -127,6 +128,7 @@ public class BackupServiceTests
             Assert.Single(restored.Tasks);
             Assert.Equal("Deneme görev", restored.Tasks[0].Title);
             Assert.Single(restored.QuickTaskTemplates);
+            Assert.Equal("Aybaşı İşlemleri", restored.QuickTaskTemplates[0].GroupName);
             Assert.Equal("Eksik evrak istenecek", restored.QuickTaskTemplates[0].Title);
             Assert.Single(restored.Tasks[0].Notes);
             Assert.Empty(restored.ActionEntries);

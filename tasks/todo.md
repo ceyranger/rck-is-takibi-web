@@ -1,6 +1,26 @@
 # Todo
 
 ## Current Task
+- [x] Hızlı eklede önceki varsayılan şablonları kaldır ve mevcut veride bir kere temizle.
+- [x] Hızlı iş şablonlarına grup alanı ekle; kullanıcı grup oluşturup silebilsin.
+- [x] Grup içindeki işleri tekli/toplu veya grup tamamı olarak Acil İşler'e ekle.
+- [x] Backup/restore ve regresyon testlerini grup yapısına göre güncelle.
+- [x] Hedefli/tam testleri çalıştır, güvenli Release publish al ve Git commit oluştur.
+
+## Review Update
+- Hızlı İş Ekle artık hazır örnek şablon seed etmiyor; önceki sürümde eklenen altı hazır başlık varsa `QuickTaskTemplates` içinde ilk açılışta bir kere soft-delete ediliyor.
+- Hızlı iş şablonlarına `GroupName` eklendi; dialog sol tarafta grup listesi, sağ tarafta seçili grubun işleri olacak şekilde yenilendi.
+- Kullanıcı grup oluşturabiliyor, grubu silebiliyor, seçili gruba ayrı ayrı iş ekleyebiliyor; `Grubu Ekle` seçili gruptaki tüm işleri Acil İşler'e tek işlem olarak ekliyor.
+- `Hepsini Seç`, `Seçimi Temizle`, `Seçilenleri Ekle` davranışı seçili grup içindeki işlerle sınırlı çalışıyor.
+- JSON yedekleri şablon grup adını taşıyor; önceki v2 hızlı şablon yedekleri için checksum uyumluluğu korundu.
+- `dotnet build RizaCanKilicIsTakibi.sln` geçti.
+- `dotnet test RizaCanKilicIsTakibi.Tests\RizaCanKilicIsTakibi.Tests.csproj --filter "QuickTaskTemplate|QuickUrgent|Backup"` geçti: 24/24.
+- `dotnet test RizaCanKilicIsTakibi.sln` geçti: 147/147.
+- Release publish geçici klasöre alındı, uygulama çalışmadığı doğrulanınca canonical `RizaCanKilicIsTakibi\bin\Release\publish\RizaCanKilicIsTakibi.exe` güncellendi.
+- Canlı `Data\tasks.db` ve `Data\last-save.json` hash/size/timestamp değerleri publish öncesi ve sonrası aynı kaldı.
+- Geçici publish klasörü ve Debug/Release ara exe çıktıları temizlendi; repo içinde tek exe canonical publish exe olarak kaldı.
+
+## Current Task
 - [x] Acil İşler hızlı iş şablonları için veritabanı model/repository/migration ekle.
 - [x] Hızlı İş Ekle dialogunu ve Acil İşler kartındaki butonu ekle.
 - [x] Seçili/Hepsini Seç şablonlarını Acil İşler'e toplu ve undo/redo uyumlu ekle.
