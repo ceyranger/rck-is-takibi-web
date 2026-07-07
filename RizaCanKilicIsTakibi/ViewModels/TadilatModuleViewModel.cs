@@ -5,6 +5,7 @@ using RizaCanKilicIsTakibi.Models;
 using RizaCanKilicIsTakibi.Services;
 using RizaCanKilicIsTakibi.Services.Abstractions;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Media;
 
@@ -63,11 +64,14 @@ public sealed class TadilatModuleViewModel : ViewModelBase
     private readonly ITadilatCellNoteDialogService _noteDialogService;
     private readonly IUndoRedoService _undoRedoService;
     private readonly IClipboardService _clipboardService;
+    private readonly IReadOnlyList<ColumnFilterViewModel> _columnFilters;
 
     private bool _isInitialized;
     private bool _hasUnsavedChanges;
     private TadilatSubTab _selectedSubTab = TadilatSubTab.Aktif;
     private TadilatEntry? _selectedEntry;
+    private string _searchText = string.Empty;
+    private int _visibleEntryCount;
     private Guid? _lastSelectedEntryId;
     private readonly Dictionary<string, TadilatDistrictGroup> _districtGroupLookup = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<Guid, TadilatEntryRow> _rowLookup = [];
@@ -107,6 +111,30 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         DistrictCounts = [];
         ReplaceDistricts(DefaultDistricts);
 
+        DistrictColumnFilter = new ColumnFilterViewModel("İlçe", RefreshDistrictGroups, ApplyColumnSort);
+        JobNameColumnFilter = new ColumnFilterViewModel("İşin İsmi", RefreshDistrictGroups, ApplyColumnSort);
+        ProjectTypeColumnFilter = new ColumnFilterViewModel("Tadilat Proje Türü", RefreshDistrictGroups, ApplyColumnSort);
+        DigitalReceivedColumnFilter = new ColumnFilterViewModel("Dijital Geldi Mi?", RefreshDistrictGroups, ApplyColumnSort);
+        InspectorApprovedColumnFilter = new ColumnFilterViewModel("Denetçi Onayı", RefreshDistrictGroups, ApplyColumnSort);
+        OutputAndReportArrivedColumnFilter = new ColumnFilterViewModel("Çıktı ve Rapor", RefreshDistrictGroups, ApplyColumnSort);
+        OfficialLetterSubmittedColumnFilter = new ColumnFilterViewModel("Üst Yazı Teslim", RefreshDistrictGroups, ApplyColumnSort);
+        ArchivedFromMunicipalityColumnFilter = new ColumnFilterViewModel("Arşive Konuldu", RefreshDistrictGroups, ApplyColumnSort);
+        Description1ColumnFilter = new ColumnFilterViewModel("Açıklama 1", RefreshDistrictGroups, ApplyColumnSort);
+        Description2ColumnFilter = new ColumnFilterViewModel("Açıklama 2", RefreshDistrictGroups, ApplyColumnSort);
+        _columnFilters =
+        [
+            DistrictColumnFilter,
+            JobNameColumnFilter,
+            ProjectTypeColumnFilter,
+            DigitalReceivedColumnFilter,
+            InspectorApprovedColumnFilter,
+            OutputAndReportArrivedColumnFilter,
+            OfficialLetterSubmittedColumnFilter,
+            ArchivedFromMunicipalityColumnFilter,
+            Description1ColumnFilter,
+            Description2ColumnFilter
+        ];
+
         SelectSubTabCommand = new RelayCommand<TadilatSubTab>(tab => SelectedSubTab = tab);
         SelectEntryCommand = new RelayCommand<TadilatEntry?>(entry => SelectEntry(entry));
         AddEntryCommand = new AsyncRelayCommand<string?>(AddEntryAsync);
@@ -135,7 +163,20 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         MoveToAktifCommand = new AsyncRelayCommand<TadilatEntry?>(entry => MoveEntryToSubTabAsync(entry, TadilatSubTab.Aktif));
         MoveEntryUpCommand = new AsyncRelayCommand<TadilatEntry?>(entry => MoveEntryAsync(entry, -1), CanMoveEntryUp);
         MoveEntryDownCommand = new AsyncRelayCommand<TadilatEntry?>(entry => MoveEntryAsync(entry, 1), CanMoveEntryDown);
+        ClearSearchCommand = new RelayCommand(ClearSearch, () => HasActiveSearch);
+        ClearAllColumnFiltersCommand = new RelayCommand(ClearAllColumnFilters, () => HasActiveColumnFilter);
     }
+
+    public ColumnFilterViewModel DistrictColumnFilter { get; }
+    public ColumnFilterViewModel JobNameColumnFilter { get; }
+    public ColumnFilterViewModel ProjectTypeColumnFilter { get; }
+    public ColumnFilterViewModel DigitalReceivedColumnFilter { get; }
+    public ColumnFilterViewModel InspectorApprovedColumnFilter { get; }
+    public ColumnFilterViewModel OutputAndReportArrivedColumnFilter { get; }
+    public ColumnFilterViewModel OfficialLetterSubmittedColumnFilter { get; }
+    public ColumnFilterViewModel ArchivedFromMunicipalityColumnFilter { get; }
+    public ColumnFilterViewModel Description1ColumnFilter { get; }
+    public ColumnFilterViewModel Description2ColumnFilter { get; }
 
     public ObservableRangeCollection<TadilatEntry> AktifEntries { get; }
     public ObservableRangeCollection<TadilatEntry> BitenEntries { get; }
@@ -180,7 +221,42 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         }
     }
 
-    public int VisibleEntryCount => GetCurrentCollection().Count;
+    public string SearchText
+    {
+        get => _searchText;
+        set
+        {
+            if (SetProperty(ref _searchText, value ?? string.Empty))
+            {
+                RefreshDistrictGroups();
+                RefreshDistrictGroups();
+                OnPropertyChanged(nameof(HasActiveSearch));
+                OnPropertyChanged(nameof(HasActiveViewFilter));
+                OnPropertyChanged(nameof(HasNoVisibleResults));
+                OnPropertyChanged(nameof(HasNoSearchResults));
+                OnPropertyChanged(nameof(EntryCountDisplay));
+                ClearSearchCommand.NotifyCanExecuteChanged();
+            }
+        }
+    }
+
+    public int TotalEntryCount => GetCurrentCollection().Count;
+
+    public int VisibleEntryCount => _visibleEntryCount;
+
+    public bool HasActiveSearch => !string.IsNullOrWhiteSpace(SearchText);
+
+    public bool HasActiveColumnFilter => _columnFilters.Any(filter => filter.IsFilteredOrSorted);
+
+    public bool HasActiveViewFilter => HasActiveSearch || HasActiveColumnFilter;
+
+    public bool HasNoVisibleResults => HasActiveViewFilter && _visibleEntryCount == 0;
+
+    public bool HasNoSearchResults => HasNoVisibleResults;
+
+    public string EntryCountDisplay => HasActiveViewFilter
+        ? $"Görünen: {_visibleEntryCount} / {TotalEntryCount}"
+        : $"Kayıt: {TotalEntryCount}";
 
     public RelayCommand<TadilatSubTab> SelectSubTabCommand { get; }
     public RelayCommand<TadilatEntry?> SelectEntryCommand { get; }
@@ -209,6 +285,8 @@ public sealed class TadilatModuleViewModel : ViewModelBase
     public AsyncRelayCommand<TadilatEntry?> MoveToAktifCommand { get; }
     public AsyncRelayCommand<TadilatEntry?> MoveEntryUpCommand { get; }
     public AsyncRelayCommand<TadilatEntry?> MoveEntryDownCommand { get; }
+    public RelayCommand ClearSearchCommand { get; }
+    public RelayCommand ClearAllColumnFiltersCommand { get; }
 
     public async Task InitializeAsync()
     {
@@ -774,6 +852,8 @@ public sealed class TadilatModuleViewModel : ViewModelBase
 
     private void RefreshDistrictGroups()
     {
+        RefreshColumnFilters();
+
         var collection = GetCurrentCollection();
         var orderedDistricts = GetOrderedDistricts(collection);
         var activeDistricts = new HashSet<string>(orderedDistricts, StringComparer.OrdinalIgnoreCase);
@@ -800,11 +880,9 @@ public sealed class TadilatModuleViewModel : ViewModelBase
                 DistrictGroups.Insert(Math.Min(index, DistrictGroups.Count), group);
             }
 
-            var items = collection
+            var items = GetSortedDistrictEntries(collection
                 .Where(item => item.District.Equals(district, StringComparison.OrdinalIgnoreCase))
-                .OrderBy(item => item.DisplayOrder)
-                .ThenBy(item => item.UpdatedAt)
-                .ToList();
+                .Where(EntryMatchesViewFilter));
 
             SyncDistrictGroup(group, items);
 
@@ -815,7 +893,8 @@ public sealed class TadilatModuleViewModel : ViewModelBase
             }
         }
 
-        if (SelectedEntry is not null && !collection.Any(item => item.Id == SelectedEntry.Id))
+        if (SelectedEntry is not null
+            && (!collection.Any(item => item.Id == SelectedEntry.Id) || !EntryMatchesViewFilter(SelectedEntry)))
         {
             _selectedEntry = null;
             OnPropertyChanged(nameof(SelectedEntry));
@@ -824,10 +903,18 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         UpdateRowSelections();
         RefreshDisplayRows(orderedDistricts);
         RefreshDistrictCounts(collection);
+        _visibleEntryCount = collection.Count(EntryMatchesViewFilter);
         OnPropertyChanged(nameof(VisibleEntryCount));
+        OnPropertyChanged(nameof(TotalEntryCount));
+        OnPropertyChanged(nameof(EntryCountDisplay));
+        OnPropertyChanged(nameof(HasActiveColumnFilter));
+        OnPropertyChanged(nameof(HasActiveViewFilter));
+        OnPropertyChanged(nameof(HasNoVisibleResults));
+        OnPropertyChanged(nameof(HasNoSearchResults));
         DeleteEntryCommand.NotifyCanExecuteChanged();
         MoveEntryUpCommand.NotifyCanExecuteChanged();
         MoveEntryDownCommand.NotifyCanExecuteChanged();
+        ClearAllColumnFiltersCommand.NotifyCanExecuteChanged();
     }
 
     private List<string> GetOrderedDistricts(IEnumerable<TadilatEntry> collection)
@@ -838,7 +925,189 @@ public sealed class TadilatModuleViewModel : ViewModelBase
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(item => item, TurkishDistrictComparer)
             .ToList();
+
+        if (DistrictColumnFilter.SortDirection is { } districtDirection)
+        {
+            return districtDirection == ListSortDirection.Ascending
+                ? orderedDistricts.OrderBy(item => item, TurkishDistrictComparer).ToList()
+                : orderedDistricts.OrderByDescending(item => item, TurkishDistrictComparer).ToList();
+        }
+
         return orderedDistricts;
+    }
+
+    private void RefreshColumnFilters()
+    {
+        var source = GetCurrentCollection();
+        DistrictColumnFilter.SetAvailableValues(source.Select(entry => entry.District));
+        JobNameColumnFilter.SetAvailableValues(source.Select(entry => entry.JobName));
+        ProjectTypeColumnFilter.SetAvailableValues(source.Select(entry => entry.ProjectType));
+        DigitalReceivedColumnFilter.SetAvailableValues(source.Select(entry => entry.DigitalReceived));
+        InspectorApprovedColumnFilter.SetAvailableValues(source.Select(entry => entry.InspectorApproved));
+        OutputAndReportArrivedColumnFilter.SetAvailableValues(source.Select(entry => entry.OutputAndReportArrived));
+        OfficialLetterSubmittedColumnFilter.SetAvailableValues(source.Select(entry => entry.OfficialLetterSubmitted));
+        ArchivedFromMunicipalityColumnFilter.SetAvailableValues(source.Select(entry => entry.ArchivedFromMunicipality));
+        Description1ColumnFilter.SetAvailableValues(source.Select(entry => entry.Description1));
+        Description2ColumnFilter.SetAvailableValues(source.Select(entry => entry.Description2));
+    }
+
+    private void ApplyColumnSort(ColumnFilterViewModel activeFilter)
+    {
+        foreach (var filter in _columnFilters)
+        {
+            if (!ReferenceEquals(filter, activeFilter))
+            {
+                filter.ClearSortSilently();
+            }
+        }
+
+        RefreshDistrictGroups();
+    }
+
+    private bool EntryMatchesViewFilter(TadilatEntry entry)
+        => EntryMatchesSearch(entry) && MatchesAllColumnFilters(entry);
+
+    private bool MatchesAllColumnFilters(TadilatEntry entry)
+        => DistrictColumnFilter.IsMatch(entry.District)
+           && JobNameColumnFilter.IsMatch(entry.JobName)
+           && ProjectTypeColumnFilter.IsMatch(entry.ProjectType)
+           && DigitalReceivedColumnFilter.IsMatch(entry.DigitalReceived)
+           && InspectorApprovedColumnFilter.IsMatch(entry.InspectorApproved)
+           && OutputAndReportArrivedColumnFilter.IsMatch(entry.OutputAndReportArrived)
+           && OfficialLetterSubmittedColumnFilter.IsMatch(entry.OfficialLetterSubmitted)
+           && ArchivedFromMunicipalityColumnFilter.IsMatch(entry.ArchivedFromMunicipality)
+           && Description1ColumnFilter.IsMatch(entry.Description1)
+           && Description2ColumnFilter.IsMatch(entry.Description2);
+
+    private List<TadilatEntry> GetSortedDistrictEntries(IEnumerable<TadilatEntry> source)
+    {
+        if (JobNameColumnFilter.SortDirection is { } jobNameDirection)
+        {
+            return ApplySecondarySort(jobNameDirection == ListSortDirection.Ascending
+                ? source.OrderBy(entry => entry.JobName, StringComparer.CurrentCultureIgnoreCase)
+                : source.OrderByDescending(entry => entry.JobName, StringComparer.CurrentCultureIgnoreCase));
+        }
+
+        if (ProjectTypeColumnFilter.SortDirection is { } projectTypeDirection)
+        {
+            return ApplySecondarySort(projectTypeDirection == ListSortDirection.Ascending
+                ? source.OrderBy(entry => entry.ProjectType, StringComparer.CurrentCultureIgnoreCase)
+                : source.OrderByDescending(entry => entry.ProjectType, StringComparer.CurrentCultureIgnoreCase));
+        }
+
+        if (DigitalReceivedColumnFilter.SortDirection is { } digitalReceivedDirection)
+        {
+            return ApplySecondarySort(digitalReceivedDirection == ListSortDirection.Ascending
+                ? source.OrderBy(entry => entry.DigitalReceived, StringComparer.CurrentCultureIgnoreCase)
+                : source.OrderByDescending(entry => entry.DigitalReceived, StringComparer.CurrentCultureIgnoreCase));
+        }
+
+        if (InspectorApprovedColumnFilter.SortDirection is { } inspectorApprovedDirection)
+        {
+            return ApplySecondarySort(inspectorApprovedDirection == ListSortDirection.Ascending
+                ? source.OrderBy(entry => entry.InspectorApproved, StringComparer.CurrentCultureIgnoreCase)
+                : source.OrderByDescending(entry => entry.InspectorApproved, StringComparer.CurrentCultureIgnoreCase));
+        }
+
+        if (OutputAndReportArrivedColumnFilter.SortDirection is { } outputDirection)
+        {
+            return ApplySecondarySort(outputDirection == ListSortDirection.Ascending
+                ? source.OrderBy(entry => entry.OutputAndReportArrived, StringComparer.CurrentCultureIgnoreCase)
+                : source.OrderByDescending(entry => entry.OutputAndReportArrived, StringComparer.CurrentCultureIgnoreCase));
+        }
+
+        if (OfficialLetterSubmittedColumnFilter.SortDirection is { } officialLetterDirection)
+        {
+            return ApplySecondarySort(officialLetterDirection == ListSortDirection.Ascending
+                ? source.OrderBy(entry => entry.OfficialLetterSubmitted, StringComparer.CurrentCultureIgnoreCase)
+                : source.OrderByDescending(entry => entry.OfficialLetterSubmitted, StringComparer.CurrentCultureIgnoreCase));
+        }
+
+        if (ArchivedFromMunicipalityColumnFilter.SortDirection is { } archivedDirection)
+        {
+            return ApplySecondarySort(archivedDirection == ListSortDirection.Ascending
+                ? source.OrderBy(entry => entry.ArchivedFromMunicipality, StringComparer.CurrentCultureIgnoreCase)
+                : source.OrderByDescending(entry => entry.ArchivedFromMunicipality, StringComparer.CurrentCultureIgnoreCase));
+        }
+
+        if (Description1ColumnFilter.SortDirection is { } description1Direction)
+        {
+            return ApplySecondarySort(description1Direction == ListSortDirection.Ascending
+                ? source.OrderBy(entry => entry.Description1, StringComparer.CurrentCultureIgnoreCase)
+                : source.OrderByDescending(entry => entry.Description1, StringComparer.CurrentCultureIgnoreCase));
+        }
+
+        if (Description2ColumnFilter.SortDirection is { } description2Direction)
+        {
+            return ApplySecondarySort(description2Direction == ListSortDirection.Ascending
+                ? source.OrderBy(entry => entry.Description2, StringComparer.CurrentCultureIgnoreCase)
+                : source.OrderByDescending(entry => entry.Description2, StringComparer.CurrentCultureIgnoreCase));
+        }
+
+        return source
+            .OrderBy(entry => entry.DisplayOrder)
+            .ThenBy(entry => entry.UpdatedAt)
+            .ToList();
+    }
+
+    private static List<TadilatEntry> ApplySecondarySort(IOrderedEnumerable<TadilatEntry> ordered)
+        => ordered
+            .ThenBy(entry => entry.DisplayOrder)
+            .ThenBy(entry => entry.UpdatedAt)
+            .ToList();
+
+    private bool EntryMatchesSearch(TadilatEntry entry)
+    {
+        if (!HasActiveSearch)
+        {
+            return true;
+        }
+
+        var query = SearchText;
+        if (SearchTextNormalizer.Contains(entry.District, query)
+            || SearchTextNormalizer.Contains(entry.JobName, query)
+            || SearchTextNormalizer.Contains(entry.ProjectType, query)
+            || SearchTextNormalizer.Contains(entry.DigitalReceived, query)
+            || SearchTextNormalizer.Contains(entry.InspectorApproved, query)
+            || SearchTextNormalizer.Contains(entry.OutputAndReportArrived, query)
+            || SearchTextNormalizer.Contains(entry.OfficialLetterSubmitted, query)
+            || SearchTextNormalizer.Contains(entry.ArchivedFromMunicipality, query)
+            || SearchTextNormalizer.Contains(entry.Description1, query)
+            || SearchTextNormalizer.Contains(entry.Description2, query))
+        {
+            return true;
+        }
+
+        foreach (var state in CellStates)
+        {
+            if (state.EntryId != entry.Id || string.IsNullOrWhiteSpace(state.NoteText))
+            {
+                continue;
+            }
+
+            if (SearchTextNormalizer.Contains(state.NoteText, query))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void ClearSearch()
+    {
+        SearchText = string.Empty;
+    }
+
+    private void ClearAllColumnFilters()
+    {
+        foreach (var filter in _columnFilters)
+        {
+            filter.SelectAllCommand.Execute(null);
+            filter.ClearSortSilently();
+        }
+
+        RefreshDistrictGroups();
     }
 
     private void SyncDistrictGroup(TadilatDistrictGroup group, IReadOnlyList<TadilatEntry> items)
@@ -919,6 +1188,11 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         {
             if (!_districtGroupLookup.TryGetValue(district, out var group) || !group.HasItems)
             {
+                if (HasActiveViewFilter)
+                {
+                    continue;
+                }
+
                 var placeholder = TadilatEntryRow.CreatePlaceholder(district);
                 placeholder.IsFirstInDistrict = true;
                 rows.Add(placeholder);

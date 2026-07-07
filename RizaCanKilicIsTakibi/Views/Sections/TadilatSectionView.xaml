@@ -67,6 +67,13 @@
                 <Setter Property="Margin" Value="0,0,6,0"/>
             </Style>
 
+            <Style x:Key="TadilatHeaderCellStyle" TargetType="Border" BasedOn="{StaticResource TadilatCellBorderStyle}">
+                <Setter Property="Background" Value="#FF16355C"/>
+                <Setter Property="BorderBrush" Value="#FFD5E0EE"/>
+                <Setter Property="MinHeight" Value="84"/>
+                <Setter Property="Padding" Value="4,6"/>
+            </Style>
+
             <Style x:Key="TadilatCellBorderStyle" TargetType="Border" BasedOn="{StaticResource TadilatCellBorderStyle}">
                 <Setter Property="BorderBrush" Value="#FFB7C9DE"/>
                 <Setter Property="BorderThickness" Value="0,0,1,1"/>
@@ -358,7 +365,7 @@
 
                     <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}" Margin="0,8,0,8">
                         <DockPanel>
-                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" VerticalAlignment="Center">
                                 <Button Content="AKTİF"
                                         Command="{Binding TadilatModule.SelectSubTabCommand}"
                                         CommandParameter="{x:Static models:TadilatSubTab.Aktif}"
@@ -377,7 +384,8 @@
                                 </Button>
                                 <Button Content="BİTEN"
                                         Command="{Binding TadilatModule.SelectSubTabCommand}"
-                                        CommandParameter="{x:Static models:TadilatSubTab.Biten}">
+                                        CommandParameter="{x:Static models:TadilatSubTab.Biten}"
+                                        Margin="0,0,8,0">
                                     <Button.Style>
                                         <Style TargetType="Button" BasedOn="{StaticResource TadilatSecondBarButtonStyle}">
                                             <Style.Triggers>
@@ -390,11 +398,55 @@
                                         </Style>
                                     </Button.Style>
                                 </Button>
+                                <Border Style="{StaticResource TadilatSecondBarChipStyle}" Margin="0,0,8,0" Padding="0" MinWidth="240">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0"
+                                                 Text="{Binding TadilatModule.SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                                 MinHeight="36"
+                                                 Margin="8,0,0,0"
+                                                 VerticalContentAlignment="Center"
+                                                 BorderThickness="0"
+                                                 Background="Transparent"
+                                                 ToolTip="İş adı, ilçe, açıklama veya hücre notunda ara"/>
+                                        <TextBlock Grid.Column="0"
+                                                   IsHitTestVisible="False"
+                                                   Margin="10,0,0,0"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="#FF8A9BB0"
+                                                   Text="Ara (iş adı, ilçe, açıklama...)">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding TadilatModule.SearchText}" Value="">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                        <Button Grid.Column="1"
+                                                Content="×"
+                                                Command="{Binding TadilatModule.ClearSearchCommand}"
+                                                MinWidth="28"
+                                                MinHeight="28"
+                                                Margin="2"
+                                                Padding="0"
+                                                FontSize="16"
+                                                ToolTip="Aramayı temizle"
+                                                Style="{StaticResource GhostButton}"/>
+                                    </Grid>
+                                </Border>
                             </StackPanel>
 
                             <ScrollViewer HorizontalScrollBarVisibility="Auto"
                                           VerticalScrollBarVisibility="Disabled"
-                                          CanContentScroll="False">
+                                          CanContentScroll="False"
+                                          DockPanel.Dock="Right">
                                 <StackPanel Orientation="Horizontal"
                                             VerticalAlignment="Center"
                                             behaviors:AutoScaleToWidthBehavior.IsEnabled="True"
@@ -429,11 +481,13 @@
                                     <Button Content="Yukarı"
                                             Command="{Binding TadilatModule.MoveEntryUpCommand}"
                                             CommandParameter="{Binding TadilatModule.SelectedEntry}"
-                                            Style="{StaticResource TadilatSecondBarButtonStyle}"/>
+                                            Style="{StaticResource TadilatSecondBarButtonStyle}"
+                                            ToolTip="Seçili satırı aynı ilçe içinde yukarı taşı"/>
                                     <Button Content="Aşağı"
                                             Command="{Binding TadilatModule.MoveEntryDownCommand}"
                                             CommandParameter="{Binding TadilatModule.SelectedEntry}"
-                                            Style="{StaticResource TadilatSecondBarButtonStyle}"/>
+                                            Style="{StaticResource TadilatSecondBarButtonStyle}"
+                                            ToolTip="Seçili satırı aynı ilçe içinde aşağı taşı"/>
                                     <ItemsControl ItemsSource="{Binding TadilatModule.DistrictCounts}" Margin="0,0,6,0">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
@@ -452,11 +506,16 @@
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                     <Border Style="{StaticResource TadilatSecondBarChipStyle}">
-                                        <TextBlock Text="{Binding TadilatModule.VisibleEntryCount, StringFormat=Görünen Kayıt: {0}}"
+                                        <TextBlock Text="{Binding TadilatModule.EntryCountDisplay}"
                                                    FontWeight="SemiBold"
                                                    VerticalAlignment="Center"
                                                    Foreground="#FF20344C"/>
                                     </Border>
+                                    <Button Content="Filtreleri Temizle"
+                                            Command="{Binding TadilatModule.ClearAllColumnFiltersCommand}"
+                                            Style="{StaticResource TadilatSecondBarButtonStyle}"
+                                            MinWidth="140"
+                                            ToolTip="Tüm sütun filtrelerini ve sıralamayı sıfırla"/>
                                     <Border Style="{StaticResource TadilatSecondBarChipStyle}"
                                             Visibility="{Binding TadilatModule.HasUnsavedChanges, Converter={StaticResource BooleanToVisibilityConverter}}">
                                         <TextBlock Text="Kaydedilmemiş değişiklik var"
@@ -495,32 +554,62 @@
                                         <ColumnDefinition Width="0.80*"/>
                                         <ColumnDefinition Width="0.80*"/>
                                     </Grid.ColumnDefinitions>
-                    <Border Grid.Column="0" Style="{StaticResource TadilatCellBorderStyle}" Background="#FF16355C" MinHeight="84"><TextBlock Text="İLÇE" Foreground="White" FontWeight="SemiBold" TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"/></Border>
-                    <Border Grid.Column="1" Style="{StaticResource TadilatCellBorderStyle}" Background="#FF16355C" MinHeight="84"><TextBlock Text="İŞİN İSMİ" Foreground="White" FontWeight="SemiBold" TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"/></Border>
-                    <Border Grid.Column="2" Style="{StaticResource TadilatCellBorderStyle}" Background="#FF16355C" MinHeight="84"><TextBlock Text="TADİLAT PROJE TÜRÜ" Foreground="White" FontWeight="SemiBold" TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"/></Border>
-                    <Border Grid.Column="3" Style="{StaticResource TadilatCellBorderStyle}" Background="#FF16355C" MinHeight="84"><TextBlock Text="PROJENİN DİJİTALİ GELDİ Mİ ?" Foreground="White" FontWeight="SemiBold" TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"/></Border>
-                    <Border Grid.Column="4" Style="{StaticResource TadilatCellBorderStyle}" Background="#FF16355C" MinHeight="84"><TextBlock Text="PROJEYİ İLGİLİ DENETÇİ ONAYLADI MI?" Foreground="White" FontWeight="SemiBold" TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"/></Border>
-                    <Border Grid.Column="5" Style="{StaticResource TadilatCellBorderStyle}" Background="#FF16355C" MinHeight="84"><TextBlock Text="PROJENİN ÇIKTISI VE TADİLAT RAPORU BÜROYA GELDİ Mİ ?" Foreground="White" FontWeight="SemiBold" TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"/></Border>
-                    <Border Grid.Column="6" Style="{StaticResource TadilatCellBorderStyle}" Background="#FF16355C" MinHeight="84"><TextBlock Text="ÜST YAZI YAZILIP BELEDİYEYE TESLİM EDİLDİ Mİ?" Foreground="White" FontWeight="SemiBold" TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"/></Border>
-                    <Border Grid.Column="7" Style="{StaticResource TadilatCellBorderStyle}" Background="#FF16355C" MinHeight="84"><TextBlock Text="PROJELER BELEDİYEDEN ALINIP ARŞİVE KONULDU MU?" Foreground="White" FontWeight="SemiBold" TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"/></Border>
-                    <Border Grid.Column="8" Style="{StaticResource TadilatCellBorderStyle}" Background="#FF16355C" MinHeight="84"><TextBlock Text="AÇIKLAMA 1" Foreground="White" FontWeight="SemiBold" TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"/></Border>
-                    <Border Grid.Column="9" Style="{StaticResource TadilatCellBorderStyle}" Background="#FF16355C" MinHeight="84"><TextBlock Text="AÇIKLAMA 2" Foreground="White" FontWeight="SemiBold" TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"/></Border>
+                    <Border Grid.Column="0" Style="{StaticResource TadilatHeaderCellStyle}">
+                        <ContentControl Content="{Binding TadilatModule.DistrictColumnFilter}"
+                                        ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"/>
+                    </Border>
+                    <Border Grid.Column="1" Style="{StaticResource TadilatHeaderCellStyle}">
+                        <ContentControl Content="{Binding TadilatModule.JobNameColumnFilter}"
+                                        ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"/>
+                    </Border>
+                    <Border Grid.Column="2" Style="{StaticResource TadilatHeaderCellStyle}">
+                        <ContentControl Content="{Binding TadilatModule.ProjectTypeColumnFilter}"
+                                        ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"/>
+                    </Border>
+                    <Border Grid.Column="3" Style="{StaticResource TadilatHeaderCellStyle}">
+                        <ContentControl Content="{Binding TadilatModule.DigitalReceivedColumnFilter}"
+                                        ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"/>
+                    </Border>
+                    <Border Grid.Column="4" Style="{StaticResource TadilatHeaderCellStyle}">
+                        <ContentControl Content="{Binding TadilatModule.InspectorApprovedColumnFilter}"
+                                        ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"/>
+                    </Border>
+                    <Border Grid.Column="5" Style="{StaticResource TadilatHeaderCellStyle}">
+                        <ContentControl Content="{Binding TadilatModule.OutputAndReportArrivedColumnFilter}"
+                                        ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"/>
+                    </Border>
+                    <Border Grid.Column="6" Style="{StaticResource TadilatHeaderCellStyle}">
+                        <ContentControl Content="{Binding TadilatModule.OfficialLetterSubmittedColumnFilter}"
+                                        ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"/>
+                    </Border>
+                    <Border Grid.Column="7" Style="{StaticResource TadilatHeaderCellStyle}">
+                        <ContentControl Content="{Binding TadilatModule.ArchivedFromMunicipalityColumnFilter}"
+                                        ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"/>
+                    </Border>
+                    <Border Grid.Column="8" Style="{StaticResource TadilatHeaderCellStyle}">
+                        <ContentControl Content="{Binding TadilatModule.Description1ColumnFilter}"
+                                        ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"/>
+                    </Border>
+                    <Border Grid.Column="9" Style="{StaticResource TadilatHeaderCellStyle}">
+                        <ContentControl Content="{Binding TadilatModule.Description2ColumnFilter}"
+                                        ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"/>
+                    </Border>
                                 </Grid>
                                 <Border Grid.Column="1" Background="#FF16355C" BorderBrush="#FFD5E0EE" BorderThickness="0,0,1,1"/>
                             </Grid>
 
-<ListBox Grid.Row="1"
-         ItemsSource="{Binding TadilatModule.DisplayRows}"
-         behaviors:MouseWheelScrollBehavior.IsEnabled="True"
-         x:Name="TadilatDistrictGroupsList"
-         Style="{StaticResource VirtualizedListBoxStyle}"
-         ItemContainerStyle="{StaticResource VirtualizedListBoxItemStyle}"
-         ScrollViewer.CanContentScroll="True"
-         ScrollViewer.IsDeferredScrollingEnabled="False"
-         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-         ScrollViewer.VerticalScrollBarVisibility="Auto"
-         VirtualizingPanel.IsVirtualizing="True"
-         VirtualizingPanel.VirtualizationMode="Recycling">
+                            <Grid Grid.Row="1">
+                                <ListBox ItemsSource="{Binding TadilatModule.DisplayRows}"
+                                         behaviors:MouseWheelScrollBehavior.IsEnabled="True"
+                                         x:Name="TadilatDistrictGroupsList"
+                                         Style="{StaticResource VirtualizedListBoxStyle}"
+                                         ItemContainerStyle="{StaticResource VirtualizedListBoxItemStyle}"
+                                         ScrollViewer.CanContentScroll="True"
+                                         ScrollViewer.IsDeferredScrollingEnabled="False"
+                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                         VirtualizingPanel.IsVirtualizing="True"
+                                         VirtualizingPanel.VirtualizationMode="Recycling">
     <ListBox.ItemTemplate>
         <DataTemplate DataType="{x:Type viewModels:TadilatEntryRow}">
             <Grid Margin="0,0,0,2">
@@ -606,11 +695,23 @@
         </DataTemplate>
     </ListBox.ItemTemplate>
 </ListBox>
+                                <Border Background="#CCFFFFFF"
+                                        Visibility="{Binding TadilatModule.HasNoVisibleResults, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <TextBlock Text="Filtre veya arama sonucu bulunamadı. Verileriniz silinmedi; aramayı veya filtreleri temizleyerek tüm kayıtları görebilirsiniz."
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               TextAlignment="Center"
+                                               TextWrapping="Wrap"
+                                               MaxWidth="420"
+                                               Foreground="{StaticResource Brush.TextSecondary}"
+                                               FontWeight="SemiBold"/>
+                                </Border>
+                            </Grid>
 
                             <TextBlock Grid.Row="2"
                                        Margin="6,10,6,2"
                                        Foreground="{StaticResource Brush.TextSecondary}"
-                                       Text="İpucu: İlçe bloğuna sağ tıklayıp satır ekleyin. Hücreye çift tık/F2 ile yazı düzenleyin, sağ tık ile renk ve not yönetin."/>
+                                       Text="İpucu: Sütun başlığındaki ▼ ile Excel tarzı filtreleyin; sol taraftaki arama kutusuyla hızlı metin araması yapın. Satır seçip Yukarı/Aşağı ile aynı ilçe içinde sıralayın (Aktif ve Biten). Değişiklikleri Kaydet ile kalıcı hale getirin."/>
                         </Grid>
                     </Border>
                 </Grid>
