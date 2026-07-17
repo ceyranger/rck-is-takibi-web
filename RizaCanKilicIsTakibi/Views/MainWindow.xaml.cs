@@ -92,12 +92,12 @@ public partial class MainWindow : Window
 
     private static void ConfigureTaskBoardFilters(DataGrid grid, TaskBoardViewModel board)
     {
+        // Column 0 = drag handle, Column 1 = title (selectable display / editable).
         if (grid.Columns.Count < 2)
         {
             return;
         }
 
-        grid.Columns[0].Header = board.TitleColumnFilter;
-        grid.Columns[1].Header = board.DescriptionColumnFilter;
+        grid.Columns[1].Header = board.TitleColumnFilter;
     }
 }

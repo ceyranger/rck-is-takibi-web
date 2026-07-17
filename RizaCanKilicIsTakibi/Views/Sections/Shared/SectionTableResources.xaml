@@ -31,6 +31,8 @@
             <TextBlock Grid.Column="0"
                        Margin="0,0,6,0"
                        Text="{Binding Header}"
+                       Foreground="White"
+                       FontWeight="SemiBold"
                        TextWrapping="Wrap"
                        TextAlignment="Center"
                        VerticalAlignment="Center"

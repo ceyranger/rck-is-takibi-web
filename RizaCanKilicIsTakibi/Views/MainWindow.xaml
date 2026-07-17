@@ -24,6 +24,31 @@
             <Setter Property="behaviors:TextChangedCommandBehavior.Command"
                     Value="{Binding DataContext.CommitGeneralEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
         </Style>
+        <Style x:Key="TaskBoardSelectableTextBoxStyle" TargetType="TextBox">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="AcceptsReturn" Value="True"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="IsHitTestVisible" Value="True"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="Cursor" Value="IBeam"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Focusable" Value="True"/>
+        </Style>
+        <Style x:Key="TaskBoardDragHandleStyle" TargetType="TextBlock">
+            <Setter Property="Text" Value="⠿"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="#FF7A8DA3"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Cursor" Value="SizeAll"/>
+            <Setter Property="ToolTip" Value="Sürükleyerek diğer listeye taşı"/>
+            <Setter Property="behaviors:DataGridDragDropBehavior.IsDragHandle" Value="True"/>
+        </Style>
         <Style x:Key="TaskBoardHeaderStyle" TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
             <Setter Property="Background" Value="#FFF5F8FC"/>
             <Setter Property="Foreground" Value="#FF17324D"/>
@@ -255,6 +280,20 @@
                     behaviors:InlineEditActivatorBehavior.CommandParameter="{Binding}">
                 <Border.ContextMenu>
                     <ContextMenu>
+                        <MenuItem Header="Üste Satır Ekle"
+                                  Command="{Binding PlacementTarget.Tag.InsertEntryAboveCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                        <MenuItem Header="Alta Satır Ekle"
+                                  Command="{Binding PlacementTarget.Tag.InsertEntryBelowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                        <Separator/>
+                        <MenuItem Header="Yukarı Taşı"
+                                  Command="{Binding PlacementTarget.Tag.MoveEntryUpCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                        <MenuItem Header="Aşağı Taşı"
+                                  Command="{Binding PlacementTarget.Tag.MoveEntryDownCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                        <Separator/>
                         <MenuItem Header="Kopyala"
                                   Command="{Binding PlacementTarget.Tag.CopyCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                   CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
@@ -314,6 +353,8 @@
                 <TextBlock Grid.Column="0"
                            Margin="0,0,6,0"
                            Text="{Binding Header}"
+                           Foreground="White"
+                           FontWeight="SemiBold"
                            TextWrapping="Wrap"
                            TextAlignment="Center"
                            VerticalAlignment="Center"
@@ -743,7 +784,9 @@
                                 <Button Content="Ara" Command="{Binding OpenSearchCommand}" Style="{StaticResource GhostButton}" ToolTip="Ara (Ctrl+F)"/>
                                 <Button Content="Kaydet" Command="{Binding SaveActiveTabCommand}" ToolTip="Kaydet (Ctrl+S)"/>
                                 <Button Content="Excel Dışa" Command="{Binding ExportExcelCommand}" ToolTip="Excel'e Aktar"/>
+                                <Button Content="Excel İçe (Ekle)" Command="{Binding AppendImportGenelExcelCommand}" Style="{StaticResource GhostButton}" ToolTip="Mevcut kayıtlara Excel'den ekler; silmez"/>
                                 <Button Content="PDF" Command="{Binding ExportPdfCommand}" Style="{StaticResource GhostButton}" ToolTip="PDF Oluştur"/>
+                                <Button Content="PDF Paket" Command="{Binding ExportReportPackCommand}" Style="{StaticResource GhostButton}" ToolTip="Çok bölümlü PDF rapor paketi"/>
                             </WrapPanel>
                         </DockPanel>
                     </Border>
@@ -794,12 +837,35 @@
                                         <Style TargetType="DataGridRow" BasedOn="{StaticResource TaskBoardRowStyle}"/>
                                     </DataGrid.RowStyle>
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Başlık"
-                                                            HeaderTemplate="{StaticResource ColumnFilterHeaderTemplate}"
-                                                            Binding="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
-                                                            ElementStyle="{StaticResource WrappedCellTextBlockStyle}"
-                                                            EditingElementStyle="{StaticResource TaskBoardEditingTextBoxStyle}"
-                                                            Width="*"/>
+                                        <DataGridTemplateColumn Header="" Width="28" CanUserResize="False" CanUserSort="False">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="Transparent"
+                                                            Padding="2,0"
+                                                            behaviors:DataGridDragDropBehavior.IsDragHandle="True"
+                                                            Cursor="SizeAll"
+                                                            ToolTip="Sürükleyerek diğer listeye taşı">
+                                                        <TextBlock Style="{StaticResource TaskBoardDragHandleStyle}"/>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="Başlık"
+                                                                HeaderTemplate="{StaticResource ColumnFilterHeaderTemplate}"
+                                                                Width="*">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox Text="{Binding Title, Mode=OneWay}"
+                                                             Style="{StaticResource TaskBoardSelectableTextBoxStyle}"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                            <DataGridTemplateColumn.CellEditingTemplate>
+                                                <DataTemplate>
+                                                    <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
+                                                             Style="{StaticResource TaskBoardEditingTextBoxStyle}"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellEditingTemplate>
+                                        </DataGridTemplateColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </Grid>
@@ -820,6 +886,8 @@
                                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
                                         <Button Content="+" Command="{Binding AddGeneralTaskCommand}" Style="{StaticResource IconButton}" ToolTip="Yeni Görev Ekle"/>
                                         <Button Content="Sil" Command="{Binding DeleteGeneralTaskCommand}" Style="{StaticResource GhostButton}" ToolTip="Seçili Görevi Sil (Delete)"/>
+                                        <Button Content="↑" Command="{Binding MoveTaskUpCommand}" Style="{StaticResource IconButton}" ToolTip="Yukarı Taşı"/>
+                                        <Button Content="↓" Command="{Binding MoveTaskDownCommand}" Style="{StaticResource IconButton}" ToolTip="Aşağı Taşı"/>
                                     </StackPanel>
                                 </DockPanel>
                                 <DataGrid Grid.Row="1"
@@ -846,12 +914,35 @@
                                         <Style TargetType="DataGridRow" BasedOn="{StaticResource TaskBoardRowStyle}"/>
                                     </DataGrid.RowStyle>
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Başlık"
-                                                            HeaderTemplate="{StaticResource ColumnFilterHeaderTemplate}"
-                                                            Binding="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
-                                                            ElementStyle="{StaticResource WrappedCellTextBlockStyle}"
-                                                            EditingElementStyle="{StaticResource TaskBoardEditingTextBoxStyle}"
-                                                            Width="*"/>
+                                        <DataGridTemplateColumn Header="" Width="28" CanUserResize="False" CanUserSort="False">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="Transparent"
+                                                            Padding="2,0"
+                                                            behaviors:DataGridDragDropBehavior.IsDragHandle="True"
+                                                            Cursor="SizeAll"
+                                                            ToolTip="Sürükleyerek diğer listeye taşı">
+                                                        <TextBlock Style="{StaticResource TaskBoardDragHandleStyle}"/>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="Başlık"
+                                                                HeaderTemplate="{StaticResource ColumnFilterHeaderTemplate}"
+                                                                Width="*">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox Text="{Binding Title, Mode=OneWay}"
+                                                             Style="{StaticResource TaskBoardSelectableTextBoxStyle}"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                            <DataGridTemplateColumn.CellEditingTemplate>
+                                                <DataTemplate>
+                                                    <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
+                                                             Style="{StaticResource TaskBoardEditingTextBoxStyle}"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellEditingTemplate>
+                                        </DataGridTemplateColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </Grid>
@@ -979,6 +1070,8 @@
                                 </StackPanel>
                                 <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
                                     <Button Content="Kayıt Ekle" Command="{Binding MissingProjectModule.AddEntryCommand}" ToolTip="Yeni Kayıt Ekle"/>
+                                    <Button Content="↑" Command="{Binding MissingProjectModule.MoveEntryUpCommand}" CommandParameter="{Binding MissingProjectModule.SelectedEntry}" Style="{StaticResource IconButton}" ToolTip="Yukarı Taşı"/>
+                                    <Button Content="↓" Command="{Binding MissingProjectModule.MoveEntryDownCommand}" CommandParameter="{Binding MissingProjectModule.SelectedEntry}" Style="{StaticResource IconButton}" ToolTip="Aşağı Taşı"/>
                                     <Button Content="Excel Dışa" Command="{Binding ExportExcelCommand}" Style="{StaticResource GhostButton}" ToolTip="Excel'e Aktar"/>
                                     <Button Content="Kaydet" Command="{Binding SaveActiveTabCommand}" Style="{StaticResource GhostButton}" ToolTip="Kaydet (Ctrl+S)"/>
                                     <Button Content="PNG Aktar" Command="{Binding ExportMissingProjectPngCommand}" CommandParameter="{Binding ElementName=MissingProjectGrid}" Style="{StaticResource GhostButton}" ToolTip="PNG Olarak Kaydet"/>

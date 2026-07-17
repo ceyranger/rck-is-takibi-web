@@ -93,6 +93,7 @@ public class AppPerformanceSmokeTests
                 new TestAppSettingsService(settings),
                 new TestLastSaveMetadataService(),
                 new TestImportExportService(),
+                new TestGenelIsTakibiExcelImportService(),
                 notificationService,
                 confirmationService,
                 new SearchService(),
@@ -437,8 +438,15 @@ public class AppPerformanceSmokeTests
         public Task ExportWorkbookAsync(ExcelWorkbookExportModel workbook, string filePath, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public Task<IReadOnlyList<TaskItem>> ImportExcelAsync(string filePath, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<TaskItem>>(Array.Empty<TaskItem>());
         public Task ExportPdfAsync(IEnumerable<TaskItem> tasks, string filePath, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task ExportReportPackAsync(ReportPackExportModel pack, string filePath, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public Task ExportPngAsync(UIElement visual, string filePath, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public Task ExportScrollablePngAsync(UIElement visual, string filePath, CancellationToken cancellationToken = default) => Task.CompletedTask;
+    }
+
+    private sealed class TestGenelIsTakibiExcelImportService : IGenelIsTakibiExcelImportService
+    {
+        public GenelIsTakibiExcelImportResult ImportFromFile(string filePath, string aksiyonaEkleneceklerDistrict = "GENEL")
+            => new();
     }
 
     private sealed class TestFileDialogService : IFileDialogService

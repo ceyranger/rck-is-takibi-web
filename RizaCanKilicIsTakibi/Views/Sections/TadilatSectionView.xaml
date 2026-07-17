@@ -127,6 +127,12 @@
                                 </MenuItem.Style>
                             </MenuItem>
                             <Separator/>
+                            <MenuItem Header="Üste Satır Ekle"
+                                      Command="{Binding PlacementTarget.Tag.InsertEntryAboveCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                            <MenuItem Header="Alta Satır Ekle"
+                                      Command="{Binding PlacementTarget.Tag.InsertEntryBelowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                             <MenuItem Header="Yukarı Taşı"
                                       Command="{Binding PlacementTarget.Tag.MoveEntryUpCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>

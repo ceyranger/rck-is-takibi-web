@@ -15,9 +15,11 @@
                 </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="KarotHeaderCellStyle" TargetType="Border" BasedOn="{StaticResource TadilatCellBorderStyle}">
-                <Setter Property="Background" Value="#FF3E6DBA"/>
-                <Setter Property="BorderBrush" Value="#FF2B5292"/>
-                <Setter Property="MinHeight" Value="64"/>
+                <Setter Property="Background" Value="#FF16355C"/>
+                <Setter Property="BorderBrush" Value="#FFD5E0EE"/>
+                <Setter Property="MinHeight" Value="84"/>
+                <Setter Property="Padding" Value="4,6"/>
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
             </Style>
 
             <Style x:Key="KarotInlineTextBoxStyle" TargetType="TextBox">
@@ -158,159 +160,250 @@
             </DockPanel>
         </Border>
 
-        <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}">
-            <Grid x:Name="KarotExportHost">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+        <Grid Grid.Row="2" x:Name="KarotExportHost" UseLayoutRounding="True" SnapsToDevicePixels="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="{x:Static SystemParameters.VerticalScrollBarWidth}"/>
-                    </Grid.ColumnDefinitions>
+            <!-- YİBF İş Takibi ile aynı: başlık + scrollbar payı; satır kenarları kaymasın diye dış çerçeve satırla eş -->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="{x:Static SystemParameters.VerticalScrollBarWidth}"/>
+                </Grid.ColumnDefinitions>
 
-                    <Grid Grid.Column="0">
+                <Border Grid.Column="0"
+                        BorderBrush="#FFD5E0EE"
+                        BorderThickness="1"
+                        SnapsToDevicePixels="True">
+                    <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1.05*"/>
-                            <ColumnDefinition Width="1.35*"/>
-                            <ColumnDefinition Width="1.1*"/>
-                            <ColumnDefinition Width="1.05*"/>
-                            <ColumnDefinition Width="2.2*"/>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="2.05*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1.1*"/>
-                            <ColumnDefinition Width="1.2*"/>
-                            <ColumnDefinition Width="1.2*"/>
-                            <ColumnDefinition Width="2.4*"/>
+                            <ColumnDefinition Width="1.05*" MinWidth="0"/>
+                            <ColumnDefinition Width="1.35*" MinWidth="0"/>
+                            <ColumnDefinition Width="1.1*" MinWidth="0"/>
+                            <ColumnDefinition Width="1.05*" MinWidth="0"/>
+                            <ColumnDefinition Width="2.2*" MinWidth="0"/>
+                            <ColumnDefinition Width="2*" MinWidth="0"/>
+                            <ColumnDefinition Width="2.05*" MinWidth="0"/>
+                            <ColumnDefinition Width="1*" MinWidth="0"/>
+                            <ColumnDefinition Width="1.1*" MinWidth="0"/>
+                            <ColumnDefinition Width="1.2*" MinWidth="0"/>
+                            <ColumnDefinition Width="1.2*" MinWidth="0"/>
+                            <ColumnDefinition Width="2.4*" MinWidth="0"/>
                         </Grid.ColumnDefinitions>
 
                         <Border Grid.Column="0" Style="{StaticResource KarotHeaderCellStyle}">
                             <TextBlock Text="KAYIT DURUMU" Foreground="White" FontWeight="SemiBold" TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"/>
                         </Border>
-                        <Border Grid.Column="1" Style="{StaticResource KarotHeaderCellStyle}"><ContentControl Content="{Binding KarotModule.SampleReceivedDateColumnFilter}" ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"/></Border>
-                        <Border Grid.Column="2" Style="{StaticResource KarotHeaderCellStyle}"><ContentControl Content="{Binding KarotModule.YibfNoColumnFilter}" ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"/></Border>
-                        <Border Grid.Column="3" Style="{StaticResource KarotHeaderCellStyle}"><ContentControl Content="{Binding KarotModule.AdaParselColumnFilter}" ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"/></Border>
-                        <Border Grid.Column="4" Style="{StaticResource KarotHeaderCellStyle}"><ContentControl Content="{Binding KarotModule.YapiSahibiColumnFilter}" ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"/></Border>
-                        <Border Grid.Column="5" Style="{StaticResource KarotHeaderCellStyle}"><ContentControl Content="{Binding KarotModule.MuteahhitColumnFilter}" ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"/></Border>
-                        <Border Grid.Column="6" Style="{StaticResource KarotHeaderCellStyle}"><ContentControl Content="{Binding KarotModule.KatBilgisiColumnFilter}" ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"/></Border>
-                        <Border Grid.Column="7" Style="{StaticResource KarotHeaderCellStyle}"><ContentControl Content="{Binding KarotModule.BetonSinifiColumnFilter}" ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"/></Border>
-                        <Border Grid.Column="8" Style="{StaticResource KarotHeaderCellStyle}"><ContentControl Content="{Binding KarotModule.TwentyEightDayResultColumnFilter}" ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"/></Border>
-                        <Border Grid.Column="9" Style="{StaticResource KarotHeaderCellStyle}"><ContentControl Content="{Binding KarotModule.BetonFirmasiColumnFilter}" ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"/></Border>
-                        <Border Grid.Column="10" Style="{StaticResource KarotHeaderCellStyle}"><ContentControl Content="{Binding KarotModule.LaboratuvarColumnFilter}" ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"/></Border>
-                        <Border Grid.Column="11" Style="{StaticResource KarotHeaderCellStyle}"><ContentControl Content="{Binding KarotModule.AciklamaColumnFilter}" ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"/></Border>
+                        <Border Grid.Column="1" Style="{StaticResource KarotHeaderCellStyle}">
+                            <ContentControl Content="{Binding KarotModule.SampleReceivedDateColumnFilter}"
+                                            ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"
+                                            MinWidth="0"
+                                            HorizontalContentAlignment="Stretch"/>
+                        </Border>
+                        <Border Grid.Column="2" Style="{StaticResource KarotHeaderCellStyle}">
+                            <ContentControl Content="{Binding KarotModule.YibfNoColumnFilter}"
+                                            ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"
+                                            MinWidth="0"
+                                            HorizontalContentAlignment="Stretch"/>
+                        </Border>
+                        <Border Grid.Column="3" Style="{StaticResource KarotHeaderCellStyle}">
+                            <ContentControl Content="{Binding KarotModule.AdaParselColumnFilter}"
+                                            ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"
+                                            MinWidth="0"
+                                            HorizontalContentAlignment="Stretch"/>
+                        </Border>
+                        <Border Grid.Column="4" Style="{StaticResource KarotHeaderCellStyle}">
+                            <ContentControl Content="{Binding KarotModule.YapiSahibiColumnFilter}"
+                                            ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"
+                                            MinWidth="0"
+                                            HorizontalContentAlignment="Stretch"/>
+                        </Border>
+                        <Border Grid.Column="5" Style="{StaticResource KarotHeaderCellStyle}">
+                            <ContentControl Content="{Binding KarotModule.MuteahhitColumnFilter}"
+                                            ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"
+                                            MinWidth="0"
+                                            HorizontalContentAlignment="Stretch"/>
+                        </Border>
+                        <Border Grid.Column="6" Style="{StaticResource KarotHeaderCellStyle}">
+                            <ContentControl Content="{Binding KarotModule.KatBilgisiColumnFilter}"
+                                            ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"
+                                            MinWidth="0"
+                                            HorizontalContentAlignment="Stretch"/>
+                        </Border>
+                        <Border Grid.Column="7" Style="{StaticResource KarotHeaderCellStyle}">
+                            <ContentControl Content="{Binding KarotModule.BetonSinifiColumnFilter}"
+                                            ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"
+                                            MinWidth="0"
+                                            HorizontalContentAlignment="Stretch"/>
+                        </Border>
+                        <Border Grid.Column="8" Style="{StaticResource KarotHeaderCellStyle}">
+                            <ContentControl Content="{Binding KarotModule.TwentyEightDayResultColumnFilter}"
+                                            ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"
+                                            MinWidth="0"
+                                            HorizontalContentAlignment="Stretch"/>
+                        </Border>
+                        <Border Grid.Column="9" Style="{StaticResource KarotHeaderCellStyle}">
+                            <ContentControl Content="{Binding KarotModule.BetonFirmasiColumnFilter}"
+                                            ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"
+                                            MinWidth="0"
+                                            HorizontalContentAlignment="Stretch"/>
+                        </Border>
+                        <Border Grid.Column="10" Style="{StaticResource KarotHeaderCellStyle}">
+                            <ContentControl Content="{Binding KarotModule.LaboratuvarColumnFilter}"
+                                            ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"
+                                            MinWidth="0"
+                                            HorizontalContentAlignment="Stretch"/>
+                        </Border>
+                        <Border Grid.Column="11" Style="{StaticResource KarotHeaderCellStyle}">
+                            <ContentControl Content="{Binding KarotModule.AciklamaColumnFilter}"
+                                            ContentTemplate="{StaticResource ColumnFilterHeaderTemplate}"
+                                            MinWidth="0"
+                                            HorizontalContentAlignment="Stretch"/>
+                        </Border>
                     </Grid>
+                </Border>
 
-                    <Border Grid.Column="1" Background="#FF3E6DBA" BorderBrush="#FF2B5292" BorderThickness="0,0,1,1"/>
-                </Grid>
-
-                <Grid Grid.Row="1">
-                    <ListBox x:Name="KarotListBox"
-                             ItemsSource="{Binding KarotModule.VisibleRows}"
-                             SelectedValue="{Binding KarotModule.SelectedEntry, Mode=TwoWay}"
-                             SelectedValuePath="Entry"
-                             behaviors:MouseWheelScrollBehavior.IsEnabled="True"
-                             ScrollViewer.IsDeferredScrollingEnabled="False"
-                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                             ScrollViewer.VerticalScrollBarVisibility="Visible">
-                        <ListBox.Style>
-                            <Style TargetType="ListBox" BasedOn="{StaticResource VirtualizedListBoxStyle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding KarotModule.VisibleEntryCount}" Value="0">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ListBox.Style>
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource VirtualizedListBoxItemStyle}"/>
-                        </ListBox.ItemContainerStyle>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate DataType="{x:Type viewModels:KarotEntryRowViewModel}">
-                                <Border Style="{StaticResource TadilatRowBorderStyle}"
-                                        Tag="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected}"
-                                        Margin="0,0,0,2"
-                                        behaviors:ClickCommandBehavior.Command="{Binding DataContext.KarotModule.SelectKarotEntryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                        behaviors:ClickCommandBehavior.CommandParameter="{Binding Entry}">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="1.05*"/>
-                                            <ColumnDefinition Width="1.35*"/>
-                                            <ColumnDefinition Width="1.1*"/>
-                                            <ColumnDefinition Width="1.05*"/>
-                                            <ColumnDefinition Width="2.2*"/>
-                                            <ColumnDefinition Width="2*"/>
-                                            <ColumnDefinition Width="2.05*"/>
-                                            <ColumnDefinition Width="1*"/>
-                                            <ColumnDefinition Width="1.1*"/>
-                                            <ColumnDefinition Width="1.2*"/>
-                                            <ColumnDefinition Width="1.2*"/>
-                                            <ColumnDefinition Width="2.4*"/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <Border Grid.Column="0" Style="{StaticResource TadilatCellBorderStyle}" Background="{Binding RowBackgroundBrush}">
-                                            <Button Style="{StaticResource KarotRowActionButtonStyle}"
-                                                    Command="{Binding DataContext.KarotModule.OpenKarotStatusDialogCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                    CommandParameter="{Binding Entry}">
-                                                <TextBlock Text="KAYIT DURUMU"
-                                                           TextWrapping="Wrap"
-                                                           TextAlignment="Center"
-                                                           VerticalAlignment="Center"/>
-                                            </Button>
-                                        </Border>
-                                        <ContentPresenter Grid.Column="1" Content="{Binding SampleReceivedDateCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
-                                        <ContentPresenter Grid.Column="2" Content="{Binding YibfNoCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
-                                        <ContentPresenter Grid.Column="3" Content="{Binding AdaParselCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
-                                        <ContentPresenter Grid.Column="4" Content="{Binding YapiSahibiCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
-                                        <ContentPresenter Grid.Column="5" Content="{Binding MuteahhitCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
-                                        <ContentPresenter Grid.Column="6" Content="{Binding KatBilgisiCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
-                                        <ContentPresenter Grid.Column="7" Content="{Binding BetonSinifiCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
-                                        <ContentPresenter Grid.Column="8" Content="{Binding TwentyEightDayResultCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
-                                        <ContentPresenter Grid.Column="9" Content="{Binding BetonFirmasiCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
-                                        <ContentPresenter Grid.Column="10" Content="{Binding LaboratuvarCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
-                                        <ContentPresenter Grid.Column="11" Content="{Binding AciklamaCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-
-                    <Border Padding="18"
-                            Background="#FFF7FAFF"
-                            BorderBrush="#FFD7E5F6"
-                            BorderThickness="1"
-                            CornerRadius="12">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Visibility" Value="Collapsed"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding KarotModule.VisibleEntryCount}" Value="0">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                        <DockPanel LastChildFill="False">
-                            <TextBlock Text="Henüz kayıt yok"
-                                       VerticalAlignment="Center"
-                                       Foreground="{StaticResource Brush.TextSecondary}"
-                                       FontSize="14"
-                                       FontWeight="SemiBold"/>
-                            <Button Content="Kayıt Ekle"
-                                    Command="{Binding KarotModule.AddKarotEntryCommand}"
-                                    DockPanel.Dock="Right"/>
-                        </DockPanel>
-                    </Border>
-                </Grid>
-
-                <TextBlock Grid.Row="2"
-                           Margin="6,10,6,2"
-                           Foreground="{StaticResource Brush.TextSecondary}"
-                           Text="İpucu: Hücreler doğrudan düzenlenir. KAYIT DURUMU butonu durum popup'ını açar. Hücreye sağ tık ile not ekleyin."/>
+                <Border Grid.Column="1" Background="#FF16355C" BorderBrush="#FFD5E0EE" BorderThickness="0,0,1,1"/>
             </Grid>
-        </Border>
+
+            <ListBox Grid.Row="1"
+                     x:Name="KarotListBox"
+                     ItemsSource="{Binding KarotModule.VisibleRows}"
+                     SelectedValue="{Binding KarotModule.SelectedEntry, Mode=TwoWay}"
+                     SelectedValuePath="Entry"
+                     behaviors:MouseWheelScrollBehavior.IsEnabled="True"
+                     ItemContainerStyle="{StaticResource VirtualizedListBoxItemStyle}"
+                     ScrollViewer.IsDeferredScrollingEnabled="False"
+                     VirtualizingPanel.CacheLength="3"
+                     VirtualizingPanel.CacheLengthUnit="Item"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     ScrollViewer.VerticalScrollBarVisibility="Visible">
+                <ListBox.Style>
+                    <Style TargetType="ListBox" BasedOn="{StaticResource VirtualizedListBoxStyle}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding KarotModule.VisibleEntryCount}" Value="0">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.Style>
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type viewModels:KarotEntryRowViewModel}">
+                        <Border Background="White"
+                                SnapsToDevicePixels="True"
+                                Tag="{Binding DataContext.KarotModule, RelativeSource={RelativeSource AncestorType=Window}}"
+                                behaviors:ClickCommandBehavior.Command="{Binding DataContext.KarotModule.SelectKarotEntryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                behaviors:ClickCommandBehavior.CommandParameter="{Binding Entry}">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="BorderBrush" Value="#FFD5E0EE"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected}" Value="True">
+                                            <Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <Border.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Üste Satır Ekle"
+                                              Command="{Binding PlacementTarget.Tag.InsertKarotEntryAboveCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                              CommandParameter="{Binding PlacementTarget.DataContext.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                    <MenuItem Header="Alta Satır Ekle"
+                                              Command="{Binding PlacementTarget.Tag.InsertKarotEntryBelowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                              CommandParameter="{Binding PlacementTarget.DataContext.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                    <Separator/>
+                                    <MenuItem Header="Yukarı Taşı"
+                                              Command="{Binding PlacementTarget.Tag.MoveKarotEntryUpFromContextCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                              CommandParameter="{Binding PlacementTarget.DataContext.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                    <MenuItem Header="Aşağı Taşı"
+                                              Command="{Binding PlacementTarget.Tag.MoveKarotEntryDownFromContextCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                              CommandParameter="{Binding PlacementTarget.DataContext.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                    <Separator/>
+                                    <MenuItem Header="Sil"
+                                              Command="{Binding PlacementTarget.Tag.DeleteKarotEntryFromContextCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                              CommandParameter="{Binding PlacementTarget.DataContext.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                </ContextMenu>
+                            </Border.ContextMenu>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1.05*" MinWidth="0"/>
+                                    <ColumnDefinition Width="1.35*" MinWidth="0"/>
+                                    <ColumnDefinition Width="1.1*" MinWidth="0"/>
+                                    <ColumnDefinition Width="1.05*" MinWidth="0"/>
+                                    <ColumnDefinition Width="2.2*" MinWidth="0"/>
+                                    <ColumnDefinition Width="2*" MinWidth="0"/>
+                                    <ColumnDefinition Width="2.05*" MinWidth="0"/>
+                                    <ColumnDefinition Width="1*" MinWidth="0"/>
+                                    <ColumnDefinition Width="1.1*" MinWidth="0"/>
+                                    <ColumnDefinition Width="1.2*" MinWidth="0"/>
+                                    <ColumnDefinition Width="1.2*" MinWidth="0"/>
+                                    <ColumnDefinition Width="2.4*" MinWidth="0"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0" Style="{StaticResource TadilatCellBorderStyle}" Background="{Binding RowBackgroundBrush}">
+                                    <Button Style="{StaticResource KarotRowActionButtonStyle}"
+                                            Command="{Binding DataContext.KarotModule.OpenKarotStatusDialogCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            CommandParameter="{Binding Entry}">
+                                        <TextBlock Text="KAYIT DURUMU"
+                                                   TextWrapping="Wrap"
+                                                   TextAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Button>
+                                </Border>
+                                <ContentPresenter Grid.Column="1" Content="{Binding SampleReceivedDateCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
+                                <ContentPresenter Grid.Column="2" Content="{Binding YibfNoCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
+                                <ContentPresenter Grid.Column="3" Content="{Binding AdaParselCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
+                                <ContentPresenter Grid.Column="4" Content="{Binding YapiSahibiCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
+                                <ContentPresenter Grid.Column="5" Content="{Binding MuteahhitCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
+                                <ContentPresenter Grid.Column="6" Content="{Binding KatBilgisiCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
+                                <ContentPresenter Grid.Column="7" Content="{Binding BetonSinifiCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
+                                <ContentPresenter Grid.Column="8" Content="{Binding TwentyEightDayResultCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
+                                <ContentPresenter Grid.Column="9" Content="{Binding BetonFirmasiCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
+                                <ContentPresenter Grid.Column="10" Content="{Binding LaboratuvarCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
+                                <ContentPresenter Grid.Column="11" Content="{Binding AciklamaCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <Border Grid.Row="1"
+                    Padding="18"
+                    Background="#FFF7FAFF"
+                    BorderBrush="#FFD7E5F6"
+                    BorderThickness="1"
+                    CornerRadius="12">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding KarotModule.VisibleEntryCount}" Value="0">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <DockPanel LastChildFill="False">
+                    <TextBlock Text="Henüz kayıt yok"
+                               VerticalAlignment="Center"
+                               Foreground="{StaticResource Brush.TextSecondary}"
+                               FontSize="14"
+                               FontWeight="SemiBold"/>
+                    <Button Content="Kayıt Ekle"
+                            Command="{Binding KarotModule.AddKarotEntryCommand}"
+                            DockPanel.Dock="Right"/>
+                </DockPanel>
+            </Border>
+
+            <TextBlock Grid.Row="2"
+                       Margin="6,10,6,2"
+                       Foreground="{StaticResource Brush.TextSecondary}"
+                       Text="İpucu: Hücreler doğrudan düzenlenir. Satıra sağ tık ile üste/alta kayıt ekleyin. Hücreye sağ tık ile not ekleyin."/>
+        </Grid>
     </Grid>
 </UserControl>

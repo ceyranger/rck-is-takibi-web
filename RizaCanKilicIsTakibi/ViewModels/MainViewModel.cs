@@ -24,6 +24,7 @@ public sealed partial class MainViewModel : ViewModelBase
     private readonly IAppSettingsService _appSettingsService;
     private readonly ILastSaveMetadataService _lastSaveMetadataService;
     private readonly IImportExportService _importExportService;
+    private readonly IGenelIsTakibiExcelImportService _genelIsTakibiExcelImportService;
     private readonly INotificationService _notificationService;
     private readonly IConfirmationService _confirmationService;
     private readonly ISearchService _searchService;
@@ -127,6 +128,7 @@ public sealed partial class MainViewModel : ViewModelBase
         IAppSettingsService appSettingsService,
         ILastSaveMetadataService lastSaveMetadataService,
         IImportExportService importExportService,
+        IGenelIsTakibiExcelImportService genelIsTakibiExcelImportService,
         INotificationService notificationService,
         IConfirmationService confirmationService,
         ISearchService searchService,
@@ -152,6 +154,7 @@ public sealed partial class MainViewModel : ViewModelBase
         _appSettingsService = appSettingsService;
         _lastSaveMetadataService = lastSaveMetadataService;
         _importExportService = importExportService;
+        _genelIsTakibiExcelImportService = genelIsTakibiExcelImportService;
         _notificationService = notificationService;
         _confirmationService = confirmationService;
         _searchService = searchService;
@@ -208,7 +211,9 @@ public sealed partial class MainViewModel : ViewModelBase
         ImportBackupCommand = new AsyncRelayCommand(ImportBackupAsync);
         ExportExcelCommand = new AsyncRelayCommand(ExportExcelAsync);
         ImportExcelCommand = new AsyncRelayCommand(ImportExcelAsync);
+        AppendImportGenelExcelCommand = new AsyncRelayCommand(AppendImportGenelExcelAsync);
         ExportPdfCommand = new AsyncRelayCommand(ExportPdfAsync);
+        ExportReportPackCommand = new AsyncRelayCommand(ExportReportPackAsync);
         ExportUrgentPngCommand = new AsyncRelayCommand<UIElement?>(ExportUrgentPngAsync);
         ExportGeneralPngCommand = new AsyncRelayCommand<UIElement?>(ExportGeneralPngAsync);
         ExportActionListPngCommand = new AsyncRelayCommand<UIElement?>(ExportActionListPngAsync);
@@ -487,7 +492,9 @@ public sealed partial class MainViewModel : ViewModelBase
     public AsyncRelayCommand ImportBackupCommand { get; }
     public AsyncRelayCommand ExportExcelCommand { get; }
     public AsyncRelayCommand ImportExcelCommand { get; }
+    public AsyncRelayCommand AppendImportGenelExcelCommand { get; }
     public AsyncRelayCommand ExportPdfCommand { get; }
+    public AsyncRelayCommand ExportReportPackCommand { get; }
     public AsyncRelayCommand<UIElement?> ExportUrgentPngCommand { get; }
     public AsyncRelayCommand<UIElement?> ExportGeneralPngCommand { get; }
     public AsyncRelayCommand<UIElement?> ExportActionListPngCommand { get; }
@@ -2513,6 +2520,36 @@ public sealed partial class MainViewModel : ViewModelBase
             _ => new ExcelWorkbookExportModel()
         };
 
+    private ReportPackExportModel BuildReportPackModel()
+    {
+        var workbooks = new (string Title, ExcelWorkbookExportModel Workbook)[]
+        {
+            ("Genel İş Takibi", BuildGeneralTasksExcelWorkbook()),
+            ("Aksiyon", BuildActionExcelWorkbook()),
+            ("Eksik Proje", BuildMissingProjectExcelWorkbook()),
+            ("Karot Takibi", BuildKarotExcelWorkbook()),
+            ("Tadilat Takibi", BuildTadilatExcelWorkbook())
+        };
+
+        var sections = new List<ReportPackSectionModel>();
+        foreach (var (title, workbook) in workbooks)
+        {
+            foreach (var sheet in workbook.Sheets)
+            {
+                sections.Add(new ReportPackSectionModel
+                {
+                    Title = $"{title} / {sheet.Name}",
+                    Headers = sheet.Headers.ToList(),
+                    Rows = sheet.Rows
+                        .Select(row => (IReadOnlyList<string>)row.Cells.Select(cell => cell.Value ?? string.Empty).ToList())
+                        .ToList()
+                });
+            }
+        }
+
+        return new ReportPackExportModel { Sections = sections };
+    }
+
     private string GetCurrentTabExcelTitle()
         => SelectedMainTab switch
         {
@@ -2923,6 +2960,137 @@ public sealed partial class MainViewModel : ViewModelBase
             }
         });
 
+    private async Task AppendImportGenelExcelAsync()
+        => await RunExclusiveOperationAsync(async () =>
+        {
+            try
+            {
+                if (!_confirmationService.Confirm(new ConfirmationRequest
+                    {
+                        Kind = ConfirmationKind.Restore,
+                        Title = "Excel İçe Aktar (Ekle)",
+                        Message = "Mevcut kayıtlara eklenecek; silinmeyecek.\n\nİçe aktarma öncesi otomatik yedek alınır.\nKayıtlar Kaydet ile kalıcı olur.\n\nDevam edilsin mi?",
+                        IsDestructive = false
+                    }))
+                {
+                    return;
+                }
+
+                var path = _fileDialogService.ShowOpenDialog(
+                    "Genel iş takibi Excel içe aktar (ekle)",
+                    "Excel (*.xlsx)|*.xlsx");
+                if (string.IsNullOrWhiteSpace(path))
+                {
+                    return;
+                }
+
+                await EnsureAllModulesInitializedAsync();
+                var imported = _genelIsTakibiExcelImportService.ImportFromFile(path);
+                if (imported.TotalCount == 0)
+                {
+                    _notificationService.ShowToast("İçe aktarılacak geçerli kayıt bulunamadı.", ToastType.Warning);
+                    return;
+                }
+
+                await _backupService.CreateBackupAsync(
+                    AllTasks(),
+                    backupPath: null,
+                    ActionModule.GetAllEntriesSnapshot(),
+                    MissingProjectModule.GetEntriesSnapshot(),
+                    MissingProjectModule.GetCellStatesSnapshot(),
+                    KarotModule.GetEntriesSnapshot(),
+                    KarotModule.GetCellStatesSnapshot(),
+                    TadilatModule.GetEntriesSnapshot(),
+                    YibfModule.GetAnaBilgiEntriesSnapshot(),
+                    YibfModule.GetAnaBilgiEventsSnapshot(),
+                    YibfModule.GetIsTakibiEntriesSnapshot(),
+                    YibfModule.GetCellStatesSnapshot(),
+                    TadilatModule.GetCellStatesSnapshot(),
+                    _quickTaskTemplateRepository?.GetAll());
+
+                var beforeUrgent = UrgentBoard.Tasks.Select(task => task.Clone()).ToList();
+                var beforeGeneral = GeneralBoard.Tasks.Select(task => task.Clone()).ToList();
+                var beforeActions = ActionModule.GetAllEntriesSnapshot().ToList();
+                var beforeMissing = MissingProjectModule.GetEntriesSnapshot().ToList();
+                var beforeMissingCells = MissingProjectModule.GetCellStatesSnapshot().ToList();
+
+                var afterUrgent = beforeUrgent.Select(task => task.Clone()).ToList();
+                var afterGeneral = beforeGeneral.Select(task => task.Clone()).ToList();
+                foreach (var task in imported.Tasks)
+                {
+                    var clone = task.Clone();
+                    if (clone.BoardType == TaskBoardType.Acil)
+                    {
+                        clone.SortOrder = afterUrgent.Count;
+                        afterUrgent.Add(clone);
+                    }
+                    else
+                    {
+                        clone.SortOrder = afterGeneral.Count;
+                        afterGeneral.Add(clone);
+                    }
+                }
+
+                var afterActions = beforeActions.ToList();
+                foreach (var group in imported.ActionEntries.GroupBy(entry => (entry.Category, District: entry.District ?? string.Empty)))
+                {
+                    var nextOrder = afterActions
+                        .Where(entry => entry.Category == group.Key.Category
+                                        && string.Equals(entry.District, group.Key.District, StringComparison.OrdinalIgnoreCase))
+                        .Select(entry => entry.DisplayOrder)
+                        .DefaultIfEmpty(-1)
+                        .Max() + 1;
+
+                    foreach (var entry in group.OrderBy(item => item.DisplayOrder))
+                    {
+                        entry.DisplayOrder = nextOrder++;
+                        afterActions.Add(entry);
+                    }
+                }
+
+                var afterMissing = beforeMissing.ToList();
+                var nextMissingOrder = afterMissing.Select(entry => entry.DisplayOrder).DefaultIfEmpty(-1).Max() + 1;
+                foreach (var entry in imported.MissingProjectEntries.OrderBy(item => item.DisplayOrder))
+                {
+                    entry.DisplayOrder = nextMissingOrder++;
+                    afterMissing.Add(entry);
+                }
+
+                void ApplyState(
+                    IReadOnlyList<TaskItem> urgent,
+                    IReadOnlyList<TaskItem> general,
+                    IReadOnlyList<ActionEntry> actions,
+                    IReadOnlyList<MissingProjectEntry> missing,
+                    IReadOnlyList<MissingProjectCellState> missingCells,
+                    bool markDirty)
+                {
+                    _suppressTaskDirtyTracking = true;
+                    UrgentBoard.ReplaceAll(urgent.Select(task => task.Clone()));
+                    GeneralBoard.ReplaceAll(general.Select(task => task.Clone()));
+                    _suppressTaskDirtyTracking = false;
+                    HasUnsavedChanges = markDirty;
+
+                    ActionModule.LoadFromBackup(actions, markDirty);
+                    MissingProjectModule.LoadFromBackup(missing, missingCells, markDirty);
+                }
+
+                _undoRedoService.Execute(new DelegateUndoableAction(
+                    "Excel içe aktar (ekle)",
+                    () => ApplyState(afterUrgent, afterGeneral, afterActions, afterMissing, beforeMissingCells, markDirty: true),
+                    () => ApplyState(beforeUrgent, beforeGeneral, beforeActions, beforeMissing, beforeMissingCells, markDirty: true)));
+
+                _notificationService.ShowToast(
+                    $"Excel eklendi: Acil {imported.UrgentTaskCount}, Genel {imported.GeneralTaskCount}, Aksiyon {imported.ActionEntryCount}, Eklenecekler {imported.ActionToAddEntryCount}, Eksik {imported.MissingProjectEntryCount}. Kaydet ile kalıcı yapın.",
+                    ToastType.Success,
+                    TimeSpan.FromSeconds(6));
+            }
+            catch (Exception ex)
+            {
+                _suppressTaskDirtyTracking = false;
+                _notificationService.ShowToast($"Excel ekleme hatası: {ex.Message}", ToastType.Error);
+            }
+        });
+
     private async Task ExportPdfAsync()
     {
         try
@@ -2939,6 +3107,27 @@ public sealed partial class MainViewModel : ViewModelBase
         catch (Exception ex)
         {
             _notificationService.ShowToast($"PDF dışa aktarma hatası: {ex.Message}", ToastType.Error);
+        }
+    }
+
+    private async Task ExportReportPackAsync()
+    {
+        try
+        {
+            var path = _fileDialogService.ShowSaveDialog("PDF rapor paketi", "PDF (*.pdf)|*.pdf", ".pdf");
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return;
+            }
+
+            await EnsureAllModulesInitializedAsync();
+            var pack = BuildReportPackModel();
+            await _importExportService.ExportReportPackAsync(pack, path);
+            _notificationService.ShowToast("PDF rapor paketi oluşturuldu.", ToastType.Success);
+        }
+        catch (Exception ex)
+        {
+            _notificationService.ShowToast($"PDF rapor paketi hatası: {ex.Message}", ToastType.Error);
         }
     }
 

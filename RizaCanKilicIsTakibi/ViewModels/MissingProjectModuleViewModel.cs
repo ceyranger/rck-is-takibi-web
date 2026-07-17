@@ -82,6 +82,10 @@ public sealed class MissingProjectModuleViewModel : ViewModelBase
 
         AddEntryCommand = new AsyncRelayCommand(AddEntryAsync);
         DeleteEntryCommand = new AsyncRelayCommand<MissingProjectEntry?>(DeleteSelectedAsync, CanDeleteEntry);
+        InsertEntryAboveCommand = new AsyncRelayCommand<MissingProjectEntry?>(entry => InsertEntryRelativeAsync(entry, insertAfter: false), entry => entry is not null);
+        InsertEntryBelowCommand = new AsyncRelayCommand<MissingProjectEntry?>(entry => InsertEntryRelativeAsync(entry, insertAfter: true), entry => entry is not null);
+        MoveEntryUpCommand = new RelayCommand<MissingProjectEntry?>(entry => MoveEntry(entry, -1), CanMoveEntryUp);
+        MoveEntryDownCommand = new RelayCommand<MissingProjectEntry?>(entry => MoveEntry(entry, 1), CanMoveEntryDown);
         SaveEntryCommand = new AsyncRelayCommand<MissingProjectEntry?>(SaveEntryAsync, CanSaveEntry);
         BeginCellEditCommand = new RelayCommand<MissingProjectCellViewModel?>(BeginCellEdit);
         CommitCellEditCommand = new RelayCommand<MissingProjectCellViewModel?>(CommitCellEdit);
@@ -127,8 +131,7 @@ public sealed class MissingProjectModuleViewModel : ViewModelBase
                 }
 
                 RefreshRowSelection();
-                DeleteEntryCommand.NotifyCanExecuteChanged();
-                SaveEntryCommand.NotifyCanExecuteChanged();
+                NotifyEntryCommands();
             }
         }
     }
@@ -147,14 +150,17 @@ public sealed class MissingProjectModuleViewModel : ViewModelBase
                 }
 
                 RefreshRowSelection();
-                DeleteEntryCommand.NotifyCanExecuteChanged();
-                SaveEntryCommand.NotifyCanExecuteChanged();
+                NotifyEntryCommands();
             }
         }
     }
 
     public AsyncRelayCommand AddEntryCommand { get; }
     public AsyncRelayCommand<MissingProjectEntry?> DeleteEntryCommand { get; }
+    public AsyncRelayCommand<MissingProjectEntry?> InsertEntryAboveCommand { get; }
+    public AsyncRelayCommand<MissingProjectEntry?> InsertEntryBelowCommand { get; }
+    public RelayCommand<MissingProjectEntry?> MoveEntryUpCommand { get; }
+    public RelayCommand<MissingProjectEntry?> MoveEntryDownCommand { get; }
     public AsyncRelayCommand<MissingProjectEntry?> SaveEntryCommand { get; }
     public RelayCommand<MissingProjectCellViewModel?> BeginCellEditCommand { get; }
     public RelayCommand<MissingProjectCellViewModel?> CommitCellEditCommand { get; }
@@ -278,6 +284,152 @@ public sealed class MissingProjectModuleViewModel : ViewModelBase
         });
         _notificationService.ShowToast("Eksik proje kaydı eklendi.", ToastType.Success);
         await Task.CompletedTask;
+    }
+
+    private Task InsertEntryRelativeAsync(MissingProjectEntry? anchorEntry, bool insertAfter)
+    {
+        if (anchorEntry is null)
+        {
+            return Task.CompletedTask;
+        }
+
+        var anchor = Entries.FirstOrDefault(item => item.Id == anchorEntry.Id);
+        if (anchor is null)
+        {
+            return Task.CompletedTask;
+        }
+
+        SelectedEntry = anchor;
+
+        ExecuteUndoableMutation(
+            insertAfter ? "Eksik proje alta kayıt ekle" : "Eksik proje üste kayıt ekle",
+            () =>
+            {
+                var ordered = Entries
+                    .OrderBy(item => item.DisplayOrder)
+                    .ThenBy(item => item.UpdatedAt)
+                    .ToList();
+                var anchorIndex = ordered.FindIndex(item => item.Id == anchor.Id);
+                if (anchorIndex < 0)
+                {
+                    return;
+                }
+
+                var insertIndex = insertAfter ? anchorIndex + 1 : anchorIndex;
+                var entry = new MissingProjectEntry
+                {
+                    AdaParsel = string.Empty,
+                    YapiSahibi = string.Empty,
+                    RecordMedium = MissingProjectMedium.Fiziki,
+                    RecordMediumText = MissingProjectMediumLabelProvider.GetLabel(MissingProjectMedium.Fiziki),
+                    MissingProjectText = string.Empty,
+                    Description = string.Empty,
+                    DisplayOrder = insertIndex,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
+                };
+
+                ordered.Insert(insertIndex, entry);
+                for (var index = 0; index < ordered.Count; index++)
+                {
+                    ordered[index].DisplayOrder = index;
+                    ordered[index].UpdatedAt = DateTime.Now;
+                }
+
+                Entries.ReplaceRange(ordered);
+                RefreshRows();
+                SelectedEntry = entry;
+                HasUnsavedChanges = true;
+            });
+
+        _notificationService.ShowToast(
+            insertAfter ? "Seçili satırın altına kayıt eklendi." : "Seçili satırın üstüne kayıt eklendi.",
+            ToastType.Success);
+        return Task.CompletedTask;
+    }
+
+    private void MoveEntry(MissingProjectEntry? entry, int direction)
+    {
+        var target = entry is null
+            ? SelectedEntry
+            : Entries.FirstOrDefault(item => item.Id == entry.Id) ?? entry;
+        if (target is null)
+        {
+            return;
+        }
+
+        var ordered = Entries
+            .OrderBy(item => item.DisplayOrder)
+            .ThenBy(item => item.UpdatedAt)
+            .ToList();
+        var currentIndex = ordered.FindIndex(item => item.Id == target.Id);
+        var targetIndex = currentIndex + direction;
+        if (currentIndex < 0 || targetIndex < 0 || targetIndex >= ordered.Count)
+        {
+            return;
+        }
+
+        ExecuteUndoableMutation("Eksik proje sıralama değiştir", () =>
+        {
+            var liveOrdered = Entries
+                .OrderBy(item => item.DisplayOrder)
+                .ThenBy(item => item.UpdatedAt)
+                .ToList();
+            var sourceIndex = liveOrdered.FindIndex(item => item.Id == target.Id);
+            var destinationIndex = sourceIndex + direction;
+            if (sourceIndex < 0 || destinationIndex < 0 || destinationIndex >= liveOrdered.Count)
+            {
+                return;
+            }
+
+            (liveOrdered[sourceIndex], liveOrdered[destinationIndex]) =
+                (liveOrdered[destinationIndex], liveOrdered[sourceIndex]);
+            for (var index = 0; index < liveOrdered.Count; index++)
+            {
+                liveOrdered[index].DisplayOrder = index;
+                liveOrdered[index].UpdatedAt = DateTime.Now;
+            }
+
+            Entries.ReplaceRange(liveOrdered);
+            RefreshRows();
+            SelectedEntry = Entries.FirstOrDefault(item => item.Id == target.Id);
+            HasUnsavedChanges = true;
+        });
+    }
+
+    private bool CanMoveEntryUp(MissingProjectEntry? entry)
+    {
+        var target = entry ?? SelectedEntry;
+        if (target is null)
+        {
+            return false;
+        }
+
+        var ordered = Entries.OrderBy(item => item.DisplayOrder).ThenBy(item => item.UpdatedAt).ToList();
+        return ordered.FindIndex(item => item.Id == target.Id) > 0;
+    }
+
+    private bool CanMoveEntryDown(MissingProjectEntry? entry)
+    {
+        var target = entry ?? SelectedEntry;
+        if (target is null)
+        {
+            return false;
+        }
+
+        var ordered = Entries.OrderBy(item => item.DisplayOrder).ThenBy(item => item.UpdatedAt).ToList();
+        var currentIndex = ordered.FindIndex(item => item.Id == target.Id);
+        return currentIndex >= 0 && currentIndex < ordered.Count - 1;
+    }
+
+    private void NotifyEntryCommands()
+    {
+        DeleteEntryCommand.NotifyCanExecuteChanged();
+        SaveEntryCommand.NotifyCanExecuteChanged();
+        InsertEntryAboveCommand.NotifyCanExecuteChanged();
+        InsertEntryBelowCommand.NotifyCanExecuteChanged();
+        MoveEntryUpCommand.NotifyCanExecuteChanged();
+        MoveEntryDownCommand.NotifyCanExecuteChanged();
     }
 
     private async Task DeleteSelectedAsync(MissingProjectEntry? entry)

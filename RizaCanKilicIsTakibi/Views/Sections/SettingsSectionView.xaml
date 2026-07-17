@@ -80,6 +80,16 @@
                                 Command="{Binding ImportBackupCommand}"
                                 Style="{StaticResource GhostButton}"
                                 Margin="0,0,8,8"/>
+                        <Button Content="EXCEL İÇE AKTAR (EKLE)"
+                                Command="{Binding AppendImportGenelExcelCommand}"
+                                Style="{StaticResource GhostButton}"
+                                ToolTip="GENEL İŞLER / AKSİYON / EKSİK PROJE sayfalarını mevcut kayıtlara ekler; silmez."
+                                Margin="0,0,8,8"/>
+                        <Button Content="PDF RAPOR PAKETİ"
+                                Command="{Binding ExportReportPackCommand}"
+                                Style="{StaticResource GhostButton}"
+                                ToolTip="Genel, Aksiyon, Eksik, Karot ve Tadilat bölümlerini tek PDF'te üretir."
+                                Margin="0,0,8,8"/>
                         <Button Content="ÇIKTILARI TEMİZLE"
                                 Command="{Binding CleanupBuildArtifactsCommand}"
                                 Style="{StaticResource GhostButton}"

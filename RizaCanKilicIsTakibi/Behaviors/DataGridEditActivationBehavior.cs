@@ -88,14 +88,41 @@ public static class DataGridEditActivationBehavior
             return;
         }
 
+        if (IsWithinDragHandle(e.OriginalSource as DependencyObject))
+        {
+            return;
+        }
+
         var cell = FindAncestor<DataGridCell>(e.OriginalSource as DependencyObject);
         if (cell is null)
         {
             return;
         }
 
+        // Drag-handle column has no editing template.
+        if (cell.Column is DataGridTemplateColumn { CellEditingTemplate: null })
+        {
+            return;
+        }
+
         BeginEdit(grid, cell);
         e.Handled = true;
+    }
+
+    private static bool IsWithinDragHandle(DependencyObject? source)
+    {
+        var current = source;
+        while (current is not null)
+        {
+            if (DataGridDragDropBehavior.GetIsDragHandle(current))
+            {
+                return true;
+            }
+
+            current = VisualTreeHelper.GetParent(current);
+        }
+
+        return false;
     }
 
     private static void OnPreviewKeyDown(object sender, KeyEventArgs e)

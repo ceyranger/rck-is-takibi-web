@@ -101,6 +101,7 @@ public partial class App : Application
         services.AddSingleton<IQuickTaskTemplateRepository>(quickTaskTemplateRepository);
         services.AddSingleton<IBackupService>(_ => new BackupService(pathService.BackupDirectory));
         services.AddSingleton<IImportExportService, ImportExportService>();
+        services.AddSingleton<IGenelIsTakibiExcelImportService, GenelIsTakibiExcelImportService>();
         services.AddSingleton<ITadilatImportService, TadilatExcelImportService>();
         services.AddSingleton<IYibfImportService, YibfExcelImportService>();
         services.AddSingleton<INotificationService, NotificationService>();

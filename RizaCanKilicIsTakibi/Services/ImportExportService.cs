@@ -219,6 +219,81 @@ public sealed class ImportExportService : IImportExportService
         return Task.CompletedTask;
     }
 
+    public Task ExportReportPackAsync(ReportPackExportModel pack, string filePath, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(pack);
+
+        Document.Create(container =>
+        {
+            foreach (var section in pack.Sections)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                container.Page(page =>
+                {
+                    page.Size(QuestPDF.Helpers.PageSizes.A3);
+                    page.Margin(18);
+                    page.DefaultTextStyle(x => x.FontSize(9));
+
+                    page.Header().Column(column =>
+                    {
+                        column.Item().Text(pack.Title).FontSize(14).Bold();
+                        column.Item().Text($"{section.Title}  •  {DateTime.Now:dd.MM.yyyy HH:mm}")
+                            .FontColor(QuestPDF.Helpers.Colors.Grey.Darken2);
+                    });
+
+                    page.Content().PaddingTop(10).Table(table =>
+                    {
+                        var columnCount = Math.Max(1, section.Headers.Count);
+                        table.ColumnsDefinition(columns =>
+                        {
+                            for (var index = 0; index < columnCount; index++)
+                            {
+                                columns.RelativeColumn();
+                            }
+                        });
+
+                        table.Header(header =>
+                        {
+                            foreach (var title in section.Headers)
+                            {
+                                header.Cell().Element(PackCellStyle).Text(title).Bold();
+                            }
+
+                            for (var index = section.Headers.Count; index < columnCount; index++)
+                            {
+                                header.Cell().Element(PackCellStyle).Text(string.Empty);
+                            }
+                        });
+
+                        if (section.Rows.Count == 0)
+                        {
+                            table.Cell().ColumnSpan((uint)columnCount).Element(PackCellStyle)
+                                .Text("Kayıt yok.");
+                        }
+                        else
+                        {
+                            foreach (var row in section.Rows)
+                            {
+                                for (var index = 0; index < columnCount; index++)
+                                {
+                                    var value = index < row.Count ? row[index] : string.Empty;
+                                    table.Cell().Element(PackCellStyle).Text(value ?? string.Empty);
+                                }
+                            }
+                        }
+
+                        static IContainer PackCellStyle(IContainer container)
+                            => container.PaddingVertical(4).PaddingHorizontal(3)
+                                .BorderBottom(1).BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten2);
+                    });
+                });
+            }
+        }).GeneratePdf(filePath);
+
+        return Task.CompletedTask;
+    }
+
     public Task ExportPngAsync(UIElement visual, string filePath, CancellationToken cancellationToken = default)
         => ExportScrollablePngAsync(visual, filePath, cancellationToken);
 

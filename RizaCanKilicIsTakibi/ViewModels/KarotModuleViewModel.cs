@@ -120,8 +120,13 @@ public sealed class KarotModuleViewModel : ViewModelBase
         SelectKarotEntryCommand = new RelayCommand<KarotEntry?>(entry => SelectedEntry = entry);
         AddKarotEntryCommand = new AsyncRelayCommand(AddEntryAsync, () => !_isAddingEntry);
         DeleteKarotEntryCommand = new AsyncRelayCommand(DeleteSelectedAsync, () => SelectedEntry is not null);
+        DeleteKarotEntryFromContextCommand = new AsyncRelayCommand<KarotEntry?>(DeleteEntryAsync, entry => entry is not null);
         MoveKarotEntryUpCommand = new RelayCommand(() => MoveSelected(-1), CanMoveUp);
         MoveKarotEntryDownCommand = new RelayCommand(() => MoveSelected(1), CanMoveDown);
+        MoveKarotEntryUpFromContextCommand = new RelayCommand<KarotEntry?>(entry => MoveEntry(entry, -1), entry => entry is not null);
+        MoveKarotEntryDownFromContextCommand = new RelayCommand<KarotEntry?>(entry => MoveEntry(entry, 1), entry => entry is not null);
+        InsertKarotEntryAboveCommand = new AsyncRelayCommand<KarotEntry?>(entry => InsertEntryRelativeAsync(entry, insertAfter: false), entry => entry is not null);
+        InsertKarotEntryBelowCommand = new AsyncRelayCommand<KarotEntry?>(entry => InsertEntryRelativeAsync(entry, insertAfter: true), entry => entry is not null);
         OpenKarotStatusDialogCommand = new AsyncRelayCommand<KarotEntry?>(OpenStatusDialogAsync, entry => (entry ?? SelectedEntry) is not null);
         EditCellNoteCommand = new AsyncRelayCommand<KarotCellViewModel?>(EditCellNoteAsync);
         CopyCellCommand = new RelayCommand<KarotCellViewModel?>(CopyCell);
@@ -180,8 +185,13 @@ public sealed class KarotModuleViewModel : ViewModelBase
 
     public AsyncRelayCommand AddKarotEntryCommand { get; }
     public AsyncRelayCommand DeleteKarotEntryCommand { get; }
+    public AsyncRelayCommand<KarotEntry?> DeleteKarotEntryFromContextCommand { get; }
     public RelayCommand MoveKarotEntryUpCommand { get; }
     public RelayCommand MoveKarotEntryDownCommand { get; }
+    public RelayCommand<KarotEntry?> MoveKarotEntryUpFromContextCommand { get; }
+    public RelayCommand<KarotEntry?> MoveKarotEntryDownFromContextCommand { get; }
+    public AsyncRelayCommand<KarotEntry?> InsertKarotEntryAboveCommand { get; }
+    public AsyncRelayCommand<KarotEntry?> InsertKarotEntryBelowCommand { get; }
     public AsyncRelayCommand<KarotEntry?> OpenKarotStatusDialogCommand { get; }
     public AsyncRelayCommand<KarotCellViewModel?> EditCellNoteCommand { get; }
     public RelayCommand<KarotCellViewModel?> CopyCellCommand { get; }
@@ -293,13 +303,19 @@ public sealed class KarotModuleViewModel : ViewModelBase
         }
     }
 
-    private async Task DeleteSelectedAsync()
+    private Task DeleteSelectedAsync() => DeleteEntryAsync(SelectedEntry);
+
+    private async Task DeleteEntryAsync(KarotEntry? entry)
     {
-        var target = SelectedEntry;
+        var target = entry is null
+            ? SelectedEntry
+            : Entries.FirstOrDefault(item => item.Id == entry.Id) ?? entry;
         if (target is null)
         {
             return;
         }
+
+        SelectedEntry = target;
 
         if (!_confirmationService.Confirm(new ConfirmationRequest
             {
@@ -462,6 +478,72 @@ public sealed class KarotModuleViewModel : ViewModelBase
         => SelectedSubTab == KarotSubTab.Bekleyen
             ? status is not KarotStatus.KarotAlindiOlumlu
             : status == KarotStatus.KarotAlindiOlumlu;
+
+    private Task InsertEntryRelativeAsync(KarotEntry? anchorEntry, bool insertAfter)
+    {
+        if (anchorEntry is null)
+        {
+            return Task.CompletedTask;
+        }
+
+        var anchor = Entries.FirstOrDefault(item => item.Id == anchorEntry.Id);
+        if (anchor is null)
+        {
+            return Task.CompletedTask;
+        }
+
+        SelectedEntry = anchor;
+
+        ExecuteUndoableMutation(
+            insertAfter ? "Karot alta kayıt ekle" : "Karot üste kayıt ekle",
+            () =>
+            {
+                var liveAnchor = Entries.FirstOrDefault(item => item.Id == anchor.Id);
+                if (liveAnchor is null)
+                {
+                    return;
+                }
+
+                var insertOrder = liveAnchor.DisplayOrder + (insertAfter ? 1 : 0);
+                foreach (var item in Entries.Where(item => item.DisplayOrder >= insertOrder))
+                {
+                    item.DisplayOrder++;
+                    item.UpdatedAt = DateTime.Now;
+                }
+
+                var entry = new KarotEntry
+                {
+                    Status = SelectedSubTab == KarotSubTab.Yapilan
+                        ? KarotStatus.KarotAlindiOlumlu
+                        : KarotStatus.KarotAlinacak,
+                    DisplayOrder = insertOrder,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
+                };
+
+                Entries.Add(entry);
+                NormalizeDisplayOrder();
+                EnsureEntryVisible(entry);
+                SelectedEntry = entry;
+                HasUnsavedChanges = true;
+            });
+
+        _notificationService.ShowToast(
+            insertAfter ? "Seçili satırın altına kayıt eklendi." : "Seçili satırın üstüne kayıt eklendi.",
+            ToastType.Success,
+            TimeSpan.FromSeconds(2));
+        return Task.CompletedTask;
+    }
+
+    private void MoveEntry(KarotEntry? entry, int direction)
+    {
+        if (entry is not null)
+        {
+            SelectedEntry = Entries.FirstOrDefault(item => item.Id == entry.Id) ?? entry;
+        }
+
+        MoveSelected(direction);
+    }
 
     private void MoveSelected(int direction)
     {
@@ -1088,8 +1170,13 @@ public sealed class KarotModuleViewModel : ViewModelBase
     private void NotifyCommands()
     {
         DeleteKarotEntryCommand.NotifyCanExecuteChanged();
+        DeleteKarotEntryFromContextCommand.NotifyCanExecuteChanged();
         MoveKarotEntryUpCommand.NotifyCanExecuteChanged();
         MoveKarotEntryDownCommand.NotifyCanExecuteChanged();
+        MoveKarotEntryUpFromContextCommand.NotifyCanExecuteChanged();
+        MoveKarotEntryDownFromContextCommand.NotifyCanExecuteChanged();
+        InsertKarotEntryAboveCommand.NotifyCanExecuteChanged();
+        InsertKarotEntryBelowCommand.NotifyCanExecuteChanged();
         OpenKarotStatusDialogCommand.NotifyCanExecuteChanged();
     }
 

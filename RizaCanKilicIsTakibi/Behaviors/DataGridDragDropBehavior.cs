@@ -29,7 +29,15 @@ public static class DataGridDragDropBehavior
             typeof(DataGridDragDropBehavior),
             new PropertyMetadata(TaskBoardType.Genel));
 
+    public static readonly DependencyProperty IsDragHandleProperty =
+        DependencyProperty.RegisterAttached(
+            "IsDragHandle",
+            typeof(bool),
+            typeof(DataGridDragDropBehavior),
+            new PropertyMetadata(false));
+
     private static Point _dragStartPoint;
+    private static bool _dragFromHandle;
 
     public static bool GetIsEnabled(DependencyObject obj) => (bool)obj.GetValue(IsEnabledProperty);
 
@@ -42,6 +50,10 @@ public static class DataGridDragDropBehavior
     public static TaskBoardType GetTargetBoardType(DependencyObject obj) => (TaskBoardType)obj.GetValue(TargetBoardTypeProperty);
 
     public static void SetTargetBoardType(DependencyObject obj, TaskBoardType value) => obj.SetValue(TargetBoardTypeProperty, value);
+
+    public static bool GetIsDragHandle(DependencyObject obj) => (bool)obj.GetValue(IsDragHandleProperty);
+
+    public static void SetIsDragHandle(DependencyObject obj, bool value) => obj.SetValue(IsDragHandleProperty, value);
 
     private static void OnIsEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -70,11 +82,12 @@ public static class DataGridDragDropBehavior
     private static void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         _dragStartPoint = e.GetPosition(null);
+        _dragFromHandle = IsWithinDragHandle(e.OriginalSource as DependencyObject);
     }
 
     private static void OnPreviewMouseMove(object sender, MouseEventArgs e)
     {
-        if (sender is not DataGrid dataGrid || e.LeftButton != MouseButtonState.Pressed)
+        if (!_dragFromHandle || sender is not DataGrid dataGrid || e.LeftButton != MouseButtonState.Pressed)
         {
             return;
         }
@@ -94,6 +107,7 @@ public static class DataGridDragDropBehavior
             return;
         }
 
+        _dragFromHandle = false;
         DragDrop.DoDragDrop(dataGrid, task, DragDropEffects.Move);
     }
 
@@ -144,6 +158,22 @@ public static class DataGridDragDropBehavior
         }
 
         e.Handled = true;
+    }
+
+    private static bool IsWithinDragHandle(DependencyObject? source)
+    {
+        var current = source;
+        while (current is not null)
+        {
+            if (GetIsDragHandle(current))
+            {
+                return true;
+            }
+
+            current = VisualTreeHelper.GetParent(current);
+        }
+
+        return false;
     }
 
     private static T? FindParent<T>(DependencyObject child) where T : DependencyObject

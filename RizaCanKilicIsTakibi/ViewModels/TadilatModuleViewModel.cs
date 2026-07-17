@@ -163,6 +163,8 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         MoveToAktifCommand = new AsyncRelayCommand<TadilatEntry?>(entry => MoveEntryToSubTabAsync(entry, TadilatSubTab.Aktif));
         MoveEntryUpCommand = new AsyncRelayCommand<TadilatEntry?>(entry => MoveEntryAsync(entry, -1), CanMoveEntryUp);
         MoveEntryDownCommand = new AsyncRelayCommand<TadilatEntry?>(entry => MoveEntryAsync(entry, 1), CanMoveEntryDown);
+        InsertEntryAboveCommand = new AsyncRelayCommand<TadilatEntry?>(entry => InsertEntryRelativeAsync(entry, insertAfter: false), entry => entry is not null);
+        InsertEntryBelowCommand = new AsyncRelayCommand<TadilatEntry?>(entry => InsertEntryRelativeAsync(entry, insertAfter: true), entry => entry is not null);
         ClearSearchCommand = new RelayCommand(ClearSearch, () => HasActiveSearch);
         ClearAllColumnFiltersCommand = new RelayCommand(ClearAllColumnFilters, () => HasActiveColumnFilter);
     }
@@ -285,6 +287,8 @@ public sealed class TadilatModuleViewModel : ViewModelBase
     public AsyncRelayCommand<TadilatEntry?> MoveToAktifCommand { get; }
     public AsyncRelayCommand<TadilatEntry?> MoveEntryUpCommand { get; }
     public AsyncRelayCommand<TadilatEntry?> MoveEntryDownCommand { get; }
+    public AsyncRelayCommand<TadilatEntry?> InsertEntryAboveCommand { get; }
+    public AsyncRelayCommand<TadilatEntry?> InsertEntryBelowCommand { get; }
     public RelayCommand ClearSearchCommand { get; }
     public RelayCommand ClearAllColumnFiltersCommand { get; }
 
@@ -530,6 +534,62 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         var destinationLabel = targetSubTab == TadilatSubTab.Biten ? "BİTEN" : "AKTİF";
         _notificationService.ShowToast($"Tadilat satırı {destinationLabel} sekmesine taşındı.", ToastType.Success, TimeSpan.FromSeconds(2));
         await Task.CompletedTask;
+    }
+
+    private Task InsertEntryRelativeAsync(TadilatEntry? anchorEntry, bool insertAfter)
+    {
+        var anchor = ResolveCurrentEntry(anchorEntry);
+        if (anchor is null || anchor.SubTab != SelectedSubTab)
+        {
+            return Task.CompletedTask;
+        }
+
+        SelectedEntry = anchor;
+
+        ExecuteUndoableMutation(
+            insertAfter ? "Tadilat alta satır ekle" : "Tadilat üste satır ekle",
+            () =>
+            {
+                CloseAllEditors();
+
+                var collection = GetCollection(anchor.SubTab);
+                var liveAnchor = collection.FirstOrDefault(item => item.Id == anchor.Id);
+                if (liveAnchor is null)
+                {
+                    return;
+                }
+
+                var insertOrder = liveAnchor.DisplayOrder + (insertAfter ? 1 : 0);
+                foreach (var item in collection.Where(item =>
+                             item.District.Equals(liveAnchor.District, StringComparison.OrdinalIgnoreCase)
+                             && item.DisplayOrder >= insertOrder))
+                {
+                    item.DisplayOrder++;
+                    item.UpdatedAt = DateTime.Now;
+                }
+
+                var entry = new TadilatEntry
+                {
+                    Id = Guid.NewGuid(),
+                    SubTab = SelectedSubTab,
+                    District = liveAnchor.District,
+                    DisplayOrder = insertOrder,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
+                };
+
+                collection.Add(entry);
+                NormalizeDistrictOrder(collection, liveAnchor.District);
+                SelectedEntry = entry;
+                HasUnsavedChanges = true;
+                RefreshDistrictGroups();
+            });
+
+        _notificationService.ShowToast(
+            insertAfter ? "Seçili satırın altına kayıt eklendi." : "Seçili satırın üstüne kayıt eklendi.",
+            ToastType.Success,
+            TimeSpan.FromSeconds(2));
+        return Task.CompletedTask;
     }
 
     private async Task MoveEntryAsync(TadilatEntry? entry, int direction)
