@@ -58,6 +58,10 @@ public sealed class ImportExportService : IImportExportService
 
         using var xlWorkbook = new XLWorkbook();
         var usedSheetNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var headerFill = XLColor.FromHtml("#1F3147");
+        var zebraFill = XLColor.FromHtml("#F5F8FB");
+        var gridBorder = XLColor.FromHtml("#D0D7E2");
+        var headerBottom = XLColor.FromHtml("#0F1C2C");
 
         foreach (var sheet in workbook.Sheets)
         {
@@ -65,16 +69,19 @@ public sealed class ImportExportService : IImportExportService
 
             var sheetName = GetUniqueSheetName(usedSheetNames, sheet.Name);
             var worksheet = xlWorkbook.Worksheets.Add(sheetName);
+            var columnCount = Math.Max(1, sheet.Headers.Count);
 
             for (var column = 0; column < sheet.Headers.Count; column++)
             {
                 var headerCell = worksheet.Cell(1, column + 1);
                 headerCell.Value = sheet.Headers[column];
                 headerCell.Style.Font.Bold = true;
-                headerCell.Style.Fill.BackgroundColor = XLColor.FromHtml("#1F3147");
+                headerCell.Style.Fill.BackgroundColor = headerFill;
                 headerCell.Style.Font.FontColor = XLColor.White;
                 headerCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 headerCell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                headerCell.Style.Border.BottomBorder = XLBorderStyleValues.Medium;
+                headerCell.Style.Border.BottomBorderColor = headerBottom;
             }
 
             for (var rowIndex = 0; rowIndex < sheet.Rows.Count; rowIndex++)
@@ -93,6 +100,10 @@ public sealed class ImportExportService : IImportExportService
                     {
                         cell.Style.Fill.BackgroundColor = XLColor.FromHtml(normalizedColor);
                     }
+                    else if (rowIndex % 2 == 1)
+                    {
+                        cell.Style.Fill.BackgroundColor = zebraFill;
+                    }
 
                     if (!string.IsNullOrWhiteSpace(exportCell.Comment))
                     {
@@ -102,6 +113,14 @@ public sealed class ImportExportService : IImportExportService
                     }
                 }
             }
+
+            var lastRow = Math.Max(1, sheet.Rows.Count + 1);
+            var usedRange = worksheet.Range(1, 1, lastRow, columnCount);
+            usedRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+            usedRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+            usedRange.Style.Border.OutsideBorderColor = gridBorder;
+            usedRange.Style.Border.InsideBorderColor = gridBorder;
+            usedRange.SetAutoFilter();
 
             worksheet.SheetView.FreezeRows(1);
             worksheet.ColumnsUsed().AdjustToContents(8, 80);
@@ -169,6 +188,9 @@ public sealed class ImportExportService : IImportExportService
     public Task ExportPdfAsync(IEnumerable<TaskItem> tasks, string filePath, CancellationToken cancellationToken = default)
     {
         var data = tasks.ToList();
+        const string headerColor = "#1F3147";
+        const string zebraColor = "#F5F8FB";
+        const string borderColor = "#D0D7E2";
 
         Document.Create(container =>
         {
@@ -182,6 +204,15 @@ public sealed class ImportExportService : IImportExportService
                 {
                     column.Item().Text("RIZA CAN KILIÇ İŞ TAKİBİ RAPORU").FontSize(18).Bold();
                     column.Item().Text($"Tarih: {DateTime.Now:dd.MM.yyyy HH:mm}").FontColor(QuestPDF.Helpers.Colors.Grey.Darken2);
+                    column.Item().PaddingTop(6).LineHorizontal(1).LineColor(headerColor);
+                });
+
+                page.Footer().AlignCenter().Text(text =>
+                {
+                    text.Span("sayfa ");
+                    text.CurrentPageNumber();
+                    text.Span(" / ");
+                    text.TotalPages();
                 });
 
                 page.Content().PaddingVertical(16).Table(table =>
@@ -196,22 +227,21 @@ public sealed class ImportExportService : IImportExportService
 
                     table.Header(header =>
                     {
-                        header.Cell().Element(CellStyle).Text("Başlık").Bold();
-                        header.Cell().Element(CellStyle).Text("Açıklama").Bold();
-                        header.Cell().Element(CellStyle).Text("Tablo").Bold();
-                        header.Cell().Element(CellStyle).Text("Not Sayısı").Bold();
+                        header.Cell().Element(c => HeaderCellStyle(c, headerColor)).Text("Başlık").Bold().FontColor(QuestPDF.Helpers.Colors.White);
+                        header.Cell().Element(c => HeaderCellStyle(c, headerColor)).Text("Açıklama").Bold().FontColor(QuestPDF.Helpers.Colors.White);
+                        header.Cell().Element(c => HeaderCellStyle(c, headerColor)).Text("Tablo").Bold().FontColor(QuestPDF.Helpers.Colors.White);
+                        header.Cell().Element(c => HeaderCellStyle(c, headerColor)).Text("Not Sayısı").Bold().FontColor(QuestPDF.Helpers.Colors.White);
                     });
 
-                    foreach (var item in data)
+                    for (var rowIndex = 0; rowIndex < data.Count; rowIndex++)
                     {
-                        table.Cell().Element(CellStyle).Text(item.Title);
-                        table.Cell().Element(CellStyle).Text(item.Description);
-                        table.Cell().Element(CellStyle).Text(item.BoardType == TaskBoardType.Acil ? "Acil" : "Genel");
-                        table.Cell().Element(CellStyle).Text(item.Notes.Count.ToString());
+                        var item = data[rowIndex];
+                        var background = rowIndex % 2 == 1 ? zebraColor : null;
+                        table.Cell().Element(c => BodyCellStyle(c, borderColor, background)).Text(item.Title);
+                        table.Cell().Element(c => BodyCellStyle(c, borderColor, background)).Text(item.Description);
+                        table.Cell().Element(c => BodyCellStyle(c, borderColor, background)).Text(item.BoardType == TaskBoardType.Acil ? "Acil" : "Genel");
+                        table.Cell().Element(c => BodyCellStyle(c, borderColor, background)).Text(item.Notes.Count.ToString());
                     }
-
-                    static IContainer CellStyle(IContainer container)
-                        => container.PaddingVertical(6).PaddingHorizontal(4).BorderBottom(1).BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten2);
                 });
             });
         }).GeneratePdf(filePath);
@@ -222,6 +252,10 @@ public sealed class ImportExportService : IImportExportService
     public Task ExportReportPackAsync(ReportPackExportModel pack, string filePath, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(pack);
+
+        const string headerColor = "#1F3147";
+        const string zebraColor = "#F5F8FB";
+        const string borderColor = "#D0D7E2";
 
         Document.Create(container =>
         {
@@ -240,6 +274,15 @@ public sealed class ImportExportService : IImportExportService
                         column.Item().Text(pack.Title).FontSize(14).Bold();
                         column.Item().Text($"{section.Title}  •  {DateTime.Now:dd.MM.yyyy HH:mm}")
                             .FontColor(QuestPDF.Helpers.Colors.Grey.Darken2);
+                        column.Item().PaddingTop(4).LineHorizontal(1).LineColor(headerColor);
+                    });
+
+                    page.Footer().AlignCenter().Text(text =>
+                    {
+                        text.Span("sayfa ");
+                        text.CurrentPageNumber();
+                        text.Span(" / ");
+                        text.TotalPages();
                     });
 
                     page.Content().PaddingTop(10).Table(table =>
@@ -257,41 +300,63 @@ public sealed class ImportExportService : IImportExportService
                         {
                             foreach (var title in section.Headers)
                             {
-                                header.Cell().Element(PackCellStyle).Text(title).Bold();
+                                header.Cell().Element(c => HeaderCellStyle(c, headerColor))
+                                    .Text(title).Bold().FontColor(QuestPDF.Helpers.Colors.White);
                             }
 
                             for (var index = section.Headers.Count; index < columnCount; index++)
                             {
-                                header.Cell().Element(PackCellStyle).Text(string.Empty);
+                                header.Cell().Element(c => HeaderCellStyle(c, headerColor)).Text(string.Empty);
                             }
                         });
 
                         if (section.Rows.Count == 0)
                         {
-                            table.Cell().ColumnSpan((uint)columnCount).Element(PackCellStyle)
+                            table.Cell().ColumnSpan((uint)columnCount)
+                                .Element(c => BodyCellStyle(c, borderColor, null))
                                 .Text("Kayıt yok.");
                         }
                         else
                         {
-                            foreach (var row in section.Rows)
+                            for (var rowIndex = 0; rowIndex < section.Rows.Count; rowIndex++)
                             {
+                                var row = section.Rows[rowIndex];
                                 for (var index = 0; index < columnCount; index++)
                                 {
-                                    var value = index < row.Count ? row[index] : string.Empty;
-                                    table.Cell().Element(PackCellStyle).Text(value ?? string.Empty);
+                                    var cell = index < row.Count ? row[index] : null;
+                                    var value = cell?.Value ?? string.Empty;
+                                    var cellColor = NormalizeExcelColor(cell?.BackgroundColor);
+                                    var background = !string.IsNullOrWhiteSpace(cellColor)
+                                        ? cellColor
+                                        : rowIndex % 2 == 1 ? zebraColor : null;
+                                    table.Cell().Element(c => BodyCellStyle(c, borderColor, background)).Text(value);
                                 }
                             }
                         }
-
-                        static IContainer PackCellStyle(IContainer container)
-                            => container.PaddingVertical(4).PaddingHorizontal(3)
-                                .BorderBottom(1).BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten2);
                     });
                 });
             }
         }).GeneratePdf(filePath);
 
         return Task.CompletedTask;
+    }
+
+    private static IContainer HeaderCellStyle(IContainer container, string headerColor)
+        => container
+            .Background(headerColor)
+            .PaddingVertical(5)
+            .PaddingHorizontal(3)
+            .BorderBottom(1)
+            .BorderColor("#0F1C2C");
+
+    private static IContainer BodyCellStyle(IContainer container, string borderColor, string? backgroundColor)
+    {
+        var styled = container.PaddingVertical(4).PaddingHorizontal(3)
+            .BorderBottom(1)
+            .BorderColor(borderColor);
+        return string.IsNullOrWhiteSpace(backgroundColor)
+            ? styled
+            : styled.Background(backgroundColor);
     }
 
     public Task ExportPngAsync(UIElement visual, string filePath, CancellationToken cancellationToken = default)

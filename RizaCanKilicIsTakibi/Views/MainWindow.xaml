@@ -676,19 +676,6 @@
                             </Style>
                         </Button.Style>
                     </Button>
-                    <Button Content="ARAMA" Command="{Binding SelectMainTabCommand}" CommandParameter="{x:Static models:MainNavigationTab.Arama}" Margin="0,0,0,8">
-                        <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding SelectedMainTab}" Value="{x:Static models:MainNavigationTab.Arama}">
-                                        <Setter Property="Background" Value="{StaticResource Brush.Primary}"/>
-                                        <Setter Property="Foreground" Value="White"/>
-                                        <Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
                     <Button Content="AKSİYON" Command="{Binding SelectMainTabCommand}" CommandParameter="{x:Static models:MainNavigationTab.Aksiyon}" Margin="0,0,0,8">
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
@@ -759,6 +746,19 @@
                             <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding SelectedMainTab}" Value="{x:Static models:MainNavigationTab.YibfIsTakibi}">
+                                        <Setter Property="Background" Value="{StaticResource Brush.Primary}"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button Content="ARAMA" Command="{Binding SelectMainTabCommand}" CommandParameter="{x:Static models:MainNavigationTab.Arama}" Margin="0,8,0,0">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SelectedMainTab}" Value="{x:Static models:MainNavigationTab.Arama}">
                                         <Setter Property="Background" Value="{StaticResource Brush.Primary}"/>
                                         <Setter Property="Foreground" Value="White"/>
                                         <Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>

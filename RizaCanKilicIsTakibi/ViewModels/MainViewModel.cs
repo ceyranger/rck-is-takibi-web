@@ -2796,7 +2796,13 @@ public sealed partial class MainViewModel : ViewModelBase
                     Title = $"{title} / {sheet.Name}",
                     Headers = sheet.Headers.ToList(),
                     Rows = sheet.Rows
-                        .Select(row => (IReadOnlyList<string>)row.Cells.Select(cell => cell.Value ?? string.Empty).ToList())
+                        .Select(row => (IReadOnlyList<ReportPackCellModel>)row.Cells
+                            .Select(cell => new ReportPackCellModel
+                            {
+                                Value = cell.Value ?? string.Empty,
+                                BackgroundColor = cell.BackgroundColor ?? string.Empty
+                            })
+                            .ToList())
                         .ToList()
                 });
             }
