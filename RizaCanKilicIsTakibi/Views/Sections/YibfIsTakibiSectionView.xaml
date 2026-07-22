@@ -135,63 +135,60 @@
         </Border>
 
         <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}" Margin="0,8,0,8">
-            <DockPanel>
-                <TextBlock Text="YİBF modül durumu"
-                           FontFamily="{StaticResource Font.Primary}"
-                           FontSize="16"
-                           FontWeight="SemiBold"
-                           VerticalAlignment="Center"
-                           DockPanel.Dock="Left"/>
+            <DockPanel LastChildFill="False">
+                <Border Style="{StaticResource MissingProjectToolbarChipStyle}"
+                        DockPanel.Dock="Left"
+                        VerticalAlignment="Center"
+                        Margin="0,0,8,0"
+                        Padding="0"
+                        MinWidth="280"
+                        Width="360">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0"
+                                 Text="{Binding YibfModule.IsTakibiSearchText, UpdateSourceTrigger=PropertyChanged}"
+                                 MinHeight="36"
+                                 Margin="8,0,0,0"
+                                 VerticalContentAlignment="Center"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 ToolTip="İş adı, kontrol alanları veya hücre notunda ara"/>
+                        <TextBlock Grid.Column="0"
+                                   IsHitTestVisible="False"
+                                   Margin="10,0,0,0"
+                                   VerticalAlignment="Center"
+                                   Foreground="#FF8A9BB0"
+                                   Text="Ara (iş adı, kontrol alanları...)">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding YibfModule.IsTakibiSearchText}" Value="">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        <Button Grid.Column="1"
+                                Content="×"
+                                Command="{Binding YibfModule.ClearIsTakibiSearchCommand}"
+                                MinWidth="28"
+                                MinHeight="28"
+                                Margin="2"
+                                Padding="0"
+                                FontSize="16"
+                                ToolTip="Aramayı temizle"
+                                Style="{StaticResource GhostButton}"/>
+                    </Grid>
+                </Border>
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Right"
                             DockPanel.Dock="Right">
-                    <Border Style="{StaticResource MissingProjectToolbarChipStyle}"
-                            Margin="0,0,8,0"
-                            Padding="0"
-                            MinWidth="240">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBox Grid.Column="0"
-                                     Text="{Binding YibfModule.IsTakibiSearchText, UpdateSourceTrigger=PropertyChanged}"
-                                     MinHeight="36"
-                                     Margin="8,0,0,0"
-                                     VerticalContentAlignment="Center"
-                                     BorderThickness="0"
-                                     Background="Transparent"
-                                     ToolTip="İş adı, kontrol alanları veya hücre notunda ara"/>
-                            <TextBlock Grid.Column="0"
-                                       IsHitTestVisible="False"
-                                       Margin="10,0,0,0"
-                                       VerticalAlignment="Center"
-                                       Foreground="#FF8A9BB0"
-                                       Text="Ara (iş adı, kontrol alanları...)">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding YibfModule.IsTakibiSearchText}" Value="">
-                                                <Setter Property="Visibility" Value="Visible"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                            <Button Grid.Column="1"
-                                    Content="×"
-                                    Command="{Binding YibfModule.ClearIsTakibiSearchCommand}"
-                                    MinWidth="28"
-                                    MinHeight="28"
-                                    Margin="2"
-                                    Padding="0"
-                                    FontSize="16"
-                                    ToolTip="Aramayı temizle"
-                                    Style="{StaticResource GhostButton}"/>
-                        </Grid>
-                    </Border>
                     <Border Style="{StaticResource MissingProjectToolbarChipStyle}" Margin="0,0,8,0">
                         <TextBlock Text="{Binding YibfModule.IsTakibiEntryCountDisplay}"
                                    FontWeight="SemiBold"
