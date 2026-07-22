@@ -1,16 +1,14 @@
 # Todo
 
 ## Current Task
-- [x] İstinat türü seçilince üst proje seçim alanının görünür ve çalışır olduğundan emin ol
-- [x] `Guid?` ComboBox SelectedValue bağlama sorununu ProjectPicker ile çöz
-- [x] Üst proje listesi boşsa kullanıcıya net mesaj göster
-- [x] Hedefli test + build/test doğrula
-- [x] Güvenli Release publish (Data/Backup/Logs korunarak)
-- [x] Git commit checkpoint
+- [x] YibfModuleViewModel: overlay aramayı kaldır, Tadilat tarzı IsTakibiSearchText + RefreshIsTakibiRows filtrelemesi ekle
+- [x] YibfIsTakibiSectionView: Ara/overlay kaldır, toolbar search chip + boş durum + sayaç
+- [x] Hedefli testler, güvenli publish ve Data hash doğrulaması
+- [x] critical-notes güncelle; Git commit checkpoint
 
 ## Review Update
-- Proje Kataloğu ekleme dialogunda Tür=İstinat seçilince **Üst Proje (zorunlu)** alanı DataTrigger ile görünür.
-- Üst proje seçimi `ProjectPickerControl` ile yapılıyor.
-- `dotnet test RizaCanKilicIsTakibi.sln -c Release`: 173/173.
-- Canonical publish exe güncellendi; `tasks.db` / `last-save.json` hash+size+timestamp aynı kaldı; `Data`/`Backup`/`Logs` dokunulmadı.
-- Commit: `fc31913` Add project catalog with İstinat parent picker and safe linking.
+- YİBF İş Takibi modal `Ara` overlay kaldırıldı.
+- Tadilat gibi sürekli görünen arama kutusu satırları yerinde filtreliyor; `×` temizler; sayaç `Görünen: X / Y`.
+- Hücre notları da aramaya dahil; Ctrl+F ile satıra gitmede aktif arama temizleniyor.
+- `CommitPendingEdits` filtrelenmiş satırları da kapsıyor (`_isTakibiRowLookup`).
+- Tests: 175/175. Publish: Data/Backup/Logs hash korundu.

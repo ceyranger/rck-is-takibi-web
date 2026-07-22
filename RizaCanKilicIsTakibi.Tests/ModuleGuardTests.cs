@@ -404,6 +404,92 @@ public class ModuleGuardTests
         Assert.Equal(["İlk", "Üçüncü", "İkinci"], stored.OrderBy(item => item.DisplayOrder).Select(item => item.JobName).ToArray());
     }
 
+    [Fact]
+    public void Yibf_IsTakibi_SearchText_Filters_Visible_Rows_And_Clears()
+    {
+        var module = new YibfModuleViewModel(
+            new SqliteYibfRepository(BuildDatabasePath()),
+            new TestYibfImportService(),
+            new TestFileDialogService(),
+            new NotificationService(),
+            new CallbackConfirmationService(),
+            new TestTadilatCellNoteDialogService(),
+            new CallbackYibfAnaBilgiEventDialogService(),
+            new TestYibfAnaBilgiEntryDialogService(),
+            new UndoRedoService());
+
+        var firstId = Guid.NewGuid();
+        var secondId = Guid.NewGuid();
+        var thirdId = Guid.NewGuid();
+        module.LoadFromBackup(
+            Array.Empty<YibfAnaBilgiEntry>(),
+            Array.Empty<YibfAnaBilgiEvent>(),
+            [
+                new YibfIsTakibiEntry { Id = firstId, JobName = "Kadıköy Ana", DisplayOrder = 0, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
+                new YibfIsTakibiEntry { Id = secondId, JobName = "Üsküdar İstinat", DisplayOrder = 1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
+                new YibfIsTakibiEntry { Id = thirdId, JobName = "Kadıköy Blok", DisplayOrder = 2, EvraklarTamMi = "eksik evrak", CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now }
+            ],
+            [
+                new YibfCellState { EntryId = secondId, ColumnKey = "JobName", NoteText = "özel not-xyz" }
+            ],
+            markDirty: false);
+
+        Assert.Equal(3, module.IsTakibiRows.Count);
+        Assert.Equal("Kayıt: 3", module.IsTakibiEntryCountDisplay);
+
+        module.IsTakibiSearchText = "Kadıköy";
+        Assert.Equal(2, module.IsTakibiRows.Count);
+        Assert.Equal(["Kadıköy Ana", "Kadıköy Blok"], module.IsTakibiRows.Select(row => row.Entry.JobName).ToArray());
+        Assert.Equal("Görünen: 2 / 3", module.IsTakibiEntryCountDisplay);
+        Assert.False(module.HasNoVisibleIsTakibiResults);
+
+        module.IsTakibiSearchText = "not-xyz";
+        Assert.Equal(["Üsküdar İstinat"], module.IsTakibiRows.Select(row => row.Entry.JobName).ToArray());
+
+        module.IsTakibiSearchText = "bulunamaz";
+        Assert.Empty(module.IsTakibiRows);
+        Assert.True(module.HasNoVisibleIsTakibiResults);
+
+        module.ClearIsTakibiSearchCommand.Execute(null);
+        Assert.Equal(3, module.IsTakibiRows.Count);
+        Assert.False(module.HasActiveIsTakibiSearch);
+        Assert.Equal(3, module.IsTakibiEntries.Count);
+    }
+
+    [Fact]
+    public void Yibf_RequestIsTakibiScroll_Clears_Active_Search()
+    {
+        var module = new YibfModuleViewModel(
+            new SqliteYibfRepository(BuildDatabasePath()),
+            new TestYibfImportService(),
+            new TestFileDialogService(),
+            new NotificationService(),
+            new CallbackConfirmationService(),
+            new TestTadilatCellNoteDialogService(),
+            new CallbackYibfAnaBilgiEventDialogService(),
+            new TestYibfAnaBilgiEntryDialogService(),
+            new UndoRedoService());
+
+        var targetId = Guid.NewGuid();
+        module.LoadFromBackup(
+            Array.Empty<YibfAnaBilgiEntry>(),
+            Array.Empty<YibfAnaBilgiEvent>(),
+            [
+                new YibfIsTakibiEntry { Id = Guid.NewGuid(), JobName = "SadeceAlfa", DisplayOrder = 0, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now },
+                new YibfIsTakibiEntry { Id = targetId, JobName = "Hedef Satır", DisplayOrder = 1, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now }
+            ],
+            Array.Empty<YibfCellState>(),
+            markDirty: false);
+
+        module.IsTakibiSearchText = "SadeceAlfa";
+        Assert.Single(module.IsTakibiRows);
+
+        module.RequestIsTakibiScroll(targetId);
+        Assert.False(module.HasActiveIsTakibiSearch);
+        Assert.Equal(2, module.IsTakibiRows.Count);
+        Assert.Equal(targetId, module.PendingIsTakibiScrollTargetId);
+    }
+
     private static string BuildDatabasePath()
         => Path.Combine(Path.GetTempPath(), "RizaCanKilicIsTakibiTests", $"{Guid.NewGuid():N}.db");
 

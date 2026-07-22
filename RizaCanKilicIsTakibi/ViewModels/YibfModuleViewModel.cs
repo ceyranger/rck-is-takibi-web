@@ -42,8 +42,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
     private bool _isInitialized;
     private bool _hasUnsavedChanges;
     private string _searchQuery = string.Empty;
-    private bool _isIsTakibiSearchOpen;
-    private string _isTakibiSearchQuery = string.Empty;
+    private string _isTakibiSearchText = string.Empty;
     private YibfAnaBilgiEntry? _selectedAnaBilgiEntry;
     private YibfAnaBilgiEvent? _selectedAnaBilgiEvent;
     private YibfIsTakibiEntry? _selectedIsTakibiEntry;
@@ -103,7 +102,6 @@ public sealed class YibfModuleViewModel : ViewModelBase
         TumIsler = [];
         VisibleEvents = [];
         IsTakibiRows = [];
-        IsTakibiSearchResults = [];
 
         TumIslerView = CollectionViewSource.GetDefaultView(TumIsler);
         TumIslerView.Filter = FilterAllJobs;
@@ -125,9 +123,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
         DeleteIsTakibiEntryCommand = new AsyncRelayCommand(DeleteSelectedIsTakibiAsync, () => SelectedIsTakibiEntry is not null);
         MoveIsTakibiEntryUpCommand = new AsyncRelayCommand<YibfIsTakibiEntry?>(entry => MoveIsTakibiEntryAsync(entry, -1), CanMoveIsTakibiEntryUp);
         MoveIsTakibiEntryDownCommand = new AsyncRelayCommand<YibfIsTakibiEntry?>(entry => MoveIsTakibiEntryAsync(entry, 1), CanMoveIsTakibiEntryDown);
-        OpenIsTakibiSearchCommand = new RelayCommand(OpenIsTakibiSearch);
-        CloseIsTakibiSearchCommand = new RelayCommand(CloseIsTakibiSearch);
-        SelectIsTakibiSearchResultCommand = new RelayCommand<SearchResultItem?>(SelectIsTakibiSearchResult);
+        ClearIsTakibiSearchCommand = new RelayCommand(ClearIsTakibiSearch, () => HasActiveIsTakibiSearch);
         DeleteActiveSelectionCommand = new AsyncRelayCommand(DeleteActiveSelectionAsync, CanDeleteActiveSelection);
         BeginCellEditCommand = new RelayCommand<YibfCellViewModel?>(BeginCellEdit);
         CommitCellEditCommand = new RelayCommand<YibfCellViewModel?>(CommitCellEdit);
@@ -151,7 +147,6 @@ public sealed class YibfModuleViewModel : ViewModelBase
     public ObservableRangeCollection<YibfAnaBilgiListItemViewModel> TumIsler { get; }
     public ObservableRangeCollection<YibfTimelineEventViewModel> VisibleEvents { get; }
     public ObservableRangeCollection<YibfIsTakibiRow> IsTakibiRows { get; }
-    public ObservableRangeCollection<SearchResultItem> IsTakibiSearchResults { get; }
     public ICollectionView TumIslerView { get; }
 
     public bool HasUnsavedChanges
@@ -175,23 +170,28 @@ public sealed class YibfModuleViewModel : ViewModelBase
         }
     }
 
-    public bool IsIsTakibiSearchOpen
+    public string IsTakibiSearchText
     {
-        get => _isIsTakibiSearchOpen;
-        set => SetProperty(ref _isIsTakibiSearchOpen, value);
-    }
-
-    public string IsTakibiSearchQuery
-    {
-        get => _isTakibiSearchQuery;
+        get => _isTakibiSearchText;
         set
         {
-            if (SetProperty(ref _isTakibiSearchQuery, value))
+            if (SetProperty(ref _isTakibiSearchText, value))
             {
-                RefreshIsTakibiSearchResults();
+                RefreshIsTakibiRows();
+                ClearIsTakibiSearchCommand.NotifyCanExecuteChanged();
             }
         }
     }
+
+    public bool HasActiveIsTakibiSearch => !string.IsNullOrWhiteSpace(IsTakibiSearchText);
+
+    public bool HasNoVisibleIsTakibiResults => HasActiveIsTakibiSearch && IsTakibiRows.Count == 0;
+
+    public int TotalIsTakibiCount => IsTakibiEntries.Count;
+
+    public string IsTakibiEntryCountDisplay => HasActiveIsTakibiSearch
+        ? $"Görünen: {VisibleIsTakibiCount} / {TotalIsTakibiCount}"
+        : $"Kayıt: {TotalIsTakibiCount}";
 
     public YibfAnaBilgiEntry? SelectedAnaBilgiEntry
     {
@@ -268,9 +268,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
     public AsyncRelayCommand DeleteIsTakibiEntryCommand { get; }
     public AsyncRelayCommand<YibfIsTakibiEntry?> MoveIsTakibiEntryUpCommand { get; }
     public AsyncRelayCommand<YibfIsTakibiEntry?> MoveIsTakibiEntryDownCommand { get; }
-    public RelayCommand OpenIsTakibiSearchCommand { get; }
-    public RelayCommand CloseIsTakibiSearchCommand { get; }
-    public RelayCommand<SearchResultItem?> SelectIsTakibiSearchResultCommand { get; }
+    public RelayCommand ClearIsTakibiSearchCommand { get; }
     public AsyncRelayCommand DeleteActiveSelectionCommand { get; }
     public RelayCommand<YibfCellViewModel?> BeginCellEditCommand { get; }
     public RelayCommand<YibfCellViewModel?> CommitCellEditCommand { get; }
@@ -361,7 +359,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
 
     public void CommitPendingEdits()
     {
-        foreach (var row in IsTakibiRows.ToList())
+        foreach (var row in _isTakibiRowLookup.Values.ToList())
         {
             CommitPendingEdit(row.JobNameCell);
             CommitPendingEdit(row.MuellifCell);
@@ -381,6 +379,11 @@ public sealed class YibfModuleViewModel : ViewModelBase
 
     public void RequestIsTakibiScroll(Guid? entryId)
     {
+        if (HasActiveIsTakibiSearch)
+        {
+            IsTakibiSearchText = string.Empty;
+        }
+
         if (PendingIsTakibiScrollTargetId == entryId)
         {
             PendingIsTakibiScrollTargetId = null;
@@ -1501,126 +1504,120 @@ public sealed class YibfModuleViewModel : ViewModelBase
         SelectedAnaBilgiEvent = AnaBilgiEvents.FirstOrDefault(evt => evt.Id == item.PendingEvent.Id);
     }
 
-    private void OpenIsTakibiSearch()
+    private void ClearIsTakibiSearch()
     {
-        IsIsTakibiSearchOpen = true;
-        RefreshIsTakibiSearchResults();
+        IsTakibiSearchText = string.Empty;
     }
 
-    private void CloseIsTakibiSearch()
+    private bool EntryMatchesIsTakibiSearch(YibfIsTakibiEntry entry)
     {
-        IsIsTakibiSearchOpen = false;
-        IsTakibiSearchQuery = string.Empty;
-        IsTakibiSearchResults.Clear();
-    }
-
-    private void SelectIsTakibiSearchResult(SearchResultItem? item)
-    {
-        if (item is null || item.Kind != SearchResultKind.YibfIsTakibiEntry)
+        if (!HasActiveIsTakibiSearch)
         {
-            return;
+            return true;
         }
 
-        var entry = IsTakibiEntries.FirstOrDefault(x => x.Id == item.ItemId);
-        if (entry is null)
+        var query = IsTakibiSearchText;
+        if (Contains(entry.JobName, query)
+            || Contains(entry.WorkVariantLabel, query)
+            || Contains(entry.MuellifBilgileriGeldiMi, query)
+            || Contains(entry.DenetciAtamalariYapildiMi, query)
+            || Contains(entry.TumProjelerinDijitaliVarMi, query)
+            || Contains(entry.EvraklarTamMi, query)
+            || Contains(entry.YibfSozlesmeHazirlandiMi, query)
+            || Contains(entry.DekontAlindiMi, query)
+            || Contains(entry.RuhsatBasvurusuYapildiMi, query)
+            || Contains(entry.RuhsatNushasiAlindiMi, query)
+            || Contains(entry.IsyeriTeslimTutangiHazirlandiMi, query)
+            || Contains(entry.IsgYazisiHazirlandiMi, query)
+            || Contains(entry.SaglikGuvenlikPlaniGeldiMi, query)
+            || Contains(entry.TemelTopraklamaTutanagiHazirlandiMi, query))
         {
-            return;
+            return true;
         }
 
-        SelectedIsTakibiEntry = entry;
-        RequestIsTakibiScroll(entry.Id);
-        CloseIsTakibiSearch();
-    }
-
-    private void RefreshIsTakibiSearchResults()
-    {
-        var query = IsTakibiSearchQuery?.Trim();
-        var results = string.IsNullOrWhiteSpace(query)
-            ? Enumerable.Empty<SearchResultItem>()
-            : IsTakibiEntries
-                .Select(BuildIsTakibiSearchResult)
-                .Where(item => Contains(item.SearchText, query))
-                .OrderBy(item => item.Title)
-                .ThenBy(item => item.Summary)
-                .ToList();
-
-        IsTakibiSearchResults.Clear();
-        foreach (var result in results)
+        foreach (var state in CellStates)
         {
-            IsTakibiSearchResults.Add(result);
+            if (state.EntryId != entry.Id || string.IsNullOrWhiteSpace(state.NoteText))
+            {
+                continue;
+            }
+
+            if (Contains(state.NoteText, query))
+            {
+                return true;
+            }
         }
-    }
 
-    private static SearchResultItem BuildIsTakibiSearchResult(YibfIsTakibiEntry entry)
-    {
-        return new SearchResultItem
-        {
-            Kind = SearchResultKind.YibfIsTakibiEntry,
-            TargetTab = MainNavigationTab.YibfIsTakibi,
-            ItemId = entry.Id,
-            BoardLabel = "YİBF İş Takibi",
-            Title = FirstNonEmpty(entry.JobName, "(Boş YİBF iş takibi kaydı)"),
-            Summary = FirstNonEmpty(entry.EvraklarTamMi, entry.RuhsatBasvurusuYapildiMi, entry.MuellifBilgileriGeldiMi),
-            SearchText = CombineSearchText(
-                entry.JobName,
-                entry.MuellifBilgileriGeldiMi,
-                entry.DenetciAtamalariYapildiMi,
-                entry.TumProjelerinDijitaliVarMi,
-                entry.EvraklarTamMi,
-                entry.YibfSozlesmeHazirlandiMi,
-                entry.DekontAlindiMi,
-                entry.RuhsatBasvurusuYapildiMi,
-                entry.RuhsatNushasiAlindiMi,
-                entry.IsyeriTeslimTutangiHazirlandiMi,
-                entry.IsgYazisiHazirlandiMi,
-                entry.SaglikGuvenlikPlaniGeldiMi,
-                entry.TemelTopraklamaTutanagiHazirlandiMi)
-        };
+        return false;
     }
 
     private void RefreshIsTakibiRows()
     {
-        var orderedEntries = IsTakibiEntries.OrderBy(item => item.DisplayOrder).ToList();
-        var activeIds = orderedEntries.Select(item => item.Id).ToHashSet();
+        var allOrderedEntries = IsTakibiEntries.OrderBy(item => item.DisplayOrder).ToList();
+        var visibleOrderedEntries = allOrderedEntries.Where(EntryMatchesIsTakibiSearch).ToList();
+        var allIds = allOrderedEntries.Select(item => item.Id).ToHashSet();
+        var visibleIds = visibleOrderedEntries.Select(item => item.Id).ToHashSet();
 
-        foreach (var obsoleteId in _isTakibiRowLookup.Keys.Where(id => !activeIds.Contains(id)).ToList())
+        foreach (var obsoleteId in _isTakibiRowLookup.Keys.Where(id => !allIds.Contains(id)).ToList())
         {
             var row = _isTakibiRowLookup[obsoleteId];
             IsTakibiRows.Remove(row);
             _isTakibiRowLookup.Remove(obsoleteId);
         }
 
-        for (var index = 0; index < orderedEntries.Count; index++)
+        foreach (var entry in allOrderedEntries)
         {
-            var entry = orderedEntries[index];
             if (!_isTakibiRowLookup.TryGetValue(entry.Id, out var row))
             {
                 row = BuildRow(entry);
                 _isTakibiRowLookup[entry.Id] = row;
-                IsTakibiRows.Insert(Math.Min(index, IsTakibiRows.Count), row);
             }
             else
             {
                 UpdateIsTakibiRow(row, entry);
-                var currentIndex = IsTakibiRows.IndexOf(row);
-                if (currentIndex >= 0 && currentIndex != index)
-                {
-                    IsTakibiRows.Move(currentIndex, index);
-                }
             }
         }
 
-        if (SelectedIsTakibiEntry is null || !IsTakibiEntries.Any(item => item.Id == SelectedIsTakibiEntry.Id))
+        foreach (var hiddenId in IsTakibiRows.Select(row => row.Entry.Id).Where(id => !visibleIds.Contains(id)).ToList())
         {
-            SelectedIsTakibiEntry = IsTakibiEntries.FirstOrDefault();
+            if (_isTakibiRowLookup.TryGetValue(hiddenId, out var hiddenRow))
+            {
+                IsTakibiRows.Remove(hiddenRow);
+            }
+        }
+
+        for (var index = 0; index < visibleOrderedEntries.Count; index++)
+        {
+            var entry = visibleOrderedEntries[index];
+            var row = _isTakibiRowLookup[entry.Id];
+            var currentIndex = IsTakibiRows.IndexOf(row);
+            if (currentIndex < 0)
+            {
+                IsTakibiRows.Insert(Math.Min(index, IsTakibiRows.Count), row);
+            }
+            else if (currentIndex != index)
+            {
+                IsTakibiRows.Move(currentIndex, index);
+            }
+        }
+
+        if (SelectedIsTakibiEntry is null
+            || !IsTakibiEntries.Any(item => item.Id == SelectedIsTakibiEntry.Id)
+            || !visibleIds.Contains(SelectedIsTakibiEntry.Id))
+        {
+            SelectedIsTakibiEntry = visibleOrderedEntries.FirstOrDefault();
         }
         else
         {
             RefreshIsTakibiSelection();
         }
 
-        RefreshIsTakibiSearchResults();
         OnPropertyChanged(nameof(VisibleIsTakibiCount));
+        OnPropertyChanged(nameof(TotalIsTakibiCount));
+        OnPropertyChanged(nameof(IsTakibiEntryCountDisplay));
+        OnPropertyChanged(nameof(HasActiveIsTakibiSearch));
+        OnPropertyChanged(nameof(HasNoVisibleIsTakibiResults));
+        ClearIsTakibiSearchCommand.NotifyCanExecuteChanged();
         MoveIsTakibiEntryUpCommand.NotifyCanExecuteChanged();
         MoveIsTakibiEntryDownCommand.NotifyCanExecuteChanged();
     }

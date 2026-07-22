@@ -135,30 +135,86 @@
         </Border>
 
         <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}" Margin="0,8,0,8">
-            <StackPanel>
             <DockPanel>
-                <TextBlock Text="YİBF modül durumu" FontFamily="{StaticResource Font.Primary}" FontSize="16" FontWeight="SemiBold" DockPanel.Dock="Left"/>
-                <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
-                    <Border Style="{StaticResource MissingProjectToolbarChipStyle}">
-                        <TextBlock Text="{Binding YibfModule.VisibleIsTakibiCount, StringFormat=Görünen Satır: {0}}" FontWeight="SemiBold" Foreground="#FF20344C"/>
+                <TextBlock Text="YİBF modül durumu"
+                           FontFamily="{StaticResource Font.Primary}"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"
+                           DockPanel.Dock="Left"/>
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Right"
+                            DockPanel.Dock="Right">
+                    <Border Style="{StaticResource MissingProjectToolbarChipStyle}"
+                            Margin="0,0,8,0"
+                            Padding="0"
+                            MinWidth="240">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0"
+                                     Text="{Binding YibfModule.IsTakibiSearchText, UpdateSourceTrigger=PropertyChanged}"
+                                     MinHeight="36"
+                                     Margin="8,0,0,0"
+                                     VerticalContentAlignment="Center"
+                                     BorderThickness="0"
+                                     Background="Transparent"
+                                     ToolTip="İş adı, kontrol alanları veya hücre notunda ara"/>
+                            <TextBlock Grid.Column="0"
+                                       IsHitTestVisible="False"
+                                       Margin="10,0,0,0"
+                                       VerticalAlignment="Center"
+                                       Foreground="#FF8A9BB0"
+                                       Text="Ara (iş adı, kontrol alanları...)">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding YibfModule.IsTakibiSearchText}" Value="">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                            <Button Grid.Column="1"
+                                    Content="×"
+                                    Command="{Binding YibfModule.ClearIsTakibiSearchCommand}"
+                                    MinWidth="28"
+                                    MinHeight="28"
+                                    Margin="2"
+                                    Padding="0"
+                                    FontSize="16"
+                                    ToolTip="Aramayı temizle"
+                                    Style="{StaticResource GhostButton}"/>
+                        </Grid>
+                    </Border>
+                    <Border Style="{StaticResource MissingProjectToolbarChipStyle}" Margin="0,0,8,0">
+                        <TextBlock Text="{Binding YibfModule.IsTakibiEntryCountDisplay}"
+                                   FontWeight="SemiBold"
+                                   Foreground="#FF20344C"/>
                     </Border>
                     <Border Style="{StaticResource MissingProjectToolbarChipStyle}"
+                            Margin="0,0,8,0"
                             Visibility="{Binding YibfModule.HasUnsavedChanges, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <TextBlock Text="Kaydedilmemiş değişiklik var" FontWeight="SemiBold" Foreground="#FF9B6E11"/>
                     </Border>
-                    <Button Content="Ara" Command="{Binding YibfModule.OpenIsTakibiSearchCommand}" Style="{StaticResource GhostButton}"/>
                     <Button Content="Yukarı"
                             Command="{Binding YibfModule.MoveIsTakibiEntryUpCommand}"
                             CommandParameter="{Binding YibfModule.SelectedIsTakibiEntry}"
-                            Style="{StaticResource GhostButton}"/>
+                            Style="{StaticResource GhostButton}"
+                            Margin="0,0,8,0"/>
                     <Button Content="Aşağı"
                             Command="{Binding YibfModule.MoveIsTakibiEntryDownCommand}"
                             CommandParameter="{Binding YibfModule.SelectedIsTakibiEntry}"
-                            Style="{StaticResource GhostButton}"/>
+                            Style="{StaticResource GhostButton}"
+                            Margin="0,0,8,0"/>
                     <Button Content="Satır Ekle" Command="{Binding YibfModule.AddIsTakibiEntryCommand}"/>
-                </WrapPanel>
+                </StackPanel>
             </DockPanel>
-            </StackPanel>
         </Border>
 
         <Grid Grid.Row="2" x:Name="YibfIsTakibiExportHost">
@@ -206,126 +262,75 @@
                 <Border Grid.Column="1" Background="#FF16355C" BorderBrush="#FFD5E0EE" BorderThickness="0,0,1,1"/>
             </Grid>
 
-            <ListBox Grid.Row="1"
-                     x:Name="YibfIsTakibiListBox"
-                     ItemsSource="{Binding YibfModule.IsTakibiRows}"
-                     behaviors:MouseWheelScrollBehavior.IsEnabled="True"
-                     Style="{StaticResource VirtualizedListBoxStyle}"
-                     ItemContainerStyle="{StaticResource VirtualizedListBoxItemStyle}"
-                     ScrollViewer.IsDeferredScrollingEnabled="False"
-                     VirtualizingPanel.CacheLength="3"
-                     VirtualizingPanel.CacheLengthUnit="Item"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                     ScrollViewer.VerticalScrollBarVisibility="Visible">
-                <ListBox.ItemTemplate>
-                    <DataTemplate DataType="{x:Type viewModels:YibfIsTakibiRow}">
-                        <Border Style="{StaticResource TadilatRowBorderStyle}"
-                                Tag="{Binding IsSelected}"
-                                Margin="0,0,0,2"
-                                behaviors:ClickCommandBehavior.Command="{Binding DataContext.YibfModule.SelectIsTakibiEntryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                behaviors:ClickCommandBehavior.CommandParameter="{Binding Entry}">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1.38*"/>
-                                    <ColumnDefinition Width="0.66*"/>
-                                    <ColumnDefinition Width="0.76*"/>
-                                    <ColumnDefinition Width="0.72*"/>
-                                    <ColumnDefinition Width="0.64*"/>
-                                    <ColumnDefinition Width="0.92*"/>
-                                    <ColumnDefinition Width="0.62*"/>
-                                    <ColumnDefinition Width="0.64*"/>
-                                    <ColumnDefinition Width="0.64*"/>
-                                    <ColumnDefinition Width="0.76*"/>
-                                    <ColumnDefinition Width="0.76*"/>
-                                    <ColumnDefinition Width="0.70*"/>
-                                    <ColumnDefinition Width="0.76*"/>
-                                </Grid.ColumnDefinitions>
-                                <ContentPresenter Grid.Column="0" Content="{Binding JobNameCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
-                                <ContentPresenter Grid.Column="1" Content="{Binding MuellifCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
-                                <ContentPresenter Grid.Column="2" Content="{Binding DenetciCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
-                                <ContentPresenter Grid.Column="3" Content="{Binding TumDijitalCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
-                                <ContentPresenter Grid.Column="4" Content="{Binding EvrakCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
-                                <ContentPresenter Grid.Column="5" Content="{Binding SozlesmeCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
-                                <ContentPresenter Grid.Column="6" Content="{Binding DekontCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
-                                <ContentPresenter Grid.Column="7" Content="{Binding RuhsatBasvuruCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
-                                <ContentPresenter Grid.Column="8" Content="{Binding RuhsatNushaCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
-                                <ContentPresenter Grid.Column="9" Content="{Binding IsyeriTeslimCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
-                                <ContentPresenter Grid.Column="10" Content="{Binding IsgCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
-                                <ContentPresenter Grid.Column="11" Content="{Binding SaglikCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
-                                <ContentPresenter Grid.Column="12" Content="{Binding TopraklamaCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+            <Grid Grid.Row="1">
+                <ListBox x:Name="YibfIsTakibiListBox"
+                         ItemsSource="{Binding YibfModule.IsTakibiRows}"
+                         behaviors:MouseWheelScrollBehavior.IsEnabled="True"
+                         Style="{StaticResource VirtualizedListBoxStyle}"
+                         ItemContainerStyle="{StaticResource VirtualizedListBoxItemStyle}"
+                         ScrollViewer.IsDeferredScrollingEnabled="False"
+                         VirtualizingPanel.CacheLength="3"
+                         VirtualizingPanel.CacheLengthUnit="Item"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         ScrollViewer.VerticalScrollBarVisibility="Visible">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewModels:YibfIsTakibiRow}">
+                            <Border Style="{StaticResource TadilatRowBorderStyle}"
+                                    Tag="{Binding IsSelected}"
+                                    Margin="0,0,0,2"
+                                    behaviors:ClickCommandBehavior.Command="{Binding DataContext.YibfModule.SelectIsTakibiEntryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                    behaviors:ClickCommandBehavior.CommandParameter="{Binding Entry}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1.38*"/>
+                                        <ColumnDefinition Width="0.66*"/>
+                                        <ColumnDefinition Width="0.76*"/>
+                                        <ColumnDefinition Width="0.72*"/>
+                                        <ColumnDefinition Width="0.64*"/>
+                                        <ColumnDefinition Width="0.92*"/>
+                                        <ColumnDefinition Width="0.62*"/>
+                                        <ColumnDefinition Width="0.64*"/>
+                                        <ColumnDefinition Width="0.64*"/>
+                                        <ColumnDefinition Width="0.76*"/>
+                                        <ColumnDefinition Width="0.76*"/>
+                                        <ColumnDefinition Width="0.70*"/>
+                                        <ColumnDefinition Width="0.76*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ContentPresenter Grid.Column="0" Content="{Binding JobNameCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
+                                    <ContentPresenter Grid.Column="1" Content="{Binding MuellifCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
+                                    <ContentPresenter Grid.Column="2" Content="{Binding DenetciCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
+                                    <ContentPresenter Grid.Column="3" Content="{Binding TumDijitalCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
+                                    <ContentPresenter Grid.Column="4" Content="{Binding EvrakCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
+                                    <ContentPresenter Grid.Column="5" Content="{Binding SozlesmeCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
+                                    <ContentPresenter Grid.Column="6" Content="{Binding DekontCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
+                                    <ContentPresenter Grid.Column="7" Content="{Binding RuhsatBasvuruCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
+                                    <ContentPresenter Grid.Column="8" Content="{Binding RuhsatNushaCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
+                                    <ContentPresenter Grid.Column="9" Content="{Binding IsyeriTeslimCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
+                                    <ContentPresenter Grid.Column="10" Content="{Binding IsgCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
+                                    <ContentPresenter Grid.Column="11" Content="{Binding SaglikCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
+                                    <ContentPresenter Grid.Column="12" Content="{Binding TopraklamaCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <Border Background="#CCFFFFFF"
+                        Visibility="{Binding YibfModule.HasNoVisibleIsTakibiResults, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <TextBlock Text="Arama sonucu bulunamadı. Verileriniz silinmedi; aramayı temizleyerek tüm kayıtları görebilirsiniz."
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap"
+                               MaxWidth="420"
+                               Foreground="{StaticResource Brush.TextSecondary}"
+                               FontWeight="SemiBold"/>
+                </Border>
+            </Grid>
 
             <TextBlock Grid.Row="2"
                        Margin="6,10,6,2"
                        Foreground="{StaticResource Brush.TextSecondary}"
-                       Text="İpucu: Hücreye çift tık/F2 ile düzenleme açılır. Sağ tık menüsü ile renk ve not yönetilir."/>
-        </Grid>
-
-        <Grid Grid.RowSpan="3"
-              Background="#660A1C30"
-              Visibility="{Binding YibfModule.IsIsTakibiSearchOpen, Converter={StaticResource BooleanToVisibilityConverter}}"
-              Panel.ZIndex="90">
-            <Border Width="720"
-                    MaxHeight="560"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    Style="{StaticResource CardBorderStyle}">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <DockPanel>
-                        <TextBlock Text="YİBF İş Takibi Arama"
-                                   FontFamily="{StaticResource Font.Primary}"
-                                   FontSize="20"
-                                   FontWeight="SemiBold"
-                                   DockPanel.Dock="Left"/>
-                        <Button Content="Kapat"
-                                Style="{StaticResource GhostButton}"
-                                DockPanel.Dock="Right"
-                                Command="{Binding YibfModule.CloseIsTakibiSearchCommand}"/>
-                    </DockPanel>
-
-                    <TextBox Grid.Row="1"
-                             Margin="4,12,4,8"
-                             Height="38"
-                             Text="{Binding YibfModule.IsTakibiSearchQuery, UpdateSourceTrigger=PropertyChanged}"/>
-
-                    <ListBox Grid.Row="2"
-                             ItemsSource="{Binding YibfModule.IsTakibiSearchResults}"
-                             Margin="4">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate DataType="{x:Type models:SearchResultItem}">
-                                <Button Style="{StaticResource GhostButton}"
-                                        HorizontalContentAlignment="Stretch"
-                                        Command="{Binding DataContext.YibfModule.SelectIsTakibiSearchResultCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                        CommandParameter="{Binding}"
-                                        AutomationProperties.AutomationId="{Binding AutomationId}"
-                                        AutomationProperties.Name="{Binding Title}">
-                                    <StackPanel>
-                                        <TextBlock Text="{Binding BoardLabel}"
-                                                   Foreground="{StaticResource Brush.TextSecondary}"
-                                                   FontSize="11"/>
-                                        <TextBlock Text="{Binding Title}"
-                                                   FontWeight="SemiBold"
-                                                   Margin="0,2,0,0"/>
-                                        <TextBlock Text="{Binding Summary}"
-                                                   Foreground="{StaticResource Brush.TextSecondary}"
-                                                   TextWrapping="Wrap"/>
-                                    </StackPanel>
-                                </Button>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </Grid>
-            </Border>
+                       Text="İpucu: Üstteki arama kutusuyla satırları filtreleyin. Hücreye çift tık/F2 ile düzenleme açılır; sağ tık menüsü ile renk ve not yönetilir."/>
         </Grid>
     </Grid>
 </UserControl>

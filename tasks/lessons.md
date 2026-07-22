@@ -2,6 +2,7 @@
 
 - WPF `ComboBox` içinde `SelectedValue` + `Guid?` bağlama sessizce başarısız olabilir; proje/üst-proje seçiminde `ProjectPickerControl` veya `SelectedItem` kullan.
 - İstinat gibi koşullu zorunlu alanlarda yalnız validasyon mesajı yetmez; alan görünür olmalı, boş liste için ayrı kullanıcı mesajı gösterilmeli.
+- Modül içi “Ara” overlay (bul-ve-git) ile Tadilat tarzı satır filtre aramasını karıştırma; kullanıcı “Tadilat gibi arama” dediğinde araç çubuğunda yerinde filtre bekler.
 - Publish çıktısı için kök `bin/Release/publish` ile RID bazlı `bin/Release/net8.0-windows/win-x64/publish` klasörlerini karıştırma; kullanıcıya teslim edilecek klasör hash veya tam yol ile doğrulanmalı.
 - `ObservableRangeCollection.ReplaceRange()` kullanan modüllerde `CollectionChangedAction.Reset` sonrası `PropertyChanged` abonelikleri yeniden kurulmalı; aksi halde yüklü kayıt düzenlemeleri dirty-state üretmeyebilir.
 - Tadilat ve Aksiyon gibi seed ilçe grupları oluşturan modüllerde testler `DistrictGroups[0]` varsayımıyla yazılmamalı; gerçek kayıt satırı `HasItems` veya `!IsPlaceholder` üzerinden bulunmalı.
