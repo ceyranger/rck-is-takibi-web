@@ -1,4 +1,5 @@
 using Microsoft.Data.Sqlite;
+using RizaCanKilicIsTakibi.Helpers;
 using RizaCanKilicIsTakibi.Models;
 using RizaCanKilicIsTakibi.Services.Abstractions;
 using System.IO;
@@ -24,7 +25,7 @@ public sealed class SqliteKarotRepository : IKarotRepository
         await using var command = connection.CreateCommand();
         command.CommandText = """
 SELECT Id, SampleReceivedDate, YibfNo, AdaParsel, YapiSahibi, Muteahhit, KatBilgisi, BetonSinifi, TwentyEightDayResult,
-       BetonFirmasi, Laboratuvar, Aciklama3, Status, DisplayOrder, CreatedAt, UpdatedAt
+       BetonFirmasi, Laboratuvar, Aciklama3, Status, DisplayOrder, CreatedAt, UpdatedAt, ProjectId
 FROM KarotEntries
 WHERE IsDeleted = 0
 ORDER BY DisplayOrder, UpdatedAt DESC;
@@ -50,7 +51,8 @@ ORDER BY DisplayOrder, UpdatedAt DESC;
                 Status = (KarotStatus)reader.GetInt32(12),
                 DisplayOrder = reader.GetInt32(13),
                 CreatedAt = DateTime.Parse(reader.GetString(14)),
-                UpdatedAt = DateTime.Parse(reader.GetString(15))
+                UpdatedAt = DateTime.Parse(reader.GetString(15)),
+                ProjectId = SqliteGuidHelper.ParseNullable(reader.IsDBNull(16) ? null : reader.GetString(16))
             });
         }
 
@@ -114,9 +116,9 @@ ORDER BY EntryId, ColumnKey;
             command.Transaction = transaction;
             command.CommandText = """
 INSERT INTO KarotEntries (Id, SampleReceivedDate, YibfNo, AdaParsel, YapiSahibi, Muteahhit, KatBilgisi, BetonSinifi, TwentyEightDayResult,
-                          BetonFirmasi, Laboratuvar, Aciklama3, Status, DisplayOrder, CreatedAt, UpdatedAt)
+                          BetonFirmasi, Laboratuvar, Aciklama3, Status, DisplayOrder, CreatedAt, UpdatedAt, ProjectId)
 VALUES ($id, $sampleReceivedDate, $yibfNo, $adaParsel, $yapiSahibi, $muteahhit, $katBilgisi, $betonSinifi, $twentyEightDayResult,
-        $betonFirmasi, $laboratuvar, $aciklama, $status, $displayOrder, $createdAt, $updatedAt)
+        $betonFirmasi, $laboratuvar, $aciklama, $status, $displayOrder, $createdAt, $updatedAt, $projectId)
 ON CONFLICT(Id) DO UPDATE SET
     SampleReceivedDate = excluded.SampleReceivedDate,
     YibfNo = excluded.YibfNo,
@@ -132,6 +134,7 @@ ON CONFLICT(Id) DO UPDATE SET
     Status = excluded.Status,
     DisplayOrder = excluded.DisplayOrder,
     UpdatedAt = excluded.UpdatedAt,
+    ProjectId = excluded.ProjectId,
     IsDeleted = 0;
 """;
 
@@ -251,6 +254,7 @@ ON CONFLICT(EntryId, ColumnKey) DO UPDATE SET
         command.Parameters.AddWithValue("$displayOrder", entry.DisplayOrder);
         command.Parameters.AddWithValue("$createdAt", entry.CreatedAt.ToString("O"));
         command.Parameters.AddWithValue("$updatedAt", entry.UpdatedAt.ToString("O"));
+        command.Parameters.AddWithValue("$projectId", SqliteGuidHelper.ToDb(entry.ProjectId));
     }
 
     private static string BuildCellStateKey(Guid entryId, string columnKey)
@@ -299,5 +303,6 @@ CREATE TABLE IF NOT EXISTS KarotCellStates (
 """;
         command.ExecuteNonQuery();
         SqliteConnectionSettings.EnsureColumnExists(connection, "KarotEntries", "IsDeleted", "INTEGER NOT NULL DEFAULT 0");
+        SqliteConnectionSettings.EnsureColumnExists(connection, "KarotEntries", "ProjectId", "TEXT NOT NULL DEFAULT ''");
     }
 }

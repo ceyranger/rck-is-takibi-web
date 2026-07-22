@@ -10,11 +10,15 @@ public class DialogAndImportValidationTests
     [Fact]
     public void YibfAnaBilgiEntryDialogViewModel_Requires_YapiSahibi()
     {
-        var viewModel = new YibfAnaBilgiEntryDialogViewModel
-        {
-            AdaParsel = "123/4",
-            YapiSahibi = string.Empty
-        };
+        var catalogService = new ProjectCatalogService(new EmptyCatalogRepository());
+        var viewModel = new YibfAnaBilgiEntryDialogViewModel(
+            Array.Empty<ProjectCatalogEntry>(),
+            catalogService,
+            new YibfAnaBilgiEntryDialogResult
+            {
+                AdaParsel = "123/4",
+                YapiSahibi = string.Empty
+            });
 
         viewModel.SaveCommand.Execute(null);
 
@@ -158,5 +162,14 @@ public class DialogAndImportValidationTests
     {
         public Task<YibfAnaBilgiEntryDialogResult?> ShowDialogAsync(YibfAnaBilgiEntryDialogResult? initialValues = null, bool isEditMode = false, CancellationToken cancellationToken = default)
             => Task.FromResult<YibfAnaBilgiEntryDialogResult?>(null);
+    }
+
+    private sealed class EmptyCatalogRepository : IProjectCatalogRepository
+    {
+        public Task<IReadOnlyList<ProjectCatalogEntry>> GetAllAsync(CancellationToken cancellationToken = default)
+            => Task.FromResult<IReadOnlyList<ProjectCatalogEntry>>(Array.Empty<ProjectCatalogEntry>());
+
+        public Task SaveManyAsync(IEnumerable<ProjectCatalogEntry> entries, CancellationToken cancellationToken = default)
+            => Task.CompletedTask;
     }
 }

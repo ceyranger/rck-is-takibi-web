@@ -10,7 +10,7 @@ namespace RizaCanKilicIsTakibi.Services;
 
 public sealed class BackupService : IBackupService
 {
-    private const int CurrentBackupSchemaVersion = 2;
+    private const int CurrentBackupSchemaVersion = 3;
     private readonly string _backupRoot;
     private readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web)
     {
@@ -42,6 +42,7 @@ public sealed class BackupService : IBackupService
         IEnumerable<YibfCellState>? yibfCellStates = null,
         IEnumerable<TadilatCellState>? tadilatCellStates = null,
         IEnumerable<QuickTaskTemplate>? quickTaskTemplates = null,
+        IEnumerable<ProjectCatalogEntry>? projectCatalogEntries = null,
         CancellationToken cancellationToken = default)
     {
         var payload = new BackupEnvelope
@@ -61,6 +62,7 @@ public sealed class BackupService : IBackupService
             YibfIsTakibiEntries = (yibfIsTakibiEntries ?? Array.Empty<YibfIsTakibiEntry>()).Select(MapYibfIsTakibiToDto).ToList(),
             YibfCellStates = (yibfCellStates ?? Array.Empty<YibfCellState>()).Select(MapYibfCellStateToDto).ToList(),
             TadilatCellStates = (tadilatCellStates ?? Array.Empty<TadilatCellState>()).Select(MapTadilatCellStateToDto).ToList(),
+            ProjectCatalogEntries = (projectCatalogEntries ?? Array.Empty<ProjectCatalogEntry>()).Select(MapProjectCatalogToDto).ToList(),
             CreatedAt = DateTime.Now
         };
         payload.Checksum = ComputeChecksum(payload);
@@ -115,26 +117,29 @@ public sealed class BackupService : IBackupService
             throw new InvalidDataException("Yedek dosyası okunamadı veya boş.");
         }
 
-        if (payload.SchemaVersion != 0 && payload.SchemaVersion != 1 && payload.SchemaVersion != CurrentBackupSchemaVersion)
+        if (payload.SchemaVersion is not (0 or 1 or 2 or 3))
         {
             throw new InvalidDataException($"Desteklenmeyen yedek sürümü: {payload.SchemaVersion}");
         }
 
-        if (payload.SchemaVersion is 1 or CurrentBackupSchemaVersion)
+        if (payload.SchemaVersion is 1 or 2 or 3)
         {
             if (string.IsNullOrWhiteSpace(payload.Checksum))
             {
                 throw new InvalidDataException("Yedek doğrulama bilgisi eksik.");
             }
 
-            var expectedChecksum = payload.SchemaVersion == 1
-                ? ComputeChecksumV1(payload)
-                : ComputeChecksum(payload);
-            var legacyV2Checksum = payload.SchemaVersion == CurrentBackupSchemaVersion
+            var expectedChecksum = payload.SchemaVersion switch
+            {
+                1 => ComputeChecksumV1(payload),
+                2 => ComputeChecksumV2(payload),
+                _ => ComputeChecksum(payload)
+            };
+            var legacyV2WithoutTemplateGroups = payload.SchemaVersion == 2
                 ? ComputeChecksumV2WithoutTemplateGroups(payload)
                 : null;
             if (!string.Equals(payload.Checksum, expectedChecksum, StringComparison.Ordinal)
-                && !string.Equals(payload.Checksum, legacyV2Checksum, StringComparison.Ordinal))
+                && !string.Equals(payload.Checksum, legacyV2WithoutTemplateGroups, StringComparison.Ordinal))
             {
                 throw new InvalidDataException("Yedek dosyası bozuk veya değiştirilmiş görünüyor.");
             }
@@ -158,7 +163,8 @@ public sealed class BackupService : IBackupService
             YibfAnaBilgiEvents = payload.YibfAnaBilgiEvents.Select(MapYibfAnaBilgiEventToModel).ToList(),
             YibfIsTakibiEntries = payload.YibfIsTakibiEntries.Select(MapYibfIsTakibiToModel).ToList(),
             YibfCellStates = payload.YibfCellStates.Select(MapYibfCellStateToModel).ToList(),
-            TadilatCellStates = payload.TadilatCellStates.Select(MapTadilatCellStateToModel).ToList()
+            TadilatCellStates = payload.TadilatCellStates.Select(MapTadilatCellStateToModel).ToList(),
+            ProjectCatalogEntries = (payload.ProjectCatalogEntries ?? []).Select(MapProjectCatalogToModel).ToList()
         };
     }
 
@@ -177,6 +183,100 @@ public sealed class BackupService : IBackupService
             envelope.KarotEntries,
             envelope.KarotCellStates,
             envelope.TadilatEntries,
+            envelope.YibfAnaBilgiEntries,
+            envelope.YibfAnaBilgiEvents,
+            envelope.YibfIsTakibiEntries,
+            envelope.YibfCellStates,
+            envelope.TadilatCellStates,
+            envelope.ProjectCatalogEntries
+        }, _jsonOptions);
+
+        return Convert.ToHexString(SHA256.HashData(payloadBytes));
+    }
+
+    private string ComputeChecksumV2(BackupEnvelope envelope)
+    {
+        var payloadBytes = JsonSerializer.SerializeToUtf8Bytes(new
+        {
+            envelope.SchemaVersion,
+            envelope.AppVersion,
+            envelope.CreatedAt,
+            Tasks = envelope.Tasks.Select(task => new
+            {
+                task.Id,
+                task.Title,
+                task.Description,
+                task.DueDate,
+                task.CreatedAt,
+                task.UpdatedAt,
+                task.BoardType,
+                task.SortOrder,
+                task.Notes
+            }),
+            envelope.QuickTaskTemplates,
+            ActionEntries = envelope.ActionEntries.Select(entry => new
+            {
+                entry.Id,
+                entry.Category,
+                entry.District,
+                entry.OwnerParcelText,
+                entry.WorkText,
+                entry.DisplayOrder,
+                entry.CreatedAt,
+                entry.UpdatedAt
+            }),
+            MissingProjectEntries = envelope.MissingProjectEntries.Select(entry => new
+            {
+                entry.Id,
+                entry.AdaParsel,
+                entry.YapiSahibi,
+                entry.RecordMedium,
+                entry.RecordMediumText,
+                entry.MissingProjectText,
+                entry.Description,
+                entry.DisplayOrder,
+                entry.CreatedAt,
+                entry.UpdatedAt
+            }),
+            envelope.MissingProjectCellStates,
+            KarotEntries = envelope.KarotEntries.Select(entry => new
+            {
+                entry.Id,
+                entry.SampleReceivedDate,
+                entry.YibfNo,
+                entry.AdaParsel,
+                entry.YapiSahibi,
+                entry.Muteahhit,
+                entry.KatBilgisi,
+                entry.BetonSinifi,
+                entry.TwentyEightDayResult,
+                entry.BetonFirmasi,
+                entry.Laboratuvar,
+                entry.Aciklama,
+                entry.Status,
+                entry.DisplayOrder,
+                entry.CreatedAt,
+                entry.UpdatedAt
+            }),
+            envelope.KarotCellStates,
+            TadilatEntries = envelope.TadilatEntries.Select(entry => new
+            {
+                entry.Id,
+                entry.SubTab,
+                entry.District,
+                entry.JobName,
+                entry.ProjectType,
+                entry.DigitalReceived,
+                entry.InspectorApproved,
+                entry.OutputAndReportArrived,
+                entry.OfficialLetterSubmitted,
+                entry.ArchivedFromMunicipality,
+                entry.Description1,
+                entry.Description2,
+                entry.DisplayOrder,
+                entry.CreatedAt,
+                entry.UpdatedAt
+            }),
             envelope.YibfAnaBilgiEntries,
             envelope.YibfAnaBilgiEvents,
             envelope.YibfIsTakibiEntries,
@@ -218,7 +318,18 @@ public sealed class BackupService : IBackupService
             envelope.SchemaVersion,
             envelope.AppVersion,
             envelope.CreatedAt,
-            envelope.Tasks,
+            Tasks = envelope.Tasks.Select(task => new
+            {
+                task.Id,
+                task.Title,
+                task.Description,
+                task.DueDate,
+                task.CreatedAt,
+                task.UpdatedAt,
+                task.BoardType,
+                task.SortOrder,
+                task.Notes
+            }),
             QuickTaskTemplates = envelope.QuickTaskTemplates.Select(template => new
             {
                 template.Id,
@@ -228,12 +339,69 @@ public sealed class BackupService : IBackupService
                 template.UpdatedAt,
                 template.IsDeleted
             }),
-            envelope.ActionEntries,
-            envelope.MissingProjectEntries,
+            ActionEntries = envelope.ActionEntries.Select(entry => new
+            {
+                entry.Id,
+                entry.Category,
+                entry.District,
+                entry.OwnerParcelText,
+                entry.WorkText,
+                entry.DisplayOrder,
+                entry.CreatedAt,
+                entry.UpdatedAt
+            }),
+            MissingProjectEntries = envelope.MissingProjectEntries.Select(entry => new
+            {
+                entry.Id,
+                entry.AdaParsel,
+                entry.YapiSahibi,
+                entry.RecordMedium,
+                entry.RecordMediumText,
+                entry.MissingProjectText,
+                entry.Description,
+                entry.DisplayOrder,
+                entry.CreatedAt,
+                entry.UpdatedAt
+            }),
             envelope.MissingProjectCellStates,
-            envelope.KarotEntries,
+            KarotEntries = envelope.KarotEntries.Select(entry => new
+            {
+                entry.Id,
+                entry.SampleReceivedDate,
+                entry.YibfNo,
+                entry.AdaParsel,
+                entry.YapiSahibi,
+                entry.Muteahhit,
+                entry.KatBilgisi,
+                entry.BetonSinifi,
+                entry.TwentyEightDayResult,
+                entry.BetonFirmasi,
+                entry.Laboratuvar,
+                entry.Aciklama,
+                entry.Status,
+                entry.DisplayOrder,
+                entry.CreatedAt,
+                entry.UpdatedAt
+            }),
             envelope.KarotCellStates,
-            envelope.TadilatEntries,
+            TadilatEntries = envelope.TadilatEntries.Select(entry => new
+            {
+                entry.Id,
+                entry.SubTab,
+                entry.District,
+                entry.JobName,
+                entry.ProjectType,
+                entry.DigitalReceived,
+                entry.InspectorApproved,
+                entry.OutputAndReportArrived,
+                entry.OfficialLetterSubmitted,
+                entry.ArchivedFromMunicipality,
+                entry.Description1,
+                entry.Description2,
+                entry.DisplayOrder,
+                entry.CreatedAt,
+                entry.UpdatedAt
+            }),
             envelope.YibfAnaBilgiEntries,
             envelope.YibfAnaBilgiEvents,
             envelope.YibfIsTakibiEntries,
@@ -257,7 +425,8 @@ public sealed class BackupService : IBackupService
            || envelope.YibfAnaBilgiEntries.Count > 0
            || envelope.YibfAnaBilgiEvents.Count > 0
            || envelope.YibfIsTakibiEntries.Count > 0
-           || envelope.YibfCellStates.Count > 0;
+           || envelope.YibfCellStates.Count > 0
+           || (envelope.ProjectCatalogEntries?.Count ?? 0) > 0;
 
     public void ScheduleAutoBackup(TimeSpan interval, Func<Task> callback)
     {
@@ -379,6 +548,8 @@ public sealed class BackupService : IBackupService
         return new BackupTaskDto
         {
             Id = item.Id,
+            ProjectId = item.ProjectId,
+            IsSpecialJob = item.IsSpecialJob,
             Title = item.Title,
             Description = item.Description,
             DueDate = item.DueDate,
@@ -400,6 +571,8 @@ public sealed class BackupService : IBackupService
         var item = new TaskItem
         {
             Id = dto.Id,
+            ProjectId = dto.ProjectId,
+            IsSpecialJob = dto.IsSpecialJob,
             Title = dto.Title,
             Description = dto.Description,
             DueDate = dto.DueDate,
@@ -427,6 +600,7 @@ public sealed class BackupService : IBackupService
         return new BackupActionEntryDto
         {
             Id = item.Id,
+            ProjectId = item.ProjectId,
             Category = item.Category,
             District = item.District,
             OwnerParcelText = item.OwnerParcelText,
@@ -442,6 +616,7 @@ public sealed class BackupService : IBackupService
         return new ActionEntry
         {
             Id = dto.Id,
+            ProjectId = dto.ProjectId,
             Category = dto.Category,
             District = dto.District,
             OwnerParcelText = dto.OwnerParcelText,
@@ -457,6 +632,7 @@ public sealed class BackupService : IBackupService
         return new BackupMissingProjectEntryDto
         {
             Id = item.Id,
+            ProjectId = item.ProjectId,
             AdaParsel = item.AdaParsel,
             YapiSahibi = item.YapiSahibi,
             RecordMedium = item.RecordMedium,
@@ -474,6 +650,7 @@ public sealed class BackupService : IBackupService
         return new MissingProjectEntry
         {
             Id = dto.Id,
+            ProjectId = dto.ProjectId,
             AdaParsel = dto.AdaParsel,
             YapiSahibi = dto.YapiSahibi,
             RecordMedium = dto.RecordMedium,
@@ -513,6 +690,7 @@ public sealed class BackupService : IBackupService
         return new BackupKarotEntryDto
         {
             Id = item.Id,
+            ProjectId = item.ProjectId,
             SampleReceivedDate = item.SampleReceivedDate,
             YibfNo = item.YibfNo,
             AdaParsel = item.AdaParsel,
@@ -536,6 +714,7 @@ public sealed class BackupService : IBackupService
         return new KarotEntry
         {
             Id = dto.Id,
+            ProjectId = dto.ProjectId,
             SampleReceivedDate = dto.SampleReceivedDate,
             YibfNo = dto.YibfNo,
             AdaParsel = dto.AdaParsel,
@@ -579,6 +758,7 @@ public sealed class BackupService : IBackupService
         return new BackupTadilatEntryDto
         {
             Id = item.Id,
+            ProjectId = item.ProjectId,
             SubTab = item.SubTab,
             District = item.District,
             JobName = item.JobName,
@@ -601,6 +781,7 @@ public sealed class BackupService : IBackupService
         return new TadilatEntry
         {
             Id = dto.Id,
+            ProjectId = dto.ProjectId,
             SubTab = dto.SubTab,
             District = dto.District,
             JobName = dto.JobName,
@@ -804,6 +985,42 @@ public sealed class BackupService : IBackupService
             IsDeleted = dto.IsDeleted
         };
 
+    private static BackupProjectCatalogEntryDto MapProjectCatalogToDto(ProjectCatalogEntry item)
+        => new()
+        {
+            Id = item.Id,
+            DisplayName = item.DisplayName,
+            AdaParsel = item.AdaParsel,
+            YapiSahibi = item.YapiSahibi,
+            YibfNo = item.YibfNo,
+            Belediye = item.Belediye,
+            Muteahhit = item.Muteahhit,
+            Kind = item.Kind,
+            ParentProjectId = item.ParentProjectId,
+            IsActive = item.IsActive,
+            DisplayOrder = item.DisplayOrder,
+            CreatedAt = item.CreatedAt,
+            UpdatedAt = item.UpdatedAt
+        };
+
+    private static ProjectCatalogEntry MapProjectCatalogToModel(BackupProjectCatalogEntryDto dto)
+        => new()
+        {
+            Id = dto.Id,
+            DisplayName = dto.DisplayName,
+            AdaParsel = dto.AdaParsel,
+            YapiSahibi = dto.YapiSahibi,
+            YibfNo = dto.YibfNo,
+            Belediye = dto.Belediye,
+            Muteahhit = dto.Muteahhit,
+            Kind = dto.Kind,
+            ParentProjectId = dto.ParentProjectId,
+            IsActive = dto.IsActive,
+            DisplayOrder = dto.DisplayOrder,
+            CreatedAt = dto.CreatedAt,
+            UpdatedAt = dto.UpdatedAt
+        };
+
     private sealed class BackupEnvelope
     {
         public int SchemaVersion { get; set; }
@@ -823,11 +1040,31 @@ public sealed class BackupService : IBackupService
         public List<BackupYibfIsTakibiEntryDto> YibfIsTakibiEntries { get; set; } = new();
         public List<BackupYibfCellStateDto> YibfCellStates { get; set; } = new();
         public List<BackupTadilatCellStateDto> TadilatCellStates { get; set; } = new();
+        public List<BackupProjectCatalogEntryDto> ProjectCatalogEntries { get; set; } = new();
+    }
+
+    private sealed class BackupProjectCatalogEntryDto
+    {
+        public Guid Id { get; set; }
+        public string DisplayName { get; set; } = string.Empty;
+        public string AdaParsel { get; set; } = string.Empty;
+        public string YapiSahibi { get; set; } = string.Empty;
+        public string YibfNo { get; set; } = string.Empty;
+        public string Belediye { get; set; } = string.Empty;
+        public string Muteahhit { get; set; } = string.Empty;
+        public ProjectCatalogKind Kind { get; set; }
+        public Guid? ParentProjectId { get; set; }
+        public bool IsActive { get; set; }
+        public int DisplayOrder { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 
     private sealed class BackupTaskDto
     {
         public Guid Id { get; set; }
+        public Guid? ProjectId { get; set; }
+        public bool IsSpecialJob { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public DateTime? DueDate { get; set; }
@@ -859,6 +1096,7 @@ public sealed class BackupService : IBackupService
     private sealed class BackupActionEntryDto
     {
         public Guid Id { get; set; }
+        public Guid? ProjectId { get; set; }
         public ActionEntryCategory Category { get; set; }
         public string District { get; set; } = string.Empty;
         public string OwnerParcelText { get; set; } = string.Empty;
@@ -871,6 +1109,7 @@ public sealed class BackupService : IBackupService
     private sealed class BackupMissingProjectEntryDto
     {
         public Guid Id { get; set; }
+        public Guid? ProjectId { get; set; }
         public string AdaParsel { get; set; } = string.Empty;
         public string YapiSahibi { get; set; } = string.Empty;
         public MissingProjectMedium RecordMedium { get; set; }
@@ -893,6 +1132,7 @@ public sealed class BackupService : IBackupService
     private sealed class BackupKarotEntryDto
     {
         public Guid Id { get; set; }
+        public Guid? ProjectId { get; set; }
         public DateTime? SampleReceivedDate { get; set; }
         public string YibfNo { get; set; } = string.Empty;
         public string AdaParsel { get; set; } = string.Empty;
@@ -920,6 +1160,7 @@ public sealed class BackupService : IBackupService
     private sealed class BackupTadilatEntryDto
     {
         public Guid Id { get; set; }
+        public Guid? ProjectId { get; set; }
         public TadilatSubTab SubTab { get; set; }
         public string District { get; set; } = string.Empty;
         public string JobName { get; set; } = string.Empty;

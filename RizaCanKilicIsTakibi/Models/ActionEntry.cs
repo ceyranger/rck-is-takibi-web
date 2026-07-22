@@ -5,6 +5,7 @@ namespace RizaCanKilicIsTakibi.Models;
 public sealed class ActionEntry : ObservableObject
 {
     private Guid _id = Guid.NewGuid();
+    private Guid? _projectId;
     private ActionEntryCategory _category;
     private string _district = string.Empty;
     private string _ownerParcelText = string.Empty;
@@ -17,6 +18,12 @@ public sealed class ActionEntry : ObservableObject
     {
         get => _id;
         set => SetProperty(ref _id, value);
+    }
+
+    public Guid? ProjectId
+    {
+        get => _projectId;
+        set => SetProperty(ref _projectId, value);
     }
 
     public ActionEntryCategory Category

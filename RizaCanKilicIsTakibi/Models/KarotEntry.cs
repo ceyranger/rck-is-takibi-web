@@ -5,6 +5,7 @@ namespace RizaCanKilicIsTakibi.Models;
 public sealed class KarotEntry : ObservableObject
 {
     private Guid _id = Guid.NewGuid();
+    private Guid? _projectId;
     private DateTime? _sampleReceivedDate;
     private string _yibfNo = string.Empty;
     private string _adaParsel = string.Empty;
@@ -25,6 +26,12 @@ public sealed class KarotEntry : ObservableObject
     {
         get => _id;
         set => SetProperty(ref _id, value);
+    }
+
+    public Guid? ProjectId
+    {
+        get => _projectId;
+        set => SetProperty(ref _projectId, value);
     }
 
     public DateTime? SampleReceivedDate

@@ -8,9 +8,24 @@ namespace RizaCanKilicIsTakibi.Services;
 
 public sealed class AddActionEntryDialogService : IAddActionEntryDialogService
 {
+    private readonly IProjectCatalogUiState _catalogUiState;
+    private readonly IProjectCatalogService _catalogService;
+
+    public AddActionEntryDialogService(
+        IProjectCatalogUiState catalogUiState,
+        IProjectCatalogService catalogService)
+    {
+        _catalogUiState = catalogUiState;
+        _catalogService = catalogService;
+    }
+
     public Task<ActionEntry?> ShowDialogAsync(string district, ActionEntryCategory category, CancellationToken cancellationToken = default)
     {
-        var vm = new AddActionEntryDialogViewModel(district, category);
+        var vm = new AddActionEntryDialogViewModel(
+            district,
+            category,
+            _catalogUiState.GetActiveEntries(),
+            _catalogService);
         var window = new AddActionEntryWindow(vm)
         {
             Owner = Application.Current?.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive)

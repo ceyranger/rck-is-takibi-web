@@ -1,4 +1,5 @@
 using Microsoft.Data.Sqlite;
+using RizaCanKilicIsTakibi.Helpers;
 using RizaCanKilicIsTakibi.Models;
 using RizaCanKilicIsTakibi.Services.Abstractions;
 using System.IO;
@@ -23,7 +24,7 @@ public sealed class SqliteMissingProjectRepository : IMissingProjectRepository
 
         await using var command = connection.CreateCommand();
         command.CommandText = """
-SELECT Id, AdaParsel, YapiSahibi, RecordMedium, RecordMediumText, MissingProjectText, Description, DisplayOrder, CreatedAt, UpdatedAt
+SELECT Id, AdaParsel, YapiSahibi, RecordMedium, RecordMediumText, MissingProjectText, Description, DisplayOrder, CreatedAt, UpdatedAt, ProjectId
 FROM MissingProjectEntries
 WHERE IsDeleted = 0
 ORDER BY DisplayOrder, UpdatedAt DESC;
@@ -43,7 +44,8 @@ ORDER BY DisplayOrder, UpdatedAt DESC;
                 Description = reader.GetString(6),
                 DisplayOrder = reader.GetInt32(7),
                 CreatedAt = DateTime.Parse(reader.GetString(8)),
-                UpdatedAt = DateTime.Parse(reader.GetString(9))
+                UpdatedAt = DateTime.Parse(reader.GetString(9)),
+                ProjectId = SqliteGuidHelper.ParseNullable(reader.IsDBNull(10) ? null : reader.GetString(10))
             });
         }
 
@@ -92,8 +94,8 @@ ORDER BY EntryId, ColumnKey;
 
         await using var command = connection.CreateCommand();
         command.CommandText = """
-INSERT INTO MissingProjectEntries (Id, AdaParsel, YapiSahibi, RecordMedium, RecordMediumText, MissingProjectText, Description, DisplayOrder, CreatedAt, UpdatedAt)
-VALUES ($id, $adaParsel, $yapiSahibi, $recordMedium, $recordMediumText, $missingProjectText, $description, $displayOrder, $createdAt, $updatedAt);
+INSERT INTO MissingProjectEntries (Id, AdaParsel, YapiSahibi, RecordMedium, RecordMediumText, MissingProjectText, Description, DisplayOrder, CreatedAt, UpdatedAt, ProjectId)
+VALUES ($id, $adaParsel, $yapiSahibi, $recordMedium, $recordMediumText, $missingProjectText, $description, $displayOrder, $createdAt, $updatedAt, $projectId);
 """;
 
         BindEntryParameters(command, entry);
@@ -116,7 +118,8 @@ SET AdaParsel = $adaParsel,
     MissingProjectText = $missingProjectText,
     Description = $description,
     DisplayOrder = $displayOrder,
-    UpdatedAt = $updatedAt
+    UpdatedAt = $updatedAt,
+    ProjectId = $projectId
 WHERE Id = $id;
 """;
 
@@ -170,8 +173,8 @@ WHERE Id = $id;
             await using var upsertCommand = connection.CreateCommand();
             upsertCommand.Transaction = transaction;
             upsertCommand.CommandText = """
-INSERT INTO MissingProjectEntries (Id, AdaParsel, YapiSahibi, RecordMedium, RecordMediumText, MissingProjectText, Description, DisplayOrder, CreatedAt, UpdatedAt)
-VALUES ($id, $adaParsel, $yapiSahibi, $recordMedium, $recordMediumText, $missingProjectText, $description, $displayOrder, $createdAt, $updatedAt)
+INSERT INTO MissingProjectEntries (Id, AdaParsel, YapiSahibi, RecordMedium, RecordMediumText, MissingProjectText, Description, DisplayOrder, CreatedAt, UpdatedAt, ProjectId)
+VALUES ($id, $adaParsel, $yapiSahibi, $recordMedium, $recordMediumText, $missingProjectText, $description, $displayOrder, $createdAt, $updatedAt, $projectId)
 ON CONFLICT(Id) DO UPDATE SET
     AdaParsel = excluded.AdaParsel,
     YapiSahibi = excluded.YapiSahibi,
@@ -181,6 +184,7 @@ ON CONFLICT(Id) DO UPDATE SET
     Description = excluded.Description,
     DisplayOrder = excluded.DisplayOrder,
     UpdatedAt = excluded.UpdatedAt,
+    ProjectId = excluded.ProjectId,
     IsDeleted = 0;
 """;
 
@@ -272,6 +276,7 @@ ON CONFLICT(EntryId, ColumnKey) DO UPDATE SET
         command.Parameters.AddWithValue("$displayOrder", entry.DisplayOrder);
         command.Parameters.AddWithValue("$createdAt", entry.CreatedAt.ToString("O"));
         command.Parameters.AddWithValue("$updatedAt", entry.UpdatedAt.ToString("O"));
+        command.Parameters.AddWithValue("$projectId", SqliteGuidHelper.ToDb(entry.ProjectId));
     }
 
     private static string BuildCellStateKey(Guid entryId, string columnKey)
@@ -356,5 +361,6 @@ WHERE TRIM(COALESCE(RecordMediumText, '')) = '';
         backfillCommand.ExecuteNonQuery();
 
         SqliteConnectionSettings.EnsureColumnExists(connection, "MissingProjectEntries", "IsDeleted", "INTEGER NOT NULL DEFAULT 0");
+        SqliteConnectionSettings.EnsureColumnExists(connection, "MissingProjectEntries", "ProjectId", "TEXT NOT NULL DEFAULT ''");
     }
 }

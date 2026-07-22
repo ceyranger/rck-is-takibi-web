@@ -71,6 +71,32 @@ public sealed class YibfWorkIdentityServiceTests
         Assert.Equal("725 4 CEMALETTİN ERSOY", key);
     }
 
+    [Fact]
+    public void NormalizeIdentities_Preserves_Unmatched_Catalog_Ids()
+    {
+        var parentId = Guid.NewGuid();
+        var istinatId = Guid.NewGuid();
+        var anaBilgi = CreateAnaBilgiEntry("200-2", "Sahip");
+        anaBilgi.Id = parentId;
+        anaBilgi.WorkGroupId = parentId;
+        anaBilgi.WorkIdentityId = parentId;
+
+        var isTakibi = new YibfIsTakibiEntry
+        {
+            Id = Guid.NewGuid(),
+            WorkGroupId = parentId,
+            WorkIdentityId = istinatId,
+            JobName = "İstinat Duvarı",
+            WorkVariantLabel = "İstinat"
+        };
+
+        YibfWorkIdentityService.NormalizeIdentities([anaBilgi], [isTakibi]);
+
+        Assert.Equal(parentId, isTakibi.WorkGroupId);
+        Assert.Equal(istinatId, isTakibi.WorkIdentityId);
+        Assert.Equal("İstinat", isTakibi.WorkVariantLabel);
+    }
+
     private static YibfAnaBilgiEntry CreateAnaBilgiEntry(string adaParsel, string yapiSahibi)
         => new()
         {

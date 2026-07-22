@@ -11,5 +11,6 @@ public enum MainNavigationTab
     YibfBekleyenIsler = 6,
     YibfIsTakibi = 7,
     Ayarlar = 8,
-    TumEksikler = 9
+    TumEksikler = 9,
+    Arama = 10
 }

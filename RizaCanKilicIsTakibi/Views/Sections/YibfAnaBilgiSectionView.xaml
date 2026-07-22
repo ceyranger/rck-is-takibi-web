@@ -154,7 +154,7 @@
                     <TextBlock Grid.Column="1" Text="{Binding YibfModule.SelectedAnaBilgiEntry.AdaParsel}" Margin="12,0,0,0" HorizontalAlignment="Left" TextAlignment="Left"/>
                     <TextBlock Grid.Row="1" Text="YİBF No" FontWeight="SemiBold"/>
                     <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding YibfModule.SelectedAnaBilgiEntry.YibfNo}" Margin="12,0,0,0" HorizontalAlignment="Left" TextAlignment="Left"/>
-                    <TextBlock Grid.Row="2" Text="İdare" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Row="2" Text="Belediye" FontWeight="SemiBold"/>
                     <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding YibfModule.SelectedAnaBilgiEntry.Idare}" Margin="12,0,0,0" HorizontalAlignment="Left" TextAlignment="Left" TextWrapping="Wrap"/>
                     <TextBlock Grid.Row="3" Text="Yapı Sahibi" FontWeight="SemiBold"/>
                     <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding YibfModule.SelectedAnaBilgiEntry.YapiSahibi}" Margin="12,0,0,0" HorizontalAlignment="Left" TextAlignment="Left" TextWrapping="Wrap"/>

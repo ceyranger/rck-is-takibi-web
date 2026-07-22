@@ -1,0 +1,105 @@
+<Window x:Class="RizaCanKilicIsTakibi.Views.ProjectLinkResolveWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Şüpheli Proje Bağlantıları"
+        Width="920"
+        Height="640"
+        MinWidth="760"
+        MinHeight="480"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResizeWithGrip"
+        Background="{StaticResource Brush.AppBackground}">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0" Margin="0,0,0,10" LastChildFill="True">
+            <Button DockPanel.Dock="Right"
+                    Content="En iyi adaya bağla"
+                    Style="{StaticResource GhostButton}"
+                    Padding="12,6"
+                    Margin="12,0,0,0"
+                    VerticalAlignment="Center"
+                    Command="{Binding ApplyBestCandidatesCommand}"
+                    ToolTip="Adayı olan tüm kayıtları en yüksek skorlu projeye bağlanacak şekilde işaretler (onay ister)."/>
+            <TextBlock Text="Çözülmemiş kayıtlar için karar verin"
+                       FontFamily="{StaticResource Font.Primary}"
+                       FontWeight="SemiBold"
+                       FontSize="20"
+                       VerticalAlignment="Center"
+                       TextWrapping="Wrap"/>
+        </DockPanel>
+
+        <ListBox Grid.Row="1"
+                 ItemsSource="{Binding Items}"
+                 HorizontalContentAlignment="Stretch">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="{StaticResource Brush.Border}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="10"
+                            Margin="0,0,0,8"
+                            Background="White">
+                        <StackPanel>
+                            <TextBlock Text="{Binding ModuleLabel}" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding SummaryText}" TextWrapping="Wrap" Margin="0,2,0,4"/>
+                            <TextBlock Foreground="{StaticResource Brush.TextSecondary}" TextWrapping="Wrap">
+                                <Run Text="Ada Parsel:"/>
+                                <Run Text="{Binding AdaParsel, Mode=OneWay}"/>
+                                <Run Text=" | Yapı Sahibi:"/>
+                                <Run Text="{Binding YapiSahibi, Mode=OneWay}"/>
+                            </TextBlock>
+
+                            <ComboBox Margin="0,8,0,0"
+                                      ItemsSource="{Binding AvailableKinds}"
+                                      DisplayMemberPath="Label"
+                                      SelectedValuePath="Kind"
+                                      SelectedValue="{Binding ResolutionKind, Mode=TwoWay}"/>
+
+                            <StackPanel Margin="0,8,0,0">
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ResolutionKind}" Value="LinkToProject">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+                                <TextBlock Text="Adaylar" FontWeight="SemiBold"/>
+                                <ComboBox ItemsSource="{Binding Candidates}"
+                                          DisplayMemberPath="DisplayName"
+                                          SelectedValuePath="ProjectId"
+                                          SelectedValue="{Binding SelectedProjectId, Mode=TwoWay}"
+                                          Margin="0,4,0,8"/>
+                                <TextBlock Text="Katalogda ara" FontWeight="SemiBold"/>
+                                <TextBox Margin="0,4,0,4"
+                                         Text="{Binding CatalogSearchQuery, UpdateSourceTrigger=PropertyChanged}"/>
+                                <ComboBox ItemsSource="{Binding CatalogMatches}"
+                                          DisplayMemberPath="DisplayName"
+                                          SelectedValuePath="Id"
+                                          SelectedValue="{Binding SelectedProjectId, Mode=TwoWay}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Content="İptal"
+                    Style="{StaticResource GhostButton}"
+                    Width="96"
+                    Margin="0,0,8,0"
+                    Command="{Binding CancelCommand}"/>
+            <Button Content="Tamam"
+                    Width="120"
+                    Command="{Binding SaveCommand}"/>
+        </StackPanel>
+    </Grid>
+</Window>

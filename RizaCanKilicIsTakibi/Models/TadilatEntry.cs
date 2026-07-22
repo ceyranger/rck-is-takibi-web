@@ -5,6 +5,7 @@ namespace RizaCanKilicIsTakibi.Models;
 public sealed class TadilatEntry : ObservableObject
 {
     private Guid _id = Guid.NewGuid();
+    private Guid? _projectId;
     private TadilatSubTab _subTab = TadilatSubTab.Aktif;
     private string _district = string.Empty;
     private string _jobName = string.Empty;
@@ -24,6 +25,12 @@ public sealed class TadilatEntry : ObservableObject
     {
         get => _id;
         set => SetProperty(ref _id, value);
+    }
+
+    public Guid? ProjectId
+    {
+        get => _projectId;
+        set => SetProperty(ref _projectId, value);
     }
 
     public TadilatSubTab SubTab

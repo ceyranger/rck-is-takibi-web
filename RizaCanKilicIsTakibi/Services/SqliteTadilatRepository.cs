@@ -1,4 +1,5 @@
 using Microsoft.Data.Sqlite;
+using RizaCanKilicIsTakibi.Helpers;
 using RizaCanKilicIsTakibi.Models;
 using RizaCanKilicIsTakibi.Services.Abstractions;
 using System.IO;
@@ -25,7 +26,7 @@ public sealed class SqliteTadilatRepository : ITadilatRepository
         command.CommandText = """
 SELECT Id, SubTab, District, JobName, ProjectType, DigitalReceived, InspectorApproved,
        OutputAndReportArrived, OfficialLetterSubmitted, ArchivedFromMunicipality,
-       Description1, Description2, DisplayOrder, CreatedAt, UpdatedAt
+       Description1, Description2, DisplayOrder, CreatedAt, UpdatedAt, ProjectId
 FROM TadilatEntries
 WHERE IsDeleted = 0
 ORDER BY SubTab, District, DisplayOrder, UpdatedAt DESC;
@@ -50,7 +51,8 @@ ORDER BY SubTab, District, DisplayOrder, UpdatedAt DESC;
                 Description2 = reader.IsDBNull(11) ? string.Empty : reader.GetString(11),
                 DisplayOrder = reader.GetInt32(12),
                 CreatedAt = DateTime.Parse(reader.GetString(13)),
-                UpdatedAt = DateTime.Parse(reader.GetString(14))
+                UpdatedAt = DateTime.Parse(reader.GetString(14)),
+                ProjectId = SqliteGuidHelper.ParseNullable(reader.IsDBNull(15) ? null : reader.GetString(15))
             });
         }
 
@@ -160,11 +162,11 @@ ORDER BY EntryId, ColumnKey;
 INSERT INTO TadilatEntries (
     Id, SubTab, District, JobName, ProjectType, DigitalReceived, InspectorApproved,
     OutputAndReportArrived, OfficialLetterSubmitted, ArchivedFromMunicipality,
-    Description1, Description2, DisplayOrder, CreatedAt, UpdatedAt)
+    Description1, Description2, DisplayOrder, CreatedAt, UpdatedAt, ProjectId)
 VALUES (
     $id, $subTab, $district, $jobName, $projectType, $digitalReceived, $inspectorApproved,
     $outputAndReportArrived, $officialLetterSubmitted, $archivedFromMunicipality,
-    $description1, $description2, $displayOrder, $createdAt, $updatedAt)
+    $description1, $description2, $displayOrder, $createdAt, $updatedAt, $projectId)
 ON CONFLICT(Id) DO UPDATE SET
     SubTab = excluded.SubTab,
     District = excluded.District,
@@ -180,6 +182,7 @@ ON CONFLICT(Id) DO UPDATE SET
     DisplayOrder = excluded.DisplayOrder,
     CreatedAt = excluded.CreatedAt,
     UpdatedAt = excluded.UpdatedAt,
+    ProjectId = excluded.ProjectId,
     IsDeleted = 0;
 """;
 
@@ -198,6 +201,7 @@ ON CONFLICT(Id) DO UPDATE SET
             insertEntry.Parameters.AddWithValue("$displayOrder", index);
             insertEntry.Parameters.AddWithValue("$createdAt", entry.CreatedAt.ToString("O"));
             insertEntry.Parameters.AddWithValue("$updatedAt", entry.UpdatedAt.ToString("O"));
+            insertEntry.Parameters.AddWithValue("$projectId", SqliteGuidHelper.ToDb(entry.ProjectId));
             await insertEntry.ExecuteNonQueryAsync(cancellationToken);
         }
 
@@ -311,5 +315,6 @@ WHERE NOT EXISTS (
         command.ExecuteNonQuery();
         
         SqliteConnectionSettings.EnsureColumnExists(connection, "TadilatEntries", "IsDeleted", "INTEGER NOT NULL DEFAULT 0");
+        SqliteConnectionSettings.EnsureColumnExists(connection, "TadilatEntries", "ProjectId", "TEXT NOT NULL DEFAULT ''");
     }
 }

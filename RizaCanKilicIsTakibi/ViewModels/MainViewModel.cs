@@ -34,6 +34,11 @@ public sealed partial class MainViewModel : ViewModelBase
     private readonly IFileDialogService _fileDialogService;
     private readonly IQuickTaskTemplateRepository? _quickTaskTemplateRepository;
     private readonly IQuickTaskTemplateDialogService? _quickTaskTemplateDialogService;
+    private readonly IProjectCatalogService? _projectCatalogService;
+    private readonly IProjectLinkingService? _projectLinkingService;
+    private readonly IProjectCatalogEntryDialogService? _projectCatalogEntryDialogService;
+    private readonly IProjectLinkResolveDialogService? _projectLinkResolveDialogService;
+    private readonly IProjectCatalogUiState? _projectCatalogUiState;
     private readonly AppSettings _settings;
     private readonly SemaphoreSlim _operationGate = new(1, 1);
     private readonly AsyncLocal<int> _operationGateDepth = new();
@@ -43,6 +48,7 @@ public sealed partial class MainViewModel : ViewModelBase
     private bool _isBusy;
     private bool _hasUnsavedChanges;
     private bool _suppressTaskDirtyTracking;
+    private bool _suppressCatalogDirtyTracking;
     private bool _isSavingGeneralTasks;
     private bool _isActionViewActivated;
     private bool _isTadilatViewActivated;
@@ -51,8 +57,10 @@ public sealed partial class MainViewModel : ViewModelBase
     private bool _isYibfIsTakibiViewActivated;
     private bool _isYibfPendingViewActivated;
     private bool _isTumEksiklerViewActivated;
+    private bool _isSearchViewActivated;
     private bool _isSettingsViewActivated;
     private bool _hasUnsavedSettings;
+    private bool _hasUnsavedCatalogChanges;
     private DateTime? _lastSuccessfulSaveAt;
     private TaskBoardViewModel _activeBoard;
     private Task? _actionModuleInitializationTask;
@@ -88,7 +96,8 @@ public sealed partial class MainViewModel : ViewModelBase
         bool HasUnsavedMissingProjectChanges,
         bool HasUnsavedKarotChanges,
         bool HasUnsavedTadilatChanges,
-        bool HasUnsavedYibfChanges);
+        bool HasUnsavedYibfChanges,
+        bool HasUnsavedCatalogChanges);
     private sealed record PersistedFilesSnapshot(
         string RootDirectory,
         string DatabasePath,
@@ -147,7 +156,12 @@ public sealed partial class MainViewModel : ViewModelBase
         TadilatModuleViewModel tadilatModule,
         YibfModuleViewModel yibfModule,
         IQuickTaskTemplateRepository? quickTaskTemplateRepository = null,
-        IQuickTaskTemplateDialogService? quickTaskTemplateDialogService = null)
+        IQuickTaskTemplateDialogService? quickTaskTemplateDialogService = null,
+        IProjectCatalogService? projectCatalogService = null,
+        IProjectLinkingService? projectLinkingService = null,
+        IProjectCatalogEntryDialogService? projectCatalogEntryDialogService = null,
+        IProjectLinkResolveDialogService? projectLinkResolveDialogService = null,
+        IProjectCatalogUiState? projectCatalogUiState = null)
     {
         _taskRepository = taskRepository;
         _backupService = backupService;
@@ -164,6 +178,11 @@ public sealed partial class MainViewModel : ViewModelBase
         _fileDialogService = fileDialogService;
         _quickTaskTemplateRepository = quickTaskTemplateRepository;
         _quickTaskTemplateDialogService = quickTaskTemplateDialogService;
+        _projectCatalogService = projectCatalogService;
+        _projectLinkingService = projectLinkingService;
+        _projectCatalogEntryDialogService = projectCatalogEntryDialogService;
+        _projectLinkResolveDialogService = projectLinkResolveDialogService;
+        _projectCatalogUiState = projectCatalogUiState;
         _settings = settings;
 
         Dashboard = dashboard;
@@ -176,6 +195,7 @@ public sealed partial class MainViewModel : ViewModelBase
         TadilatModule = tadilatModule;
         YibfModule = yibfModule;
         TumEksikler = new TumEksiklerViewModel();
+        ProjectCatalogEntries = new ObservableCollection<ProjectCatalogEntry>();
         ClearableTabs = BuildClearableTabs();
         _selectedClearTab = ClearableTabs.FirstOrDefault();
 
@@ -203,7 +223,8 @@ public sealed partial class MainViewModel : ViewModelBase
         PasteTaskToBoardCommand = new RelayCommand<TaskBoardType>(PasteTaskToBoard, _ => _clipboardTask is not null);
 
         OpenSearchCommand = new RelayCommand(OpenSearch);
-        CloseSearchCommand = new RelayCommand(() => SearchOverlay.Close());
+        OpenGlobalSearchCommand = new RelayCommand(OpenGlobalSearch);
+        CloseSearchCommand = new RelayCommand(CloseSearchUi);
         RunContextQueryCommand = new RelayCommand(RunContextQuery);
         EscapeCommand = new RelayCommand(HandleEscape);
 
@@ -269,6 +290,18 @@ public sealed partial class MainViewModel : ViewModelBase
         ObserveModuleDirtyState(KarotModule);
         ObserveModuleDirtyState(TadilatModule);
         ObserveModuleDirtyState(YibfModule);
+        ProjectCatalogEntries.CollectionChanged += (_, _) =>
+        {
+            if (!_suppressCatalogDirtyTracking)
+            {
+                MarkCatalogDirty();
+                _projectCatalogUiState?.SetEntries(ProjectCatalogEntries);
+            }
+
+            RefreshFilteredProjectCatalogList();
+        };
+
+        InitializeProjectCatalogCommands();
     }
 
     public DashboardViewModel Dashboard { get; }
@@ -281,6 +314,7 @@ public sealed partial class MainViewModel : ViewModelBase
     public TadilatModuleViewModel TadilatModule { get; }
     public YibfModuleViewModel YibfModule { get; }
     public TumEksiklerViewModel TumEksikler { get; }
+    public ObservableCollection<ProjectCatalogEntry> ProjectCatalogEntries { get; }
     public TaskBoardViewModel UrgentBoard { get; }
     public TaskBoardViewModel GeneralBoard { get; }
     public ObservableRangeCollection<AcilIsOzetItemViewModel> AcilIsOzetItems { get; } = [];
@@ -328,8 +362,20 @@ public sealed partial class MainViewModel : ViewModelBase
         }
     }
 
+    public bool HasUnsavedCatalogChanges
+    {
+        get => _hasUnsavedCatalogChanges;
+        private set
+        {
+            if (SetProperty(ref _hasUnsavedCatalogChanges, value))
+            {
+                NotifySaveStatusChanged();
+            }
+        }
+    }
+
     public bool HasAnyUnsavedChanges
-        => HasUnsavedChanges || HasUnsavedSettings || ActionModule.HasUnsavedChanges || MissingProjectModule.HasUnsavedChanges || KarotModule.HasUnsavedChanges || TadilatModule.HasUnsavedChanges || YibfModule.HasUnsavedChanges;
+        => HasUnsavedChanges || HasUnsavedSettings || HasUnsavedCatalogChanges || ActionModule.HasUnsavedChanges || MissingProjectModule.HasUnsavedChanges || KarotModule.HasUnsavedChanges || TadilatModule.HasUnsavedChanges || YibfModule.HasUnsavedChanges;
 
     public DateTime? LastSuccessfulSaveAt
     {
@@ -390,6 +436,12 @@ public sealed partial class MainViewModel : ViewModelBase
     {
         get => _isTumEksiklerViewActivated;
         private set => SetProperty(ref _isTumEksiklerViewActivated, value);
+    }
+
+    public bool IsSearchViewActivated
+    {
+        get => _isSearchViewActivated;
+        private set => SetProperty(ref _isSearchViewActivated, value);
     }
 
     public bool IsSettingsViewActivated
@@ -484,6 +536,7 @@ public sealed partial class MainViewModel : ViewModelBase
     public RelayCommand<TaskBoardType> PasteTaskToBoardCommand { get; }
 
     public RelayCommand OpenSearchCommand { get; }
+    public RelayCommand OpenGlobalSearchCommand { get; }
     public RelayCommand CloseSearchCommand { get; }
     public RelayCommand RunContextQueryCommand { get; }
     public RelayCommand EscapeCommand { get; }
@@ -546,6 +599,13 @@ public sealed partial class MainViewModel : ViewModelBase
             UrgentBoard.ReplaceAll(allTasks.Where(task => task.BoardType == TaskBoardType.Acil));
             GeneralBoard.ReplaceAll(allTasks.Where(task => task.BoardType == TaskBoardType.Genel));
 
+            if (_projectCatalogService is not null)
+            {
+                var catalogEntries = await _projectCatalogService.LoadAsync();
+                ReplaceProjectCatalogEntries(catalogEntries.Select(entry => entry.Clone()));
+                HasUnsavedCatalogChanges = false;
+            }
+
             RefreshDashboard();
             HasUnsavedChanges = false;
             InitializeLastSuccessfulSaveAtFromPersistedFiles(hasPersistedTaskData: allTasks.Count > 0 || seeded || migratedDescriptions);
@@ -581,12 +641,17 @@ public sealed partial class MainViewModel : ViewModelBase
             await KarotModule.PersistAsync(showErrorToast: true);
             await TadilatModule.PersistAsync(showErrorToast: true);
             await YibfModule.PersistAsync(showErrorToast: true);
+            if (HasUnsavedCatalogChanges && _projectCatalogService is not null)
+            {
+                await _projectCatalogService.SaveAsync(GetProjectCatalogSnapshot());
+                HasUnsavedCatalogChanges = false;
+            }
             if (HasUnsavedSettings)
             {
                 await SaveSettingsAsync(showSuccessToast: false);
             }
 
-            var allSaved = generalSaved && !HasUnsavedSettings && !ActionModule.HasUnsavedChanges && !MissingProjectModule.HasUnsavedChanges && !KarotModule.HasUnsavedChanges && !TadilatModule.HasUnsavedChanges && !YibfModule.HasUnsavedChanges;
+            var allSaved = generalSaved && !HasUnsavedSettings && !HasUnsavedCatalogChanges && !ActionModule.HasUnsavedChanges && !MissingProjectModule.HasUnsavedChanges && !KarotModule.HasUnsavedChanges && !TadilatModule.HasUnsavedChanges && !YibfModule.HasUnsavedChanges;
             if (allSaved)
             {
                 await MarkGlobalSaveSucceededAsync();
@@ -635,6 +700,11 @@ public sealed partial class MainViewModel : ViewModelBase
 
     private void SelectMainTab(MainNavigationTab tab)
     {
+        if (SearchOverlay.IsOpen && tab != SelectedMainTab)
+        {
+            CloseSearchUi();
+        }
+
         MarkTabViewActivated(tab);
         SelectedMainTab = tab;
         if (!HasUiDispatcherContext())
@@ -644,6 +714,18 @@ public sealed partial class MainViewModel : ViewModelBase
         }
 
         RunSafeBackgroundTask(ActivateTabAsync(tab), $"'{tab}' sekmesi yüklenemedi.");
+    }
+
+    private void CloseSearchUi()
+    {
+        SearchOverlay.Close();
+        ClearGeneralBoardSearchFilters();
+    }
+
+    private void ClearGeneralBoardSearchFilters()
+    {
+        UrgentBoard.FilterText = string.Empty;
+        GeneralBoard.FilterText = string.Empty;
     }
 
     private static bool HasUiDispatcherContext()
@@ -727,6 +809,9 @@ public sealed partial class MainViewModel : ViewModelBase
             case MainNavigationTab.TumEksikler:
                 IsTumEksiklerViewActivated = true;
                 break;
+            case MainNavigationTab.Arama:
+                IsSearchViewActivated = true;
+                break;
             case MainNavigationTab.Ayarlar:
                 IsSettingsViewActivated = true;
                 break;
@@ -752,7 +837,8 @@ public sealed partial class MainViewModel : ViewModelBase
                     yibfIsTakibiEntries: YibfModule.GetIsTakibiEntriesSnapshot(),
                     yibfCellStates: YibfModule.GetCellStatesSnapshot(),
                     tadilatCellStates: TadilatModule.GetCellStatesSnapshot(),
-                    quickTaskTemplates: _quickTaskTemplateRepository?.GetAll());
+                    quickTaskTemplates: _quickTaskTemplateRepository?.GetAll(),
+                    projectCatalogEntries: GetProjectCatalogSnapshot());
                 
                 await _backupService.CleanOldBackupsAsync(30);
                 
@@ -781,7 +867,8 @@ public sealed partial class MainViewModel : ViewModelBase
             YibfAnaBilgiEntries = YibfModule.GetAnaBilgiEntriesSnapshot(),
             YibfAnaBilgiEvents = YibfModule.GetAnaBilgiEventsSnapshot(),
             YibfIsTakibiEntries = YibfModule.GetIsTakibiEntriesSnapshot(),
-            YibfCellStates = YibfModule.GetCellStatesSnapshot()
+            YibfCellStates = YibfModule.GetCellStatesSnapshot(),
+            ProjectCatalogEntries = GetProjectCatalogSnapshot()
         };
 
     private ApplicationStateSnapshot CaptureApplicationStateSnapshot()
@@ -794,7 +881,8 @@ public sealed partial class MainViewModel : ViewModelBase
             MissingProjectModule.HasUnsavedChanges,
             KarotModule.HasUnsavedChanges,
             TadilatModule.HasUnsavedChanges,
-            YibfModule.HasUnsavedChanges);
+            YibfModule.HasUnsavedChanges,
+            HasUnsavedCatalogChanges);
 
     private async Task<ApplicationStateSnapshot> CaptureApplicationStateSnapshotAsync()
     {
@@ -849,7 +937,7 @@ public sealed partial class MainViewModel : ViewModelBase
             UrgentBoard.SelectedTask = null;
             GeneralBoard.SelectedTask = null;
             DetailPanel.Close();
-            SearchOverlay.Close();
+            CloseSearchUi();
         }
         finally
         {
@@ -862,6 +950,15 @@ public sealed partial class MainViewModel : ViewModelBase
         TadilatModule.LoadFromBackup(restored.TadilatEntries, restored.TadilatCellStates, markModulesDirty);
         YibfModule.LoadFromBackup(restored.YibfAnaBilgiEntries, restored.YibfAnaBilgiEvents, restored.YibfIsTakibiEntries, restored.YibfCellStates, markModulesDirty);
         _quickTaskTemplateRepository?.ReplaceAll(restored.QuickTaskTemplates.Select(template => template.Clone()));
+        ReplaceProjectCatalogEntries(restored.ProjectCatalogEntries.Select(entry => entry.Clone()));
+        if (markModulesDirty)
+        {
+            MarkCatalogDirty();
+        }
+        else
+        {
+            HasUnsavedCatalogChanges = false;
+        }
         MarkAllModulesStateLoadedFromSnapshot();
         InvalidateSearchCorpus();
         RefreshAcilIsOzet();
@@ -881,7 +978,7 @@ public sealed partial class MainViewModel : ViewModelBase
             UrgentBoard.SelectedTask = null;
             GeneralBoard.SelectedTask = null;
             DetailPanel.Close();
-            SearchOverlay.Close();
+            CloseSearchUi();
         }
         finally
         {
@@ -894,6 +991,8 @@ public sealed partial class MainViewModel : ViewModelBase
         TadilatModule.LoadFromBackup(snapshot.Data.TadilatEntries, snapshot.Data.TadilatCellStates, snapshot.HasUnsavedTadilatChanges);
         YibfModule.LoadFromBackup(snapshot.Data.YibfAnaBilgiEntries, snapshot.Data.YibfAnaBilgiEvents, snapshot.Data.YibfIsTakibiEntries, snapshot.Data.YibfCellStates, snapshot.HasUnsavedYibfChanges);
         _quickTaskTemplateRepository?.ReplaceAll(snapshot.Data.QuickTaskTemplates.Select(template => template.Clone()));
+        ReplaceProjectCatalogEntries(snapshot.Data.ProjectCatalogEntries.Select(entry => entry.Clone()));
+        HasUnsavedCatalogChanges = snapshot.HasUnsavedCatalogChanges;
         MarkAllModulesStateLoadedFromSnapshot();
         InvalidateSearchCorpus();
         RefreshAcilIsOzet();
@@ -1179,13 +1278,24 @@ public sealed partial class MainViewModel : ViewModelBase
     {
         await EnsureModulesForTabAsync(tab);
 
-        if (tab == MainNavigationTab.YibfBekleyenIsler)
+        if (tab == MainNavigationTab.Ayarlar)
+        {
+            await TryAutoSeedProjectCatalogAsync();
+        }
+        else if (tab == MainNavigationTab.YibfBekleyenIsler)
         {
             RefreshAcilIsOzet();
         }
         else if (tab == MainNavigationTab.TumEksikler)
         {
             RefreshTumEksikler();
+        }
+        else if (tab == MainNavigationTab.Arama)
+        {
+            SearchOverlay.PrepareFullPageSearch();
+            SearchOverlay.RequestFocus();
+            OnSearchQueryChanged(this, SearchOverlay.Query);
+            _searchWarmupTask ??= WarmupSearchAsync();
         }
     }
 
@@ -1226,6 +1336,8 @@ public sealed partial class MainViewModel : ViewModelBase
                 break;
             case MainNavigationTab.YibfBekleyenIsler:
             case MainNavigationTab.TumEksikler:
+            case MainNavigationTab.Arama:
+            case MainNavigationTab.Ayarlar:
                 await EnsureAllModulesInitializedAsync();
                 break;
         }
@@ -1267,6 +1379,7 @@ public sealed partial class MainViewModel : ViewModelBase
         await EnsureKarotModuleInitializedAsync();
         await EnsureTadilatModuleInitializedAsync();
         await EnsureYibfModuleInitializedAsync();
+        await TryAutoSeedProjectCatalogAsync();
     }
 
     private static Task EnsureModuleInitializedAsync(ref Task? initializationTask, Func<Task> initializeAsync)
@@ -1318,6 +1431,7 @@ public sealed partial class MainViewModel : ViewModelBase
             await EnsureTadilatModuleInitializedAsync();
             await Task.Delay(50);
             await EnsureYibfModuleInitializedAsync();
+            await TryAutoSeedProjectCatalogAsync();
             RefreshAcilIsOzet();
         }
         catch
@@ -1703,17 +1817,39 @@ public sealed partial class MainViewModel : ViewModelBase
 
     private void OpenSearch()
     {
-        SearchOverlay.SelectedScope = MapSearchScope(SelectedMainTab);
-        SearchOverlay.Open();
-        OnSearchQueryChanged(this, SearchOverlay.Query);
-        _searchWarmupTask ??= WarmupSearchAsync();
+        if (IsTableSearchTab(SelectedMainTab))
+        {
+            SearchOverlay.OpenForTab(MapSearchScope(SelectedMainTab));
+            OnSearchQueryChanged(this, SearchOverlay.Query);
+            _searchWarmupTask ??= WarmupSearchAsync();
+            return;
+        }
+
+        OpenGlobalSearch();
     }
+
+    private void OpenGlobalSearch()
+    {
+        SelectMainTab(MainNavigationTab.Arama);
+    }
+
+    private static bool IsTableSearchTab(MainNavigationTab tab)
+        => tab is MainNavigationTab.Aksiyon
+            or MainNavigationTab.EksikProje
+            or MainNavigationTab.KarotTakibi
+            or MainNavigationTab.TadilatTakibi
+            or MainNavigationTab.YibfAnaBilgi
+            or MainNavigationTab.YibfIsTakibi
+            or MainNavigationTab.YibfBekleyenIsler;
+
+    private bool IsSearchUiActive()
+        => SearchOverlay.IsOpen || SelectedMainTab == MainNavigationTab.Arama;
 
     private async Task WarmupSearchAsync()
     {
         await EnsureAllModulesInitializedAsync();
 
-        if (!SearchOverlay.IsOpen)
+        if (!IsSearchUiActive())
         {
             _searchWarmupTask = null;
             return;
@@ -1754,6 +1890,30 @@ public sealed partial class MainViewModel : ViewModelBase
         OnPropertyChanged(nameof(SaveStatusTimestampText));
     }
 
+    private void MarkCatalogDirty() => HasUnsavedCatalogChanges = true;
+
+    private IReadOnlyList<ProjectCatalogEntry> GetProjectCatalogSnapshot()
+        => ProjectCatalogEntries.Select(entry => entry.Clone()).ToList();
+
+    private void ReplaceProjectCatalogEntries(IEnumerable<ProjectCatalogEntry> entries)
+    {
+        _suppressCatalogDirtyTracking = true;
+        try
+        {
+            ProjectCatalogEntries.Clear();
+            foreach (var entry in entries)
+            {
+                ProjectCatalogEntries.Add(entry);
+            }
+        }
+        finally
+        {
+            _suppressCatalogDirtyTracking = false;
+        }
+
+        _projectCatalogUiState?.SetEntries(ProjectCatalogEntries);
+    }
+
     private async Task MarkGlobalSaveSucceededAsync(CancellationToken cancellationToken = default)
     {
         var timestamp = DateTime.Now;
@@ -1775,9 +1935,7 @@ public sealed partial class MainViewModel : ViewModelBase
     {
         if (SearchOverlay.IsOpen)
         {
-            SearchOverlay.Close();
-            UrgentBoard.FilterText = string.Empty;
-            GeneralBoard.FilterText = string.Empty;
+            CloseSearchUi();
             return;
         }
 
@@ -1875,25 +2033,87 @@ public sealed partial class MainViewModel : ViewModelBase
                 case MainNavigationTab.YibfAnaBilgi:
                 case MainNavigationTab.YibfIsTakibi:
                 case MainNavigationTab.YibfBekleyenIsler:
-                    if (!YibfModule.HasUnsavedChanges)
+                {
+                    var yibfDirty = YibfModule.HasUnsavedChanges;
+                    var catalogDirty = HasUnsavedCatalogChanges && _projectCatalogService is not null;
+                    if (!yibfDirty && !catalogDirty)
                     {
                         _notificationService.ShowToast("Kaydedilecek değişiklik yok.", ToastType.Info, TimeSpan.FromSeconds(2));
                         return;
                     }
 
-                    await YibfModule.PersistAsync(showErrorToast: true);
-                    if (!YibfModule.HasUnsavedChanges)
+                    if (catalogDirty)
+                    {
+                        await _projectCatalogService!.SaveAsync(GetProjectCatalogSnapshot());
+                        HasUnsavedCatalogChanges = false;
+                    }
+
+                    if (yibfDirty)
+                    {
+                        await YibfModule.PersistAsync(showErrorToast: true);
+                    }
+
+                    if (!YibfModule.HasUnsavedChanges && !HasUnsavedCatalogChanges)
                     {
                         await MarkGlobalSaveSucceededAsync();
-                        _notificationService.ShowToast("YİBF kayıtları kaydedildi.", ToastType.Success, TimeSpan.FromSeconds(2));
+                        _notificationService.ShowToast(
+                            yibfDirty && catalogDirty
+                                ? "YİBF ve proje kataloğu kaydedildi."
+                                : catalogDirty
+                                    ? "Proje kataloğu kaydedildi."
+                                    : "YİBF kayıtları kaydedildi.",
+                            ToastType.Success,
+                            TimeSpan.FromSeconds(2));
                     }
+
                     break;
+                }
                 case MainNavigationTab.TumEksikler:
                     _notificationService.ShowToast("TÜM EKSİKLER ekranı salt okunur; kaydedilecek değişiklik yok.", ToastType.Info, TimeSpan.FromSeconds(2));
                     break;
-                case MainNavigationTab.Ayarlar:
-                    await SaveSettingsAsync();
+                case MainNavigationTab.Arama:
+                    _notificationService.ShowToast("Arama ekranında kaydedilecek değişiklik yok.", ToastType.Info, TimeSpan.FromSeconds(2));
                     break;
+                case MainNavigationTab.Ayarlar:
+                {
+                    var catalogSaved = false;
+                    var yibfSaved = false;
+                    if (HasUnsavedCatalogChanges && _projectCatalogService is not null)
+                    {
+                        await _projectCatalogService.SaveAsync(GetProjectCatalogSnapshot());
+                        HasUnsavedCatalogChanges = false;
+                        catalogSaved = true;
+                    }
+
+                    if (YibfModule.HasUnsavedChanges)
+                    {
+                        await YibfModule.PersistAsync(showErrorToast: true);
+                        yibfSaved = !YibfModule.HasUnsavedChanges;
+                    }
+
+                    if (HasUnsavedSettings)
+                    {
+                        await SaveSettingsAsync();
+                    }
+                    else if (catalogSaved || yibfSaved)
+                    {
+                        await MarkGlobalSaveSucceededAsync();
+                        _notificationService.ShowToast(
+                            catalogSaved && yibfSaved
+                                ? "Proje kataloğu ve YİBF kayıtları kaydedildi."
+                                : catalogSaved
+                                    ? "Proje kataloğu kaydedildi."
+                                    : "YİBF kayıtları kaydedildi.",
+                            ToastType.Success,
+                            TimeSpan.FromSeconds(2));
+                    }
+                    else
+                    {
+                        _notificationService.ShowToast("Kaydedilecek değişiklik yok.", ToastType.Info, TimeSpan.FromSeconds(2));
+                    }
+
+                    break;
+                }
             }
         });
 
@@ -1950,24 +2170,44 @@ public sealed partial class MainViewModel : ViewModelBase
 
     private async Task SaveSettingsWithConfirmationAsync()
     {
-        if (!HasUnsavedSettings)
+        if (!HasUnsavedSettings && !HasUnsavedCatalogChanges)
         {
             _notificationService.ShowToast("Kaydedilecek değişiklik yok.", ToastType.Info, TimeSpan.FromSeconds(2));
             return;
         }
 
+        var message = HasUnsavedSettings && HasUnsavedCatalogChanges
+            ? "Ayarlar ve proje kataloğu kaydedilecek.\n\nDevam edilsin mi?"
+            : HasUnsavedCatalogChanges
+                ? "Proje kataloğu kaydedilecek.\n\nDevam edilsin mi?"
+                : "Ayarlar kaydedilecek.\n\nDevam edilsin mi?";
+
         if (!_confirmationService.Confirm(new ConfirmationRequest
             {
                 Kind = ConfirmationKind.Save,
                 Title = "Kaydet",
-                Message = "Ayarlar kaydedilecek.\n\nDevam edilsin mi?",
+                Message = message,
                 IsDestructive = false
             }))
         {
             return;
         }
 
-        await SaveSettingsAsync();
+        if (HasUnsavedCatalogChanges && _projectCatalogService is not null)
+        {
+            await _projectCatalogService.SaveAsync(GetProjectCatalogSnapshot());
+            HasUnsavedCatalogChanges = false;
+        }
+
+        if (HasUnsavedSettings)
+        {
+            await SaveSettingsAsync();
+        }
+        else
+        {
+            await MarkGlobalSaveSucceededAsync();
+            _notificationService.ShowToast("Proje kataloğu kaydedildi.", ToastType.Success, TimeSpan.FromSeconds(2));
+        }
     }
 
     private string? GetSaveOperationLabel()
@@ -1978,8 +2218,22 @@ public sealed partial class MainViewModel : ViewModelBase
             MainNavigationTab.EksikProje when MissingProjectModule.HasUnsavedChanges => "Eksik proje kayıtları",
             MainNavigationTab.KarotTakibi when KarotModule.HasUnsavedChanges => "Karot kayıtları",
             MainNavigationTab.TadilatTakibi when TadilatModule.HasUnsavedChanges => "Tadilat kayıtları",
-            MainNavigationTab.YibfAnaBilgi or MainNavigationTab.YibfIsTakibi or MainNavigationTab.YibfBekleyenIsler when YibfModule.HasUnsavedChanges => "YİBF kayıtları",
-            MainNavigationTab.Ayarlar when HasUnsavedSettings => "Ayarlar",
+            MainNavigationTab.YibfAnaBilgi or MainNavigationTab.YibfIsTakibi or MainNavigationTab.YibfBekleyenIsler
+                when YibfModule.HasUnsavedChanges || HasUnsavedCatalogChanges
+                => YibfModule.HasUnsavedChanges && HasUnsavedCatalogChanges
+                    ? "YİBF ve proje kataloğu"
+                    : HasUnsavedCatalogChanges
+                        ? "Proje kataloğu"
+                        : "YİBF kayıtları",
+            MainNavigationTab.Ayarlar when HasUnsavedSettings || HasUnsavedCatalogChanges || YibfModule.HasUnsavedChanges
+                => (HasUnsavedSettings, HasUnsavedCatalogChanges || YibfModule.HasUnsavedChanges) switch
+                {
+                    (true, true) => "Ayarlar, proje kataloğu ve YİBF",
+                    (true, false) => "Ayarlar",
+                    _ when HasUnsavedCatalogChanges && YibfModule.HasUnsavedChanges => "Proje kataloğu ve YİBF",
+                    _ when HasUnsavedCatalogChanges => "Proje kataloğu",
+                    _ => "YİBF kayıtları"
+                },
             _ => null
         };
 
@@ -2145,7 +2399,7 @@ public sealed partial class MainViewModel : ViewModelBase
                     UrgentBoard.SelectedTask = null;
                     GeneralBoard.SelectedTask = null;
                     DetailPanel.Close();
-                    SearchOverlay.Close();
+                    CloseSearchUi();
                 }
                 finally
                 {
@@ -2413,7 +2667,8 @@ public sealed partial class MainViewModel : ViewModelBase
                     YibfModule.GetIsTakibiEntriesSnapshot(),
                     YibfModule.GetCellStatesSnapshot(),
                     TadilatModule.GetCellStatesSnapshot(),
-                    _quickTaskTemplateRepository?.GetAll());
+                    _quickTaskTemplateRepository?.GetAll(),
+                    GetProjectCatalogSnapshot());
                 _notificationService.ShowToast($"Yedek alındı ({metadata.TaskCount} kayıt).", ToastType.Success);
             }
             catch (Exception ex)
@@ -3006,7 +3261,8 @@ public sealed partial class MainViewModel : ViewModelBase
                     YibfModule.GetIsTakibiEntriesSnapshot(),
                     YibfModule.GetCellStatesSnapshot(),
                     TadilatModule.GetCellStatesSnapshot(),
-                    _quickTaskTemplateRepository?.GetAll());
+                    _quickTaskTemplateRepository?.GetAll(),
+                    GetProjectCatalogSnapshot());
 
                 var beforeUrgent = UrgentBoard.Tasks.Select(task => task.Clone()).ToList();
                 var beforeGeneral = GeneralBoard.Tasks.Select(task => task.Clone()).ToList();
@@ -3225,6 +3481,7 @@ public sealed partial class MainViewModel : ViewModelBase
             return;
         }
 
+        var navigated = false;
         switch (item.Kind)
         {
             case SearchResultKind.GeneralTask:
@@ -3234,10 +3491,18 @@ public sealed partial class MainViewModel : ViewModelBase
                     break;
                 }
 
-                SelectMainTab(MainNavigationTab.GenelIsTakibi);
                 var board = GetBoard(item.BoardType.Value);
+                var task = board.Tasks.FirstOrDefault(t => t.Id == item.ItemId);
+                if (task is null)
+                {
+                    break;
+                }
+
+                ClearGeneralBoardSearchFilters();
+                SelectMainTab(MainNavigationTab.GenelIsTakibi);
                 FocusBoard(board.BoardType);
-                board.SelectedTask = board.Tasks.FirstOrDefault(task => task.Id == item.ItemId);
+                board.SelectedTask = task;
+                navigated = true;
                 break;
             }
             case SearchResultKind.ActionEntry:
@@ -3251,6 +3516,7 @@ public sealed partial class MainViewModel : ViewModelBase
                 SelectMainTab(MainNavigationTab.Aksiyon);
                 ActionModule.SelectedSubTab = entry.Category == ActionEntryCategory.Aksiyon ? ActionSubTab.Aksiyon : ActionSubTab.AksiyonaEklenecekler;
                 ActionModule.SelectedEntry = entry;
+                navigated = true;
                 break;
             }
             case SearchResultKind.MissingProjectEntry:
@@ -3263,6 +3529,7 @@ public sealed partial class MainViewModel : ViewModelBase
 
                 SelectMainTab(MainNavigationTab.EksikProje);
                 MissingProjectModule.SelectedEntry = entry;
+                navigated = true;
                 break;
             }
             case SearchResultKind.KarotEntry:
@@ -3274,8 +3541,11 @@ public sealed partial class MainViewModel : ViewModelBase
                 }
 
                 SelectMainTab(MainNavigationTab.KarotTakibi);
-                KarotModule.SelectedSubTab = entry.Status == KarotStatus.KarotAlinacak ? KarotSubTab.Bekleyen : KarotSubTab.Yapilan;
+                KarotModule.SelectedSubTab = entry.Status == KarotStatus.KarotAlindiOlumlu
+                    ? KarotSubTab.Yapilan
+                    : KarotSubTab.Bekleyen;
                 KarotModule.SelectedEntry = entry;
+                navigated = true;
                 break;
             }
             case SearchResultKind.TadilatEntry:
@@ -3289,6 +3559,7 @@ public sealed partial class MainViewModel : ViewModelBase
                 SelectMainTab(MainNavigationTab.TadilatTakibi);
                 TadilatModule.SelectedSubTab = entry.SubTab;
                 TadilatModule.SelectedEntry = entry;
+                navigated = true;
                 break;
             }
             case SearchResultKind.YibfAnaBilgiEntry:
@@ -3302,6 +3573,7 @@ public sealed partial class MainViewModel : ViewModelBase
                 SelectMainTab(MainNavigationTab.YibfAnaBilgi);
                 YibfModule.SelectedAnaBilgiEntry = entry;
                 YibfModule.SelectedAnaBilgiEvent = null;
+                navigated = true;
                 break;
             }
             case SearchResultKind.YibfAnaBilgiEvent:
@@ -3316,6 +3588,7 @@ public sealed partial class MainViewModel : ViewModelBase
                 SelectMainTab(MainNavigationTab.YibfAnaBilgi);
                 YibfModule.SelectedAnaBilgiEntry = entry;
                 YibfModule.SelectedAnaBilgiEvent = eventItem;
+                navigated = true;
                 break;
             }
             case SearchResultKind.YibfIsTakibiEntry:
@@ -3329,11 +3602,26 @@ public sealed partial class MainViewModel : ViewModelBase
                 SelectMainTab(MainNavigationTab.YibfIsTakibi);
                 YibfModule.SelectedIsTakibiEntry = entry;
                 YibfModule.RequestIsTakibiScroll(entry.Id);
+                navigated = true;
                 break;
             }
         }
 
-        SearchOverlay.Close();
+        if (!navigated)
+        {
+            _notificationService.ShowToast("Kayıt bulunamadı veya henüz yüklenmedi.", ToastType.Warning, TimeSpan.FromSeconds(3));
+            return;
+        }
+
+        // Overlay açıksa kapat; ARAMA sekmesindeki sorgu/sonuçlar korunur.
+        if (SearchOverlay.IsOpen)
+        {
+            CloseSearchUi();
+        }
+        else
+        {
+            ClearGeneralBoardSearchFilters();
+        }
     }
 
     private void SelectEksikItem(EksikItemViewModel? item)
@@ -3440,7 +3728,7 @@ public sealed partial class MainViewModel : ViewModelBase
 
     private void OnSearchQueryChanged(object? sender, string query)
     {
-        if (!SearchOverlay.IsOpen || !SearchOverlay.IsClassicMode)
+        if (!IsSearchUiActive() || !SearchOverlay.IsClassicMode)
         {
             return;
         }
@@ -3448,21 +3736,28 @@ public sealed partial class MainViewModel : ViewModelBase
         if (string.IsNullOrWhiteSpace(query))
         {
             SearchOverlay.SetResults(Array.Empty<SearchResultItem>());
-            UrgentBoard.FilterText = string.Empty;
-            GeneralBoard.FilterText = string.Empty;
+            ClearGeneralBoardSearchFilters();
             return;
         }
 
         var results = _searchService.SearchAll(GetSearchCorpus(), query, SearchOverlay.SelectedScope);
         SearchOverlay.SetResults(results);
 
-        UrgentBoard.FilterText = query;
-        GeneralBoard.FilterText = query;
+        // Genel sekmesinde açık overlay dışında board filtrelerini kirletme (yapışkan filtre bug'ı).
+        if (SelectedMainTab == MainNavigationTab.GenelIsTakibi && SearchOverlay.IsOpen)
+        {
+            UrgentBoard.FilterText = query;
+            GeneralBoard.FilterText = query;
+        }
+        else
+        {
+            ClearGeneralBoardSearchFilters();
+        }
     }
 
     private void OnSearchScopeChanged(object? sender, SearchScope scope)
     {
-        if (!SearchOverlay.IsOpen)
+        if (!IsSearchUiActive())
         {
             return;
         }
@@ -3472,7 +3767,7 @@ public sealed partial class MainViewModel : ViewModelBase
 
     private void OnSearchModeChanged(object? sender, SearchOverlayMode mode)
     {
-        if (!SearchOverlay.IsOpen)
+        if (!IsSearchUiActive())
         {
             return;
         }
@@ -3501,6 +3796,7 @@ public sealed partial class MainViewModel : ViewModelBase
             MainNavigationTab.YibfIsTakibi => SearchScope.YibfIsTakibi,
             MainNavigationTab.YibfBekleyenIsler => SearchScope.YibfAnaBilgi,
             MainNavigationTab.TumEksikler => SearchScope.All,
+            MainNavigationTab.Arama => SearchScope.All,
             MainNavigationTab.Ayarlar => SearchScope.All,
             _ => SearchScope.All
         };
@@ -3584,7 +3880,7 @@ public sealed partial class MainViewModel : ViewModelBase
                 Kind = SearchResultKind.KarotEntry,
                 TargetTab = MainNavigationTab.KarotTakibi,
                 ItemId = entry.Id,
-                BoardLabel = entry.Status == KarotStatus.KarotAlinacak ? "Karot / Bekleyen" : "Karot / Yapılan",
+                BoardLabel = entry.Status == KarotStatus.KarotAlindiOlumlu ? "Karot / Yapılan" : "Karot / Bekleyen",
                 Title = FirstNonEmpty(entry.YibfNo, entry.AdaParsel, "(Boş karot kaydı)"),
                 Summary = FirstNonEmpty(entry.AdaParsel, entry.YapiSahibi, entry.Aciklama),
                 SearchText = SearchContextAliasBuilder.EnrichSearchText(rawSearchText, aliasLookup),

@@ -85,6 +85,7 @@ public partial class App : Application
         var tadilatRepository = new SqliteTadilatRepository(_dbPath);
         var yibfRepository = new SqliteYibfRepository(_dbPath);
         var quickTaskTemplateRepository = new SqliteQuickTaskTemplateRepository(_dbPath);
+        var projectCatalogRepository = new SqliteProjectCatalogRepository(_dbPath);
 
         services.AddSingleton(pathService);
         services.AddSingleton<IAppSettingsService>(settingsService);
@@ -99,6 +100,10 @@ public partial class App : Application
         services.AddSingleton<ITadilatRepository>(tadilatRepository);
         services.AddSingleton<IYibfRepository>(yibfRepository);
         services.AddSingleton<IQuickTaskTemplateRepository>(quickTaskTemplateRepository);
+        services.AddSingleton<IProjectCatalogRepository>(projectCatalogRepository);
+        services.AddSingleton<IProjectCatalogService, ProjectCatalogService>();
+        services.AddSingleton<IProjectCatalogUiState, ProjectCatalogUiState>();
+        services.AddSingleton<IProjectLinkingService, ProjectLinkingService>();
         services.AddSingleton<IBackupService>(_ => new BackupService(pathService.BackupDirectory));
         services.AddSingleton<IImportExportService, ImportExportService>();
         services.AddSingleton<IGenelIsTakibiExcelImportService, GenelIsTakibiExcelImportService>();
@@ -112,11 +117,17 @@ public partial class App : Application
         services.AddSingleton<IContextInsightBuilder, ContextInsightBuilder>();
         services.AddSingleton<IFileDialogService, FileDialogService>();
         services.AddSingleton<IAddActionEntryDialogService, AddActionEntryDialogService>();
+        services.AddSingleton<IKarotEntryDialogService, KarotEntryDialogService>();
+        services.AddSingleton<ITadilatEntryDialogService, TadilatEntryDialogService>();
+        services.AddSingleton<IMissingProjectEntryDialogService, MissingProjectEntryDialogService>();
+        services.AddSingleton<IYibfIsTakibiEntryDialogService, YibfIsTakibiEntryDialogService>();
         services.AddSingleton<IKarotStatusDialogService, KarotStatusDialogService>();
         services.AddSingleton<ITadilatCellNoteDialogService, TadilatCellNoteDialogService>();
         services.AddSingleton<IYibfAnaBilgiEventDialogService, YibfAnaBilgiEventDialogService>();
         services.AddSingleton<IYibfAnaBilgiEntryDialogService, YibfAnaBilgiEntryDialogService>();
         services.AddSingleton<IQuickTaskTemplateDialogService, QuickTaskTemplateDialogService>();
+        services.AddSingleton<IProjectCatalogEntryDialogService, ProjectCatalogEntryDialogService>();
+        services.AddSingleton<IProjectLinkResolveDialogService, ProjectLinkResolveDialogService>();
 
         services.AddSingleton<DashboardViewModel>();
         services.AddSingleton<SearchOverlayViewModel>();

@@ -33,6 +33,9 @@ public sealed class YibfModuleViewModel : ViewModelBase
     private readonly ITadilatCellNoteDialogService _noteDialogService;
     private readonly IYibfAnaBilgiEventDialogService _anaBilgiEventDialogService;
     private readonly IYibfAnaBilgiEntryDialogService _anaBilgiEntryDialogService;
+    private readonly IYibfIsTakibiEntryDialogService? _isTakibiEntryDialogService;
+    private readonly IProjectCatalogUiState? _projectCatalogUiState;
+    private readonly IProjectCatalogService? _projectCatalogService;
     private readonly IUndoRedoService _undoRedoService;
     private readonly IClipboardService _clipboardService;
 
@@ -73,7 +76,10 @@ public sealed class YibfModuleViewModel : ViewModelBase
         IYibfAnaBilgiEventDialogService anaBilgiEventDialogService,
         IYibfAnaBilgiEntryDialogService anaBilgiEntryDialogService,
         IUndoRedoService undoRedoService,
-        IClipboardService? clipboardService = null)
+        IClipboardService? clipboardService = null,
+        IYibfIsTakibiEntryDialogService? isTakibiEntryDialogService = null,
+        IProjectCatalogUiState? projectCatalogUiState = null,
+        IProjectCatalogService? projectCatalogService = null)
     {
         _repository = repository;
         _importService = importService;
@@ -83,6 +89,9 @@ public sealed class YibfModuleViewModel : ViewModelBase
         _noteDialogService = noteDialogService;
         _anaBilgiEventDialogService = anaBilgiEventDialogService;
         _anaBilgiEntryDialogService = anaBilgiEntryDialogService;
+        _isTakibiEntryDialogService = isTakibiEntryDialogService;
+        _projectCatalogUiState = projectCatalogUiState;
+        _projectCatalogService = projectCatalogService;
         _undoRedoService = undoRedoService;
         _clipboardService = clipboardService ?? new ClipboardService();
 
@@ -151,6 +160,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
         private set => SetProperty(ref _hasUnsavedChanges, value);
     }
 
+    public void MarkDirty() => HasUnsavedChanges = true;
 
 
     public string SearchQuery
@@ -500,8 +510,19 @@ public sealed class YibfModuleViewModel : ViewModelBase
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
             };
-            entry.WorkGroupId = entry.Id;
-            entry.WorkIdentityId = entry.Id;
+
+            if (result.WorkGroupId is Guid workGroupId || result.ProjectId is Guid projectId)
+            {
+                var groupId = result.WorkGroupId ?? result.ProjectId ?? entry.Id;
+                var identityId = result.ProjectId ?? result.WorkGroupId ?? entry.Id;
+                entry.WorkGroupId = groupId;
+                entry.WorkIdentityId = identityId;
+            }
+            else
+            {
+                entry.WorkGroupId = entry.Id;
+                entry.WorkIdentityId = entry.Id;
+            }
 
             AnaBilgiEntries.Add(entry);
             NormalizeWorkIdentities();
@@ -767,6 +788,32 @@ public sealed class YibfModuleViewModel : ViewModelBase
 
     private async Task AddIsTakibiEntryAsync()
     {
+        if (_isTakibiEntryDialogService is not null)
+        {
+            var created = await _isTakibiEntryDialogService.ShowDialogAsync();
+            if (created is null)
+            {
+                return;
+            }
+
+            ExecuteUndoableMutation("YİBF iş takibi satır ekle", () =>
+            {
+                created.DisplayOrder = IsTakibiEntries.Count;
+                IsTakibiEntries.Add(created);
+                SyncAnaBilgiFromCatalogForIsTakibi(created);
+                NormalizeWorkIdentities();
+                NormalizeIsTakibiOrder();
+                RefreshAnaBilgiCollections();
+                RefreshIsTakibiRows();
+                SelectedIsTakibiEntry = created;
+                RequestIsTakibiScroll(created.Id);
+                HasUnsavedChanges = true;
+            });
+            _notificationService.ShowToast("YİBF iş takibi satırı eklendi.", ToastType.Success, TimeSpan.FromSeconds(2));
+            await Task.CompletedTask;
+            return;
+        }
+
         ExecuteUndoableMutation("YİBF iş takibi satır ekle", () =>
         {
             var entry = new YibfIsTakibiEntry
@@ -790,6 +837,99 @@ public sealed class YibfModuleViewModel : ViewModelBase
         _notificationService.ShowToast("YİBF iş takibi satırı eklendi.", ToastType.Success, TimeSpan.FromSeconds(2));
         await Task.CompletedTask;
     }
+
+    public void AddStubEntriesFromFanOut(ProjectCatalogFanOutResult fanOut)
+    {
+        if (fanOut.AnaBilgiStub is null && fanOut.IsTakibiStub is null)
+        {
+            return;
+        }
+
+        ExecuteUndoableMutation("Katalog fan-out", () =>
+        {
+            if (fanOut.AnaBilgiStub is { } anaStub
+                && !AnaBilgiEntries.Any(item =>
+                    item.Id == anaStub.Id
+                    || item.WorkGroupId == anaStub.WorkGroupId
+                    || (HasSameAdaSahip(item, anaStub))))
+            {
+                anaStub.DisplayOrder = AnaBilgiEntries.Count == 0 ? 0 : AnaBilgiEntries.Max(item => item.DisplayOrder) + 1;
+                AnaBilgiEntries.Add(anaStub);
+            }
+
+            if (fanOut.IsTakibiStub is { } isTakibiStub
+                && !IsTakibiEntries.Any(item =>
+                    item.WorkIdentityId == isTakibiStub.WorkIdentityId
+                    || (item.WorkGroupId == isTakibiStub.WorkGroupId
+                        && item.WorkIdentityId == isTakibiStub.WorkGroupId
+                        && string.Equals(item.JobName?.Trim(), isTakibiStub.JobName?.Trim(), StringComparison.OrdinalIgnoreCase))))
+            {
+                isTakibiStub.Id = Guid.NewGuid();
+                isTakibiStub.DisplayOrder = IsTakibiEntries.Count == 0 ? 0 : IsTakibiEntries.Max(item => item.DisplayOrder) + 1;
+                IsTakibiEntries.Add(isTakibiStub);
+                SyncAnaBilgiFromCatalogForIsTakibi(isTakibiStub);
+            }
+
+            NormalizeWorkIdentities();
+            NormalizeIsTakibiOrder();
+            RefreshAnaBilgiCollections();
+            RefreshIsTakibiRows();
+            HasUnsavedChanges = true;
+        });
+    }
+
+    private void SyncAnaBilgiFromCatalogForIsTakibi(YibfIsTakibiEntry isTakibiEntry)
+    {
+        if (_projectCatalogService is null || _projectCatalogUiState is null)
+        {
+            return;
+        }
+
+        var catalog = _projectCatalogUiState.GetActiveEntries();
+        var project = catalog.FirstOrDefault(item => item.Id == isTakibiEntry.WorkIdentityId)
+                      ?? catalog.FirstOrDefault(item => item.Id == isTakibiEntry.WorkGroupId);
+        if (project is null)
+        {
+            return;
+        }
+
+        // İstinat işlerinde belediye/müteahhit üst projeden alınır.
+        if (project.Kind == ProjectCatalogKind.Istinat
+            && project.ParentProjectId is Guid parentId
+            && parentId != Guid.Empty)
+        {
+            project = catalog.FirstOrDefault(item => item.Id == parentId) ?? project;
+        }
+
+        var anaBilgi = AnaBilgiEntries.FirstOrDefault(item =>
+            item.WorkGroupId == isTakibiEntry.WorkGroupId
+            || item.Id == isTakibiEntry.WorkGroupId
+            || item.WorkIdentityId == isTakibiEntry.WorkGroupId);
+
+        if (anaBilgi is null && project.Kind == ProjectCatalogKind.Normal)
+        {
+            var stub = _projectCatalogService.BuildFanOut(project).AnaBilgiStub;
+            if (stub is not null
+                && !AnaBilgiEntries.Any(item => item.Id == stub.Id || item.WorkGroupId == stub.WorkGroupId))
+            {
+                stub.DisplayOrder = AnaBilgiEntries.Count == 0 ? 0 : AnaBilgiEntries.Max(item => item.DisplayOrder) + 1;
+                AnaBilgiEntries.Add(stub);
+            }
+
+            return;
+        }
+
+        if (anaBilgi is not null)
+        {
+            _projectCatalogService.ApplyProjectSelection(anaBilgi, project);
+        }
+    }
+
+    private static bool HasSameAdaSahip(YibfAnaBilgiEntry left, YibfAnaBilgiEntry right)
+        => !string.IsNullOrWhiteSpace(left.AdaParsel)
+           && !string.IsNullOrWhiteSpace(left.YapiSahibi)
+           && string.Equals(left.AdaParsel.Trim(), right.AdaParsel?.Trim(), StringComparison.OrdinalIgnoreCase)
+           && string.Equals(left.YapiSahibi.Trim(), right.YapiSahibi?.Trim(), StringComparison.OrdinalIgnoreCase);
 
     private async Task DeleteSelectedIsTakibiAsync()
     {

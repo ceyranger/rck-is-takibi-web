@@ -1,4 +1,5 @@
 using Microsoft.Data.Sqlite;
+using RizaCanKilicIsTakibi.Helpers;
 using RizaCanKilicIsTakibi.Models;
 using RizaCanKilicIsTakibi.Services.Abstractions;
 using System.IO;
@@ -29,7 +30,7 @@ public sealed class SqliteTaskRepository : ITaskRepository
         await using (var cmd = connection.CreateCommand())
         {
             cmd.CommandText = @"
-SELECT Id, Title, Description, DueDate, CreatedAt, UpdatedAt, BoardType, SortOrder
+SELECT Id, Title, Description, DueDate, CreatedAt, UpdatedAt, BoardType, SortOrder, ProjectId, IsSpecialJob
 FROM Tasks
 WHERE IsDeleted = 0
 ORDER BY BoardType, SortOrder, UpdatedAt DESC;";
@@ -46,7 +47,9 @@ ORDER BY BoardType, SortOrder, UpdatedAt DESC;";
                     CreatedAt = DateTime.Parse(reader.GetString(4)),
                     UpdatedAt = DateTime.Parse(reader.GetString(5)),
                     BoardType = (TaskBoardType)reader.GetInt32(6),
-                    SortOrder = reader.GetInt32(7)
+                    SortOrder = reader.GetInt32(7),
+                    ProjectId = SqliteGuidHelper.ParseNullable(reader.IsDBNull(8) ? null : reader.GetString(8)),
+                    IsSpecialJob = !reader.IsDBNull(9) && reader.GetInt32(9) != 0
                 };
 
                 result.Add(item);
@@ -193,6 +196,8 @@ CREATE TABLE IF NOT EXISTS TaskNotes (
 
         EnsureTasksSchema(connection);
         SqliteConnectionSettings.EnsureColumnExists(connection, "Tasks", "IsDeleted", "INTEGER NOT NULL DEFAULT 0");
+        SqliteConnectionSettings.EnsureColumnExists(connection, "Tasks", "ProjectId", "TEXT NOT NULL DEFAULT ''");
+        SqliteConnectionSettings.EnsureColumnExists(connection, "Tasks", "IsSpecialJob", "INTEGER NOT NULL DEFAULT 0");
     }
 
     private static void EnsureTasksSchema(SqliteConnection connection)
@@ -252,8 +257,8 @@ PRAGMA foreign_keys=ON;";
         {
             taskCmd.Transaction = transaction;
             taskCmd.CommandText = @"
-INSERT INTO Tasks (Id, Title, Description, DueDate, CreatedAt, UpdatedAt, BoardType, SortOrder)
-VALUES ($id, $title, $description, $dueDate, $createdAt, $updatedAt, $boardType, $sortOrder)
+INSERT INTO Tasks (Id, Title, Description, DueDate, CreatedAt, UpdatedAt, BoardType, SortOrder, ProjectId, IsSpecialJob)
+VALUES ($id, $title, $description, $dueDate, $createdAt, $updatedAt, $boardType, $sortOrder, $projectId, $isSpecialJob)
 ON CONFLICT(Id) DO UPDATE SET
     Title = excluded.Title,
     Description = excluded.Description,
@@ -261,6 +266,8 @@ ON CONFLICT(Id) DO UPDATE SET
     UpdatedAt = excluded.UpdatedAt,
     BoardType = excluded.BoardType,
     SortOrder = excluded.SortOrder,
+    ProjectId = excluded.ProjectId,
+    IsSpecialJob = excluded.IsSpecialJob,
     IsDeleted = 0;";
 
             taskCmd.Parameters.AddWithValue("$id", item.Id.ToString());
@@ -271,6 +278,8 @@ ON CONFLICT(Id) DO UPDATE SET
             taskCmd.Parameters.AddWithValue("$updatedAt", updatedAt.ToString("O"));
             taskCmd.Parameters.AddWithValue("$boardType", (int)item.BoardType);
             taskCmd.Parameters.AddWithValue("$sortOrder", item.SortOrder);
+            taskCmd.Parameters.AddWithValue("$projectId", SqliteGuidHelper.ToDb(item.ProjectId));
+            taskCmd.Parameters.AddWithValue("$isSpecialJob", item.IsSpecialJob ? 1 : 0);
             await taskCmd.ExecuteNonQueryAsync(cancellationToken);
         }
 

@@ -6,6 +6,8 @@ namespace RizaCanKilicIsTakibi.Models;
 public sealed class TaskItem : ObservableObject
 {
     private Guid _id = Guid.NewGuid();
+    private Guid? _projectId;
+    private bool _isSpecialJob;
     private string _title = string.Empty;
     private string _description = string.Empty;
     private DateTime? _dueDate;
@@ -18,6 +20,24 @@ public sealed class TaskItem : ObservableObject
     {
         get => _id;
         set => SetProperty(ref _id, value);
+    }
+
+    public Guid? ProjectId
+    {
+        get => _projectId;
+        set => SetProperty(ref _projectId, value);
+    }
+
+    public bool IsSpecialJob
+    {
+        get => _isSpecialJob;
+        set
+        {
+            if (SetProperty(ref _isSpecialJob, value) && value)
+            {
+                ProjectId = null;
+            }
+        }
     }
 
     public string Title
@@ -69,6 +89,8 @@ public sealed class TaskItem : ObservableObject
         var clone = new TaskItem
         {
             Id = Id,
+            ProjectId = ProjectId,
+            IsSpecialJob = IsSpecialJob,
             Title = Title,
             Description = Description,
             DueDate = DueDate,

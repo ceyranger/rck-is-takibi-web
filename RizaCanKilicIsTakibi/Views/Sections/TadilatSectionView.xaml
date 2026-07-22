@@ -7,6 +7,7 @@
              xmlns:models="clr-namespace:RizaCanKilicIsTakibi.Models"
              xmlns:viewModels="clr-namespace:RizaCanKilicIsTakibi.ViewModels"
              xmlns:behaviors="clr-namespace:RizaCanKilicIsTakibi.Behaviors"
+             xmlns:viewControls="clr-namespace:RizaCanKilicIsTakibi.Views.Controls"
              UseLayoutRounding="True"
              SnapsToDevicePixels="True"
              mc:Ignorable="d">
@@ -370,6 +371,7 @@
                     </Border>
 
                     <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}" Margin="0,8,0,8">
+                        <StackPanel>
                         <DockPanel>
                             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" VerticalAlignment="Center">
                                 <Button Content="AKTİF"
@@ -532,6 +534,7 @@
                                 </StackPanel>
                             </ScrollViewer>
                         </DockPanel>
+                        </StackPanel>
                     </Border>
 
                     <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}">

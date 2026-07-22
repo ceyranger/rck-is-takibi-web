@@ -96,6 +96,7 @@ public sealed class ActionModuleViewModel : ViewModelBase
 
     public bool IsBusy { get => _isBusy; private set => SetProperty(ref _isBusy, value); }
     public bool HasUnsavedChanges { get => _hasUnsavedChanges; private set => SetProperty(ref _hasUnsavedChanges, value); }
+    public void MarkDirty() => HasUnsavedChanges = true;
     public ActionSubTab SelectedSubTab
     {
         get => _selectedSubTab;

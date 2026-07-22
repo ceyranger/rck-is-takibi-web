@@ -17,6 +17,10 @@ public sealed class SearchOverlayViewModel : ViewModelBase
     private string _assistantMatchedKey = string.Empty;
     private SearchScope _selectedScope = SearchScope.All;
     private SearchOverlayMode _selectedMode = SearchOverlayMode.Classic;
+    private bool _isScopeSelectionVisible = true;
+    private string _headerTitle = "Arama";
+    private int _focusRequestToken;
+    private SearchResultItem? _selectedResult;
 
     public SearchOverlayViewModel()
     {
@@ -49,6 +53,8 @@ public sealed class SearchOverlayViewModel : ViewModelBase
         {
             if (SetProperty(ref _query, value))
             {
+                OnPropertyChanged(nameof(HasNoClassicResults));
+                OnPropertyChanged(nameof(ShowClassicEmptyHint));
                 QueryChanged?.Invoke(this, _query);
             }
         }
@@ -75,6 +81,9 @@ public sealed class SearchOverlayViewModel : ViewModelBase
             {
                 OnPropertyChanged(nameof(IsClassicMode));
                 OnPropertyChanged(nameof(IsAssistantMode));
+                OnPropertyChanged(nameof(IsScopeBarVisible));
+                OnPropertyChanged(nameof(HasNoClassicResults));
+                OnPropertyChanged(nameof(ShowClassicEmptyHint));
                 ModeChanged?.Invoke(this, _selectedMode);
             }
         }
@@ -132,6 +141,8 @@ public sealed class SearchOverlayViewModel : ViewModelBase
 
     public bool HasPrimaryResults => PrimaryResults.Count > 0;
     public bool HasSecondaryResults => SecondaryResults.Count > 0;
+    public bool HasNoClassicResults => IsClassicMode && !HasPrimaryResults && !string.IsNullOrWhiteSpace(Query);
+    public bool ShowClassicEmptyHint => IsClassicMode && !HasPrimaryResults && string.IsNullOrWhiteSpace(Query);
     public bool HasAssistantAnswer => !string.IsNullOrWhiteSpace(AssistantAnswer);
     public bool HasAssistantExplanation => !string.IsNullOrWhiteSpace(AssistantExplanation);
     public bool HasAssistantSections => AssistantSections.Count > 0;
@@ -141,11 +152,82 @@ public sealed class SearchOverlayViewModel : ViewModelBase
     public bool IsClassicMode => SelectedMode == SearchOverlayMode.Classic;
     public bool IsAssistantMode => SelectedMode == SearchOverlayMode.Assistant;
 
+    public bool IsScopeSelectionVisible
+    {
+        get => _isScopeSelectionVisible;
+        private set
+        {
+            if (SetProperty(ref _isScopeSelectionVisible, value))
+            {
+                OnPropertyChanged(nameof(IsScopeBarVisible));
+            }
+        }
+    }
+
+    public string HeaderTitle
+    {
+        get => _headerTitle;
+        private set => SetProperty(ref _headerTitle, value);
+    }
+
+    public int FocusRequestToken
+    {
+        get => _focusRequestToken;
+        private set => SetProperty(ref _focusRequestToken, value);
+    }
+
+    public bool IsScopeBarVisible => IsScopeSelectionVisible && IsClassicMode;
+
+    public SearchResultItem? SelectedResult
+    {
+        get => _selectedResult;
+        set
+        {
+            if (SetProperty(ref _selectedResult, value))
+            {
+                OnPropertyChanged(nameof(HasSelectedResult));
+            }
+        }
+    }
+
+    public bool HasSelectedResult => SelectedResult is not null;
+
     public RelayCommand ClearCommand { get; }
     public RelayCommand<SearchScope> SelectScopeCommand { get; }
     public RelayCommand<SearchOverlayMode> SelectModeCommand { get; }
 
-    public void Open() => IsOpen = true;
+    public void Open() => OpenGlobal();
+
+    public void OpenGlobal()
+    {
+        IsScopeSelectionVisible = true;
+        HeaderTitle = "Arama";
+        SelectedScope = SearchScope.All;
+        IsOpen = true;
+    }
+
+    public void OpenForTab(SearchScope scope)
+    {
+        IsScopeSelectionVisible = false;
+        HeaderTitle = "Bu sekmede ara";
+        SelectedScope = scope;
+        IsOpen = true;
+        RequestFocus();
+    }
+
+    public void PrepareFullPageSearch()
+    {
+        var wasTabLocked = !IsScopeSelectionVisible;
+        IsOpen = false;
+        IsScopeSelectionVisible = true;
+        HeaderTitle = "Arama";
+        if (wasTabLocked)
+        {
+            SelectedScope = SearchScope.All;
+        }
+    }
+
+    public void RequestFocus() => FocusRequestToken++;
 
     public void Close()
     {
@@ -158,6 +240,8 @@ public sealed class SearchOverlayViewModel : ViewModelBase
         AssistantMatchedKey = string.Empty;
         SelectedScope = SearchScope.All;
         SelectedMode = SearchOverlayMode.Classic;
+        IsScopeSelectionVisible = true;
+        HeaderTitle = "Arama";
         Results.Clear();
         PrimaryResults.Clear();
         SecondaryResults.Clear();
@@ -165,6 +249,7 @@ public sealed class SearchOverlayViewModel : ViewModelBase
         AssistantSources.Clear();
         DirectAssistantSources.Clear();
         ContextAssistantSources.Clear();
+        SelectedResult = null;
         OnPropertyChanged(nameof(HasPrimaryResults));
         OnPropertyChanged(nameof(HasSecondaryResults));
         OnPropertyChanged(nameof(HasAssistantSections));
@@ -196,8 +281,20 @@ public sealed class SearchOverlayViewModel : ViewModelBase
             SecondaryResults.Add(item);
         }
 
+        if (_selectedResult is not null
+            && resultList.Any(item => item.Kind == _selectedResult.Kind && item.ItemId == _selectedResult.ItemId))
+        {
+            SelectedResult = resultList.First(item => item.Kind == _selectedResult.Kind && item.ItemId == _selectedResult.ItemId);
+        }
+        else
+        {
+            SelectedResult = resultList.FirstOrDefault();
+        }
+
         OnPropertyChanged(nameof(HasPrimaryResults));
         OnPropertyChanged(nameof(HasSecondaryResults));
+        OnPropertyChanged(nameof(HasNoClassicResults));
+        OnPropertyChanged(nameof(ShowClassicEmptyHint));
     }
 
     public void SetAssistantResult(QueryInsightResult result)
@@ -233,6 +330,7 @@ public sealed class SearchOverlayViewModel : ViewModelBase
             }
         }
 
+        SelectedResult = result.Sources.FirstOrDefault();
         OnPropertyChanged(nameof(HasAssistantSections));
         OnPropertyChanged(nameof(HasAssistantSources));
         OnPropertyChanged(nameof(HasDirectAssistantSources));
@@ -252,6 +350,7 @@ public sealed class SearchOverlayViewModel : ViewModelBase
             AssistantSources.Clear();
             DirectAssistantSources.Clear();
             ContextAssistantSources.Clear();
+            SelectedResult = null;
             OnPropertyChanged(nameof(HasAssistantSections));
             OnPropertyChanged(nameof(HasAssistantSources));
             OnPropertyChanged(nameof(HasDirectAssistantSources));
@@ -260,5 +359,6 @@ public sealed class SearchOverlayViewModel : ViewModelBase
         }
 
         Query = string.Empty;
+        SelectedResult = null;
     }
 }

@@ -191,9 +191,9 @@ public sealed class TumEksiklerViewModel : ViewModelBase
 
         AppendYibfAnaBilgiEvents(groupsByEntryId, anaBilgiEntries, anaBilgiEvents);
         AppendYibfIsTakibi(groupsByEntryId, groupsByWorkGroupId, unmatched, anaBilgiEntries, isTakibiEntries, yibfStateLookup);
-        AppendTadilat(groupsByEntryId, unmatched, anaBilgiEntries, aktifTadilatEntries, tadilatStateLookup);
-        AppendMissingProject(groupsByEntryId, unmatched, anaBilgiEntries, missingProjectEntries);
-        AppendKarot(groupsByEntryId, unmatched, anaBilgiEntries, karotEntries);
+        AppendTadilat(groupsByEntryId, groupsByWorkGroupId, unmatched, anaBilgiEntries, aktifTadilatEntries, tadilatStateLookup);
+        AppendMissingProject(groupsByEntryId, groupsByWorkGroupId, unmatched, anaBilgiEntries, missingProjectEntries);
+        AppendKarot(groupsByEntryId, groupsByWorkGroupId, unmatched, anaBilgiEntries, karotEntries);
 
         var result = groupsByEntryId.Values
             .Where(group => group.Items.Count > 0)
@@ -272,6 +272,7 @@ public sealed class TumEksiklerViewModel : ViewModelBase
 
     private static void AppendTadilat(
         IReadOnlyDictionary<Guid, EksikIsGroupViewModel> groupsByEntryId,
+        IReadOnlyDictionary<Guid, EksikIsGroupViewModel> groupsByWorkGroupId,
         EksikIsGroupViewModel unmatched,
         IReadOnlyList<YibfAnaBilgiEntry> anaBilgiEntries,
         IEnumerable<TadilatEntry> entries,
@@ -279,7 +280,12 @@ public sealed class TumEksiklerViewModel : ViewModelBase
     {
         foreach (var entry in entries)
         {
-            var group = ResolveGroup(anaBilgiEntries, groupsByEntryId, unmatched, CombineSearchText(entry.JobName, entry.ProjectType, entry.Description1, entry.Description2));
+            if (entry.SubTab != TadilatSubTab.Aktif)
+            {
+                continue;
+            }
+
+            var group = ResolveGroup(anaBilgiEntries, groupsByEntryId, groupsByWorkGroupId, unmatched, entry.ProjectId, CombineSearchText(entry.JobName, entry.ProjectType, entry.Description1, entry.Description2));
             var sourceContext = BuildSourceContext(
                 ("İlçe", entry.District),
                 ("İş", entry.JobName),
@@ -308,13 +314,14 @@ public sealed class TumEksiklerViewModel : ViewModelBase
 
     private static void AppendMissingProject(
         IReadOnlyDictionary<Guid, EksikIsGroupViewModel> groupsByEntryId,
+        IReadOnlyDictionary<Guid, EksikIsGroupViewModel> groupsByWorkGroupId,
         EksikIsGroupViewModel unmatched,
         IReadOnlyList<YibfAnaBilgiEntry> anaBilgiEntries,
         IEnumerable<MissingProjectEntry> entries)
     {
         foreach (var entry in entries)
         {
-            var group = ResolveGroup(anaBilgiEntries, groupsByEntryId, unmatched, CombineSearchText(entry.AdaParsel, entry.YapiSahibi));
+            var group = ResolveGroup(anaBilgiEntries, groupsByEntryId, groupsByWorkGroupId, unmatched, entry.ProjectId, CombineSearchText(entry.AdaParsel, entry.YapiSahibi));
             group.Items.Add(new EksikItemViewModel(
                 "Eksik Proje",
                 "Eksik Proje",
@@ -336,6 +343,7 @@ public sealed class TumEksiklerViewModel : ViewModelBase
 
     private static void AppendKarot(
         IReadOnlyDictionary<Guid, EksikIsGroupViewModel> groupsByEntryId,
+        IReadOnlyDictionary<Guid, EksikIsGroupViewModel> groupsByWorkGroupId,
         EksikIsGroupViewModel unmatched,
         IReadOnlyList<YibfAnaBilgiEntry> anaBilgiEntries,
         IEnumerable<KarotEntry> entries)
@@ -354,7 +362,7 @@ public sealed class TumEksiklerViewModel : ViewModelBase
                 continue;
             }
 
-            var group = ResolveGroup(anaBilgiEntries, groupsByEntryId, unmatched, CombineSearchText(entry.YibfNo, entry.AdaParsel, entry.YapiSahibi));
+            var group = ResolveGroup(anaBilgiEntries, groupsByEntryId, groupsByWorkGroupId, unmatched, entry.ProjectId, CombineSearchText(entry.YibfNo, entry.AdaParsel, entry.YapiSahibi));
             var reason = entry.Status switch
             {
                 KarotStatus.KarotAlindiOlumsuz => "Karot sonucu olumsuz",
@@ -426,9 +434,18 @@ public sealed class TumEksiklerViewModel : ViewModelBase
     private static EksikIsGroupViewModel ResolveGroup(
         IReadOnlyList<YibfAnaBilgiEntry> anaBilgiEntries,
         IReadOnlyDictionary<Guid, EksikIsGroupViewModel> groupsByEntryId,
+        IReadOnlyDictionary<Guid, EksikIsGroupViewModel> groupsByWorkGroupId,
         EksikIsGroupViewModel unmatched,
+        Guid? projectId,
         string sourceText)
     {
+        if (projectId is Guid linkedProjectId
+            && linkedProjectId != Guid.Empty
+            && groupsByWorkGroupId.TryGetValue(linkedProjectId, out var linkedGroup))
+        {
+            return linkedGroup;
+        }
+
         var match = anaBilgiEntries
             .Where(entry => IsIdentityMatch(sourceText, entry.YibfNo))
             .Take(2)
@@ -457,7 +474,7 @@ public sealed class TumEksiklerViewModel : ViewModelBase
             return group;
         }
 
-        return ResolveGroup(anaBilgiEntries, groupsByEntryId, unmatched, CombineSearchText(GetYibfIsTakibiValues(entry)));
+        return ResolveGroup(anaBilgiEntries, groupsByEntryId, groupsByWorkGroupId, unmatched, entry.WorkGroupId != Guid.Empty ? entry.WorkGroupId : null, CombineSearchText(GetYibfIsTakibiValues(entry)));
     }
 
     private void ApplyFilters()

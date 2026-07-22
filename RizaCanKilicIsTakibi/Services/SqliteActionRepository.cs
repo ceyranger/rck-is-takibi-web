@@ -1,4 +1,5 @@
 using Microsoft.Data.Sqlite;
+using RizaCanKilicIsTakibi.Helpers;
 using RizaCanKilicIsTakibi.Models;
 using RizaCanKilicIsTakibi.Services.Abstractions;
 using System.IO;
@@ -25,7 +26,7 @@ public sealed class SqliteActionRepository : IActionRepository
 
         await using var cmd = connection.CreateCommand();
         cmd.CommandText = @"
-SELECT Id, Category, District, OwnerParcelText, WorkText, DisplayOrder, CreatedAt, UpdatedAt
+SELECT Id, Category, District, OwnerParcelText, WorkText, DisplayOrder, CreatedAt, UpdatedAt, ProjectId
 FROM ActionEntries
 WHERE Category = $category AND IsDeleted = 0
 ORDER BY District, DisplayOrder, UpdatedAt DESC;";
@@ -43,7 +44,8 @@ ORDER BY District, DisplayOrder, UpdatedAt DESC;";
                 WorkText = reader.GetString(4),
                 DisplayOrder = reader.GetInt32(5),
                 CreatedAt = DateTime.Parse(reader.GetString(6)),
-                UpdatedAt = DateTime.Parse(reader.GetString(7))
+                UpdatedAt = DateTime.Parse(reader.GetString(7)),
+                ProjectId = SqliteGuidHelper.ParseNullable(reader.IsDBNull(8) ? null : reader.GetString(8))
             });
         }
 
@@ -64,8 +66,8 @@ ORDER BY District, DisplayOrder, UpdatedAt DESC;";
 
         await using var cmd = connection.CreateCommand();
         cmd.CommandText = @"
-INSERT INTO ActionEntries (Id, Category, District, OwnerParcelText, WorkText, DisplayOrder, CreatedAt, UpdatedAt)
-VALUES ($id, $category, $district, $ownerParcelText, $workText, $displayOrder, $createdAt, $updatedAt);";
+INSERT INTO ActionEntries (Id, Category, District, OwnerParcelText, WorkText, DisplayOrder, CreatedAt, UpdatedAt, ProjectId)
+VALUES ($id, $category, $district, $ownerParcelText, $workText, $displayOrder, $createdAt, $updatedAt, $projectId);";
         BindCommonParameters(cmd, entry);
         await cmd.ExecuteNonQueryAsync(cancellationToken);
     }
@@ -127,8 +129,8 @@ VALUES ($id, $category, $district, $ownerParcelText, $workText, $displayOrder, $
             await using var upsertEntry = connection.CreateCommand();
             upsertEntry.Transaction = transaction;
             upsertEntry.CommandText = @"
-INSERT INTO ActionEntries (Id, Category, District, OwnerParcelText, WorkText, DisplayOrder, CreatedAt, UpdatedAt)
-VALUES ($id, $category, $district, $ownerParcelText, $workText, $displayOrder, $createdAt, $updatedAt)
+INSERT INTO ActionEntries (Id, Category, District, OwnerParcelText, WorkText, DisplayOrder, CreatedAt, UpdatedAt, ProjectId)
+VALUES ($id, $category, $district, $ownerParcelText, $workText, $displayOrder, $createdAt, $updatedAt, $projectId)
 ON CONFLICT(Id) DO UPDATE SET
     Category = excluded.Category,
     District = excluded.District,
@@ -136,6 +138,7 @@ ON CONFLICT(Id) DO UPDATE SET
     WorkText = excluded.WorkText,
     DisplayOrder = excluded.DisplayOrder,
     UpdatedAt = excluded.UpdatedAt,
+    ProjectId = excluded.ProjectId,
     IsDeleted = 0;";
             BindCommonParameters(upsertEntry, entry);
             await upsertEntry.ExecuteNonQueryAsync(cancellationToken);
@@ -158,7 +161,8 @@ SET Category = $category,
     OwnerParcelText = $ownerParcelText,
     WorkText = $workText,
     DisplayOrder = $displayOrder,
-    UpdatedAt = $updatedAt
+    UpdatedAt = $updatedAt,
+    ProjectId = $projectId
 WHERE Id = $id;";
         BindCommonParameters(cmd, entry);
         await cmd.ExecuteNonQueryAsync(cancellationToken);
@@ -226,6 +230,7 @@ CREATE TABLE IF NOT EXISTS ActionEntries (
 
         cmd.ExecuteNonQuery();
         SqliteConnectionSettings.EnsureColumnExists(connection, "ActionEntries", "IsDeleted", "INTEGER NOT NULL DEFAULT 0");
+        SqliteConnectionSettings.EnsureColumnExists(connection, "ActionEntries", "ProjectId", "TEXT NOT NULL DEFAULT ''");
     }
 
     private static void BindCommonParameters(SqliteCommand cmd, ActionEntry entry)
@@ -238,5 +243,6 @@ CREATE TABLE IF NOT EXISTS ActionEntries (
         cmd.Parameters.AddWithValue("$displayOrder", entry.DisplayOrder);
         cmd.Parameters.AddWithValue("$createdAt", entry.CreatedAt.ToString("O"));
         cmd.Parameters.AddWithValue("$updatedAt", entry.UpdatedAt.ToString("O"));
+        cmd.Parameters.AddWithValue("$projectId", SqliteGuidHelper.ToDb(entry.ProjectId));
     }
 }

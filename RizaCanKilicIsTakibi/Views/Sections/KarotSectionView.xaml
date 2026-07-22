@@ -6,6 +6,7 @@
              xmlns:models="clr-namespace:RizaCanKilicIsTakibi.Models"
              xmlns:viewModels="clr-namespace:RizaCanKilicIsTakibi.ViewModels"
              xmlns:behaviors="clr-namespace:RizaCanKilicIsTakibi.Behaviors"
+             xmlns:viewControls="clr-namespace:RizaCanKilicIsTakibi.Views.Controls"
              mc:Ignorable="d">
     <UserControl.Resources>
             <ResourceDictionary>
@@ -109,6 +110,7 @@
         </Border>
 
         <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}" Margin="0,8,0,8">
+            <StackPanel>
             <DockPanel>
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                     <Button Content="BEKLEYEN"
@@ -158,6 +160,7 @@
                     </Border>
                 </WrapPanel>
             </DockPanel>
+            </StackPanel>
         </Border>
 
         <Grid Grid.Row="2" x:Name="KarotExportHost" UseLayoutRounding="True" SnapsToDevicePixels="True">

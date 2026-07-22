@@ -1,0 +1,273 @@
+<UserControl x:Class="RizaCanKilicIsTakibi.Views.Sections.SearchSectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="clr-namespace:RizaCanKilicIsTakibi.Models"
+             xmlns:behaviors="clr-namespace:RizaCanKilicIsTakibi.Behaviors"
+             mc:Ignorable="d"
+             d:DesignHeight="720"
+             d:DesignWidth="1180">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/RizaCanKilicIsTakibi;component/Views/Sections/Shared/SearchResultResources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="SearchResultListBoxItemStyle" TargetType="ListBoxItem">
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="Margin" Value="0"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                            <ContentPresenter/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Style="{StaticResource CardBorderStyle}">
+            <StackPanel>
+                <TextBlock Text="ARAMA"
+                           FontFamily="{StaticResource Font.Primary}"
+                           FontSize="24"
+                           FontWeight="SemiBold"/>
+                <TextBlock Text="Soldan sonucu seçin; sağda ayrıntıyı görün, ardından kayda gidin."
+                           Foreground="{StaticResource Brush.TextSecondary}"
+                           Margin="0,2,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="1" Margin="0,8,0,0" Style="{StaticResource CardBorderStyle}">
+            <StackPanel>
+                <WrapPanel Margin="0,0,0,12" Orientation="Horizontal">
+                    <Button Content="Klasik Arama"
+                            Command="{Binding SearchOverlay.SelectModeCommand}"
+                            CommandParameter="{x:Static models:SearchOverlayMode.Classic}">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SearchOverlay.SelectedMode}" Value="{x:Static models:SearchOverlayMode.Classic}">
+                                        <Setter Property="Background" Value="{StaticResource Brush.Primary}"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button Content="Akıllı Sorgu"
+                            Command="{Binding SearchOverlay.SelectModeCommand}"
+                            CommandParameter="{x:Static models:SearchOverlayMode.Assistant}">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SearchOverlay.SelectedMode}" Value="{x:Static models:SearchOverlayMode.Assistant}">
+                                        <Setter Property="Background" Value="{StaticResource Brush.Primary}"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </WrapPanel>
+
+                <TextBox x:Name="SearchQueryBox"
+                         Height="44"
+                         FontSize="16"
+                         Padding="12,8"
+                         Text="{Binding SearchOverlay.Query, UpdateSourceTrigger=PropertyChanged}"
+                         Visibility="{Binding SearchOverlay.IsClassicMode, Converter={StaticResource BooleanToVisibilityConverter}}"
+                         behaviors:FocusWhenVisibleBehavior.IsEnabled="True"/>
+
+                <Grid Visibility="{Binding SearchOverlay.IsAssistantMode, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="AssistantQueryBox"
+                             Grid.Column="0"
+                             Height="44"
+                             FontSize="16"
+                             Padding="12,8"
+                             Margin="0,0,8,0"
+                             VerticalContentAlignment="Center"
+                             Text="{Binding SearchOverlay.AssistantQuery, UpdateSourceTrigger=PropertyChanged}"
+                             behaviors:FocusWhenVisibleBehavior.IsEnabled="True">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding RunContextQueryCommand}"/>
+                        </TextBox.InputBindings>
+                    </TextBox>
+                    <Button Grid.Column="1"
+                            Content="Sor"
+                            MinWidth="96"
+                            Height="44"
+                            Command="{Binding RunContextQueryCommand}"
+                            Style="{StaticResource GhostButton}"/>
+                </Grid>
+
+                <WrapPanel Margin="0,12,0,0"
+                           Orientation="Horizontal"
+                           Visibility="{Binding SearchOverlay.IsClassicMode, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Button Content="Tümü" Command="{Binding SearchOverlay.SelectScopeCommand}" CommandParameter="{x:Static models:SearchScope.All}">
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource GhostButton}"><Style.Triggers><DataTrigger Binding="{Binding SearchOverlay.SelectedScope}" Value="{x:Static models:SearchScope.All}"><Setter Property="Background" Value="{StaticResource Brush.Primary}"/><Setter Property="Foreground" Value="White"/><Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/></DataTrigger></Style.Triggers></Style></Button.Style>
+                    </Button>
+                    <Button Content="Genel" Command="{Binding SearchOverlay.SelectScopeCommand}" CommandParameter="{x:Static models:SearchScope.GenelIsTakibi}">
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource GhostButton}"><Style.Triggers><DataTrigger Binding="{Binding SearchOverlay.SelectedScope}" Value="{x:Static models:SearchScope.GenelIsTakibi}"><Setter Property="Background" Value="{StaticResource Brush.Primary}"/><Setter Property="Foreground" Value="White"/><Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/></DataTrigger></Style.Triggers></Style></Button.Style>
+                    </Button>
+                    <Button Content="Aksiyon" Command="{Binding SearchOverlay.SelectScopeCommand}" CommandParameter="{x:Static models:SearchScope.Aksiyon}">
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource GhostButton}"><Style.Triggers><DataTrigger Binding="{Binding SearchOverlay.SelectedScope}" Value="{x:Static models:SearchScope.Aksiyon}"><Setter Property="Background" Value="{StaticResource Brush.Primary}"/><Setter Property="Foreground" Value="White"/><Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/></DataTrigger></Style.Triggers></Style></Button.Style>
+                    </Button>
+                    <Button Content="Eksik" Command="{Binding SearchOverlay.SelectScopeCommand}" CommandParameter="{x:Static models:SearchScope.EksikProje}">
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource GhostButton}"><Style.Triggers><DataTrigger Binding="{Binding SearchOverlay.SelectedScope}" Value="{x:Static models:SearchScope.EksikProje}"><Setter Property="Background" Value="{StaticResource Brush.Primary}"/><Setter Property="Foreground" Value="White"/><Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/></DataTrigger></Style.Triggers></Style></Button.Style>
+                    </Button>
+                    <Button Content="Karot" Command="{Binding SearchOverlay.SelectScopeCommand}" CommandParameter="{x:Static models:SearchScope.KarotTakibi}">
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource GhostButton}"><Style.Triggers><DataTrigger Binding="{Binding SearchOverlay.SelectedScope}" Value="{x:Static models:SearchScope.KarotTakibi}"><Setter Property="Background" Value="{StaticResource Brush.Primary}"/><Setter Property="Foreground" Value="White"/><Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/></DataTrigger></Style.Triggers></Style></Button.Style>
+                    </Button>
+                    <Button Content="Tadilat" Command="{Binding SearchOverlay.SelectScopeCommand}" CommandParameter="{x:Static models:SearchScope.TadilatTakibi}">
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource GhostButton}"><Style.Triggers><DataTrigger Binding="{Binding SearchOverlay.SelectedScope}" Value="{x:Static models:SearchScope.TadilatTakibi}"><Setter Property="Background" Value="{StaticResource Brush.Primary}"/><Setter Property="Foreground" Value="White"/><Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/></DataTrigger></Style.Triggers></Style></Button.Style>
+                    </Button>
+                    <Button Content="YİBF Ana" Command="{Binding SearchOverlay.SelectScopeCommand}" CommandParameter="{x:Static models:SearchScope.YibfAnaBilgi}">
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource GhostButton}"><Style.Triggers><DataTrigger Binding="{Binding SearchOverlay.SelectedScope}" Value="{x:Static models:SearchScope.YibfAnaBilgi}"><Setter Property="Background" Value="{StaticResource Brush.Primary}"/><Setter Property="Foreground" Value="White"/><Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/></DataTrigger></Style.Triggers></Style></Button.Style>
+                    </Button>
+                    <Button Content="YİBF İş" Command="{Binding SearchOverlay.SelectScopeCommand}" CommandParameter="{x:Static models:SearchScope.YibfIsTakibi}">
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource GhostButton}"><Style.Triggers><DataTrigger Binding="{Binding SearchOverlay.SelectedScope}" Value="{x:Static models:SearchScope.YibfIsTakibi}"><Setter Property="Background" Value="{StaticResource Brush.Primary}"/><Setter Property="Foreground" Value="White"/><Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/></DataTrigger></Style.Triggers></Style></Button.Style>
+                    </Button>
+                </WrapPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Klasik: sol liste + sağ detay -->
+        <Grid Grid.Row="2"
+              Margin="0,8,0,0"
+              Visibility="{Binding SearchOverlay.IsClassicMode, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="360" MinWidth="280" MaxWidth="420"/>
+                <ColumnDefinition Width="8"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Style="{StaticResource CardBorderStyle}" Padding="10">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top"
+                               Text="Sonuçlar"
+                               FontWeight="SemiBold"
+                               Margin="0,0,0,8"/>
+                    <TextBlock DockPanel.Dock="Top"
+                               Text="Aramak için yukarıya bir terim yazın."
+                               Foreground="{StaticResource Brush.TextSecondary}"
+                               Margin="0,8,0,0"
+                               TextWrapping="Wrap"
+                               Visibility="{Binding SearchOverlay.ShowClassicEmptyHint, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <TextBlock DockPanel.Dock="Top"
+                               Text="Eşleşen kayıt bulunamadı."
+                               Foreground="{StaticResource Brush.TextSecondary}"
+                               Margin="0,8,0,0"
+                               Visibility="{Binding SearchOverlay.HasNoClassicResults, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <ListBox ItemsSource="{Binding SearchOverlay.Results}"
+                             SelectedItem="{Binding SearchOverlay.SelectedResult, Mode=TwoWay}"
+                             BorderThickness="0"
+                             Background="Transparent"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             ItemContainerStyle="{StaticResource SearchResultListBoxItemStyle}"
+                             ItemTemplate="{StaticResource SearchResultListItemTemplate}"
+                             Visibility="{Binding SearchOverlay.HasPrimaryResults, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <ListBox.InputBindings>
+                            <KeyBinding Key="Enter"
+                                        Command="{Binding SelectSearchResultCommand}"
+                                        CommandParameter="{Binding SearchOverlay.SelectedResult}"/>
+                        </ListBox.InputBindings>
+                    </ListBox>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Column="2" Style="{StaticResource CardBorderStyle}" Padding="16">
+                <Grid>
+                    <ContentControl Content="{Binding SearchOverlay.SelectedResult}"
+                                    ContentTemplate="{StaticResource SearchResultDetailTemplate}">
+                        <ContentControl.Style>
+                            <Style TargetType="ContentControl">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SearchOverlay.HasSelectedResult}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility" Value="Visible"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SearchOverlay.HasSelectedResult}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <TextBlock Text="Detay paneli"
+                                   FontWeight="SemiBold"
+                                   FontSize="16"
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="Soldaki listeden bir sonuç seçin."
+                                   Foreground="{StaticResource Brush.TextSecondary}"
+                                   Margin="0,6,0,0"
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Akıllı sorgu paneli -->
+        <Border Grid.Row="2"
+                Margin="0,8,0,0"
+                Style="{StaticResource CardBorderStyle}"
+                Visibility="{Binding SearchOverlay.IsAssistantMode, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="4">
+                <StackPanel>
+                    <TextBlock Text="{Binding SearchOverlay.AssistantAnswer}"
+                               FontWeight="SemiBold"
+                               TextWrapping="Wrap"
+                               Visibility="{Binding SearchOverlay.HasAssistantAnswer, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <TextBlock Text="{Binding SearchOverlay.AssistantExplanation}"
+                               Foreground="{StaticResource Brush.TextSecondary}"
+                               Margin="0,8,0,0"
+                               TextWrapping="Wrap"
+                               Visibility="{Binding SearchOverlay.HasAssistantExplanation, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <Grid Margin="0,14,0,0" Visibility="{Binding SearchOverlay.HasAssistantSources, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="360" MinWidth="280" MaxWidth="420"/>
+                            <ColumnDefinition Width="8"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <ListBox Grid.Column="0"
+                                 ItemsSource="{Binding SearchOverlay.AssistantSources}"
+                                 SelectedItem="{Binding SearchOverlay.SelectedResult, Mode=TwoWay}"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 ItemContainerStyle="{StaticResource SearchResultListBoxItemStyle}"
+                                 ItemTemplate="{StaticResource SearchResultListItemTemplate}"/>
+                        <ContentControl Grid.Column="2"
+                                        Content="{Binding SearchOverlay.SelectedResult}"
+                                        ContentTemplate="{StaticResource SearchResultDetailTemplate}"/>
+                    </Grid>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</UserControl>

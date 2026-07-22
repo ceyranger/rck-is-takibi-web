@@ -35,6 +35,7 @@ public sealed class MissingProjectModuleViewModel : ViewModelBase
     private const string LegacyPaleGrayColor = "#FFE8ECF2";
 
     private readonly IMissingProjectRepository _repository;
+    private readonly IMissingProjectEntryDialogService? _entryDialogService;
     private readonly INotificationService _notificationService;
     private readonly IConfirmationService _confirmationService;
     private readonly ITadilatCellNoteDialogService _noteDialogService;
@@ -60,9 +61,11 @@ public sealed class MissingProjectModuleViewModel : ViewModelBase
         ITadilatCellNoteDialogService noteDialogService,
         IUndoRedoService undoRedoService,
         AppSettings settings,
-        IClipboardService? clipboardService = null)
+        IClipboardService? clipboardService = null,
+        IMissingProjectEntryDialogService? entryDialogService = null)
     {
         _repository = repository;
+        _entryDialogService = entryDialogService;
         _notificationService = notificationService;
         _confirmationService = confirmationService;
         _noteDialogService = noteDialogService;
@@ -117,6 +120,8 @@ public sealed class MissingProjectModuleViewModel : ViewModelBase
             }
         }
     }
+
+    public void MarkDirty() => HasUnsavedChanges = true;
 
     public MissingProjectEntry? SelectedEntry
     {
@@ -262,6 +267,26 @@ public sealed class MissingProjectModuleViewModel : ViewModelBase
 
     private async Task AddEntryAsync()
     {
+        if (_entryDialogService is not null)
+        {
+            var created = await _entryDialogService.ShowDialogAsync();
+            if (created is null)
+            {
+                return;
+            }
+
+            ExecuteUndoableMutation("Eksik proje kayıt ekle", () =>
+            {
+                created.DisplayOrder = Entries.Count;
+                Entries.Add(created);
+                RefreshRows();
+                SelectedEntry = created;
+                HasUnsavedChanges = true;
+            });
+            _notificationService.ShowToast("Eksik proje kaydı eklendi.", ToastType.Success);
+            return;
+        }
+
         ExecuteUndoableMutation("Eksik proje kayıt ekle", () =>
         {
             var entry = new MissingProjectEntry
@@ -286,20 +311,38 @@ public sealed class MissingProjectModuleViewModel : ViewModelBase
         await Task.CompletedTask;
     }
 
-    private Task InsertEntryRelativeAsync(MissingProjectEntry? anchorEntry, bool insertAfter)
+    private async Task InsertEntryRelativeAsync(MissingProjectEntry? anchorEntry, bool insertAfter)
     {
         if (anchorEntry is null)
         {
-            return Task.CompletedTask;
+            return;
         }
 
         var anchor = Entries.FirstOrDefault(item => item.Id == anchorEntry.Id);
         if (anchor is null)
         {
-            return Task.CompletedTask;
+            return;
         }
 
         SelectedEntry = anchor;
+
+        if (_entryDialogService is not null)
+        {
+            var created = await _entryDialogService.ShowDialogAsync();
+            if (created is null)
+            {
+                return;
+            }
+
+            ExecuteUndoableMutation(
+                insertAfter ? "Eksik proje alta kayıt ekle" : "Eksik proje üste kayıt ekle",
+                () => InsertCreatedEntryRelative(anchor, created, insertAfter));
+
+            _notificationService.ShowToast(
+                insertAfter ? "Seçili satırın altına kayıt eklendi." : "Seçili satırın üstüne kayıt eklendi.",
+                ToastType.Success);
+            return;
+        }
 
         ExecuteUndoableMutation(
             insertAfter ? "Eksik proje alta kayıt ekle" : "Eksik proje üste kayıt ekle",
@@ -345,7 +388,32 @@ public sealed class MissingProjectModuleViewModel : ViewModelBase
         _notificationService.ShowToast(
             insertAfter ? "Seçili satırın altına kayıt eklendi." : "Seçili satırın üstüne kayıt eklendi.",
             ToastType.Success);
-        return Task.CompletedTask;
+    }
+
+    private void InsertCreatedEntryRelative(MissingProjectEntry anchor, MissingProjectEntry created, bool insertAfter)
+    {
+        var ordered = Entries
+            .OrderBy(item => item.DisplayOrder)
+            .ThenBy(item => item.UpdatedAt)
+            .ToList();
+        var anchorIndex = ordered.FindIndex(item => item.Id == anchor.Id);
+        if (anchorIndex < 0)
+        {
+            return;
+        }
+
+        var insertIndex = insertAfter ? anchorIndex + 1 : anchorIndex;
+        ordered.Insert(insertIndex, created);
+        for (var index = 0; index < ordered.Count; index++)
+        {
+            ordered[index].DisplayOrder = index;
+            ordered[index].UpdatedAt = DateTime.Now;
+        }
+
+        Entries.ReplaceRange(ordered);
+        RefreshRows();
+        SelectedEntry = created;
+        HasUnsavedChanges = true;
     }
 
     private void MoveEntry(MissingProjectEntry? entry, int direction)

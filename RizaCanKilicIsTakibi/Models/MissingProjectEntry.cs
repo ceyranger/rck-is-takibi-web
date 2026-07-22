@@ -5,6 +5,7 @@ namespace RizaCanKilicIsTakibi.Models;
 public sealed class MissingProjectEntry : ObservableObject
 {
     private Guid _id = Guid.NewGuid();
+    private Guid? _projectId;
     private string _adaParsel = string.Empty;
     private string _yapiSahibi = string.Empty;
     private MissingProjectMedium _recordMedium = MissingProjectMedium.Fiziki;
@@ -19,6 +20,12 @@ public sealed class MissingProjectEntry : ObservableObject
     {
         get => _id;
         set => SetProperty(ref _id, value);
+    }
+
+    public Guid? ProjectId
+    {
+        get => _projectId;
+        set => SetProperty(ref _projectId, value);
     }
 
     public string AdaParsel

@@ -8,12 +8,27 @@ namespace RizaCanKilicIsTakibi.Services;
 
 public sealed class YibfAnaBilgiEntryDialogService : IYibfAnaBilgiEntryDialogService
 {
+    private readonly IProjectCatalogUiState _catalogUiState;
+    private readonly IProjectCatalogService _catalogService;
+
+    public YibfAnaBilgiEntryDialogService(
+        IProjectCatalogUiState catalogUiState,
+        IProjectCatalogService catalogService)
+    {
+        _catalogUiState = catalogUiState;
+        _catalogService = catalogService;
+    }
+
     public Task<YibfAnaBilgiEntryDialogResult?> ShowDialogAsync(
         YibfAnaBilgiEntryDialogResult? initialValues = null,
         bool isEditMode = false,
         CancellationToken cancellationToken = default)
     {
-        var viewModel = new YibfAnaBilgiEntryDialogViewModel(initialValues, isEditMode);
+        var viewModel = new YibfAnaBilgiEntryDialogViewModel(
+            _catalogUiState.GetActiveEntries(),
+            _catalogService,
+            initialValues,
+            isEditMode);
         var window = new YibfAnaBilgiEntryWindow(viewModel)
         {
             Owner = Application.Current?.Windows.OfType<Window>().FirstOrDefault(item => item.IsActive)

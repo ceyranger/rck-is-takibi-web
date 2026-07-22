@@ -19,6 +19,7 @@ public interface IBackupService
         IEnumerable<YibfCellState>? yibfCellStates = null,
         IEnumerable<TadilatCellState>? tadilatCellStates = null,
         IEnumerable<QuickTaskTemplate>? quickTaskTemplates = null,
+        IEnumerable<ProjectCatalogEntry>? projectCatalogEntries = null,
         CancellationToken cancellationToken = default);
 
     Task<BackupRestoreData> RestoreBackupAsync(string backupPath, CancellationToken cancellationToken = default);

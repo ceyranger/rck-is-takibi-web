@@ -1,19 +1,29 @@
 using CommunityToolkit.Mvvm.Input;
 using RizaCanKilicIsTakibi.Helpers;
 using RizaCanKilicIsTakibi.Models;
+using RizaCanKilicIsTakibi.Services.Abstractions;
+using System.Collections.ObjectModel;
 
 namespace RizaCanKilicIsTakibi.ViewModels;
 
 public sealed class AddActionEntryDialogViewModel : ViewModelBase
 {
+    private readonly IProjectCatalogService _catalogService;
     private string _ownerParcelText = string.Empty;
     private string _workText = string.Empty;
+    private Guid? _selectedProjectId;
     private string _validationMessage = string.Empty;
 
-    public AddActionEntryDialogViewModel(string district, ActionEntryCategory category)
+    public AddActionEntryDialogViewModel(
+        string district,
+        ActionEntryCategory category,
+        IEnumerable<ProjectCatalogEntry> catalogEntries,
+        IProjectCatalogService catalogService)
     {
         District = district;
         Category = category;
+        _catalogService = catalogService;
+        CatalogEntries = new ObservableCollection<ProjectCatalogEntry>(catalogEntries);
 
         SaveCommand = new RelayCommand(Save);
         CancelCommand = new RelayCommand(() => RequestClose?.Invoke(this, false));
@@ -24,6 +34,22 @@ public sealed class AddActionEntryDialogViewModel : ViewModelBase
     public string District { get; }
 
     public ActionEntryCategory Category { get; }
+
+    public ObservableCollection<ProjectCatalogEntry> CatalogEntries { get; }
+
+    public Guid? SelectedProjectId
+    {
+        get => _selectedProjectId;
+        set
+        {
+            if (!SetProperty(ref _selectedProjectId, value))
+            {
+                return;
+            }
+
+            ApplySelectedProject();
+        }
+    }
 
     public string OwnerParcelText
     {
@@ -49,7 +75,7 @@ public sealed class AddActionEntryDialogViewModel : ViewModelBase
 
     public ActionEntry BuildEntry(int displayOrder)
     {
-        return new ActionEntry
+        var entry = new ActionEntry
         {
             Id = Guid.NewGuid(),
             Category = Category,
@@ -60,6 +86,44 @@ public sealed class AddActionEntryDialogViewModel : ViewModelBase
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
         };
+
+        if (SelectedProjectId is Guid projectId)
+        {
+            var project = CatalogEntries.FirstOrDefault(item => item.Id == projectId);
+            if (project is not null)
+            {
+                _catalogService.ApplyProjectSelection(entry, project);
+            }
+            else
+            {
+                entry.ProjectId = projectId;
+            }
+        }
+
+        return entry;
+    }
+
+    private void ApplySelectedProject()
+    {
+        if (SelectedProjectId is not Guid projectId)
+        {
+            return;
+        }
+
+        var project = CatalogEntries.FirstOrDefault(item => item.Id == projectId);
+        if (project is null)
+        {
+            return;
+        }
+
+        var temp = new ActionEntry
+        {
+            OwnerParcelText = OwnerParcelText,
+            WorkText = WorkText
+        };
+        _catalogService.ApplyProjectSelection(temp, project);
+        OwnerParcelText = temp.OwnerParcelText;
+        WorkText = temp.WorkText;
     }
 
     private void Save()

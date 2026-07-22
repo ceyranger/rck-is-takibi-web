@@ -59,6 +59,7 @@ public sealed class TadilatModuleViewModel : ViewModelBase
     private readonly ITadilatRepository _repository;
     private readonly ITadilatImportService _importService;
     private readonly IFileDialogService _fileDialogService;
+    private readonly ITadilatEntryDialogService? _entryDialogService;
     private readonly INotificationService _notificationService;
     private readonly IConfirmationService _confirmationService;
     private readonly ITadilatCellNoteDialogService _noteDialogService;
@@ -91,11 +92,13 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         IConfirmationService confirmationService,
         ITadilatCellNoteDialogService noteDialogService,
         IUndoRedoService undoRedoService,
-        IClipboardService? clipboardService = null)
+        IClipboardService? clipboardService = null,
+        ITadilatEntryDialogService? entryDialogService = null)
     {
         _repository = repository;
         _importService = importService;
         _fileDialogService = fileDialogService;
+        _entryDialogService = entryDialogService;
         _notificationService = notificationService;
         _confirmationService = confirmationService;
         _noteDialogService = noteDialogService;
@@ -193,6 +196,8 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         get => _hasUnsavedChanges;
         private set => SetProperty(ref _hasUnsavedChanges, value);
     }
+
+    public void MarkDirty() => HasUnsavedChanges = true;
 
     public TadilatSubTab SelectedSubTab
     {
@@ -436,6 +441,30 @@ public sealed class TadilatModuleViewModel : ViewModelBase
 
         EnsureDistrictExists(targetDistrict);
 
+        if (_entryDialogService is not null)
+        {
+            var created = await _entryDialogService.ShowDialogAsync(targetDistrict, SelectedSubTab);
+            if (created is null)
+            {
+                return;
+            }
+
+            ExecuteUndoableMutation("Tadilat satır ekle", () =>
+            {
+                var collection = GetCurrentCollection();
+                created.SubTab = SelectedSubTab;
+                created.District = targetDistrict;
+                created.DisplayOrder = NextDisplayOrder(collection, targetDistrict);
+                collection.Add(created);
+                NormalizeDistrictOrder(collection, targetDistrict);
+                SelectedEntry = created;
+                HasUnsavedChanges = true;
+                RefreshDistrictGroups();
+            });
+            _notificationService.ShowToast("Tadilat satırı eklendi.", ToastType.Success, TimeSpan.FromSeconds(2));
+            return;
+        }
+
         ExecuteUndoableMutation("Tadilat satır ekle", () =>
         {
             var collection = GetCurrentCollection();
@@ -536,15 +565,34 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         await Task.CompletedTask;
     }
 
-    private Task InsertEntryRelativeAsync(TadilatEntry? anchorEntry, bool insertAfter)
+    private async Task InsertEntryRelativeAsync(TadilatEntry? anchorEntry, bool insertAfter)
     {
         var anchor = ResolveCurrentEntry(anchorEntry);
         if (anchor is null || anchor.SubTab != SelectedSubTab)
         {
-            return Task.CompletedTask;
+            return;
         }
 
         SelectedEntry = anchor;
+
+        if (_entryDialogService is not null)
+        {
+            var created = await _entryDialogService.ShowDialogAsync(anchor.District, SelectedSubTab);
+            if (created is null)
+            {
+                return;
+            }
+
+            ExecuteUndoableMutation(
+                insertAfter ? "Tadilat alta satır ekle" : "Tadilat üste satır ekle",
+                () => InsertCreatedEntryRelative(anchor, created, insertAfter));
+
+            _notificationService.ShowToast(
+                insertAfter ? "Seçili satırın altına kayıt eklendi." : "Seçili satırın üstüne kayıt eklendi.",
+                ToastType.Success,
+                TimeSpan.FromSeconds(2));
+            return;
+        }
 
         ExecuteUndoableMutation(
             insertAfter ? "Tadilat alta satır ekle" : "Tadilat üste satır ekle",
@@ -589,7 +637,36 @@ public sealed class TadilatModuleViewModel : ViewModelBase
             insertAfter ? "Seçili satırın altına kayıt eklendi." : "Seçili satırın üstüne kayıt eklendi.",
             ToastType.Success,
             TimeSpan.FromSeconds(2));
-        return Task.CompletedTask;
+    }
+
+    private void InsertCreatedEntryRelative(TadilatEntry anchor, TadilatEntry created, bool insertAfter)
+    {
+        CloseAllEditors();
+
+        var collection = GetCollection(anchor.SubTab);
+        var liveAnchor = collection.FirstOrDefault(item => item.Id == anchor.Id);
+        if (liveAnchor is null)
+        {
+            return;
+        }
+
+        var insertOrder = liveAnchor.DisplayOrder + (insertAfter ? 1 : 0);
+        foreach (var item in collection.Where(item =>
+                     item.District.Equals(liveAnchor.District, StringComparison.OrdinalIgnoreCase)
+                     && item.DisplayOrder >= insertOrder))
+        {
+            item.DisplayOrder++;
+            item.UpdatedAt = DateTime.Now;
+        }
+
+        created.SubTab = SelectedSubTab;
+        created.District = liveAnchor.District;
+        created.DisplayOrder = insertOrder;
+        collection.Add(created);
+        NormalizeDistrictOrder(collection, liveAnchor.District);
+        SelectedEntry = created;
+        HasUnsavedChanges = true;
+        RefreshDistrictGroups();
     }
 
     private async Task MoveEntryAsync(TadilatEntry? entry, int direction)

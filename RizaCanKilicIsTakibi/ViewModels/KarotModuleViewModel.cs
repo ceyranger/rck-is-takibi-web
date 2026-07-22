@@ -40,6 +40,7 @@ public sealed class KarotModuleViewModel : ViewModelBase
 
     private readonly IKarotRepository _repository;
     private readonly IKarotStatusDialogService _statusDialogService;
+    private readonly IKarotEntryDialogService? _entryDialogService;
     private readonly INotificationService _notificationService;
     private readonly IConfirmationService _confirmationService;
     private readonly ITadilatCellNoteDialogService _noteDialogService;
@@ -69,10 +70,12 @@ public sealed class KarotModuleViewModel : ViewModelBase
         IConfirmationService confirmationService,
         ITadilatCellNoteDialogService noteDialogService,
         IUndoRedoService undoRedoService,
-        IClipboardService? clipboardService = null)
+        IClipboardService? clipboardService = null,
+        IKarotEntryDialogService? entryDialogService = null)
     {
         _repository = repository;
         _statusDialogService = statusDialogService;
+        _entryDialogService = entryDialogService;
         _notificationService = notificationService;
         _confirmationService = confirmationService;
         _noteDialogService = noteDialogService;
@@ -155,6 +158,8 @@ public sealed class KarotModuleViewModel : ViewModelBase
         get => _hasUnsavedChanges;
         private set => SetProperty(ref _hasUnsavedChanges, value);
     }
+
+    public void MarkDirty() => HasUnsavedChanges = true;
 
     public int VisibleEntryCount => VisibleEntries.Count;
 
@@ -268,6 +273,28 @@ public sealed class KarotModuleViewModel : ViewModelBase
 
         try
         {
+            if (_entryDialogService is not null)
+            {
+                CollapseBlankDraftEntries();
+                var created = await _entryDialogService.ShowDialogAsync(SelectedSubTab);
+                if (created is null)
+                {
+                    return;
+                }
+
+                ExecuteUndoableMutation("Karot kayıt ekle", () =>
+                {
+                    created.DisplayOrder = Entries.Count;
+                    Entries.Add(created);
+                    NormalizeDisplayOrder();
+                    EnsureEntryVisible(created);
+                    SelectedEntry = created;
+                    HasUnsavedChanges = true;
+                });
+                _notificationService.ShowToast("Karot kaydı eklendi.", ToastType.Success, TimeSpan.FromSeconds(2));
+                return;
+            }
+
             CollapseBlankDraftEntries();
             var reusableEntry = FindReusableDraftEntry();
             if (reusableEntry is not null)
@@ -479,20 +506,39 @@ public sealed class KarotModuleViewModel : ViewModelBase
             ? status is not KarotStatus.KarotAlindiOlumlu
             : status == KarotStatus.KarotAlindiOlumlu;
 
-    private Task InsertEntryRelativeAsync(KarotEntry? anchorEntry, bool insertAfter)
+    private async Task InsertEntryRelativeAsync(KarotEntry? anchorEntry, bool insertAfter)
     {
         if (anchorEntry is null)
         {
-            return Task.CompletedTask;
+            return;
         }
 
         var anchor = Entries.FirstOrDefault(item => item.Id == anchorEntry.Id);
         if (anchor is null)
         {
-            return Task.CompletedTask;
+            return;
         }
 
         SelectedEntry = anchor;
+
+        if (_entryDialogService is not null)
+        {
+            var created = await _entryDialogService.ShowDialogAsync(SelectedSubTab);
+            if (created is null)
+            {
+                return;
+            }
+
+            ExecuteUndoableMutation(
+                insertAfter ? "Karot alta kayıt ekle" : "Karot üste kayıt ekle",
+                () => InsertCreatedEntryRelative(anchor, created, insertAfter));
+
+            _notificationService.ShowToast(
+                insertAfter ? "Seçili satırın altına kayıt eklendi." : "Seçili satırın üstüne kayıt eklendi.",
+                ToastType.Success,
+                TimeSpan.FromSeconds(2));
+            return;
+        }
 
         ExecuteUndoableMutation(
             insertAfter ? "Karot alta kayıt ekle" : "Karot üste kayıt ekle",
@@ -532,7 +578,29 @@ public sealed class KarotModuleViewModel : ViewModelBase
             insertAfter ? "Seçili satırın altına kayıt eklendi." : "Seçili satırın üstüne kayıt eklendi.",
             ToastType.Success,
             TimeSpan.FromSeconds(2));
-        return Task.CompletedTask;
+    }
+
+    private void InsertCreatedEntryRelative(KarotEntry anchor, KarotEntry created, bool insertAfter)
+    {
+        var liveAnchor = Entries.FirstOrDefault(item => item.Id == anchor.Id);
+        if (liveAnchor is null)
+        {
+            return;
+        }
+
+        var insertOrder = liveAnchor.DisplayOrder + (insertAfter ? 1 : 0);
+        foreach (var item in Entries.Where(item => item.DisplayOrder >= insertOrder))
+        {
+            item.DisplayOrder++;
+            item.UpdatedAt = DateTime.Now;
+        }
+
+        created.DisplayOrder = insertOrder;
+        Entries.Add(created);
+        NormalizeDisplayOrder();
+        EnsureEntryVisible(created);
+        SelectedEntry = created;
+        HasUnsavedChanges = true;
     }
 
     private void MoveEntry(KarotEntry? entry, int direction)

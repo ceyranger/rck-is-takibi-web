@@ -55,14 +55,16 @@ public static class YibfWorkIdentityService
             }
 
             var match = Classify(entry, anaBilgiEntries);
-            var nextGroupId = entry.Id;
-            var nextIdentityId = entry.Id;
-            var nextVariantLabel = string.Empty;
+            // Katalog fan-out / elle bağlanmış kimlikleri koru; eşleşmeyen satırlarda sıfırlama.
+            var nextGroupId = entry.WorkGroupId != Guid.Empty ? entry.WorkGroupId : entry.Id;
+            var nextIdentityId = entry.WorkIdentityId != Guid.Empty ? entry.WorkIdentityId : entry.Id;
+            var nextVariantLabel = entry.WorkVariantLabel ?? string.Empty;
 
             if (match.Kind == YibfWorkIdentityMatchKind.ExactBase && match.AnaBilgiEntry is not null)
             {
                 nextGroupId = match.AnaBilgiEntry.WorkGroupId == Guid.Empty ? match.AnaBilgiEntry.Id : match.AnaBilgiEntry.WorkGroupId;
                 nextIdentityId = match.AnaBilgiEntry.WorkIdentityId == Guid.Empty ? match.AnaBilgiEntry.Id : match.AnaBilgiEntry.WorkIdentityId;
+                nextVariantLabel = string.Empty;
             }
             else if (match.Kind == YibfWorkIdentityMatchKind.Variant && match.AnaBilgiEntry is not null)
             {

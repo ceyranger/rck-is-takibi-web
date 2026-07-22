@@ -1,0 +1,70 @@
+<Window x:Class="RizaCanKilicIsTakibi.Views.YibfIsTakibiEntryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:RizaCanKilicIsTakibi.Views.Controls"
+        Title="YİBF İş Takibi Kaydı Ekle"
+        Width="620"
+        Height="520"
+        MinWidth="560"
+        MinHeight="440"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResizeWithGrip"
+        Background="{StaticResource Brush.AppBackground}">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Text="Yeni YİBF İş Takibi Kaydı"
+                   FontFamily="{StaticResource Font.Primary}"
+                   FontWeight="SemiBold"
+                   FontSize="22"
+                   Margin="0,0,0,10" />
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel>
+                <TextBlock Text="Proje (isteğe bağlı)" FontWeight="SemiBold" />
+                <controls:ProjectPickerControl Margin="0,4,0,8"
+                                               SelectedProjectId="{Binding SelectedProjectId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                               Catalog="{Binding CatalogEntries}" />
+
+                <TextBlock Text="İşin İsmi" FontWeight="SemiBold" />
+                <TextBox Margin="0,4,0,8" Text="{Binding JobName, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBlock Text="İş Varyant Etiketi" FontWeight="SemiBold" />
+                <TextBox Margin="0,4,0,8" Text="{Binding WorkVariantLabel, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBlock Text="Belediye" FontWeight="SemiBold" />
+                <TextBox Margin="0,4,0,8"
+                         Text="{Binding Belediye}"
+                         IsReadOnly="True"
+                         Opacity="0.9" />
+
+                <TextBlock Text="Müteahhit" FontWeight="SemiBold" />
+                <TextBox Margin="0,4,0,8"
+                         Text="{Binding Muteahhit}"
+                         IsReadOnly="True"
+                         Opacity="0.9" />
+
+                <TextBlock Text="{Binding ValidationMessage}"
+                           Foreground="{StaticResource Brush.Danger}"
+                           Margin="0,2,0,4"
+                           TextWrapping="Wrap" />
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Content="İptal"
+                    Style="{StaticResource GhostButton}"
+                    Width="96"
+                    Margin="0,0,8,0"
+                    Command="{Binding CancelCommand}" />
+            <Button Content="Kaydet"
+                    Width="120"
+                    Command="{Binding SaveCommand}" />
+        </StackPanel>
+    </Grid>
+</Window>
