@@ -27,14 +27,12 @@
             <TextBlock Text="Program beklenmedik şekilde kapanmış olabilir. Kaydedilmemiş oturum bulundu."
                        TextWrapping="Wrap"
                        Foreground="{StaticResource Brush.TextSecondary}"/>
-            <TextBlock Margin="0,8,0,0" TextWrapping="Wrap">
-                <Run Text="Son başarılı kayıt: "/>
-                <Run Text="{Binding LastSuccessfulSaveText}" FontWeight="SemiBold"/>
-            </TextBlock>
-            <TextBlock Margin="0,4,0,0" TextWrapping="Wrap">
-                <Run Text="Kurtarma anı: "/>
-                <Run Text="{Binding RecoveryCreatedText}" FontWeight="SemiBold"/>
-            </TextBlock>
+            <TextBlock Margin="0,8,0,0"
+                       TextWrapping="Wrap"
+                       Text="{Binding LastSuccessfulSaveText, Mode=OneWay, StringFormat=Son başarılı kayıt: {0}}"/>
+            <TextBlock Margin="0,4,0,0"
+                       TextWrapping="Wrap"
+                       Text="{Binding RecoveryCreatedText, Mode=OneWay, StringFormat=Kurtarma anı: {0}}"/>
         </StackPanel>
 
         <Border Grid.Row="2"
