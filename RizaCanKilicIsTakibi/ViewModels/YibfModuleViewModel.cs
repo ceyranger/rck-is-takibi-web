@@ -53,6 +53,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
     private string _pendingApprovalFilter = YibfAnaBilgiApprovalStatuses.FilterAll;
     private readonly Dictionary<Guid, YibfAnaBilgiListItemViewModel> _allJobLookup = [];
     private readonly Dictionary<Guid, YibfPendingItemViewModel> _pendingLookup = [];
+    private readonly Dictionary<Guid, YibfPendingGroupViewModel> _pendingGroupLookup = [];
     private readonly Dictionary<Guid, YibfTimelineEventViewModel> _visibleEventLookup = [];
     private readonly Dictionary<Guid, YibfIsTakibiRow> _isTakibiRowLookup = [];
     private readonly Dictionary<string, YibfCellState> _cellStateLookup = new(StringComparer.OrdinalIgnoreCase);
@@ -100,6 +101,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
         IsTakibiEntries = [];
         CellStates = [];
         BekleyenIsler = [];
+        BekleyenGruplar = [];
         TumIsler = [];
         VisibleEvents = [];
         IsTakibiRows = [];
@@ -109,6 +111,9 @@ public sealed class YibfModuleViewModel : ViewModelBase
 
         FilteredBekleyenIslerView = CollectionViewSource.GetDefaultView(BekleyenIsler);
         FilteredBekleyenIslerView.Filter = FilterPendingApprovalItems;
+
+        FilteredBekleyenGruplarView = CollectionViewSource.GetDefaultView(BekleyenGruplar);
+        FilteredBekleyenGruplarView.Filter = FilterPendingApprovalGroups;
 
         SelectAnaBilgiEntryCommand = new RelayCommand<YibfAnaBilgiEntry?>(entry => SelectedAnaBilgiEntry = entry);
         SelectAnaBilgiEventCommand = new RelayCommand<YibfAnaBilgiEvent?>(item => SelectedAnaBilgiEvent = item);
@@ -150,11 +155,13 @@ public sealed class YibfModuleViewModel : ViewModelBase
     public ObservableRangeCollection<YibfIsTakibiEntry> IsTakibiEntries { get; }
     public ObservableRangeCollection<YibfCellState> CellStates { get; }
     public ObservableRangeCollection<YibfPendingItemViewModel> BekleyenIsler { get; }
+    public ObservableRangeCollection<YibfPendingGroupViewModel> BekleyenGruplar { get; }
     public ObservableRangeCollection<YibfAnaBilgiListItemViewModel> TumIsler { get; }
     public ObservableRangeCollection<YibfTimelineEventViewModel> VisibleEvents { get; }
     public ObservableRangeCollection<YibfIsTakibiRow> IsTakibiRows { get; }
     public ICollectionView TumIslerView { get; }
     public ICollectionView FilteredBekleyenIslerView { get; }
+    public ICollectionView FilteredBekleyenGruplarView { get; }
 
     public bool HasUnsavedChanges
     {
@@ -270,7 +277,10 @@ public sealed class YibfModuleViewModel : ViewModelBase
             }
 
             FilteredBekleyenIslerView.Refresh();
+            ApplyPendingFilterToGroups();
+            FilteredBekleyenGruplarView.Refresh();
             OnPropertyChanged(nameof(FilteredBekleyenIslerCount));
+            OnPropertyChanged(nameof(FilteredBekleyenGruplarCount));
             OnPropertyChanged(nameof(IsPendingFilterAllSelected));
             OnPropertyChanged(nameof(IsPendingFilterIncelenecekSelected));
             OnPropertyChanged(nameof(IsPendingFilterDenetcidenDonusSelected));
@@ -282,6 +292,9 @@ public sealed class YibfModuleViewModel : ViewModelBase
 
     public int FilteredBekleyenIslerCount
         => BekleyenIsler.Count(MatchesPendingApprovalFilter);
+
+    public int FilteredBekleyenGruplarCount
+        => BekleyenGruplar.Count(MatchesPendingApprovalGroup);
 
     public int PendingFilterAllCount => BekleyenIsler.Count;
     public int PendingFilterIncelenecekCount
@@ -1440,6 +1453,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
         }
 
         NotifyPendingFilterProperties();
+        RebuildPendingGroups();
         FilteredBekleyenIslerView.Refresh();
         TumIslerView.Refresh();
         if (SelectedAnaBilgiEntry is null || !AnaBilgiEntries.Any(item => item.Id == SelectedAnaBilgiEntry.Id))
@@ -1941,7 +1955,67 @@ public sealed class YibfModuleViewModel : ViewModelBase
 
         BekleyenIsler.ReplaceRange(ordered);
         NotifyPendingFilterProperties();
+        RebuildPendingGroups();
         FilteredBekleyenIslerView.Refresh();
+    }
+
+    private void RebuildPendingGroups()
+    {
+        var orderedGroups = BekleyenIsler
+            .GroupBy(item => item.Entry.Id)
+            .Select(group =>
+            {
+                var events = group
+                    .OrderBy(item => item.PendingEvent.EventDate ?? DateTime.MaxValue)
+                    .ThenBy(item => item.PendingEvent.DisplayOrder)
+                    .ToList();
+                var entry = events[0].Entry;
+                return new { entry.Id, entry, events };
+            })
+            .OrderBy(group => group.events.Min(item => item.UrgencyRank))
+            .ThenBy(group => group.events.Min(item => item.PendingEvent.EventDate ?? DateTime.MaxValue))
+            .ThenBy(group => group.entry.DisplayOrder)
+            .ToList();
+
+        var activeIds = orderedGroups.Select(item => item.Id).ToHashSet();
+        foreach (var obsoleteId in _pendingGroupLookup.Keys.Where(id => !activeIds.Contains(id)).ToList())
+        {
+            var item = _pendingGroupLookup[obsoleteId];
+            BekleyenGruplar.Remove(item);
+            _pendingGroupLookup.Remove(obsoleteId);
+        }
+
+        for (var index = 0; index < orderedGroups.Count; index++)
+        {
+            var item = orderedGroups[index];
+            if (!_pendingGroupLookup.TryGetValue(item.Id, out var groupVm))
+            {
+                groupVm = new YibfPendingGroupViewModel(item.entry, item.events);
+                _pendingGroupLookup[item.Id] = groupVm;
+                BekleyenGruplar.Insert(Math.Min(index, BekleyenGruplar.Count), groupVm);
+            }
+            else
+            {
+                groupVm.Update(item.entry, item.events);
+                var currentIndex = BekleyenGruplar.IndexOf(groupVm);
+                if (currentIndex >= 0 && currentIndex != index)
+                {
+                    BekleyenGruplar.Move(currentIndex, index);
+                }
+            }
+        }
+
+        ApplyPendingFilterToGroups();
+        FilteredBekleyenGruplarView.Refresh();
+        OnPropertyChanged(nameof(FilteredBekleyenGruplarCount));
+    }
+
+    private void ApplyPendingFilterToGroups()
+    {
+        foreach (var group in BekleyenGruplar)
+        {
+            group.ApplyFilter(PendingApprovalFilter);
+        }
     }
 
     private void SelectPendingApprovalFilter(string? filterKey)
@@ -1951,6 +2025,9 @@ public sealed class YibfModuleViewModel : ViewModelBase
 
     private bool FilterPendingApprovalItems(object item)
         => item is YibfPendingItemViewModel pending && MatchesPendingApprovalFilter(pending);
+
+    private bool FilterPendingApprovalGroups(object item)
+        => item is YibfPendingGroupViewModel group && MatchesPendingApprovalGroup(group);
 
     private bool MatchesPendingApprovalFilter(YibfPendingItemViewModel item)
     {
@@ -1962,9 +2039,13 @@ public sealed class YibfModuleViewModel : ViewModelBase
         return string.Equals(item.FilterKey, PendingApprovalFilter, StringComparison.Ordinal);
     }
 
+    private bool MatchesPendingApprovalGroup(YibfPendingGroupViewModel group)
+        => group.VisibleEvents.Count > 0;
+
     private void NotifyPendingFilterProperties()
     {
         OnPropertyChanged(nameof(FilteredBekleyenIslerCount));
+        OnPropertyChanged(nameof(FilteredBekleyenGruplarCount));
         OnPropertyChanged(nameof(PendingFilterAllCount));
         OnPropertyChanged(nameof(PendingFilterIncelenecekCount));
         OnPropertyChanged(nameof(PendingFilterDenetcidenDonusCount));
@@ -2138,10 +2219,8 @@ public sealed class YibfPendingItemViewModel : ViewModelBase
     public YibfAnaBilgiEvent PendingEvent => _pendingEvent;
     public string StatusLabel => YibfAnaBilgiApprovalStatuses.GetLabel(PendingEvent.ApprovalStatus);
     public string FilterKey => YibfAnaBilgiApprovalStatuses.GetFilterKey(PendingEvent.ApprovalStatus);
-    public int PriorityRank => string.Equals(NormalizePendingColor(PendingEvent.BackgroundColor), "#FFFF0000", StringComparison.OrdinalIgnoreCase) ? 0
-        : string.Equals(NormalizePendingColor(PendingEvent.BackgroundColor), "#FFFFA500", StringComparison.OrdinalIgnoreCase) ? 1
-        : string.Equals(NormalizePendingColor(PendingEvent.BackgroundColor), "#FFFFFF00", StringComparison.OrdinalIgnoreCase) ? 2
-        : 3;
+    public int UrgencyRank => YibfAnaBilgiApprovalStatuses.GetUrgencyRank(PendingEvent.ApprovalStatus);
+    public int PriorityRank => UrgencyRank;
     public string Summary => PendingEvent.Description;
     public string EventDateText => PendingEvent.EventDate?.ToString("dd.MM.yyyy") ?? "-";
     public int? DaysElapsed
@@ -2151,21 +2230,17 @@ public sealed class YibfPendingItemViewModel : ViewModelBase
     public string DaysElapsedText
         => DaysElapsed is int days ? $"{days} gün" : "—";
     public bool IsOverdue => DaysElapsed >= OverdueDayThreshold;
-    public Brush StatusBrush
+    public Brush CategoryBrush
     {
         get
         {
-            // Prefer stored user color; fall back to category default.
-            var color = NormalizePendingColor(PendingEvent.BackgroundColor);
-            if (string.IsNullOrWhiteSpace(color))
-            {
-                color = YibfAnaBilgiApprovalStatuses.GetDefaultColorForStatus(PendingEvent.ApprovalStatus)
-                    ?? "#FFD9D9D9";
-            }
-
+            var color = YibfAnaBilgiApprovalStatuses.GetDefaultColorForStatus(PendingEvent.ApprovalStatus);
             return BrushConverter.ConvertFromString(color) as Brush ?? Brushes.LightGray;
         }
     }
+
+    public Brush PriorityBrush => CategoryBrush;
+    public Brush StatusBrush => CategoryBrush;
 
     public void Update(YibfAnaBilgiEntry entry, YibfAnaBilgiEvent pendingEvent)
     {
@@ -2175,23 +2250,68 @@ public sealed class YibfPendingItemViewModel : ViewModelBase
         OnPropertyChanged(nameof(PendingEvent));
         OnPropertyChanged(nameof(StatusLabel));
         OnPropertyChanged(nameof(FilterKey));
+        OnPropertyChanged(nameof(UrgencyRank));
         OnPropertyChanged(nameof(PriorityRank));
         OnPropertyChanged(nameof(Summary));
         OnPropertyChanged(nameof(EventDateText));
         OnPropertyChanged(nameof(DaysElapsed));
         OnPropertyChanged(nameof(DaysElapsedText));
         OnPropertyChanged(nameof(IsOverdue));
+        OnPropertyChanged(nameof(CategoryBrush));
+        OnPropertyChanged(nameof(PriorityBrush));
         OnPropertyChanged(nameof(StatusBrush));
     }
+}
 
-    private static string NormalizePendingColor(string? color)
+public sealed class YibfPendingGroupViewModel : ViewModelBase
+{
+    private YibfAnaBilgiEntry _entry;
+    private IReadOnlyList<YibfPendingItemViewModel> _allEvents;
+    private IReadOnlyList<YibfPendingItemViewModel> _visibleEvents;
+    private string _activeFilter = YibfAnaBilgiApprovalStatuses.FilterAll;
+
+    public YibfPendingGroupViewModel(YibfAnaBilgiEntry entry, IReadOnlyList<YibfPendingItemViewModel> events)
     {
-        if (string.IsNullOrWhiteSpace(color))
-        {
-            return string.Empty;
-        }
+        _entry = entry;
+        _allEvents = events;
+        _visibleEvents = events;
+    }
 
-        return color;
+    public YibfAnaBilgiEntry Entry => _entry;
+    public IReadOnlyList<YibfPendingItemViewModel> AllEvents => _allEvents;
+    public IReadOnlyList<YibfPendingItemViewModel> Events => _allEvents;
+    public IReadOnlyList<YibfPendingItemViewModel> VisibleEvents => _visibleEvents;
+    public int EventCount => _visibleEvents.Count;
+    public string EventCountText => $"{EventCount} olay";
+    public string TitleText => $"{Entry.AdaParsel}   {Entry.YapiSahibi}".Trim();
+    public int UrgencyRank => _visibleEvents.Count == 0 ? int.MaxValue : _visibleEvents.Min(item => item.UrgencyRank);
+    public bool IsOverdue => _visibleEvents.Any(item => item.IsOverdue);
+
+    public void Update(YibfAnaBilgiEntry entry, IReadOnlyList<YibfPendingItemViewModel> events)
+    {
+        _entry = entry;
+        _allEvents = events;
+        OnPropertyChanged(nameof(Entry));
+        OnPropertyChanged(nameof(AllEvents));
+        OnPropertyChanged(nameof(Events));
+        OnPropertyChanged(nameof(TitleText));
+        ApplyFilter(_activeFilter);
+    }
+
+    public void ApplyFilter(string? filterKey)
+    {
+        _activeFilter = filterKey ?? YibfAnaBilgiApprovalStatuses.FilterAll;
+        _visibleEvents = string.IsNullOrEmpty(_activeFilter)
+            ? _allEvents
+            : _allEvents
+                .Where(item => string.Equals(item.FilterKey, _activeFilter, StringComparison.Ordinal))
+                .ToList();
+
+        OnPropertyChanged(nameof(VisibleEvents));
+        OnPropertyChanged(nameof(EventCount));
+        OnPropertyChanged(nameof(EventCountText));
+        OnPropertyChanged(nameof(UrgencyRank));
+        OnPropertyChanged(nameof(IsOverdue));
     }
 }
 

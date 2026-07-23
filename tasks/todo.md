@@ -1,10 +1,9 @@
 # Todo
 
 ## Current Task
-- [x] Ana Bilgi: Beklenen kategorisi (sarı)
-- [x] Proje Onay Takibi filtre chip
-- [x] Build + tests + güvenli publish
+- [x] Grup VisibleEvents + ApplyFilter
+- [x] XAML VisibleEvents + test + publish
 
 ## Review Update
-- Beklenen: IsExplicitPending; varsayılan renk sarı (#FFFFFF00).
-- Tests: 184/184. Publish: Data hash korundu.
+- Tümü: tüm olaylar. Kategori filtresi: grupta yalnız seçilen kategori satırları.
+- Tests: 186/186. Publish: Data hash korundu.

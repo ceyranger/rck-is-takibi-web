@@ -8,25 +8,18 @@ namespace RizaCanKilicIsTakibi.Tests;
 public class YibfAnaBilgiApprovalTrackingTests
 {
     [Fact]
-    public void Dialog_Defaults_EventDate_To_Today_And_Allows_Category_Color_Override()
+    public void Dialog_Applies_Category_Color_And_Saves_It()
     {
         var vm = new YibfAnaBilgiEventDialogViewModel(null, string.Empty, string.Empty, string.Empty);
 
         Assert.Equal(DateTime.Today, vm.EventDate?.Date);
-        Assert.True(vm.IsColorEditable);
+        Assert.Equal(YibfAnaBilgiApprovalStatuses.ColorKategorisiz, vm.SelectedColor);
 
         vm.SelectedApprovalStatus = YibfAnaBilgiApprovalStatuses.Incelenecek;
         Assert.Equal(YibfAnaBilgiApprovalStatuses.ColorIncelenecek, vm.SelectedColor);
-        Assert.True(vm.IsColorEditable);
-
-        vm.SelectedColor = "#FF4F81BD";
-        Assert.Equal("#FF4F81BD", vm.SelectedColor);
 
         vm.SelectedApprovalStatus = YibfAnaBilgiApprovalStatuses.Pasif;
         Assert.Equal(YibfAnaBilgiApprovalStatuses.ColorPasif, vm.SelectedColor);
-        Assert.True(vm.IsColorEditable);
-
-        vm.SelectedColor = "#FF4F81BD";
 
         YibfAnaBilgiEventDialogResult? result = null;
         vm.RequestClose += (_, dialogResult) => result = dialogResult;
@@ -35,8 +28,22 @@ public class YibfAnaBilgiApprovalTrackingTests
 
         Assert.NotNull(result);
         Assert.Equal(YibfAnaBilgiApprovalStatuses.Pasif, result!.ApprovalStatus);
-        Assert.Equal("#FF4F81BD", result.BackgroundColor);
+        Assert.Equal(YibfAnaBilgiApprovalStatuses.ColorPasif, result.BackgroundColor);
         Assert.Equal(DateTime.Today, result.EventDate?.Date);
+    }
+
+    [Fact]
+    public void Dialog_Uses_Category_Color_Even_When_Legacy_Color_Passed()
+    {
+        var vm = new YibfAnaBilgiEventDialogViewModel(
+            DateTime.Today,
+            "eski",
+            "#FF4F81BD",
+            string.Empty,
+            YibfAnaBilgiApprovalStatuses.Beklenen);
+
+        Assert.Equal(YibfAnaBilgiApprovalStatuses.ColorBeklenen, vm.SelectedColor);
+        Assert.Equal(YibfAnaBilgiApprovalStatuses.Beklenen, vm.SelectedApprovalStatus);
     }
 
     [Fact]
@@ -72,9 +79,14 @@ public class YibfAnaBilgiApprovalTrackingTests
         Assert.Equal(YibfAnaBilgiApprovalStatuses.ColorMuelliftenRevize, YibfAnaBilgiApprovalStatuses.GetColorForStatus(YibfAnaBilgiApprovalStatuses.MuelliftenRevize));
         Assert.Equal(YibfAnaBilgiApprovalStatuses.ColorOnaylanan, YibfAnaBilgiApprovalStatuses.GetColorForStatus(YibfAnaBilgiApprovalStatuses.Onaylanan));
         Assert.Equal("Beklenen", YibfAnaBilgiApprovalStatuses.GetLabel(YibfAnaBilgiApprovalStatuses.Beklenen));
-        Assert.Equal("#FFFFFF00", YibfAnaBilgiApprovalStatuses.ColorBeklenen);
+        Assert.Equal("#FFE8E0A8", YibfAnaBilgiApprovalStatuses.ColorBeklenen);
+        Assert.Equal("#FF9E9E9E", YibfAnaBilgiApprovalStatuses.ColorPasif);
+        Assert.Equal("#FFD9D9D9", YibfAnaBilgiApprovalStatuses.ColorKategorisiz);
         Assert.Equal(YibfAnaBilgiApprovalStatuses.ColorBeklenen, YibfAnaBilgiApprovalStatuses.GetDefaultColorForStatus(YibfAnaBilgiApprovalStatuses.Beklenen));
+        Assert.Equal(0, YibfAnaBilgiApprovalStatuses.GetUrgencyRank(YibfAnaBilgiApprovalStatuses.Incelenecek));
+        Assert.Equal(3, YibfAnaBilgiApprovalStatuses.GetUrgencyRank(YibfAnaBilgiApprovalStatuses.Beklenen));
         Assert.True(YibfAnaBilgiApprovalStatuses.IsExplicitPending(YibfAnaBilgiApprovalStatuses.Beklenen));
+        Assert.NotEqual(YibfAnaBilgiApprovalStatuses.ColorMuelliftenRevize, YibfAnaBilgiApprovalStatuses.ColorBeklenen);
         Assert.Equal("Pasif", YibfAnaBilgiApprovalStatuses.GetLabel(YibfAnaBilgiApprovalStatuses.Pasif));
         Assert.Equal(YibfAnaBilgiApprovalStatuses.ColorPasif, YibfAnaBilgiApprovalStatuses.GetDefaultColorForStatus(YibfAnaBilgiApprovalStatuses.Pasif));
         Assert.True(YibfAnaBilgiApprovalStatuses.IsApproved(YibfAnaBilgiApprovalStatuses.Onaylanan));
@@ -188,6 +200,97 @@ public class YibfAnaBilgiApprovalTrackingTests
             module.PendingApprovalFilter = YibfAnaBilgiApprovalStatuses.Beklenen;
             Assert.Equal(1, module.FilteredBekleyenIslerCount);
             Assert.Equal("Beklenen olay", module.BekleyenIsler.Single(item => item.FilterKey == YibfAnaBilgiApprovalStatuses.Beklenen).Summary);
+        }
+        finally
+        {
+            try
+            {
+                if (Directory.Exists(root))
+                {
+                    Directory.Delete(root, true);
+                }
+            }
+            catch (IOException)
+            {
+                // SQLite can briefly lock temp files on Windows; ignore cleanup races.
+            }
+        }
+    }
+
+    [Fact]
+    public void ProjeOnayTakibi_Groups_All_Pending_Events_Under_Same_Entry()
+    {
+        var root = Path.Combine(Path.GetTempPath(), "RizaCanKilicIsTakibiTests", Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(root);
+        try
+        {
+            var entry = new YibfAnaBilgiEntry
+            {
+                AdaParsel = "55-5",
+                YapiSahibi = "Sahip",
+                DisplayOrder = 0,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            };
+
+            var events = new[]
+            {
+                new YibfAnaBilgiEvent
+                {
+                    EntryId = entry.Id,
+                    EventDate = DateTime.Today.AddDays(-2),
+                    Description = "İncelenecek kart",
+                    ApprovalStatus = YibfAnaBilgiApprovalStatuses.Incelenecek,
+                    BackgroundColor = YibfAnaBilgiApprovalStatuses.ColorIncelenecek,
+                    DisplayOrder = 0
+                },
+                new YibfAnaBilgiEvent
+                {
+                    EntryId = entry.Id,
+                    EventDate = DateTime.Today.AddDays(-1),
+                    Description = "Beklenen kart",
+                    ApprovalStatus = YibfAnaBilgiApprovalStatuses.Beklenen,
+                    BackgroundColor = YibfAnaBilgiApprovalStatuses.ColorBeklenen,
+                    DisplayOrder = 1
+                }
+            };
+
+            var module = new YibfModuleViewModel(
+                new SqliteYibfRepository(Path.Combine(root, "yibf.db")),
+                new StubYibfImportService(),
+                new StubFileDialogService(),
+                new NotificationService(),
+                new StubConfirmationService(),
+                new StubNoteDialogService(),
+                new StubEventDialogService(),
+                new StubEntryDialogService(),
+                new UndoRedoService());
+
+            module.LoadFromBackup([entry], events, Array.Empty<YibfIsTakibiEntry>(), Array.Empty<YibfCellState>(), markDirty: false);
+
+            Assert.Equal(2, module.BekleyenIsler.Count);
+            var group = Assert.Single(module.BekleyenGruplar);
+            Assert.Equal(2, group.EventCount);
+            Assert.Equal(2, group.VisibleEvents.Count);
+            Assert.Equal("2 olay", group.EventCountText);
+            Assert.Contains(group.AllEvents, item => item.Summary == "İncelenecek kart");
+            Assert.Contains(group.AllEvents, item => item.Summary == "Beklenen kart");
+            Assert.Equal(0, group.UrgencyRank);
+            Assert.Equal(1, module.FilteredBekleyenGruplarCount);
+
+            module.PendingApprovalFilter = YibfAnaBilgiApprovalStatuses.Beklenen;
+            Assert.Equal(1, module.FilteredBekleyenGruplarCount);
+            Assert.Equal("1 olay", group.EventCountText);
+            Assert.Equal("Beklenen kart", Assert.Single(group.VisibleEvents).Summary);
+            Assert.Equal(2, group.AllEvents.Count);
+
+            module.PendingApprovalFilter = YibfAnaBilgiApprovalStatuses.Incelenecek;
+            Assert.Equal(1, module.FilteredBekleyenGruplarCount);
+            Assert.Equal("İncelenecek kart", Assert.Single(group.VisibleEvents).Summary);
+
+            module.PendingApprovalFilter = YibfAnaBilgiApprovalStatuses.FilterAll;
+            Assert.Equal(2, group.VisibleEvents.Count);
+            Assert.Equal("2 olay", group.EventCountText);
         }
         finally
         {

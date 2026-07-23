@@ -150,7 +150,7 @@
                                             <DockPanel>
                                                 <TextBlock Text="Proje Onay Takibi" FontFamily="{StaticResource Font.Primary}" FontSize="18" FontWeight="SemiBold" DockPanel.Dock="Left"/>
                                                 <Border Style="{StaticResource MissingProjectToolbarChipStyle}" DockPanel.Dock="Right">
-                                                    <TextBlock Text="{Binding YibfModule.FilteredBekleyenIslerCount, StringFormat=Kayıt: {0}}" FontWeight="SemiBold" Foreground="#FF20344C"/>
+                                                    <TextBlock Text="{Binding YibfModule.FilteredBekleyenGruplarCount, StringFormat=Proje: {0}}" FontWeight="SemiBold" Foreground="#FF20344C"/>
                                                 </Border>
                                             </DockPanel>
                                             <WrapPanel Grid.Row="1" Margin="0,10,0,0" Orientation="Horizontal">
@@ -276,20 +276,16 @@
                                                 </Button>
                                             </WrapPanel>
                                             <ListBox Grid.Row="2"
-                                                     ItemsSource="{Binding YibfModule.FilteredBekleyenIslerView}"
+                                                     ItemsSource="{Binding YibfModule.FilteredBekleyenGruplarView}"
                                                      Margin="0,8,0,0"
                                                      ScrollViewer.IsDeferredScrollingEnabled="False"
                                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                                      Style="{StaticResource VirtualizedListBoxStyle}"
                                                      ItemContainerStyle="{StaticResource VirtualizedListBoxItemStyle}">
                                                 <ListBox.ItemTemplate>
-                                                     <DataTemplate DataType="{x:Type viewModels:YibfPendingItemViewModel}">
+                                                     <DataTemplate DataType="{x:Type viewModels:YibfPendingGroupViewModel}">
                                                          <Border HorizontalAlignment="Stretch"
-                                                                 Margin="0,0,0,8"
-                                                                 behaviors:ClickCommandBehavior.Command="{Binding DataContext.YibfModule.SelectPendingItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                                 behaviors:ClickCommandBehavior.CommandParameter="{Binding}"
-                                                                 behaviors:DoubleClickCommandBehavior.Command="{Binding DataContext.YibfModule.EditPendingItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                                 behaviors:DoubleClickCommandBehavior.CommandParameter="{Binding}">
+                                                                 Margin="0,0,0,10">
                                                             <Border.Style>
                                                                 <Style TargetType="Border" BasedOn="{StaticResource YibfPassiveSurfaceStyle}">
                                                                     <Style.Triggers>
@@ -305,69 +301,105 @@
                                                                 <Grid.RowDefinitions>
                                                                     <RowDefinition Height="Auto"/>
                                                                     <RowDefinition Height="Auto"/>
-                                                                    <RowDefinition Height="Auto"/>
                                                                 </Grid.RowDefinitions>
-                                                                <Grid Grid.Row="0">
-                                                                    <Grid.ColumnDefinitions>
-                                                                        <ColumnDefinition Width="Auto"/>
-                                                                        <ColumnDefinition Width="*"/>
-                                                                        <ColumnDefinition Width="Auto"/>
-                                                                    </Grid.ColumnDefinitions>
-                                                                    <Border Background="{Binding StatusBrush}"
-                                                                            CornerRadius="8"
-                                                                            Padding="8,6"
-                                                                            HorizontalAlignment="Left"
-                                                                            VerticalAlignment="Top"
-                                                                            MaxWidth="220">
-                                                                        <TextBlock Text="{Binding StatusLabel}"
-                                                                                   Foreground="#FF111111"
-                                                                                   FontWeight="SemiBold"
-                                                                                   TextWrapping="Wrap"/>
-                                                                    </Border>
-                                                                    <TextBlock Grid.Column="1"
-                                                                               Text="{Binding EventDateText}"
-                                                                               Foreground="{StaticResource Brush.TextSecondary}"
-                                                                               Margin="12,4,8,0"
-                                                                               TextAlignment="Left"
-                                                                               TextWrapping="Wrap"
-                                                                               VerticalAlignment="Top"/>
-                                                                    <Border Grid.Column="2"
+                                                                <DockPanel Margin="0,0,0,8">
+                                                                    <Border DockPanel.Dock="Right"
+                                                                            Background="#FFE8EEF5"
                                                                             CornerRadius="8"
                                                                             Padding="8,4"
-                                                                            VerticalAlignment="Top">
-                                                                        <Border.Style>
-                                                                            <Style TargetType="Border">
-                                                                                <Setter Property="Background" Value="#FFE8EEF5"/>
-                                                                                <Style.Triggers>
-                                                                                    <DataTrigger Binding="{Binding IsOverdue}" Value="True">
-                                                                                        <Setter Property="Background" Value="#FFFFCDD2"/>
-                                                                                    </DataTrigger>
-                                                                                </Style.Triggers>
-                                                                            </Style>
-                                                                        </Border.Style>
-                                                                        <TextBlock Text="{Binding DaysElapsedText}"
+                                                                            VerticalAlignment="Center">
+                                                                        <TextBlock Text="{Binding EventCountText}"
                                                                                    FontWeight="SemiBold"
                                                                                    Foreground="#FF20344C"/>
                                                                     </Border>
-                                                                </Grid>
-                                                                <TextBlock Grid.Row="1"
-                                                                           Margin="0,10,0,0"
-                                                                           FontWeight="SemiBold"
-                                                                           TextAlignment="Left"
-                                                                           TextWrapping="Wrap">
-                                                                    <Run Text="{Binding Entry.AdaParsel}"/>
-                                                                    <Run Text="   "/>
-                                                                    <Run Text="{Binding Entry.YapiSahibi}"/>
-                                                                </TextBlock>
-                                                                <TextBlock Grid.Row="2"
-                                                                           Text="{Binding Summary}"
-                                                                           Margin="0,8,0,0"
-                                                                           TextWrapping="Wrap"
-                                                                           FontWeight="SemiBold"
-                                                                           TextAlignment="Left"/>
+                                                                    <TextBlock Text="{Binding TitleText}"
+                                                                               FontSize="15"
+                                                                               FontWeight="SemiBold"
+                                                                               Foreground="#FF111111"
+                                                                               TextWrapping="Wrap"
+                                                                               VerticalAlignment="Center"
+                                                                               Margin="0,0,10,0"/>
+                                                                </DockPanel>
+                                                                <ItemsControl Grid.Row="1" ItemsSource="{Binding VisibleEvents}">
+                                                                    <ItemsControl.ItemTemplate>
+                                                                        <DataTemplate DataType="{x:Type viewModels:YibfPendingItemViewModel}">
+                                                                            <Border Margin="0,0,0,6"
+                                                                                    Padding="0,0,0,0"
+                                                                                    Background="Transparent"
+                                                                                    Cursor="Hand"
+                                                                                    behaviors:ClickCommandBehavior.Command="{Binding DataContext.YibfModule.SelectPendingItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                                    behaviors:ClickCommandBehavior.CommandParameter="{Binding}"
+                                                                                    behaviors:DoubleClickCommandBehavior.Command="{Binding DataContext.YibfModule.EditPendingItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                                    behaviors:DoubleClickCommandBehavior.CommandParameter="{Binding}">
+                                                                                <Grid>
+                                                                                    <Grid.ColumnDefinitions>
+                                                                                        <ColumnDefinition Width="6"/>
+                                                                                        <ColumnDefinition Width="*"/>
+                                                                                    </Grid.ColumnDefinitions>
+                                                                                    <Border Grid.Column="0"
+                                                                                            Background="{Binding CategoryBrush}"
+                                                                                            CornerRadius="4,0,0,4"
+                                                                                            Margin="0,0,10,0"/>
+                                                                                    <Border Grid.Column="1"
+                                                                                            Background="#FFF8FAFC"
+                                                                                            CornerRadius="0,8,8,0"
+                                                                                            Padding="10,8">
+                                                                                        <Grid>
+                                                                                            <Grid.RowDefinitions>
+                                                                                                <RowDefinition Height="Auto"/>
+                                                                                                <RowDefinition Height="Auto"/>
+                                                                                            </Grid.RowDefinitions>
+                                                                                            <Grid>
+                                                                                                <Grid.ColumnDefinitions>
+                                                                                                    <ColumnDefinition Width="*"/>
+                                                                                                    <ColumnDefinition Width="Auto"/>
+                                                                                                    <ColumnDefinition Width="Auto"/>
+                                                                                                </Grid.ColumnDefinitions>
+                                                                                                <TextBlock Text="{Binding StatusLabel}"
+                                                                                                           FontWeight="SemiBold"
+                                                                                                           Foreground="#FF111111"
+                                                                                                           TextWrapping="Wrap"
+                                                                                                           VerticalAlignment="Center"/>
+                                                                                                <TextBlock Grid.Column="1"
+                                                                                                           Text="{Binding EventDateText}"
+                                                                                                           Foreground="{StaticResource Brush.TextSecondary}"
+                                                                                                           Margin="12,0,8,0"
+                                                                                                           VerticalAlignment="Center"/>
+                                                                                                <Border Grid.Column="2"
+                                                                                                        CornerRadius="8"
+                                                                                                        Padding="8,4"
+                                                                                                        VerticalAlignment="Center">
+                                                                                                    <Border.Style>
+                                                                                                        <Style TargetType="Border">
+                                                                                                            <Setter Property="Background" Value="#FFE8EEF5"/>
+                                                                                                            <Style.Triggers>
+                                                                                                                <DataTrigger Binding="{Binding IsOverdue}" Value="True">
+                                                                                                                    <Setter Property="Background" Value="#FFFFCDD2"/>
+                                                                                                                </DataTrigger>
+                                                                                                            </Style.Triggers>
+                                                                                                        </Style>
+                                                                                                    </Border.Style>
+                                                                                                    <TextBlock Text="{Binding DaysElapsedText}"
+                                                                                                               FontWeight="SemiBold"
+                                                                                                               Foreground="#FF20344C"/>
+                                                                                                </Border>
+                                                                                            </Grid>
+                                                                                            <TextBlock Grid.Row="1"
+                                                                                                       Text="{Binding Summary}"
+                                                                                                       Margin="0,6,0,0"
+                                                                                                       TextWrapping="Wrap"
+                                                                                                       FontWeight="SemiBold"
+                                                                                                       TextAlignment="Left"/>
+                                                                                        </Grid>
+                                                                                    </Border>
+                                                                                </Grid>
+                                                                            </Border>
+                                                                        </DataTemplate>
+                                                                    </ItemsControl.ItemTemplate>
+                                                                </ItemsControl>
                                                             </Grid>
-                                                        </Border>
-                                                    </DataTemplate>
+                                                         </Border>
+                                                     </DataTemplate>
                                                 </ListBox.ItemTemplate>
                                             </ListBox>
                                         </Grid>

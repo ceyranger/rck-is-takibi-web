@@ -114,45 +114,22 @@
                         </Grid>
                     </StackPanel>
 
-                    <!-- Status + Color -->
-                    <Grid Grid.Row="1" Margin="0,0,0,10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="10"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel>
-                            <TextBlock Text="DURUM" Style="{StaticResource EventFieldLabelStyle}"/>
-                            <Border Style="{StaticResource EventFieldBoxStyle}" MinHeight="38">
-                                <ComboBox BorderThickness="0"
-                                          Background="Transparent"
-                                          FontSize="13"
-                                          Padding="8,6"
-                                          VerticalContentAlignment="Center"
-                                          Margin="0"
-                                          ItemsSource="{Binding ApprovalStatusOptions}"
-                                          DisplayMemberPath="Label"
-                                          SelectedValuePath="Value"
-                                          SelectedValue="{Binding SelectedApprovalStatus, Mode=TwoWay}"/>
-                            </Border>
-                        </StackPanel>
-                        <StackPanel Grid.Column="2">
-                            <TextBlock Text="RENK" Style="{StaticResource EventFieldLabelStyle}"/>
-                            <Border Style="{StaticResource EventFieldBoxStyle}" MinHeight="38">
-                                <ComboBox BorderThickness="0"
-                                          Background="Transparent"
-                                          FontSize="13"
-                                          Padding="8,6"
-                                          VerticalContentAlignment="Center"
-                                          Margin="0"
-                                          ItemsSource="{Binding ColorOptions}"
-                                          DisplayMemberPath="Label"
-                                          SelectedValuePath="Value"
-                                          SelectedValue="{Binding SelectedColor, Mode=TwoWay}"
-                                          IsEnabled="{Binding IsColorEditable}"/>
-                            </Border>
-                        </StackPanel>
-                    </Grid>
+                    <!-- Status -->
+                    <StackPanel Grid.Row="1" Margin="0,0,0,10">
+                        <TextBlock Text="DURUM" Style="{StaticResource EventFieldLabelStyle}"/>
+                        <Border Style="{StaticResource EventFieldBoxStyle}" MinHeight="38">
+                            <ComboBox BorderThickness="0"
+                                      Background="Transparent"
+                                      FontSize="13"
+                                      Padding="8,6"
+                                      VerticalContentAlignment="Center"
+                                      Margin="0"
+                                      ItemsSource="{Binding ApprovalStatusOptions}"
+                                      DisplayMemberPath="Label"
+                                      SelectedValuePath="Value"
+                                      SelectedValue="{Binding SelectedApprovalStatus, Mode=TwoWay}"/>
+                        </Border>
+                    </StackPanel>
 
                     <!-- Description shares space -->
                     <Grid Grid.Row="2" Margin="0,0,0,10">

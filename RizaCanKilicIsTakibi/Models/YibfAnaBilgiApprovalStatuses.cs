@@ -12,9 +12,10 @@ public static class YibfAnaBilgiApprovalStatuses
     public const string ColorIncelenecek = "#FFFF0000";
     public const string ColorDenetcidenDonus = "#FFFFA500";
     public const string ColorMuelliftenRevize = "#FFFFFF00";
-    public const string ColorBeklenen = "#FFFFFF00";
+    public const string ColorBeklenen = "#FFE8E0A8";
     public const string ColorOnaylanan = "#FF92D050";
-    public const string ColorPasif = "#FFD9D9D9";
+    public const string ColorPasif = "#FF9E9E9E";
+    public const string ColorKategorisiz = "#FFD9D9D9";
 
     public const string FilterAll = "";
     public const string FilterKategorisiz = "Kategorisiz";
@@ -83,7 +84,7 @@ public static class YibfAnaBilgiApprovalStatuses
             _ => "Kategorisiz"
         };
 
-    public static string? GetDefaultColorForStatus(string? status)
+    public static string GetDefaultColorForStatus(string? status)
         => Normalize(status) switch
         {
             Incelenecek => ColorIncelenecek,
@@ -92,7 +93,7 @@ public static class YibfAnaBilgiApprovalStatuses
             Beklenen => ColorBeklenen,
             Onaylanan => ColorOnaylanan,
             Pasif => ColorPasif,
-            _ => null
+            _ => ColorKategorisiz
         };
 
     // Kept for callers that still use the old name; returns the default color suggestion.
@@ -104,6 +105,17 @@ public static class YibfAnaBilgiApprovalStatuses
         var normalized = Normalize(status);
         return string.IsNullOrEmpty(normalized) ? FilterKategorisiz : normalized;
     }
+
+    /// <summary>0 = most urgent. Lower ranks sort first.</summary>
+    public static int GetUrgencyRank(string? status)
+        => Normalize(status) switch
+        {
+            Incelenecek => 0,
+            DenetcidenDonus => 1,
+            MuelliftenRevize => 2,
+            Beklenen => 3,
+            _ => 4
+        };
 
     public static bool IsApproved(string? status)
         => string.Equals(Normalize(status), Onaylanan, StringComparison.Ordinal);
