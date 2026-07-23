@@ -50,6 +50,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
     private Guid? _lastSelectedAnaBilgiEntryId;
     private Guid? _lastSelectedAnaBilgiEventId;
     private Guid? _lastSelectedIsTakibiEntryId;
+    private string _pendingApprovalFilter = YibfAnaBilgiApprovalStatuses.FilterAll;
     private readonly Dictionary<Guid, YibfAnaBilgiListItemViewModel> _allJobLookup = [];
     private readonly Dictionary<Guid, YibfPendingItemViewModel> _pendingLookup = [];
     private readonly Dictionary<Guid, YibfTimelineEventViewModel> _visibleEventLookup = [];
@@ -106,9 +107,13 @@ public sealed class YibfModuleViewModel : ViewModelBase
         TumIslerView = CollectionViewSource.GetDefaultView(TumIsler);
         TumIslerView.Filter = FilterAllJobs;
 
+        FilteredBekleyenIslerView = CollectionViewSource.GetDefaultView(BekleyenIsler);
+        FilteredBekleyenIslerView.Filter = FilterPendingApprovalItems;
+
         SelectAnaBilgiEntryCommand = new RelayCommand<YibfAnaBilgiEntry?>(entry => SelectedAnaBilgiEntry = entry);
         SelectAnaBilgiEventCommand = new RelayCommand<YibfAnaBilgiEvent?>(item => SelectedAnaBilgiEvent = item);
         SelectPendingItemCommand = new RelayCommand<YibfPendingItemViewModel?>(SelectPendingItem);
+        SelectPendingApprovalFilterCommand = new RelayCommand<string?>(SelectPendingApprovalFilter);
         SelectIsTakibiEntryCommand = new RelayCommand<YibfIsTakibiEntry?>(entry => SelectedIsTakibiEntry = entry);
         ImportExcelCommand = new AsyncRelayCommand(ImportExcelAsync);
         AddAnaBilgiEntryCommand = new AsyncRelayCommand(AddAnaBilgiEntryAsync);
@@ -148,6 +153,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
     public ObservableRangeCollection<YibfTimelineEventViewModel> VisibleEvents { get; }
     public ObservableRangeCollection<YibfIsTakibiRow> IsTakibiRows { get; }
     public ICollectionView TumIslerView { get; }
+    public ICollectionView FilteredBekleyenIslerView { get; }
 
     public bool HasUnsavedChanges
     {
@@ -251,9 +257,55 @@ public sealed class YibfModuleViewModel : ViewModelBase
 
     public int VisibleIsTakibiCount => IsTakibiRows.Count;
 
+    public string PendingApprovalFilter
+    {
+        get => _pendingApprovalFilter;
+        set
+        {
+            var normalized = value ?? YibfAnaBilgiApprovalStatuses.FilterAll;
+            if (!SetProperty(ref _pendingApprovalFilter, normalized))
+            {
+                return;
+            }
+
+            FilteredBekleyenIslerView.Refresh();
+            OnPropertyChanged(nameof(FilteredBekleyenIslerCount));
+            OnPropertyChanged(nameof(IsPendingFilterAllSelected));
+            OnPropertyChanged(nameof(IsPendingFilterIncelenecekSelected));
+            OnPropertyChanged(nameof(IsPendingFilterDenetcidenDonusSelected));
+            OnPropertyChanged(nameof(IsPendingFilterMuelliftenRevizeSelected));
+            OnPropertyChanged(nameof(IsPendingFilterKategorisizSelected));
+        }
+    }
+
+    public int FilteredBekleyenIslerCount
+        => BekleyenIsler.Count(MatchesPendingApprovalFilter);
+
+    public int PendingFilterAllCount => BekleyenIsler.Count;
+    public int PendingFilterIncelenecekCount
+        => BekleyenIsler.Count(item => string.Equals(item.FilterKey, YibfAnaBilgiApprovalStatuses.Incelenecek, StringComparison.Ordinal));
+    public int PendingFilterDenetcidenDonusCount
+        => BekleyenIsler.Count(item => string.Equals(item.FilterKey, YibfAnaBilgiApprovalStatuses.DenetcidenDonus, StringComparison.Ordinal));
+    public int PendingFilterMuelliftenRevizeCount
+        => BekleyenIsler.Count(item => string.Equals(item.FilterKey, YibfAnaBilgiApprovalStatuses.MuelliftenRevize, StringComparison.Ordinal));
+    public int PendingFilterKategorisizCount
+        => BekleyenIsler.Count(item => string.Equals(item.FilterKey, YibfAnaBilgiApprovalStatuses.FilterKategorisiz, StringComparison.Ordinal));
+
+    public bool IsPendingFilterAllSelected
+        => string.Equals(PendingApprovalFilter, YibfAnaBilgiApprovalStatuses.FilterAll, StringComparison.Ordinal);
+    public bool IsPendingFilterIncelenecekSelected
+        => string.Equals(PendingApprovalFilter, YibfAnaBilgiApprovalStatuses.Incelenecek, StringComparison.Ordinal);
+    public bool IsPendingFilterDenetcidenDonusSelected
+        => string.Equals(PendingApprovalFilter, YibfAnaBilgiApprovalStatuses.DenetcidenDonus, StringComparison.Ordinal);
+    public bool IsPendingFilterMuelliftenRevizeSelected
+        => string.Equals(PendingApprovalFilter, YibfAnaBilgiApprovalStatuses.MuelliftenRevize, StringComparison.Ordinal);
+    public bool IsPendingFilterKategorisizSelected
+        => string.Equals(PendingApprovalFilter, YibfAnaBilgiApprovalStatuses.FilterKategorisiz, StringComparison.Ordinal);
+
     public RelayCommand<YibfAnaBilgiEntry?> SelectAnaBilgiEntryCommand { get; }
     public RelayCommand<YibfAnaBilgiEvent?> SelectAnaBilgiEventCommand { get; }
     public RelayCommand<YibfPendingItemViewModel?> SelectPendingItemCommand { get; }
+    public RelayCommand<string?> SelectPendingApprovalFilterCommand { get; }
     public RelayCommand<YibfIsTakibiEntry?> SelectIsTakibiEntryCommand { get; }
     public AsyncRelayCommand ImportExcelCommand { get; }
     public AsyncRelayCommand AddAnaBilgiEntryCommand { get; }
@@ -451,7 +503,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
             return;
         }
 
-        var result = await _anaBilgiEventDialogService.ShowDialogAsync(null, string.Empty, string.Empty, string.Empty);
+        var result = await _anaBilgiEventDialogService.ShowDialogAsync(DateTime.Today, string.Empty, string.Empty, string.Empty);
         if (result is null || IsEmptyAnaBilgiEvent(result.EventDate, result.Description, result.BackgroundColor, result.NoteText))
         {
             return;
@@ -473,6 +525,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
                 Description = result.Description.Trim(),
                 BackgroundColor = NormalizeCellColor(result.BackgroundColor),
                 NoteText = result.NoteText.Trim(),
+                ApprovalStatus = YibfAnaBilgiApprovalStatuses.Normalize(result.ApprovalStatus),
                 DisplayOrder = AnaBilgiEvents.Count(evt => evt.EntryId == targetEntry.Id)
             };
 
@@ -602,7 +655,8 @@ public sealed class YibfModuleViewModel : ViewModelBase
             targetEvent.EventDate,
             targetEvent.Description,
             NormalizeCellColor(targetEvent.BackgroundColor),
-            targetEvent.NoteText);
+            targetEvent.NoteText,
+            targetEvent.ApprovalStatus);
 
         if (result is null)
         {
@@ -627,6 +681,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
             targetEvent.Description = result.Description.Trim();
             targetEvent.BackgroundColor = NormalizeCellColor(result.BackgroundColor);
             targetEvent.NoteText = result.NoteText.Trim();
+            targetEvent.ApprovalStatus = YibfAnaBilgiApprovalStatuses.Normalize(result.ApprovalStatus);
 
             var entry = AnaBilgiEntries.FirstOrDefault(item => item.Id == targetEvent.EntryId);
             if (entry is not null)
@@ -1309,7 +1364,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
             entry => AnaBilgiEvents
                 .Where(item => item.EntryId == entry.Id && !IsEmptyAnaBilgiEvent(item))
                 .OrderBy(item => item.DisplayOrder)
-                .LastOrDefault(item => IsPendingColor(item.BackgroundColor)));
+                .LastOrDefault(item => IsPendingApprovalEvent(item)));
 
         var activeEntryIds = orderedEntries.Select(item => item.Id).ToHashSet();
         foreach (var obsoleteId in _allJobLookup.Keys.Where(id => !activeEntryIds.Contains(id)).ToList())
@@ -1342,12 +1397,11 @@ public sealed class YibfModuleViewModel : ViewModelBase
 
         var orderedPending = orderedEntries
             .SelectMany(entry => AnaBilgiEvents
-                .Where(evt => evt.EntryId == entry.Id && !IsEmptyAnaBilgiEvent(evt) && IsPendingColor(evt.BackgroundColor))
+                .Where(evt => evt.EntryId == entry.Id && !IsEmptyAnaBilgiEvent(evt) && IsPendingApprovalEvent(evt))
                 .Select(evt => new { entry, pending = evt }))
-            .OrderBy(item => string.Equals(item.pending!.BackgroundColor, StrongRedColor, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
-            .ThenByDescending(item => item.pending!.EventDate ?? DateTime.MinValue)
-            .ThenByDescending(item => item.pending!.DisplayOrder)
-            .ThenByDescending(item => item.entry.DisplayOrder)
+            .OrderBy(item => item.pending!.EventDate ?? DateTime.MaxValue)
+            .ThenBy(item => item.pending!.DisplayOrder)
+            .ThenBy(item => item.entry.DisplayOrder)
             .ToList();
 
         var activePendingIds = orderedPending.Select(item => item.pending.Id).ToHashSet();
@@ -1378,6 +1432,8 @@ public sealed class YibfModuleViewModel : ViewModelBase
             }
         }
 
+        NotifyPendingFilterProperties();
+        FilteredBekleyenIslerView.Refresh();
         TumIslerView.Refresh();
         if (SelectedAnaBilgiEntry is null || !AnaBilgiEntries.Any(item => item.Id == SelectedAnaBilgiEntry.Id))
         {
@@ -1853,13 +1909,47 @@ public sealed class YibfModuleViewModel : ViewModelBase
     private void SortBekleyenItems()
     {
         var ordered = BekleyenIsler
-            .OrderBy(item => item.PriorityRank)
-            .ThenByDescending(item => item.PendingEvent.EventDate ?? DateTime.MinValue)
-            .ThenByDescending(item => item.PendingEvent.DisplayOrder)
-            .ThenByDescending(item => item.Entry.DisplayOrder)
+            .OrderBy(item => item.PendingEvent.EventDate ?? DateTime.MaxValue)
+            .ThenBy(item => item.PendingEvent.DisplayOrder)
+            .ThenBy(item => item.Entry.DisplayOrder)
             .ToList();
 
         BekleyenIsler.ReplaceRange(ordered);
+        NotifyPendingFilterProperties();
+        FilteredBekleyenIslerView.Refresh();
+    }
+
+    private void SelectPendingApprovalFilter(string? filterKey)
+    {
+        PendingApprovalFilter = filterKey ?? YibfAnaBilgiApprovalStatuses.FilterAll;
+    }
+
+    private bool FilterPendingApprovalItems(object item)
+        => item is YibfPendingItemViewModel pending && MatchesPendingApprovalFilter(pending);
+
+    private bool MatchesPendingApprovalFilter(YibfPendingItemViewModel item)
+    {
+        if (string.IsNullOrEmpty(PendingApprovalFilter))
+        {
+            return true;
+        }
+
+        return string.Equals(item.FilterKey, PendingApprovalFilter, StringComparison.Ordinal);
+    }
+
+    private void NotifyPendingFilterProperties()
+    {
+        OnPropertyChanged(nameof(FilteredBekleyenIslerCount));
+        OnPropertyChanged(nameof(PendingFilterAllCount));
+        OnPropertyChanged(nameof(PendingFilterIncelenecekCount));
+        OnPropertyChanged(nameof(PendingFilterDenetcidenDonusCount));
+        OnPropertyChanged(nameof(PendingFilterMuelliftenRevizeCount));
+        OnPropertyChanged(nameof(PendingFilterKategorisizCount));
+        OnPropertyChanged(nameof(IsPendingFilterAllSelected));
+        OnPropertyChanged(nameof(IsPendingFilterIncelenecekSelected));
+        OnPropertyChanged(nameof(IsPendingFilterDenetcidenDonusSelected));
+        OnPropertyChanged(nameof(IsPendingFilterMuelliftenRevizeSelected));
+        OnPropertyChanged(nameof(IsPendingFilterKategorisizSelected));
     }
 
     private static bool Contains(string? source, string value)
@@ -1874,6 +1964,21 @@ public sealed class YibfModuleViewModel : ViewModelBase
     private static bool IsPendingColor(string? color)
         => string.Equals(NormalizeCellColor(color), StrongRedColor, StringComparison.OrdinalIgnoreCase)
            || string.Equals(NormalizeCellColor(color), StrongYellowColor, StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsPendingApprovalEvent(YibfAnaBilgiEvent item)
+    {
+        if (YibfAnaBilgiApprovalStatuses.IsApproved(item.ApprovalStatus))
+        {
+            return false;
+        }
+
+        if (YibfAnaBilgiApprovalStatuses.IsExplicitPending(item.ApprovalStatus))
+        {
+            return true;
+        }
+
+        return IsPendingColor(item.BackgroundColor);
+    }
 
     private static bool IsEmptyAnaBilgiEvent(YibfAnaBilgiEvent item)
         => IsEmptyAnaBilgiEvent(item.EventDate, item.Description, item.BackgroundColor, item.NoteText);
@@ -1944,6 +2049,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
             Description = item.Description,
             BackgroundColor = NormalizeCellColor(item.BackgroundColor),
             NoteText = item.NoteText,
+            ApprovalStatus = YibfAnaBilgiApprovalStatuses.Normalize(item.ApprovalStatus),
             DisplayOrder = item.DisplayOrder
         };
     }
@@ -1989,6 +2095,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
 
 public sealed class YibfPendingItemViewModel : ViewModelBase
 {
+    private const int OverdueDayThreshold = 7;
     private static readonly BrushConverter BrushConverter = new();
     private YibfAnaBilgiEntry _entry;
     private YibfAnaBilgiEvent _pendingEvent;
@@ -2001,11 +2108,34 @@ public sealed class YibfPendingItemViewModel : ViewModelBase
 
     public YibfAnaBilgiEntry Entry => _entry;
     public YibfAnaBilgiEvent PendingEvent => _pendingEvent;
-    public string StatusLabel => string.Equals(PendingEvent.BackgroundColor, "#FFFF0000", StringComparison.OrdinalIgnoreCase) ? "ACİL" : "DİKKAT";
-    public int PriorityRank => string.Equals(PendingEvent.BackgroundColor, "#FFFF0000", StringComparison.OrdinalIgnoreCase) ? 0 : 1;
+    public string StatusLabel => YibfAnaBilgiApprovalStatuses.GetLabel(PendingEvent.ApprovalStatus);
+    public string FilterKey => YibfAnaBilgiApprovalStatuses.GetFilterKey(PendingEvent.ApprovalStatus);
+    public int PriorityRank => string.Equals(NormalizePendingColor(PendingEvent.BackgroundColor), "#FFFF0000", StringComparison.OrdinalIgnoreCase) ? 0
+        : string.Equals(NormalizePendingColor(PendingEvent.BackgroundColor), "#FFFFFF00", StringComparison.OrdinalIgnoreCase) ? 1
+        : 2;
     public string Summary => PendingEvent.Description;
     public string EventDateText => PendingEvent.EventDate?.ToString("dd.MM.yyyy") ?? "-";
-    public Brush StatusBrush => PendingSummaryPalette.GetPriorityBrush(PriorityRank);
+    public int? DaysElapsed
+        => PendingEvent.EventDate is DateTime date
+            ? Math.Max(0, (DateTime.Today - date.Date).Days)
+            : null;
+    public string DaysElapsedText
+        => DaysElapsed is int days ? $"{days} gün" : "—";
+    public bool IsOverdue => DaysElapsed >= OverdueDayThreshold;
+    public Brush StatusBrush
+    {
+        get
+        {
+            var color = YibfAnaBilgiApprovalStatuses.GetColorForStatus(PendingEvent.ApprovalStatus)
+                ?? NormalizePendingColor(PendingEvent.BackgroundColor);
+            if (string.IsNullOrWhiteSpace(color))
+            {
+                color = "#FFD9D9D9";
+            }
+
+            return BrushConverter.ConvertFromString(color) as Brush ?? Brushes.LightGray;
+        }
+    }
 
     public void Update(YibfAnaBilgiEntry entry, YibfAnaBilgiEvent pendingEvent)
     {
@@ -2014,10 +2144,24 @@ public sealed class YibfPendingItemViewModel : ViewModelBase
         OnPropertyChanged(nameof(Entry));
         OnPropertyChanged(nameof(PendingEvent));
         OnPropertyChanged(nameof(StatusLabel));
+        OnPropertyChanged(nameof(FilterKey));
         OnPropertyChanged(nameof(PriorityRank));
         OnPropertyChanged(nameof(Summary));
         OnPropertyChanged(nameof(EventDateText));
+        OnPropertyChanged(nameof(DaysElapsed));
+        OnPropertyChanged(nameof(DaysElapsedText));
+        OnPropertyChanged(nameof(IsOverdue));
         OnPropertyChanged(nameof(StatusBrush));
+    }
+
+    private static string NormalizePendingColor(string? color)
+    {
+        if (string.IsNullOrWhiteSpace(color))
+        {
+            return string.Empty;
+        }
+
+        return color;
     }
 }
 

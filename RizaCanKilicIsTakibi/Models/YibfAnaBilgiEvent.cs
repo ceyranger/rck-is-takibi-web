@@ -10,6 +10,7 @@ public sealed class YibfAnaBilgiEvent : ObservableObject
     private string _description = string.Empty;
     private string _backgroundColor = string.Empty;
     private string _noteText = string.Empty;
+    private string _approvalStatus = string.Empty;
     private int _displayOrder;
 
     public Guid Id { get => _id; set => SetProperty(ref _id, value); }
@@ -18,5 +19,6 @@ public sealed class YibfAnaBilgiEvent : ObservableObject
     public string Description { get => _description; set => SetProperty(ref _description, value); }
     public string BackgroundColor { get => _backgroundColor; set => SetProperty(ref _backgroundColor, value); }
     public string NoteText { get => _noteText; set => SetProperty(ref _noteText, value); }
+    public string ApprovalStatus { get => _approvalStatus; set => SetProperty(ref _approvalStatus, value); }
     public int DisplayOrder { get => _displayOrder; set => SetProperty(ref _displayOrder, value); }
 }

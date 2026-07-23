@@ -3,10 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:behaviors="clr-namespace:RizaCanKilicIsTakibi.Behaviors"
         Title="Ana Bilgi Olayı"
-        Width="560"
-        Height="460"
-        MinWidth="500"
-        MinHeight="420"
+        Width="580"
+        Height="520"
+        MinWidth="520"
+        MinHeight="460"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResizeWithGrip"
         Background="{StaticResource Brush.AppBackground}">
@@ -33,21 +33,47 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <TextBlock Text="Tarih" FontWeight="SemiBold" VerticalAlignment="Center"/>
-            <DatePicker Grid.Column="1"
-                        SelectedDate="{Binding EventDate, Mode=TwoWay}"
-                        Margin="8,0,0,0"/>
+            <DockPanel Grid.Column="1" Margin="8,0,0,0" LastChildFill="True">
+                <Button DockPanel.Dock="Right"
+                        Content="Bugün"
+                        MinWidth="72"
+                        Margin="8,0,0,0"
+                        Padding="12,8"
+                        Style="{StaticResource GhostButton}"
+                        Command="{Binding SetTodayCommand}"/>
+                <DatePicker SelectedDate="{Binding EventDate, Mode=TwoWay}"
+                            FontSize="15"
+                            Padding="8,6"
+                            MinHeight="36"
+                            VerticalContentAlignment="Center"/>
+            </DockPanel>
 
-            <TextBlock Grid.Row="1" Text="Renk" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,12,0,0"/>
+            <TextBlock Grid.Row="1" Text="Durum" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,12,0,0"/>
             <ComboBox Grid.Row="1"
                       Grid.Column="1"
                       Margin="8,12,0,0"
+                      MinHeight="36"
+                      Padding="8,6"
+                      ItemsSource="{Binding ApprovalStatusOptions}"
+                      DisplayMemberPath="Label"
+                      SelectedValuePath="Value"
+                      SelectedValue="{Binding SelectedApprovalStatus, Mode=TwoWay}"/>
+
+            <TextBlock Grid.Row="2" Text="Renk" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,12,0,0"/>
+            <ComboBox Grid.Row="2"
+                      Grid.Column="1"
+                      Margin="8,12,0,0"
+                      MinHeight="36"
+                      Padding="8,6"
                       ItemsSource="{Binding ColorOptions}"
                       DisplayMemberPath="Label"
                       SelectedValuePath="Value"
-                      SelectedValue="{Binding SelectedColor, Mode=TwoWay}"/>
+                      SelectedValue="{Binding SelectedColor, Mode=TwoWay}"
+                      IsEnabled="{Binding IsColorEditable}"/>
         </Grid>
 
         <Grid Grid.Row="2" Margin="0,0,0,12">

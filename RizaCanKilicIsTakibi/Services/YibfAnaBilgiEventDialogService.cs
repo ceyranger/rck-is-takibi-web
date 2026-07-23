@@ -13,9 +13,10 @@ public sealed class YibfAnaBilgiEventDialogService : IYibfAnaBilgiEventDialogSer
         string description,
         string backgroundColor,
         string noteText,
+        string approvalStatus = "",
         CancellationToken cancellationToken = default)
     {
-        var viewModel = new YibfAnaBilgiEventDialogViewModel(eventDate, description, backgroundColor, noteText);
+        var viewModel = new YibfAnaBilgiEventDialogViewModel(eventDate, description, backgroundColor, noteText, approvalStatus);
         var window = new YibfAnaBilgiEventWindow(viewModel)
         {
             Owner = Application.Current?.Windows.OfType<Window>().FirstOrDefault(item => item.IsActive)

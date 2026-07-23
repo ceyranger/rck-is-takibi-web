@@ -547,7 +547,7 @@ public class CellClipboardTests
 
     private sealed class TestYibfAnaBilgiEventDialogService : IYibfAnaBilgiEventDialogService
     {
-        public Task<YibfAnaBilgiEventDialogResult?> ShowDialogAsync(DateTime? eventDate, string description, string backgroundColor, string noteText, CancellationToken cancellationToken = default)
+        public Task<YibfAnaBilgiEventDialogResult?> ShowDialogAsync(DateTime? eventDate, string description, string backgroundColor, string noteText, string approvalStatus = "", CancellationToken cancellationToken = default)
             => Task.FromResult<YibfAnaBilgiEventDialogResult?>(null);
     }
 

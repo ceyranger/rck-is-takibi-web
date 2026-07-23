@@ -867,6 +867,7 @@ public sealed class BackupService : IBackupService
             Description = item.Description,
             BackgroundColor = item.BackgroundColor,
             NoteText = item.NoteText,
+            ApprovalStatus = item.ApprovalStatus,
             DisplayOrder = item.DisplayOrder
         };
     }
@@ -881,6 +882,7 @@ public sealed class BackupService : IBackupService
             Description = dto.Description,
             BackgroundColor = dto.BackgroundColor,
             NoteText = dto.NoteText,
+            ApprovalStatus = dto.ApprovalStatus ?? string.Empty,
             DisplayOrder = dto.DisplayOrder
         };
     }
@@ -1208,6 +1210,7 @@ public sealed class BackupService : IBackupService
         public string Description { get; set; } = string.Empty;
         public string BackgroundColor { get; set; } = string.Empty;
         public string NoteText { get; set; } = string.Empty;
+        public string ApprovalStatus { get; set; } = string.Empty;
         public int DisplayOrder { get; set; }
     }
 

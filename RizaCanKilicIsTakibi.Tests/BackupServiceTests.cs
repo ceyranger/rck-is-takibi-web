@@ -89,6 +89,7 @@ public class BackupServiceTests
                     Description = "RUHSAT AŞAMASINDA EKSİK EVRAKLAR GELDİ",
                     BackgroundColor = "#FFFFFF00",
                     NoteText = "Ana bilgi notu",
+                    ApprovalStatus = YibfAnaBilgiApprovalStatuses.Incelenecek,
                     DisplayOrder = 0
                 }
             };
@@ -147,6 +148,7 @@ public class BackupServiceTests
             Assert.Equal(yibfAnaBilgiEntries[0].WorkGroupId, restored.YibfAnaBilgiEntries[0].WorkGroupId);
             Assert.Equal(yibfAnaBilgiEntries[0].WorkIdentityId, restored.YibfIsTakibiEntries[0].WorkIdentityId);
             Assert.Equal("Ana bilgi notu", restored.YibfAnaBilgiEvents[0].NoteText);
+            Assert.Equal(YibfAnaBilgiApprovalStatuses.Incelenecek, restored.YibfAnaBilgiEvents[0].ApprovalStatus);
             Assert.Equal("Dijital eksik", restored.YibfCellStates[0].NoteText);
         }
         finally

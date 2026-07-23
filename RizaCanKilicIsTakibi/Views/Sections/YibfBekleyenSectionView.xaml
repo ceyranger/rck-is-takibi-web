@@ -144,28 +144,141 @@
                                         <Grid>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
                                                 <RowDefinition Height="*"/>
                                             </Grid.RowDefinitions>
                                             <DockPanel>
                                                 <TextBlock Text="Proje Onay Takibi" FontFamily="{StaticResource Font.Primary}" FontSize="18" FontWeight="SemiBold" DockPanel.Dock="Left"/>
                                                 <Border Style="{StaticResource MissingProjectToolbarChipStyle}" DockPanel.Dock="Right">
-                                                    <TextBlock Text="{Binding YibfModule.BekleyenIsler.Count, StringFormat=Kayıt: {0}}" FontWeight="SemiBold" Foreground="#FF20344C"/>
+                                                    <TextBlock Text="{Binding YibfModule.FilteredBekleyenIslerCount, StringFormat=Kayıt: {0}}" FontWeight="SemiBold" Foreground="#FF20344C"/>
                                                 </Border>
                                             </DockPanel>
-                                            <ListBox Grid.Row="1"
-                                                     ItemsSource="{Binding YibfModule.BekleyenIsler}"
-                                                     Margin="0,12,0,0"
+                                            <WrapPanel Grid.Row="1" Margin="0,10,0,0" Orientation="Horizontal">
+                                                <Button Margin="0,0,6,6"
+                                                        Padding="10,6"
+                                                        Command="{Binding YibfModule.SelectPendingApprovalFilterCommand}"
+                                                        CommandParameter="{x:Static models:YibfAnaBilgiApprovalStatuses.FilterAll}">
+                                                    <Button.Style>
+                                                        <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding YibfModule.IsPendingFilterAllSelected}" Value="True">
+                                                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                                                    <Setter Property="Background" Value="#FFE8EEF5"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                    <TextBlock>
+                                                        <Run Text="Tümü ("/>
+                                                        <Run Text="{Binding YibfModule.PendingFilterAllCount, Mode=OneWay}"/>
+                                                        <Run Text=")"/>
+                                                    </TextBlock>
+                                                </Button>
+                                                <Button Margin="0,0,6,6"
+                                                        Padding="10,6"
+                                                        Command="{Binding YibfModule.SelectPendingApprovalFilterCommand}"
+                                                        CommandParameter="{x:Static models:YibfAnaBilgiApprovalStatuses.Incelenecek}">
+                                                    <Button.Style>
+                                                        <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding YibfModule.IsPendingFilterIncelenecekSelected}" Value="True">
+                                                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                                                    <Setter Property="Background" Value="#FFE8EEF5"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                    <TextBlock>
+                                                        <Run Text="İncelenecek ("/>
+                                                        <Run Text="{Binding YibfModule.PendingFilterIncelenecekCount, Mode=OneWay}"/>
+                                                        <Run Text=")"/>
+                                                    </TextBlock>
+                                                </Button>
+                                                <Button Margin="0,0,6,6"
+                                                        Padding="10,6"
+                                                        Command="{Binding YibfModule.SelectPendingApprovalFilterCommand}"
+                                                        CommandParameter="{x:Static models:YibfAnaBilgiApprovalStatuses.DenetcidenDonus}">
+                                                    <Button.Style>
+                                                        <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding YibfModule.IsPendingFilterDenetcidenDonusSelected}" Value="True">
+                                                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                                                    <Setter Property="Background" Value="#FFE8EEF5"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                    <TextBlock>
+                                                        <Run Text="Denetçi ("/>
+                                                        <Run Text="{Binding YibfModule.PendingFilterDenetcidenDonusCount, Mode=OneWay}"/>
+                                                        <Run Text=")"/>
+                                                    </TextBlock>
+                                                </Button>
+                                                <Button Margin="0,0,6,6"
+                                                        Padding="10,6"
+                                                        Command="{Binding YibfModule.SelectPendingApprovalFilterCommand}"
+                                                        CommandParameter="{x:Static models:YibfAnaBilgiApprovalStatuses.MuelliftenRevize}">
+                                                    <Button.Style>
+                                                        <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding YibfModule.IsPendingFilterMuelliftenRevizeSelected}" Value="True">
+                                                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                                                    <Setter Property="Background" Value="#FFE8EEF5"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                    <TextBlock>
+                                                        <Run Text="Revize ("/>
+                                                        <Run Text="{Binding YibfModule.PendingFilterMuelliftenRevizeCount, Mode=OneWay}"/>
+                                                        <Run Text=")"/>
+                                                    </TextBlock>
+                                                </Button>
+                                                <Button Margin="0,0,6,6"
+                                                        Padding="10,6"
+                                                        Command="{Binding YibfModule.SelectPendingApprovalFilterCommand}"
+                                                        CommandParameter="{x:Static models:YibfAnaBilgiApprovalStatuses.FilterKategorisiz}">
+                                                    <Button.Style>
+                                                        <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding YibfModule.IsPendingFilterKategorisizSelected}" Value="True">
+                                                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                                                    <Setter Property="Background" Value="#FFE8EEF5"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                    <TextBlock>
+                                                        <Run Text="Kategorisiz ("/>
+                                                        <Run Text="{Binding YibfModule.PendingFilterKategorisizCount, Mode=OneWay}"/>
+                                                        <Run Text=")"/>
+                                                    </TextBlock>
+                                                </Button>
+                                            </WrapPanel>
+                                            <ListBox Grid.Row="2"
+                                                     ItemsSource="{Binding YibfModule.FilteredBekleyenIslerView}"
+                                                     Margin="0,8,0,0"
                                                      ScrollViewer.IsDeferredScrollingEnabled="False"
                                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                                      Style="{StaticResource VirtualizedListBoxStyle}"
                                                      ItemContainerStyle="{StaticResource VirtualizedListBoxItemStyle}">
                                                 <ListBox.ItemTemplate>
                                                      <DataTemplate DataType="{x:Type viewModels:YibfPendingItemViewModel}">
-                                                         <Border Style="{StaticResource YibfPassiveSurfaceStyle}"
-                                                                 HorizontalAlignment="Stretch"
+                                                         <Border HorizontalAlignment="Stretch"
                                                                  Margin="0,0,0,8"
                                                                  behaviors:ClickCommandBehavior.Command="{Binding DataContext.YibfModule.SelectPendingItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                                  behaviors:ClickCommandBehavior.CommandParameter="{Binding}">
+                                                            <Border.Style>
+                                                                <Style TargetType="Border" BasedOn="{StaticResource YibfPassiveSurfaceStyle}">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsOverdue}" Value="True">
+                                                                            <Setter Property="BorderBrush" Value="#FFD64545"/>
+                                                                            <Setter Property="BorderThickness" Value="2"/>
+                                                                            <Setter Property="Background" Value="#14D64545"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Border.Style>
                                                             <Grid>
                                                                 <Grid.RowDefinitions>
                                                                     <RowDefinition Height="Auto"/>
@@ -176,21 +289,44 @@
                                                                     <Grid.ColumnDefinitions>
                                                                         <ColumnDefinition Width="Auto"/>
                                                                         <ColumnDefinition Width="*"/>
+                                                                        <ColumnDefinition Width="Auto"/>
                                                                     </Grid.ColumnDefinitions>
                                                                     <Border Background="{Binding StatusBrush}"
                                                                             CornerRadius="8"
                                                                             Padding="8,6"
                                                                             HorizontalAlignment="Left"
-                                                                            VerticalAlignment="Top">
-                                                                        <TextBlock Text="{Binding StatusLabel}" Foreground="#FF111111" FontWeight="SemiBold"/>
+                                                                            VerticalAlignment="Top"
+                                                                            MaxWidth="220">
+                                                                        <TextBlock Text="{Binding StatusLabel}"
+                                                                                   Foreground="#FF111111"
+                                                                                   FontWeight="SemiBold"
+                                                                                   TextWrapping="Wrap"/>
                                                                     </Border>
                                                                     <TextBlock Grid.Column="1"
                                                                                Text="{Binding EventDateText}"
                                                                                Foreground="{StaticResource Brush.TextSecondary}"
-                                                                               Margin="12,4,0,0"
+                                                                               Margin="12,4,8,0"
                                                                                TextAlignment="Left"
                                                                                TextWrapping="Wrap"
                                                                                VerticalAlignment="Top"/>
+                                                                    <Border Grid.Column="2"
+                                                                            CornerRadius="8"
+                                                                            Padding="8,4"
+                                                                            VerticalAlignment="Top">
+                                                                        <Border.Style>
+                                                                            <Style TargetType="Border">
+                                                                                <Setter Property="Background" Value="#FFE8EEF5"/>
+                                                                                <Style.Triggers>
+                                                                                    <DataTrigger Binding="{Binding IsOverdue}" Value="True">
+                                                                                        <Setter Property="Background" Value="#FFFFCDD2"/>
+                                                                                    </DataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </Border.Style>
+                                                                        <TextBlock Text="{Binding DaysElapsedText}"
+                                                                                   FontWeight="SemiBold"
+                                                                                   Foreground="#FF20344C"/>
+                                                                    </Border>
                                                                 </Grid>
                                                                 <TextBlock Grid.Row="1"
                                                                            Margin="0,10,0,0"

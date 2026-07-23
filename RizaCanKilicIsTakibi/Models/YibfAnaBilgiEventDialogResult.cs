@@ -6,4 +6,5 @@ public sealed class YibfAnaBilgiEventDialogResult
     public string Description { get; init; } = string.Empty;
     public string BackgroundColor { get; init; } = string.Empty;
     public string NoteText { get; init; } = string.Empty;
+    public string ApprovalStatus { get; init; } = string.Empty;
 }

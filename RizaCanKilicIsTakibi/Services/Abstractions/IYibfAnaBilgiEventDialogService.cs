@@ -9,5 +9,6 @@ public interface IYibfAnaBilgiEventDialogService
         string description,
         string backgroundColor,
         string noteText,
+        string approvalStatus = "",
         CancellationToken cancellationToken = default);
 }

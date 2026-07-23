@@ -32,6 +32,7 @@ public class YibfRepositoryTests
                 Description = "Tarihsiz test olayı",
                 BackgroundColor = "#FFFFFF00",
                 NoteText = "SQLite null date testi",
+                ApprovalStatus = YibfAnaBilgiApprovalStatuses.DenetcidenDonus,
                 DisplayOrder = 0
             };
 
@@ -46,6 +47,7 @@ public class YibfRepositoryTests
             Assert.Single(events);
             Assert.Null(events[0].EventDate);
             Assert.Equal("Tarihsiz test olayı", events[0].Description);
+            Assert.Equal(YibfAnaBilgiApprovalStatuses.DenetcidenDonus, events[0].ApprovalStatus);
         }
         finally
         {

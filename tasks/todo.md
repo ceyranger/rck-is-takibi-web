@@ -1,13 +1,12 @@
 # Todo
 
 ## Current Task
-- [x] MainWindow.xaml: ARAMA butonunu YİBF İş Takibi altına taşı
-- [x] ImportExportService Excel: kenarlık, AutoFilter, zebra
-- [x] ReportPack model + PDF: header band, zebra, sayfa no, BackgroundColor taşı
-- [x] Test + güvenli publish + Data hash + commit
+- [x] ApprovalStatus model + SQLite migration + backup DTO
+- [x] Olay dialog: bugün varsayılan, büyük DatePicker+Bugün, kategori ComboBox+renk eşlemesi
+- [x] Proje Onay Takibi: kategori filtre/chip, gün sayısı, 7+ uyarı, sıralama, Excel
+- [x] Testler + build + güvenli publish + commit
 
 ## Review Update
-- Sol panel sırası: … → YİBF İŞ TAKİBİ → ARAMA.
-- Excel: koyu header korundu; ince grid, AutoFilter, zebra (#F5F8FB), mevcut hücre renkleri duruyor.
-- PDF/PDF Paket: koyu header, zebra, bölüm altı çizgi, sayfa X/Y; paket hücre BackgroundColor taşınıyor.
-- Tests: 177/177. Publish: Data/Backup/Logs hash korundu.
+- Ana Bilgi Olay Ekle: bugün varsayılan, büyük DatePicker + Bugün butonu, isteğe bağlı Durum (kategori) + otomatik renk.
+- Proje Onay Takibi: İncelenecek / Denetçi / Revize / Kategorisiz filtreleri; Onaylanan listeden düşer; geçen gün + 7+ uyarı; en eski üstte.
+- Tests: 181/181. Publish: Data/Backup/Logs hash korundu.

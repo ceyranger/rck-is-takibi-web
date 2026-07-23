@@ -10,13 +10,20 @@ public sealed class YibfAnaBilgiEventDialogViewModel : ViewModelBase
     private string _description;
     private string _selectedColor;
     private string _noteText;
+    private string _selectedApprovalStatus;
 
-    public YibfAnaBilgiEventDialogViewModel(DateTime? eventDate, string description, string backgroundColor, string noteText)
+    public YibfAnaBilgiEventDialogViewModel(
+        DateTime? eventDate,
+        string description,
+        string backgroundColor,
+        string noteText,
+        string approvalStatus = "")
     {
-        _eventDate = eventDate;
+        _eventDate = eventDate ?? DateTime.Today;
         _description = description;
         _selectedColor = backgroundColor;
         _noteText = noteText;
+        _selectedApprovalStatus = YibfAnaBilgiApprovalStatuses.Normalize(approvalStatus);
 
         ColorOptions =
         [
@@ -28,13 +35,18 @@ public sealed class YibfAnaBilgiEventDialogViewModel : ViewModelBase
             new YibfAnaBilgiEventColorOption("#FFD9D9D9", "Gri")
         ];
 
+        ApprovalStatusOptions = YibfAnaBilgiApprovalStatuses.DialogOptions;
+        ApplyColorFromApprovalStatus();
+
         SaveCommand = new RelayCommand(Save);
         CancelCommand = new RelayCommand(() => RequestClose?.Invoke(this, null));
+        SetTodayCommand = new RelayCommand(() => EventDate = DateTime.Today);
     }
 
     public event EventHandler<YibfAnaBilgiEventDialogResult?>? RequestClose;
 
     public IReadOnlyList<YibfAnaBilgiEventColorOption> ColorOptions { get; }
+    public IReadOnlyList<YibfAnaBilgiApprovalStatusOption> ApprovalStatusOptions { get; }
 
     public DateTime? EventDate
     {
@@ -60,17 +72,50 @@ public sealed class YibfAnaBilgiEventDialogViewModel : ViewModelBase
         set => SetProperty(ref _noteText, value);
     }
 
+    public string SelectedApprovalStatus
+    {
+        get => _selectedApprovalStatus;
+        set
+        {
+            if (!SetProperty(ref _selectedApprovalStatus, YibfAnaBilgiApprovalStatuses.Normalize(value)))
+            {
+                return;
+            }
+
+            ApplyColorFromApprovalStatus();
+            OnPropertyChanged(nameof(IsColorEditable));
+        }
+    }
+
+    public bool IsColorEditable
+        => string.IsNullOrWhiteSpace(SelectedApprovalStatus);
+
     public RelayCommand SaveCommand { get; }
     public RelayCommand CancelCommand { get; }
+    public RelayCommand SetTodayCommand { get; }
+
+    private void ApplyColorFromApprovalStatus()
+    {
+        var color = YibfAnaBilgiApprovalStatuses.GetColorForStatus(SelectedApprovalStatus);
+        if (color is null)
+        {
+            return;
+        }
+
+        SelectedColor = color;
+    }
 
     private void Save()
     {
+        var status = YibfAnaBilgiApprovalStatuses.Normalize(SelectedApprovalStatus);
+        var color = YibfAnaBilgiApprovalStatuses.GetColorForStatus(status) ?? SelectedColor;
         RequestClose?.Invoke(this, new YibfAnaBilgiEventDialogResult
         {
             EventDate = EventDate,
             Description = Description.Trim(),
-            BackgroundColor = SelectedColor,
-            NoteText = NoteText.Trim()
+            BackgroundColor = color,
+            NoteText = NoteText.Trim(),
+            ApprovalStatus = status
         });
     }
 }

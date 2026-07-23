@@ -60,7 +60,7 @@ ORDER BY DisplayOrder, UpdatedAt DESC;
 
         await using var command = connection.CreateCommand();
         command.CommandText = """
-SELECT Id, EntryId, EventDate, Description, BackgroundColor, NoteText, DisplayOrder
+SELECT Id, EntryId, EventDate, Description, BackgroundColor, NoteText, DisplayOrder, ApprovalStatus
 FROM YibfAnaBilgiEvents
 ORDER BY EntryId, DisplayOrder;
 """;
@@ -76,7 +76,8 @@ ORDER BY EntryId, DisplayOrder;
                 Description = reader.IsDBNull(3) ? string.Empty : reader.GetString(3),
                 BackgroundColor = reader.IsDBNull(4) ? string.Empty : reader.GetString(4),
                 NoteText = reader.IsDBNull(5) ? string.Empty : reader.GetString(5),
-                DisplayOrder = reader.GetInt32(6)
+                DisplayOrder = reader.GetInt32(6),
+                ApprovalStatus = reader.FieldCount > 7 && !reader.IsDBNull(7) ? reader.GetString(7) : string.Empty
             });
         }
 
@@ -312,15 +313,16 @@ ON CONFLICT(Id) DO UPDATE SET
                 await using var insert = connection.CreateCommand();
                 insert.Transaction = transaction;
                 insert.CommandText = @"
-INSERT INTO YibfAnaBilgiEvents (Id, EntryId, EventDate, Description, BackgroundColor, NoteText, DisplayOrder)
-VALUES ($id, $entryId, $eventDate, $description, $backgroundColor, $noteText, $displayOrder)
+INSERT INTO YibfAnaBilgiEvents (Id, EntryId, EventDate, Description, BackgroundColor, NoteText, DisplayOrder, ApprovalStatus)
+VALUES ($id, $entryId, $eventDate, $description, $backgroundColor, $noteText, $displayOrder, $approvalStatus)
 ON CONFLICT(Id) DO UPDATE SET
     EntryId = excluded.EntryId,
     EventDate = excluded.EventDate,
     Description = excluded.Description,
     BackgroundColor = excluded.BackgroundColor,
     NoteText = excluded.NoteText,
-    DisplayOrder = excluded.DisplayOrder;
+    DisplayOrder = excluded.DisplayOrder,
+    ApprovalStatus = excluded.ApprovalStatus;
 ";
                 insert.Parameters.AddWithValue("$id", item.Id.ToString());
                 insert.Parameters.AddWithValue("$entryId", item.EntryId.ToString());
@@ -329,6 +331,7 @@ ON CONFLICT(Id) DO UPDATE SET
                 insert.Parameters.AddWithValue("$backgroundColor", item.BackgroundColor);
                 insert.Parameters.AddWithValue("$noteText", item.NoteText);
                 insert.Parameters.AddWithValue("$displayOrder", item.DisplayOrder);
+                insert.Parameters.AddWithValue("$approvalStatus", item.ApprovalStatus ?? string.Empty);
                 await insert.ExecuteNonQueryAsync(cancellationToken);
             }
         }
@@ -560,7 +563,8 @@ CREATE TABLE IF NOT EXISTS YibfAnaBilgiEvents (
     Description TEXT NOT NULL DEFAULT '',
     BackgroundColor TEXT NOT NULL DEFAULT '',
     NoteText TEXT NOT NULL DEFAULT '',
-    DisplayOrder INTEGER NOT NULL
+    DisplayOrder INTEGER NOT NULL,
+    ApprovalStatus TEXT NOT NULL DEFAULT ''
 );
 
 CREATE TABLE IF NOT EXISTS YibfIsTakibiEntries (
@@ -617,6 +621,7 @@ WHERE NOT EXISTS (
         SqliteConnectionSettings.EnsureColumnExists(connection, "YibfIsTakibiEntries", "WorkGroupId", "TEXT NOT NULL DEFAULT ''");
         SqliteConnectionSettings.EnsureColumnExists(connection, "YibfIsTakibiEntries", "WorkIdentityId", "TEXT NOT NULL DEFAULT ''");
         SqliteConnectionSettings.EnsureColumnExists(connection, "YibfIsTakibiEntries", "WorkVariantLabel", "TEXT NOT NULL DEFAULT ''");
+        SqliteConnectionSettings.EnsureColumnExists(connection, "YibfAnaBilgiEvents", "ApprovalStatus", "TEXT NOT NULL DEFAULT ''");
         BackfillWorkIdentityColumns(connection);
     }
 

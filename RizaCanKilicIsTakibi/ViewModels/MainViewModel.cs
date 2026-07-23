@@ -3049,11 +3049,12 @@ public sealed partial class MainViewModel : ViewModelBase
                 new ExcelSheetExportModel
                 {
                     Name = "Proje Onay Takibi",
-                    Headers = ["Öncelik", "Tarih", "Ada Parsel", "Yapı Sahibi", "Özet"],
+                    Headers = ["Kategori", "Tarih", "Geçen Gün", "Ada Parsel", "Yapı Sahibi", "Özet"],
                     Rows = YibfModule.BekleyenIsler
                         .Select(item => CreateRow(
-                            CreateCell(item.StatusLabel, backgroundColor: item.PriorityRank == 0 ? "#FFFF0000" : "#FFFFFF00"),
+                            CreateCell(item.StatusLabel, backgroundColor: YibfAnaBilgiApprovalStatuses.GetColorForStatus(item.PendingEvent.ApprovalStatus) ?? item.PendingEvent.BackgroundColor),
                             CreateCell(item.EventDateText),
+                            CreateCell(item.DaysElapsedText),
                             CreateCell(item.Entry.AdaParsel),
                             CreateCell(item.Entry.YapiSahibi),
                             CreateCell(item.Summary, item.PendingEvent.NoteText)))
