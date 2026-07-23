@@ -39,6 +39,7 @@ public partial class MainWindow : Window
 
         if (!_viewModel.HasAnyUnsavedChanges)
         {
+            _viewModel.ClearSessionRecoveryArtifacts();
             return;
         }
 
@@ -71,6 +72,7 @@ public partial class MainWindow : Window
                     return;
                 }
 
+                _viewModel.ClearSessionRecoveryArtifacts();
                 _allowCloseWithoutPrompt = true;
                 _ = Dispatcher.BeginInvoke(new Action(Close), DispatcherPriority.Normal);
                 return;
@@ -81,6 +83,7 @@ public partial class MainWindow : Window
             }
         }
 
+        _viewModel.ClearSessionRecoveryArtifacts();
         _allowCloseWithoutPrompt = true;
     }
 

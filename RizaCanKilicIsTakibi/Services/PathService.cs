@@ -58,6 +58,16 @@ public sealed class PathService
     public string LastSaveMetadataPath => Path.Combine(_dataDirectory, "last-save.json");
 
     /// <summary>
+    /// Ani kapanış sonrası kurtarma anlık görüntüsü
+    /// </summary>
+    public string PendingRecoveryPath => Path.Combine(_dataDirectory, "pending-recovery.json");
+
+    /// <summary>
+    /// Kaydedilmemiş oturum işareti (ani kapanışta kalır)
+    /// </summary>
+    public string SessionDirtyFlagPath => Path.Combine(_dataDirectory, "session-dirty.flag");
+
+    /// <summary>
     /// Hata log dosyasının tam yolu
     /// </summary>
     public string ErrorLogPath => Path.Combine(_logsDirectory, "app-errors.log");

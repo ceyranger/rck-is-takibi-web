@@ -52,7 +52,7 @@ public static class ClickCommandBehavior
 
     private static void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if (sender is not DependencyObject element)
+        if (e.ClickCount != 1 || sender is not DependencyObject element)
         {
             return;
         }

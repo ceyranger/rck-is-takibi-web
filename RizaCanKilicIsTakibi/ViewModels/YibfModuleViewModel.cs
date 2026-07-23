@@ -1570,6 +1570,13 @@ public sealed class YibfModuleViewModel : ViewModelBase
         }
 
         SelectPendingItem(item);
+
+        var dispatcher = System.Windows.Application.Current?.Dispatcher;
+        if (dispatcher is not null)
+        {
+            await dispatcher.InvokeAsync(() => { }, System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+        }
+
         await EditSelectedAnaBilgiEventAsync();
     }
 

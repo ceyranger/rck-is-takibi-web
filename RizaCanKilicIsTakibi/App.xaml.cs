@@ -105,6 +105,8 @@ public partial class App : Application
         services.AddSingleton<IProjectCatalogUiState, ProjectCatalogUiState>();
         services.AddSingleton<IProjectLinkingService, ProjectLinkingService>();
         services.AddSingleton<IBackupService>(_ => new BackupService(pathService.BackupDirectory));
+        services.AddSingleton<ISessionRecoveryService, SessionRecoveryService>();
+        services.AddSingleton<ICrashRecoveryWizardService, CrashRecoveryWizardService>();
         services.AddSingleton<IImportExportService, ImportExportService>();
         services.AddSingleton<IGenelIsTakibiExcelImportService, GenelIsTakibiExcelImportService>();
         services.AddSingleton<ITadilatImportService, TadilatExcelImportService>();
@@ -199,6 +201,14 @@ public partial class App : Application
         }
 
         _isFatalShutdownRequested = true;
+        try
+        {
+            _serviceProvider?.GetService<ISessionRecoveryService>()?.TryFlushBestEffort();
+        }
+        catch
+        {
+        }
+
         if (Dispatcher.CheckAccess())
         {
             Shutdown(-1);

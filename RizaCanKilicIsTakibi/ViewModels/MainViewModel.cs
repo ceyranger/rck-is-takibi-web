@@ -23,6 +23,10 @@ public sealed partial class MainViewModel : ViewModelBase
     private readonly IBackupService _backupService;
     private readonly IAppSettingsService _appSettingsService;
     private readonly ILastSaveMetadataService _lastSaveMetadataService;
+    private readonly ISessionRecoveryService? _sessionRecoveryService;
+    private readonly ICrashRecoveryWizardService? _crashRecoveryWizardService;
+    private DispatcherTimer? _sessionRecoveryDebounceTimer;
+    private int _sessionRecoveryWriteVersion;
     private readonly IImportExportService _importExportService;
     private readonly IGenelIsTakibiExcelImportService _genelIsTakibiExcelImportService;
     private readonly INotificationService _notificationService;
@@ -161,12 +165,16 @@ public sealed partial class MainViewModel : ViewModelBase
         IProjectLinkingService? projectLinkingService = null,
         IProjectCatalogEntryDialogService? projectCatalogEntryDialogService = null,
         IProjectLinkResolveDialogService? projectLinkResolveDialogService = null,
-        IProjectCatalogUiState? projectCatalogUiState = null)
+        IProjectCatalogUiState? projectCatalogUiState = null,
+        ISessionRecoveryService? sessionRecoveryService = null,
+        ICrashRecoveryWizardService? crashRecoveryWizardService = null)
     {
         _taskRepository = taskRepository;
         _backupService = backupService;
         _appSettingsService = appSettingsService;
         _lastSaveMetadataService = lastSaveMetadataService;
+        _sessionRecoveryService = sessionRecoveryService;
+        _crashRecoveryWizardService = crashRecoveryWizardService;
         _importExportService = importExportService;
         _genelIsTakibiExcelImportService = genelIsTakibiExcelImportService;
         _notificationService = notificationService;
@@ -290,6 +298,7 @@ public sealed partial class MainViewModel : ViewModelBase
         ObserveModuleDirtyState(KarotModule);
         ObserveModuleDirtyState(TadilatModule);
         ObserveModuleDirtyState(YibfModule);
+        _sessionRecoveryService?.RegisterFlushCallback(WriteSessionRecoverySnapshotAsync);
         ProjectCatalogEntries.CollectionChanged += (_, _) =>
         {
             if (!_suppressCatalogDirtyTracking)
@@ -616,6 +625,8 @@ public sealed partial class MainViewModel : ViewModelBase
             {
                 StartBackgroundModuleWarmup();
             }
+
+            await PromptCrashRecoveryIfNeededAsync();
         }
         catch (Exception ex)
         {
@@ -655,6 +666,7 @@ public sealed partial class MainViewModel : ViewModelBase
             if (allSaved)
             {
                 await MarkGlobalSaveSucceededAsync();
+                ClearSessionRecoveryArtifacts();
             }
 
             return allSaved;
@@ -1888,6 +1900,135 @@ public sealed partial class MainViewModel : ViewModelBase
         OnPropertyChanged(nameof(HasAnyUnsavedChanges));
         OnPropertyChanged(nameof(SaveStatusText));
         OnPropertyChanged(nameof(SaveStatusTimestampText));
+        ScheduleSessionRecoverySnapshot();
+    }
+
+    public void ClearSessionRecoveryArtifacts()
+    {
+        _sessionRecoveryDebounceTimer?.Stop();
+        _sessionRecoveryService?.ClearPendingRecovery();
+    }
+
+    private void ScheduleSessionRecoverySnapshot()
+    {
+        if (_sessionRecoveryService is null || !HasAnyUnsavedChanges)
+        {
+            return;
+        }
+
+        _sessionRecoveryService.MarkDirtySession();
+
+        if (!HasUiDispatcherContext())
+        {
+            return;
+        }
+
+        _sessionRecoveryDebounceTimer ??= new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(5)
+        };
+        _sessionRecoveryDebounceTimer.Tick -= OnSessionRecoveryDebounceTick;
+        _sessionRecoveryDebounceTimer.Tick += OnSessionRecoveryDebounceTick;
+        _sessionRecoveryDebounceTimer.Stop();
+        _sessionRecoveryDebounceTimer.Start();
+    }
+
+    private async void OnSessionRecoveryDebounceTick(object? sender, EventArgs e)
+    {
+        _sessionRecoveryDebounceTimer?.Stop();
+        if (!HasAnyUnsavedChanges)
+        {
+            return;
+        }
+
+        try
+        {
+            await WriteSessionRecoverySnapshotAsync();
+        }
+        catch
+        {
+            // Best-effort recovery snapshot.
+        }
+    }
+
+    private async Task WriteSessionRecoverySnapshotAsync()
+    {
+        if (_sessionRecoveryService is null || !HasAnyUnsavedChanges)
+        {
+            return;
+        }
+
+        var version = Interlocked.Increment(ref _sessionRecoveryWriteVersion);
+        await EnsureAllModulesInitializedAsync();
+        if (version != _sessionRecoveryWriteVersion || !HasAnyUnsavedChanges)
+        {
+            return;
+        }
+
+        await _sessionRecoveryService.WriteRecoverySnapshotAsync(
+            AllTasks(),
+            actionEntries: ActionModule.GetAllEntriesSnapshot(),
+            missingProjectEntries: MissingProjectModule.GetEntriesSnapshot(),
+            missingProjectCellStates: MissingProjectModule.GetCellStatesSnapshot(),
+            karotEntries: KarotModule.GetEntriesSnapshot(),
+            karotCellStates: KarotModule.GetCellStatesSnapshot(),
+            tadilatEntries: TadilatModule.GetEntriesSnapshot(),
+            yibfAnaBilgiEntries: YibfModule.GetAnaBilgiEntriesSnapshot(),
+            yibfAnaBilgiEvents: YibfModule.GetAnaBilgiEventsSnapshot(),
+            yibfIsTakibiEntries: YibfModule.GetIsTakibiEntriesSnapshot(),
+            yibfCellStates: YibfModule.GetCellStatesSnapshot(),
+            tadilatCellStates: TadilatModule.GetCellStatesSnapshot(),
+            quickTaskTemplates: _quickTaskTemplateRepository?.GetAll(),
+            projectCatalogEntries: GetProjectCatalogSnapshot());
+    }
+
+    private async Task PromptCrashRecoveryIfNeededAsync()
+    {
+        if (_sessionRecoveryService is null || _crashRecoveryWizardService is null)
+        {
+            return;
+        }
+
+        if (!_sessionRecoveryService.IsPendingRecoveryAvailable())
+        {
+            return;
+        }
+
+        var recovery = await _sessionRecoveryService.LoadPendingRecoveryAsync();
+        if (recovery is null)
+        {
+            _sessionRecoveryService.ClearPendingRecovery();
+            return;
+        }
+
+        await EnsureAllModulesInitializedAsync();
+        var current = CaptureBackupRestoreData();
+        var lines = CrashRecoverySummaryBuilder.Build(recovery, current);
+        var choice = _crashRecoveryWizardService.Show(new CrashRecoveryWizardRequest
+        {
+            LastSuccessfulSaveAt = LastSuccessfulSaveAt,
+            RecoveryCreatedAt = _sessionRecoveryService.GetPendingRecoveryTimestamp(),
+            ChangeLines = lines
+        });
+
+        if (choice == CrashRecoveryWizardChoice.Recover)
+        {
+            ApplyBackupRestoreData(recovery, markModulesDirty: true);
+            var saved = await SaveAllTabsAsync();
+            if (saved)
+            {
+                ClearSessionRecoveryArtifacts();
+                _notificationService.ShowToast("Kurtarılan veriler kaydedildi.", ToastType.Success, TimeSpan.FromSeconds(4));
+            }
+            else
+            {
+                _notificationService.ShowToast("Kurtarma uygulandı ancak kayıt tamamlanamadı. Lütfen Kaydet'e basın.", ToastType.Warning, TimeSpan.FromSeconds(5));
+            }
+
+            return;
+        }
+
+        ClearSessionRecoveryArtifacts();
     }
 
     private void MarkCatalogDirty() => HasUnsavedCatalogChanges = true;
@@ -1929,6 +2070,10 @@ public sealed partial class MainViewModel : ViewModelBase
         }
 
         NotifySaveStatusChanged();
+        if (!HasAnyUnsavedChanges)
+        {
+            ClearSessionRecoveryArtifacts();
+        }
     }
 
     private void HandleEscape()
