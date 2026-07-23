@@ -164,6 +164,104 @@ public class YibfAnaBilgiApprovalTrackingTests
         }
     }
 
+    [Fact]
+    public async Task EditPendingItem_Opens_Dialog_For_Selected_Pending_Event()
+    {
+        var root = Path.Combine(Path.GetTempPath(), "RizaCanKilicIsTakibiTests", Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(root);
+        try
+        {
+            var entry = new YibfAnaBilgiEntry
+            {
+                AdaParsel = "22-2",
+                YapiSahibi = "Sahip",
+                DisplayOrder = 0,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            };
+            var pendingEvent = new YibfAnaBilgiEvent
+            {
+                EntryId = entry.Id,
+                EventDate = DateTime.Today.AddDays(-4),
+                Description = "Eski açıklama",
+                ApprovalStatus = YibfAnaBilgiApprovalStatuses.Incelenecek,
+                BackgroundColor = YibfAnaBilgiApprovalStatuses.ColorIncelenecek,
+                DisplayOrder = 0
+            };
+
+            var dialogService = new CapturingEventDialogService
+            {
+                Result = new YibfAnaBilgiEventDialogResult
+                {
+                    EventDate = DateTime.Today,
+                    Description = "Güncellendi",
+                    BackgroundColor = YibfAnaBilgiApprovalStatuses.ColorDenetcidenDonus,
+                    ApprovalStatus = YibfAnaBilgiApprovalStatuses.DenetcidenDonus,
+                    NoteText = "not"
+                }
+            };
+
+            var module = new YibfModuleViewModel(
+                new SqliteYibfRepository(Path.Combine(root, "yibf.db")),
+                new StubYibfImportService(),
+                new StubFileDialogService(),
+                new NotificationService(),
+                new StubConfirmationService(),
+                new StubNoteDialogService(),
+                dialogService,
+                new StubEntryDialogService(),
+                new UndoRedoService());
+
+            module.LoadFromBackup([entry], [pendingEvent], Array.Empty<YibfIsTakibiEntry>(), Array.Empty<YibfCellState>(), markDirty: false);
+            var pendingItem = Assert.Single(module.BekleyenIsler);
+
+            await module.EditPendingItemCommand.ExecuteAsync(pendingItem);
+
+            Assert.Equal(1, dialogService.CallCount);
+            Assert.Equal("Eski açıklama", dialogService.LastDescription);
+            Assert.Equal(YibfAnaBilgiApprovalStatuses.Incelenecek, dialogService.LastApprovalStatus);
+            Assert.Equal(pendingEvent.Id, module.SelectedAnaBilgiEvent?.Id);
+            Assert.Equal("Güncellendi", module.SelectedAnaBilgiEvent?.Description);
+            Assert.Equal(YibfAnaBilgiApprovalStatuses.DenetcidenDonus, module.SelectedAnaBilgiEvent?.ApprovalStatus);
+            Assert.Equal("Denetçiden dönüş bekleniyor", Assert.Single(module.BekleyenIsler).StatusLabel);
+        }
+        finally
+        {
+            try
+            {
+                if (Directory.Exists(root))
+                {
+                    Directory.Delete(root, true);
+                }
+            }
+            catch (IOException)
+            {
+            }
+        }
+    }
+
+    private sealed class CapturingEventDialogService : IYibfAnaBilgiEventDialogService
+    {
+        public YibfAnaBilgiEventDialogResult? Result { get; set; }
+        public int CallCount { get; private set; }
+        public string? LastDescription { get; private set; }
+        public string? LastApprovalStatus { get; private set; }
+
+        public Task<YibfAnaBilgiEventDialogResult?> ShowDialogAsync(
+            DateTime? eventDate,
+            string description,
+            string backgroundColor,
+            string noteText,
+            string approvalStatus = "",
+            CancellationToken cancellationToken = default)
+        {
+            CallCount++;
+            LastDescription = description;
+            LastApprovalStatus = approvalStatus;
+            return Task.FromResult(Result);
+        }
+    }
+
     private sealed class StubYibfImportService : IYibfImportService
     {
         public Task<YibfImportData> ImportAsync(string filePath, CancellationToken cancellationToken = default)

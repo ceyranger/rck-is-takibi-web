@@ -267,7 +267,9 @@
                                                          <Border HorizontalAlignment="Stretch"
                                                                  Margin="0,0,0,8"
                                                                  behaviors:ClickCommandBehavior.Command="{Binding DataContext.YibfModule.SelectPendingItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                                 behaviors:ClickCommandBehavior.CommandParameter="{Binding}">
+                                                                 behaviors:ClickCommandBehavior.CommandParameter="{Binding}"
+                                                                 behaviors:DoubleClickCommandBehavior.Command="{Binding DataContext.YibfModule.EditPendingItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                 behaviors:DoubleClickCommandBehavior.CommandParameter="{Binding}">
                                                             <Border.Style>
                                                                 <Style TargetType="Border" BasedOn="{StaticResource YibfPassiveSurfaceStyle}">
                                                                     <Style.Triggers>

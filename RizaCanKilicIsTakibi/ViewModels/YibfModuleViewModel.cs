@@ -113,6 +113,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
         SelectAnaBilgiEntryCommand = new RelayCommand<YibfAnaBilgiEntry?>(entry => SelectedAnaBilgiEntry = entry);
         SelectAnaBilgiEventCommand = new RelayCommand<YibfAnaBilgiEvent?>(item => SelectedAnaBilgiEvent = item);
         SelectPendingItemCommand = new RelayCommand<YibfPendingItemViewModel?>(SelectPendingItem);
+        EditPendingItemCommand = new AsyncRelayCommand<YibfPendingItemViewModel?>(EditPendingItemAsync);
         SelectPendingApprovalFilterCommand = new RelayCommand<string?>(SelectPendingApprovalFilter);
         SelectIsTakibiEntryCommand = new RelayCommand<YibfIsTakibiEntry?>(entry => SelectedIsTakibiEntry = entry);
         ImportExcelCommand = new AsyncRelayCommand(ImportExcelAsync);
@@ -305,6 +306,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
     public RelayCommand<YibfAnaBilgiEntry?> SelectAnaBilgiEntryCommand { get; }
     public RelayCommand<YibfAnaBilgiEvent?> SelectAnaBilgiEventCommand { get; }
     public RelayCommand<YibfPendingItemViewModel?> SelectPendingItemCommand { get; }
+    public AsyncRelayCommand<YibfPendingItemViewModel?> EditPendingItemCommand { get; }
     public RelayCommand<string?> SelectPendingApprovalFilterCommand { get; }
     public RelayCommand<YibfIsTakibiEntry?> SelectIsTakibiEntryCommand { get; }
     public AsyncRelayCommand ImportExcelCommand { get; }
@@ -1558,6 +1560,17 @@ public sealed class YibfModuleViewModel : ViewModelBase
 
         SelectedAnaBilgiEntry = item.Entry;
         SelectedAnaBilgiEvent = AnaBilgiEvents.FirstOrDefault(evt => evt.Id == item.PendingEvent.Id);
+    }
+
+    private async Task EditPendingItemAsync(YibfPendingItemViewModel? item)
+    {
+        if (item is null)
+        {
+            return;
+        }
+
+        SelectPendingItem(item);
+        await EditSelectedAnaBilgiEventAsync();
     }
 
     private void ClearIsTakibiSearch()

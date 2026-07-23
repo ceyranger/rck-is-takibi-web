@@ -1,12 +1,9 @@
 # Todo
 
 ## Current Task
-- [x] ApprovalStatus model + SQLite migration + backup DTO
-- [x] Olay dialog: bugün varsayılan, büyük DatePicker+Bugün, kategori ComboBox+renk eşlemesi
-- [x] Proje Onay Takibi: kategori filtre/chip, gün sayısı, 7+ uyarı, sıralama, Excel
-- [x] Testler + build + güvenli publish + commit
+- [x] Proje Onay Takibi kartına çift tıkla → olay düzenleme penceresi
+- [x] Test + publish checkpoint
 
 ## Review Update
-- Ana Bilgi Olay Ekle: bugün varsayılan, büyük DatePicker + Bugün butonu, isteğe bağlı Durum (kategori) + otomatik renk.
-- Proje Onay Takibi: İncelenecek / Denetçi / Revize / Kategorisiz filtreleri; Onaylanan listeden düşer; geçen gün + 7+ uyarı; en eski üstte.
-- Tests: 181/181. Publish: Data/Backup/Logs hash korundu.
+- Proje Onay Takibi kartına çift tıklanınca ilgili Ana Bilgi olay düzenleme diyaloğu açılıyor.
+- Tests: 182/182. Publish: Data hash korundu.
