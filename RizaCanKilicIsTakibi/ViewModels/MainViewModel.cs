@@ -3222,7 +3222,9 @@ public sealed partial class MainViewModel : ViewModelBase
                     Headers = ["Kategori", "Tarih", "Geçen Gün", "Ada Parsel", "Yapı Sahibi", "Özet"],
                     Rows = YibfModule.BekleyenIsler
                         .Select(item => CreateRow(
-                            CreateCell(item.StatusLabel, backgroundColor: YibfAnaBilgiApprovalStatuses.GetColorForStatus(item.PendingEvent.ApprovalStatus) ?? item.PendingEvent.BackgroundColor),
+                            CreateCell(item.StatusLabel, backgroundColor: string.IsNullOrWhiteSpace(item.PendingEvent.BackgroundColor)
+                                ? YibfAnaBilgiApprovalStatuses.GetDefaultColorForStatus(item.PendingEvent.ApprovalStatus)
+                                : item.PendingEvent.BackgroundColor),
                             CreateCell(item.EventDateText),
                             CreateCell(item.DaysElapsedText),
                             CreateCell(item.Entry.AdaParsel),

@@ -237,6 +237,26 @@
                                                 <Button Margin="0,0,6,6"
                                                         Padding="10,6"
                                                         Command="{Binding YibfModule.SelectPendingApprovalFilterCommand}"
+                                                        CommandParameter="{x:Static models:YibfAnaBilgiApprovalStatuses.Beklenen}">
+                                                    <Button.Style>
+                                                        <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding YibfModule.IsPendingFilterBeklenenSelected}" Value="True">
+                                                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                                                    <Setter Property="Background" Value="#FFE8EEF5"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                    <TextBlock>
+                                                        <Run Text="Beklenen ("/>
+                                                        <Run Text="{Binding YibfModule.PendingFilterBeklenenCount, Mode=OneWay}"/>
+                                                        <Run Text=")"/>
+                                                    </TextBlock>
+                                                </Button>
+                                                <Button Margin="0,0,6,6"
+                                                        Padding="10,6"
+                                                        Command="{Binding YibfModule.SelectPendingApprovalFilterCommand}"
                                                         CommandParameter="{x:Static models:YibfAnaBilgiApprovalStatuses.FilterKategorisiz}">
                                                     <Button.Style>
                                                         <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">

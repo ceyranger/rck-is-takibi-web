@@ -8,7 +8,7 @@ namespace RizaCanKilicIsTakibi.Tests;
 public class YibfAnaBilgiApprovalTrackingTests
 {
     [Fact]
-    public void Dialog_Defaults_EventDate_To_Today_And_Maps_Category_Color()
+    public void Dialog_Defaults_EventDate_To_Today_And_Allows_Category_Color_Override()
     {
         var vm = new YibfAnaBilgiEventDialogViewModel(null, string.Empty, string.Empty, string.Empty);
 
@@ -17,19 +17,25 @@ public class YibfAnaBilgiApprovalTrackingTests
 
         vm.SelectedApprovalStatus = YibfAnaBilgiApprovalStatuses.Incelenecek;
         Assert.Equal(YibfAnaBilgiApprovalStatuses.ColorIncelenecek, vm.SelectedColor);
-        Assert.False(vm.IsColorEditable);
+        Assert.True(vm.IsColorEditable);
 
-        vm.SelectedApprovalStatus = YibfAnaBilgiApprovalStatuses.MuelliftenRevize;
-        Assert.Equal(YibfAnaBilgiApprovalStatuses.ColorMuelliftenRevize, vm.SelectedColor);
+        vm.SelectedColor = "#FF4F81BD";
+        Assert.Equal("#FF4F81BD", vm.SelectedColor);
+
+        vm.SelectedApprovalStatus = YibfAnaBilgiApprovalStatuses.Pasif;
+        Assert.Equal(YibfAnaBilgiApprovalStatuses.ColorPasif, vm.SelectedColor);
+        Assert.True(vm.IsColorEditable);
+
+        vm.SelectedColor = "#FF4F81BD";
 
         YibfAnaBilgiEventDialogResult? result = null;
         vm.RequestClose += (_, dialogResult) => result = dialogResult;
-        vm.Description = "Denetçiye gönderildi";
+        vm.Description = "Pasif proje";
         vm.SaveCommand.Execute(null);
 
         Assert.NotNull(result);
-        Assert.Equal(YibfAnaBilgiApprovalStatuses.MuelliftenRevize, result!.ApprovalStatus);
-        Assert.Equal(YibfAnaBilgiApprovalStatuses.ColorMuelliftenRevize, result.BackgroundColor);
+        Assert.Equal(YibfAnaBilgiApprovalStatuses.Pasif, result!.ApprovalStatus);
+        Assert.Equal("#FF4F81BD", result.BackgroundColor);
         Assert.Equal(DateTime.Today, result.EventDate?.Date);
     }
 
@@ -60,11 +66,21 @@ public class YibfAnaBilgiApprovalTrackingTests
     {
         Assert.Equal("İncelenecek", YibfAnaBilgiApprovalStatuses.GetLabel(YibfAnaBilgiApprovalStatuses.Incelenecek));
         Assert.Equal(YibfAnaBilgiApprovalStatuses.ColorIncelenecek, YibfAnaBilgiApprovalStatuses.GetColorForStatus(YibfAnaBilgiApprovalStatuses.Incelenecek));
+        Assert.Equal("#FFFFA500", YibfAnaBilgiApprovalStatuses.ColorDenetcidenDonus);
+        Assert.Equal("#FFFFFF00", YibfAnaBilgiApprovalStatuses.ColorMuelliftenRevize);
         Assert.Equal(YibfAnaBilgiApprovalStatuses.ColorDenetcidenDonus, YibfAnaBilgiApprovalStatuses.GetColorForStatus(YibfAnaBilgiApprovalStatuses.DenetcidenDonus));
         Assert.Equal(YibfAnaBilgiApprovalStatuses.ColorMuelliftenRevize, YibfAnaBilgiApprovalStatuses.GetColorForStatus(YibfAnaBilgiApprovalStatuses.MuelliftenRevize));
         Assert.Equal(YibfAnaBilgiApprovalStatuses.ColorOnaylanan, YibfAnaBilgiApprovalStatuses.GetColorForStatus(YibfAnaBilgiApprovalStatuses.Onaylanan));
+        Assert.Equal("Beklenen", YibfAnaBilgiApprovalStatuses.GetLabel(YibfAnaBilgiApprovalStatuses.Beklenen));
+        Assert.Equal("#FFFFFF00", YibfAnaBilgiApprovalStatuses.ColorBeklenen);
+        Assert.Equal(YibfAnaBilgiApprovalStatuses.ColorBeklenen, YibfAnaBilgiApprovalStatuses.GetDefaultColorForStatus(YibfAnaBilgiApprovalStatuses.Beklenen));
+        Assert.True(YibfAnaBilgiApprovalStatuses.IsExplicitPending(YibfAnaBilgiApprovalStatuses.Beklenen));
+        Assert.Equal("Pasif", YibfAnaBilgiApprovalStatuses.GetLabel(YibfAnaBilgiApprovalStatuses.Pasif));
+        Assert.Equal(YibfAnaBilgiApprovalStatuses.ColorPasif, YibfAnaBilgiApprovalStatuses.GetDefaultColorForStatus(YibfAnaBilgiApprovalStatuses.Pasif));
         Assert.True(YibfAnaBilgiApprovalStatuses.IsApproved(YibfAnaBilgiApprovalStatuses.Onaylanan));
+        Assert.True(YibfAnaBilgiApprovalStatuses.IsPassive(YibfAnaBilgiApprovalStatuses.Pasif));
         Assert.False(YibfAnaBilgiApprovalStatuses.IsExplicitPending(YibfAnaBilgiApprovalStatuses.Onaylanan));
+        Assert.False(YibfAnaBilgiApprovalStatuses.IsExplicitPending(YibfAnaBilgiApprovalStatuses.Pasif));
         Assert.Equal(YibfAnaBilgiApprovalStatuses.FilterKategorisiz, YibfAnaBilgiApprovalStatuses.GetFilterKey(string.Empty));
     }
 
@@ -107,11 +123,29 @@ public class YibfAnaBilgiApprovalTrackingTests
                 new YibfAnaBilgiEvent
                 {
                     EntryId = entry.Id,
+                    EventDate = DateTime.Today.AddDays(-8),
+                    Description = "Beklenen olay",
+                    ApprovalStatus = YibfAnaBilgiApprovalStatuses.Beklenen,
+                    BackgroundColor = YibfAnaBilgiApprovalStatuses.ColorBeklenen,
+                    DisplayOrder = 2
+                },
+                new YibfAnaBilgiEvent
+                {
+                    EntryId = entry.Id,
                     EventDate = DateTime.Today.AddDays(-1),
                     Description = "Onaylandı",
                     ApprovalStatus = YibfAnaBilgiApprovalStatuses.Onaylanan,
                     BackgroundColor = YibfAnaBilgiApprovalStatuses.ColorOnaylanan,
-                    DisplayOrder = 2
+                    DisplayOrder = 3
+                },
+                new YibfAnaBilgiEvent
+                {
+                    EntryId = entry.Id,
+                    EventDate = DateTime.Today.AddDays(-2),
+                    Description = "Pasif olay",
+                    ApprovalStatus = YibfAnaBilgiApprovalStatuses.Pasif,
+                    BackgroundColor = YibfAnaBilgiApprovalStatuses.ColorPasif,
+                    DisplayOrder = 4
                 },
                 new YibfAnaBilgiEvent
                 {
@@ -120,7 +154,7 @@ public class YibfAnaBilgiApprovalTrackingTests
                     Description = "Eski sarı",
                     ApprovalStatus = string.Empty,
                     BackgroundColor = "#FFFFFF00",
-                    DisplayOrder = 3
+                    DisplayOrder = 5
                 }
             };
 
@@ -137,16 +171,23 @@ public class YibfAnaBilgiApprovalTrackingTests
 
             module.LoadFromBackup([entry], events, Array.Empty<YibfIsTakibiEntry>(), Array.Empty<YibfCellState>(), markDirty: false);
 
-            Assert.Equal(3, module.BekleyenIsler.Count);
+            Assert.Equal(4, module.BekleyenIsler.Count);
             Assert.DoesNotContain(module.BekleyenIsler, item => item.Summary == "Onaylandı");
+            Assert.DoesNotContain(module.BekleyenIsler, item => item.Summary == "Pasif olay");
             Assert.Contains(module.BekleyenIsler, item => item.Summary == "Revize olay");
+            Assert.Contains(module.BekleyenIsler, item => item.Summary == "Beklenen olay" && item.FilterKey == YibfAnaBilgiApprovalStatuses.Beklenen);
             Assert.Contains(module.BekleyenIsler, item => item.Summary == "Eski sarı" && item.FilterKey == YibfAnaBilgiApprovalStatuses.FilterKategorisiz);
             Assert.Equal("Revize olay", module.BekleyenIsler[0].Summary);
 
             module.PendingApprovalFilter = YibfAnaBilgiApprovalStatuses.MuelliftenRevize;
             Assert.Equal(1, module.FilteredBekleyenIslerCount);
             Assert.Equal(1, module.PendingFilterMuelliftenRevizeCount);
+            Assert.Equal(1, module.PendingFilterBeklenenCount);
             Assert.Equal(1, module.PendingFilterKategorisizCount);
+
+            module.PendingApprovalFilter = YibfAnaBilgiApprovalStatuses.Beklenen;
+            Assert.Equal(1, module.FilteredBekleyenIslerCount);
+            Assert.Equal("Beklenen olay", module.BekleyenIsler.Single(item => item.FilterKey == YibfAnaBilgiApprovalStatuses.Beklenen).Summary);
         }
         finally
         {

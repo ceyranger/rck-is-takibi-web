@@ -275,6 +275,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
             OnPropertyChanged(nameof(IsPendingFilterIncelenecekSelected));
             OnPropertyChanged(nameof(IsPendingFilterDenetcidenDonusSelected));
             OnPropertyChanged(nameof(IsPendingFilterMuelliftenRevizeSelected));
+            OnPropertyChanged(nameof(IsPendingFilterBeklenenSelected));
             OnPropertyChanged(nameof(IsPendingFilterKategorisizSelected));
         }
     }
@@ -289,6 +290,8 @@ public sealed class YibfModuleViewModel : ViewModelBase
         => BekleyenIsler.Count(item => string.Equals(item.FilterKey, YibfAnaBilgiApprovalStatuses.DenetcidenDonus, StringComparison.Ordinal));
     public int PendingFilterMuelliftenRevizeCount
         => BekleyenIsler.Count(item => string.Equals(item.FilterKey, YibfAnaBilgiApprovalStatuses.MuelliftenRevize, StringComparison.Ordinal));
+    public int PendingFilterBeklenenCount
+        => BekleyenIsler.Count(item => string.Equals(item.FilterKey, YibfAnaBilgiApprovalStatuses.Beklenen, StringComparison.Ordinal));
     public int PendingFilterKategorisizCount
         => BekleyenIsler.Count(item => string.Equals(item.FilterKey, YibfAnaBilgiApprovalStatuses.FilterKategorisiz, StringComparison.Ordinal));
 
@@ -300,6 +303,8 @@ public sealed class YibfModuleViewModel : ViewModelBase
         => string.Equals(PendingApprovalFilter, YibfAnaBilgiApprovalStatuses.DenetcidenDonus, StringComparison.Ordinal);
     public bool IsPendingFilterMuelliftenRevizeSelected
         => string.Equals(PendingApprovalFilter, YibfAnaBilgiApprovalStatuses.MuelliftenRevize, StringComparison.Ordinal);
+    public bool IsPendingFilterBeklenenSelected
+        => string.Equals(PendingApprovalFilter, YibfAnaBilgiApprovalStatuses.Beklenen, StringComparison.Ordinal);
     public bool IsPendingFilterKategorisizSelected
         => string.Equals(PendingApprovalFilter, YibfAnaBilgiApprovalStatuses.FilterKategorisiz, StringComparison.Ordinal);
 
@@ -1964,11 +1969,13 @@ public sealed class YibfModuleViewModel : ViewModelBase
         OnPropertyChanged(nameof(PendingFilterIncelenecekCount));
         OnPropertyChanged(nameof(PendingFilterDenetcidenDonusCount));
         OnPropertyChanged(nameof(PendingFilterMuelliftenRevizeCount));
+        OnPropertyChanged(nameof(PendingFilterBeklenenCount));
         OnPropertyChanged(nameof(PendingFilterKategorisizCount));
         OnPropertyChanged(nameof(IsPendingFilterAllSelected));
         OnPropertyChanged(nameof(IsPendingFilterIncelenecekSelected));
         OnPropertyChanged(nameof(IsPendingFilterDenetcidenDonusSelected));
         OnPropertyChanged(nameof(IsPendingFilterMuelliftenRevizeSelected));
+        OnPropertyChanged(nameof(IsPendingFilterBeklenenSelected));
         OnPropertyChanged(nameof(IsPendingFilterKategorisizSelected));
     }
 
@@ -1987,7 +1994,8 @@ public sealed class YibfModuleViewModel : ViewModelBase
 
     private static bool IsPendingApprovalEvent(YibfAnaBilgiEvent item)
     {
-        if (YibfAnaBilgiApprovalStatuses.IsApproved(item.ApprovalStatus))
+        if (YibfAnaBilgiApprovalStatuses.IsApproved(item.ApprovalStatus)
+            || YibfAnaBilgiApprovalStatuses.IsPassive(item.ApprovalStatus))
         {
             return false;
         }
@@ -2131,8 +2139,9 @@ public sealed class YibfPendingItemViewModel : ViewModelBase
     public string StatusLabel => YibfAnaBilgiApprovalStatuses.GetLabel(PendingEvent.ApprovalStatus);
     public string FilterKey => YibfAnaBilgiApprovalStatuses.GetFilterKey(PendingEvent.ApprovalStatus);
     public int PriorityRank => string.Equals(NormalizePendingColor(PendingEvent.BackgroundColor), "#FFFF0000", StringComparison.OrdinalIgnoreCase) ? 0
-        : string.Equals(NormalizePendingColor(PendingEvent.BackgroundColor), "#FFFFFF00", StringComparison.OrdinalIgnoreCase) ? 1
-        : 2;
+        : string.Equals(NormalizePendingColor(PendingEvent.BackgroundColor), "#FFFFA500", StringComparison.OrdinalIgnoreCase) ? 1
+        : string.Equals(NormalizePendingColor(PendingEvent.BackgroundColor), "#FFFFFF00", StringComparison.OrdinalIgnoreCase) ? 2
+        : 3;
     public string Summary => PendingEvent.Description;
     public string EventDateText => PendingEvent.EventDate?.ToString("dd.MM.yyyy") ?? "-";
     public int? DaysElapsed
@@ -2146,11 +2155,12 @@ public sealed class YibfPendingItemViewModel : ViewModelBase
     {
         get
         {
-            var color = YibfAnaBilgiApprovalStatuses.GetColorForStatus(PendingEvent.ApprovalStatus)
-                ?? NormalizePendingColor(PendingEvent.BackgroundColor);
+            // Prefer stored user color; fall back to category default.
+            var color = NormalizePendingColor(PendingEvent.BackgroundColor);
             if (string.IsNullOrWhiteSpace(color))
             {
-                color = "#FFD9D9D9";
+                color = YibfAnaBilgiApprovalStatuses.GetDefaultColorForStatus(PendingEvent.ApprovalStatus)
+                    ?? "#FFD9D9D9";
             }
 
             return BrushConverter.ConvertFromString(color) as Brush ?? Brushes.LightGray;

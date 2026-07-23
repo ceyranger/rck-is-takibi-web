@@ -1,12 +1,10 @@
 # Todo
 
 ## Current Task
-- [x] ClickCount!=1 + EditPendingItem Dispatcher defer
-- [x] pending-recovery.json + dirty flag + debounce/clear hooks
-- [x] Kurtarma Sihirbazı penceresi: özet, Kurtar, Kapat
-- [x] Tests + güvenli publish + commit
+- [x] Ana Bilgi: Beklenen kategorisi (sarı)
+- [x] Proje Onay Takibi filtre chip
+- [x] Build + tests + güvenli publish
 
 ## Review Update
-- Proje Onay Takibi çift tık çökmesi: ClickCount filtresi + dialog Dispatcher ertelemesi.
-- Kaydedilmemiş oturum için `pending-recovery.json` + Kurtarma Sihirbazı (Kurtar/Kapat).
+- Beklenen: IsExplicitPending; varsayılan renk sarı (#FFFFFF00).
 - Tests: 184/184. Publish: Data hash korundu.
