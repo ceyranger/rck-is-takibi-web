@@ -61,11 +61,17 @@ public class CrashRecoveryTests
             Assert.True(File.Exists(pendingPath));
             Assert.True(recoveryService.IsPendingRecoveryAvailable());
 
+            // Flag-only should not be required once snapshot exists.
+            File.Delete(flagPath);
+            Assert.True(recoveryService.IsPendingRecoveryAvailable());
+
             var restored = await recoveryService.LoadPendingRecoveryAsync();
             Assert.NotNull(restored);
             Assert.Single(restored!.Tasks);
             Assert.Equal("Kurtarılacak", restored.Tasks[0].Title);
 
+            // Restore flag for clear test path
+            File.WriteAllText(flagPath, DateTime.Now.ToString("O"));
             recoveryService.ClearPendingRecovery();
             Assert.False(recoveryService.IsPendingRecoveryAvailable());
             Assert.False(File.Exists(pendingPath));

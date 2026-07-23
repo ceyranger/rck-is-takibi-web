@@ -1909,6 +1909,25 @@ public sealed partial class MainViewModel : ViewModelBase
         _sessionRecoveryService?.ClearPendingRecovery();
     }
 
+    public async Task FlushSessionRecoveryAsync()
+    {
+        if (_sessionRecoveryService is null || !HasAnyUnsavedChanges)
+        {
+            return;
+        }
+
+        _sessionRecoveryDebounceTimer?.Stop();
+        _sessionRecoveryService.MarkDirtySession();
+        try
+        {
+            await WriteSessionRecoverySnapshotAsync();
+        }
+        catch
+        {
+            // Best-effort; closing/kill path must not throw.
+        }
+    }
+
     private void ScheduleSessionRecoverySnapshot()
     {
         if (_sessionRecoveryService is null || !HasAnyUnsavedChanges)
@@ -1920,12 +1939,18 @@ public sealed partial class MainViewModel : ViewModelBase
 
         if (!HasUiDispatcherContext())
         {
+            // No dispatcher (tests): write immediately on background.
+            _ = WriteSessionRecoverySnapshotAsync();
             return;
         }
 
+        // Write as soon as possible so End Task / crash still has a snapshot.
+        _ = WriteSessionRecoverySnapshotAsync();
+
+        // Coalesce rapid follow-up edits into a later refresh.
         _sessionRecoveryDebounceTimer ??= new DispatcherTimer
         {
-            Interval = TimeSpan.FromSeconds(5)
+            Interval = TimeSpan.FromMilliseconds(750)
         };
         _sessionRecoveryDebounceTimer.Tick -= OnSessionRecoveryDebounceTick;
         _sessionRecoveryDebounceTimer.Tick += OnSessionRecoveryDebounceTick;

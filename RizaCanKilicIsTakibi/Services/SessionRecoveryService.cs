@@ -25,7 +25,7 @@ public sealed class SessionRecoveryService : ISessionRecoveryService
     }
 
     public bool IsPendingRecoveryAvailable()
-        => File.Exists(_sessionDirtyFlagPath) && File.Exists(_pendingRecoveryPath);
+        => File.Exists(_pendingRecoveryPath);
 
     public DateTime? GetPendingRecoveryTimestamp()
     {

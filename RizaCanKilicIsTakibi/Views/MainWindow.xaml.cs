@@ -43,23 +43,26 @@ public partial class MainWindow : Window
             return;
         }
 
-        var result = MessageBox.Show(
-            "Kaydedilmemiş değişiklikler var. Çıkmadan önce kaydetmek ister misiniz?",
-            "Çıkış Onayı",
-            MessageBoxButton.YesNoCancel,
-            MessageBoxImage.Warning);
-
-        if (result == MessageBoxResult.Cancel)
+        // Write recovery BEFORE the confirmation dialog so Task Manager / End Task
+        // during the prompt still leaves a recoverable snapshot.
+        e.Cancel = true;
+        _isSavingOnClose = true;
+        try
         {
-            e.Cancel = true;
-            return;
-        }
+            await _viewModel.FlushSessionRecoveryAsync();
 
-        if (result == MessageBoxResult.Yes)
-        {
-            e.Cancel = true;
-            _isSavingOnClose = true;
-            try
+            var result = MessageBox.Show(
+                "Kaydedilmemiş değişiklikler var. Çıkmadan önce kaydetmek ister misiniz?",
+                "Çıkış Onayı",
+                MessageBoxButton.YesNoCancel,
+                MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Cancel)
+            {
+                return;
+            }
+
+            if (result == MessageBoxResult.Yes)
             {
                 var saved = await _viewModel.SaveAllTabsSafelyAsync();
                 if (!saved)
@@ -77,14 +80,16 @@ public partial class MainWindow : Window
                 _ = Dispatcher.BeginInvoke(new Action(Close), DispatcherPriority.Normal);
                 return;
             }
-            finally
-            {
-                _isSavingOnClose = false;
-            }
-        }
 
-        _viewModel.ClearSessionRecoveryArtifacts();
-        _allowCloseWithoutPrompt = true;
+            // Explicit discard: user chose not to keep unsaved work.
+            _viewModel.ClearSessionRecoveryArtifacts();
+            _allowCloseWithoutPrompt = true;
+            _ = Dispatcher.BeginInvoke(new Action(Close), DispatcherPriority.Normal);
+        }
+        finally
+        {
+            _isSavingOnClose = false;
+        }
     }
 
     private void ConfigureColumnFilters()
