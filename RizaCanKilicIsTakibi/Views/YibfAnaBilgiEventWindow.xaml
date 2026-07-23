@@ -4,19 +4,19 @@
         xmlns:behaviors="clr-namespace:RizaCanKilicIsTakibi.Behaviors"
         Title="Ana Bilgi Olayı"
         Width="620"
-        Height="640"
+        Height="600"
         MinWidth="560"
-        MinHeight="560"
+        MinHeight="540"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResizeWithGrip"
         Background="#FFEEF3F9">
     <Window.Resources>
         <Style x:Key="EventFieldLabelStyle" TargetType="TextBlock">
             <Setter Property="FontFamily" Value="{StaticResource Font.Body}"/>
-            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontSize" Value="11"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Foreground" Value="{StaticResource Brush.TextSecondary}"/>
-            <Setter Property="Margin" Value="0,0,0,6"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
         </Style>
         <Style x:Key="EventFieldBoxStyle" TargetType="Border">
             <Setter Property="Background" Value="White"/>
@@ -25,15 +25,6 @@
             <Setter Property="CornerRadius" Value="10"/>
             <Setter Property="Padding" Value="2"/>
             <Setter Property="SnapsToDevicePixels" Value="True"/>
-        </Style>
-        <Style x:Key="EventInnerInputStyle" TargetType="Control">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="10,8"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontFamily" Value="{StaticResource Font.Body}"/>
-            <Setter Property="Foreground" Value="{StaticResource Brush.TextPrimary}"/>
-            <Setter Property="Margin" Value="0"/>
         </Style>
     </Window.Resources>
 
@@ -46,14 +37,14 @@
             </LinearGradientBrush>
         </Grid.Background>
 
-        <Border Margin="18"
+        <Border Margin="14"
                 Background="{StaticResource Brush.Surface}"
                 BorderBrush="{StaticResource Brush.Border}"
                 BorderThickness="1"
-                CornerRadius="18"
+                CornerRadius="16"
                 SnapsToDevicePixels="True">
             <Border.Effect>
-                <DropShadowEffect Color="#1A0A1C30" BlurRadius="28" ShadowDepth="0" Opacity="0.9"/>
+                <DropShadowEffect Color="#1A0A1C30" BlurRadius="24" ShadowDepth="0" Opacity="0.9"/>
             </Border.Effect>
 
             <Grid>
@@ -63,8 +54,8 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Header -->
-                <Border CornerRadius="18,18,0,0" Padding="24,20,24,18">
+                <!-- Header (compact) -->
+                <Border CornerRadius="16,16,0,0" Padding="20,14,20,12">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                             <GradientStop Color="#FF0F5CC0" Offset="0"/>
@@ -79,153 +70,150 @@
                                    Foreground="#CCFFFFFF"/>
                         <TextBlock Text="Olay kaydı"
                                    FontFamily="{StaticResource Font.Primary}"
-                                   FontSize="26"
+                                   FontSize="22"
                                    FontWeight="SemiBold"
                                    Foreground="White"
-                                   Margin="0,4,0,0"/>
-                        <TextBlock Text="Tarih, durum ve açıklamayı tek ekranda düzenleyin."
-                                   FontSize="13"
-                                   Foreground="#D9FFFFFF"
-                                   Margin="0,6,0,0"
-                                   TextWrapping="Wrap"/>
+                                   Margin="0,2,0,0"/>
                     </StackPanel>
                 </Border>
 
-                <!-- Body -->
-                <ScrollViewer Grid.Row="1"
-                              VerticalScrollBarVisibility="Auto"
-                              Padding="24,20,24,8">
+                <!-- Body: no outer scroll; fields share remaining height -->
+                <Grid Grid.Row="1" Margin="20,14,20,8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Date -->
                     <StackPanel>
-                        <!-- Date -->
                         <TextBlock Text="TARİH" Style="{StaticResource EventFieldLabelStyle}"/>
-                        <Grid Margin="0,0,0,16">
+                        <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <Border Style="{StaticResource EventFieldBoxStyle}" MinHeight="44">
+                            <Border Style="{StaticResource EventFieldBoxStyle}" MinHeight="38">
                                 <DatePicker SelectedDate="{Binding EventDate, Mode=TwoWay}"
                                             BorderThickness="0"
                                             Background="Transparent"
-                                            FontSize="15"
-                                            Padding="10,8"
+                                            FontSize="14"
+                                            Padding="8,6"
                                             VerticalContentAlignment="Center"
                                             Margin="0"/>
                             </Border>
                             <Button Grid.Column="1"
                                     Content="Bugün"
-                                    MinWidth="88"
-                                    Margin="10,0,0,0"
-                                    Padding="14,10"
+                                    MinWidth="80"
+                                    MinHeight="38"
+                                    Margin="8,0,0,0"
+                                    Padding="12,6"
                                     Style="{StaticResource GhostButton}"
                                     Command="{Binding SetTodayCommand}"/>
                         </Grid>
+                    </StackPanel>
 
-                        <!-- Status + Color -->
-                        <Grid Margin="0,0,0,16">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="12"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel>
-                                <TextBlock Text="DURUM" Style="{StaticResource EventFieldLabelStyle}"/>
-                                <Border Style="{StaticResource EventFieldBoxStyle}" MinHeight="44">
-                                    <ComboBox BorderThickness="0"
-                                              Background="Transparent"
-                                              FontSize="14"
-                                              Padding="10,8"
-                                              VerticalContentAlignment="Center"
-                                              Margin="0"
-                                              ItemsSource="{Binding ApprovalStatusOptions}"
-                                              DisplayMemberPath="Label"
-                                              SelectedValuePath="Value"
-                                              SelectedValue="{Binding SelectedApprovalStatus, Mode=TwoWay}"/>
-                                </Border>
-                            </StackPanel>
-                            <StackPanel Grid.Column="2">
-                                <TextBlock Text="RENK" Style="{StaticResource EventFieldLabelStyle}"/>
-                                <Border Style="{StaticResource EventFieldBoxStyle}" MinHeight="44">
-                                    <ComboBox BorderThickness="0"
-                                              Background="Transparent"
-                                              FontSize="14"
-                                              Padding="10,8"
-                                              VerticalContentAlignment="Center"
-                                              Margin="0"
-                                              ItemsSource="{Binding ColorOptions}"
-                                              DisplayMemberPath="Label"
-                                              SelectedValuePath="Value"
-                                              SelectedValue="{Binding SelectedColor, Mode=TwoWay}"
-                                              IsEnabled="{Binding IsColorEditable}"/>
-                                </Border>
-                            </StackPanel>
-                        </Grid>
+                    <!-- Status + Color -->
+                    <Grid Grid.Row="1" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="DURUM" Style="{StaticResource EventFieldLabelStyle}"/>
+                            <Border Style="{StaticResource EventFieldBoxStyle}" MinHeight="38">
+                                <ComboBox BorderThickness="0"
+                                          Background="Transparent"
+                                          FontSize="13"
+                                          Padding="8,6"
+                                          VerticalContentAlignment="Center"
+                                          Margin="0"
+                                          ItemsSource="{Binding ApprovalStatusOptions}"
+                                          DisplayMemberPath="Label"
+                                          SelectedValuePath="Value"
+                                          SelectedValue="{Binding SelectedApprovalStatus, Mode=TwoWay}"/>
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="RENK" Style="{StaticResource EventFieldLabelStyle}"/>
+                            <Border Style="{StaticResource EventFieldBoxStyle}" MinHeight="38">
+                                <ComboBox BorderThickness="0"
+                                          Background="Transparent"
+                                          FontSize="13"
+                                          Padding="8,6"
+                                          VerticalContentAlignment="Center"
+                                          Margin="0"
+                                          ItemsSource="{Binding ColorOptions}"
+                                          DisplayMemberPath="Label"
+                                          SelectedValuePath="Value"
+                                          SelectedValue="{Binding SelectedColor, Mode=TwoWay}"
+                                          IsEnabled="{Binding IsColorEditable}"/>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
 
-                        <!-- Description -->
+                    <!-- Description shares space -->
+                    <Grid Grid.Row="2" Margin="0,0,0,10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
                         <TextBlock Text="AÇIKLAMA" Style="{StaticResource EventFieldLabelStyle}"/>
-                        <Border Style="{StaticResource EventFieldBoxStyle}"
-                                Margin="0,0,0,16"
-                                MinHeight="120">
+                        <Border Grid.Row="1" Style="{StaticResource EventFieldBoxStyle}">
                             <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
                                      BorderThickness="0"
                                      Background="Transparent"
-                                     Padding="12,10"
+                                     Padding="10,8"
                                      AcceptsReturn="True"
                                      TextWrapping="Wrap"
                                      VerticalContentAlignment="Top"
                                      VerticalScrollBarVisibility="Auto"
                                      behaviors:TextBoxMouseWheelBehavior.IsEnabled="True"
-                                     MinHeight="108"
                                      Margin="0"/>
                         </Border>
+                    </Grid>
 
-                        <!-- Note -->
+                    <!-- Note shares space -->
+                    <Grid Grid.Row="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
                         <TextBlock Text="NOT" Style="{StaticResource EventFieldLabelStyle}"/>
-                        <Border Style="{StaticResource EventFieldBoxStyle}"
-                                MinHeight="100">
+                        <Border Grid.Row="1" Style="{StaticResource EventFieldBoxStyle}">
                             <TextBox Text="{Binding NoteText, UpdateSourceTrigger=PropertyChanged}"
                                      BorderThickness="0"
                                      Background="Transparent"
-                                     Padding="12,10"
+                                     Padding="10,8"
                                      AcceptsReturn="True"
                                      TextWrapping="Wrap"
                                      VerticalContentAlignment="Top"
                                      VerticalScrollBarVisibility="Auto"
                                      behaviors:TextBoxMouseWheelBehavior.IsEnabled="True"
-                                     MinHeight="88"
                                      Margin="0"/>
                         </Border>
-                    </StackPanel>
-                </ScrollViewer>
+                    </Grid>
+                </Grid>
 
                 <!-- Footer -->
                 <Border Grid.Row="2"
                         BorderBrush="{StaticResource Brush.Border}"
                         BorderThickness="0,1,0,0"
                         Background="{StaticResource Brush.SurfaceAlt}"
-                        CornerRadius="0,0,18,18"
-                        Padding="20,14">
-                    <DockPanel LastChildFill="False">
-                        <TextBlock DockPanel.Dock="Left"
-                                   Text="Kaydetmeden önce alanları kontrol edin."
-                                   Foreground="{StaticResource Brush.TextSecondary}"
-                                   VerticalAlignment="Center"
-                                   FontSize="12"
-                                   TextWrapping="Wrap"
-                                   MaxWidth="260"/>
-                        <StackPanel DockPanel.Dock="Right"
-                                    Orientation="Horizontal"
-                                    HorizontalAlignment="Right">
-                            <Button Content="İptal"
-                                    Width="104"
-                                    Margin="0,0,8,0"
-                                    Style="{StaticResource GhostButton}"
-                                    Command="{Binding CancelCommand}"/>
-                            <Button Content="Kaydet"
-                                    Width="128"
-                                    Command="{Binding SaveCommand}"/>
-                        </StackPanel>
-                    </DockPanel>
+                        CornerRadius="0,0,16,16"
+                        Padding="16,10">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="İptal"
+                                Width="100"
+                                Margin="0,0,8,0"
+                                Style="{StaticResource GhostButton}"
+                                Command="{Binding CancelCommand}"/>
+                        <Button Content="Kaydet"
+                                Width="120"
+                                Command="{Binding SaveCommand}"/>
+                    </StackPanel>
                 </Border>
             </Grid>
         </Border>
