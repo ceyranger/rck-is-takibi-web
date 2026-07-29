@@ -10,12 +10,16 @@ public sealed class KarotEntryDialogViewModel : ViewModelBase
 {
     private readonly KarotSubTab _subTab;
     private readonly IProjectCatalogService _catalogService;
+    private DateTime? _sampleReceivedDate;
     private string _adaParsel = string.Empty;
     private string _yapiSahibi = string.Empty;
     private string _yibfNo = string.Empty;
     private string _muteahhit = string.Empty;
     private string _katBilgisi = string.Empty;
     private string _betonSinifi = string.Empty;
+    private string _twentyEightDayResult = string.Empty;
+    private string _betonFirmasi = string.Empty;
+    private string _laboratuvar = string.Empty;
     private string _aciklama = string.Empty;
     private Guid? _selectedProjectId;
     private string _validationMessage = string.Empty;
@@ -49,6 +53,12 @@ public sealed class KarotEntryDialogViewModel : ViewModelBase
 
             ApplySelectedProject();
         }
+    }
+
+    public DateTime? SampleReceivedDate
+    {
+        get => _sampleReceivedDate;
+        set => SetProperty(ref _sampleReceivedDate, value);
     }
 
     public string AdaParsel
@@ -87,6 +97,24 @@ public sealed class KarotEntryDialogViewModel : ViewModelBase
         set => SetProperty(ref _betonSinifi, value);
     }
 
+    public string TwentyEightDayResult
+    {
+        get => _twentyEightDayResult;
+        set => SetProperty(ref _twentyEightDayResult, value);
+    }
+
+    public string BetonFirmasi
+    {
+        get => _betonFirmasi;
+        set => SetProperty(ref _betonFirmasi, value);
+    }
+
+    public string Laboratuvar
+    {
+        get => _laboratuvar;
+        set => SetProperty(ref _laboratuvar, value);
+    }
+
     public string Aciklama
     {
         get => _aciklama;
@@ -106,12 +134,16 @@ public sealed class KarotEntryDialogViewModel : ViewModelBase
     {
         var entry = new KarotEntry
         {
+            SampleReceivedDate = SampleReceivedDate,
             AdaParsel = AdaParsel.Trim(),
             YapiSahibi = YapiSahibi.Trim(),
             YibfNo = YibfNo.Trim(),
             Muteahhit = Muteahhit.Trim(),
             KatBilgisi = KatBilgisi.Trim(),
             BetonSinifi = BetonSinifi.Trim(),
+            TwentyEightDayResult = TwentyEightDayResult.Trim(),
+            BetonFirmasi = BetonFirmasi.Trim(),
+            Laboratuvar = Laboratuvar.Trim(),
             Aciklama = Aciklama.Trim(),
             Status = _subTab == KarotSubTab.Yapilan ? KarotStatus.KarotAlindiOlumlu : KarotStatus.KarotAlinacak,
             CreatedAt = DateTime.Now,

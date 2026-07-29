@@ -32,6 +32,10 @@
                                                SelectedProjectId="{Binding SelectedProjectId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                Catalog="{Binding CatalogEntries}" />
 
+                <TextBlock Text="Numune Alınma Tarihi" FontWeight="SemiBold" />
+                <DatePicker Margin="0,4,0,8"
+                            SelectedDate="{Binding SampleReceivedDate, Mode=TwoWay}" />
+
                 <TextBlock Text="Ada Parsel" FontWeight="SemiBold" />
                 <TextBox Margin="0,4,0,8" Text="{Binding AdaParsel, UpdateSourceTrigger=PropertyChanged}" />
 
@@ -49,6 +53,15 @@
 
                 <TextBlock Text="Beton Sınıfı" FontWeight="SemiBold" />
                 <TextBox Margin="0,4,0,8" Text="{Binding BetonSinifi, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBlock Text="28 Günlük Sonuç" FontWeight="SemiBold" />
+                <TextBox Margin="0,4,0,8" Text="{Binding TwentyEightDayResult, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBlock Text="Beton Firması" FontWeight="SemiBold" />
+                <TextBox Margin="0,4,0,8" Text="{Binding BetonFirmasi, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBlock Text="Laboratuvar" FontWeight="SemiBold" />
+                <TextBox Margin="0,4,0,8" Text="{Binding Laboratuvar, UpdateSourceTrigger=PropertyChanged}" />
 
                 <TextBlock Text="Açıklama" FontWeight="SemiBold" />
                 <TextBox Margin="0,4,0,8"
