@@ -36,6 +36,7 @@ public partial class MainWindow : Window
         }
 
         PendingEditCommitHelper.FlushFocusedEditor();
+        await _viewModel.CommitAllPendingEditsAsync();
 
         if (!_viewModel.HasAnyUnsavedChanges)
         {

@@ -20,10 +20,16 @@ public sealed class AddActionEntryDialogService : IAddActionEntryDialogService
     }
 
     public Task<ActionEntry?> ShowDialogAsync(string district, ActionEntryCategory category, CancellationToken cancellationToken = default)
+        => ShowDialogAsync(new AddActionEntryDialogRequest
+        {
+            District = district,
+            Category = category
+        }, cancellationToken);
+
+    public Task<ActionEntry?> ShowDialogAsync(AddActionEntryDialogRequest request, CancellationToken cancellationToken = default)
     {
         var vm = new AddActionEntryDialogViewModel(
-            district,
-            category,
+            request,
             _catalogUiState.GetActiveEntries(),
             _catalogService);
         var window = new AddActionEntryWindow(vm)

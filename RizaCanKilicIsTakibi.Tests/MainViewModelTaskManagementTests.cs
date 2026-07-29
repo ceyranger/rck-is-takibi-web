@@ -1359,6 +1359,51 @@ public class MainViewModelTaskManagementTests
     }
 
     [Fact]
+    public async Task CommitAllPendingEdits_Makes_Dirty_Visible_For_Close_Path()
+    {
+        var root = CreateTempRoot();
+        var databasePath = Path.Combine(root, "close-pending-edits.db");
+
+        try
+        {
+            var repository = new SqliteActionRepository(databasePath);
+            var entry = new ActionEntry
+            {
+                Category = ActionEntryCategory.Aksiyon,
+                District = "MERKEZ",
+                OwnerParcelText = "Eski Ada",
+                WorkText = "Eski Is",
+                DisplayOrder = 0,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            };
+
+            await repository.SaveManyAsync([entry]);
+
+            var mainViewModel = await CreateMainViewModelAsync(databasePath);
+            mainViewModel.SelectMainTabCommand.Execute(MainNavigationTab.Aksiyon);
+
+            var row = mainViewModel.ActionModule.DistrictGroups
+                .SelectMany(group => group.Rows)
+                .First(item => !item.IsPlaceholder && item.Entry?.Id == entry.Id);
+
+            row.IsEditingOwnerParcel = true;
+            row.OwnerParcelDraft = "Kapanis Ada";
+
+            Assert.False(mainViewModel.ActionModule.HasUnsavedChanges);
+
+            await mainViewModel.CommitAllPendingEditsAsync();
+
+            Assert.True(mainViewModel.HasAnyUnsavedChanges);
+            Assert.Equal("Kapanis Ada", row.Entry!.OwnerParcelText);
+        }
+        finally
+        {
+            await DeleteDirectoryWithRetriesAsync(root);
+        }
+    }
+
+    [Fact]
     public async Task SaveActiveTabCommand_Commits_Pending_Action_Edit_Before_Persist()
     {
         var root = CreateTempRoot();

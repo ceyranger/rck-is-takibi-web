@@ -204,6 +204,43 @@ public sealed class ProjectCatalogServiceTests
         Assert.Equal(project.Id, entry.WorkIdentityId);
     }
 
+    [Fact]
+    public void OverwriteLinkedIdentityFields_Previews_And_Replaces_Only_Identity_Fields()
+    {
+        var service = new ProjectCatalogService(new InMemoryProjectCatalogRepository());
+        var project = new ProjectCatalogEntry
+        {
+            Id = Guid.NewGuid(),
+            DisplayName = "Yeni Proje",
+            AdaParsel = "10/2",
+            YapiSahibi = "Yeni Sahip",
+            YibfNo = "99",
+            Muteahhit = "Yeni Müteahhit"
+        };
+        var karot = new KarotEntry { ProjectId = project.Id, AdaParsel = "Eski", Aciklama = "Korunacak" };
+        var missing = new MissingProjectEntry { ProjectId = project.Id, AdaParsel = "Eski", Description = "Korunacak" };
+        var action = new ActionEntry { ProjectId = project.Id, OwnerParcelText = "Eski", WorkText = "Korunacak" };
+        var tadilat = new TadilatEntry { ProjectId = project.Id, JobName = "Eski", Description1 = "Korunacak" };
+        var yibf = new YibfIsTakibiEntry { WorkGroupId = project.Id, WorkIdentityId = project.Id, JobName = "Eski" };
+
+        var preview = service.PreviewLinkedIdentityOverwrite(project, [karot], [missing], [action], [tadilat], [yibf]);
+        var applied = service.OverwriteLinkedIdentityFields(project, [karot], [missing], [action], [tadilat], [yibf]);
+
+        Assert.Equal(5, preview.TotalCount);
+        Assert.Equal(5, applied.TotalCount);
+        Assert.Equal("10/2", karot.AdaParsel);
+        Assert.Equal("Yeni Sahip", karot.YapiSahibi);
+        Assert.Equal("99", karot.YibfNo);
+        Assert.Equal("Yeni Müteahhit", karot.Muteahhit);
+        Assert.Equal("10/2 Yeni Sahip", action.OwnerParcelText);
+        Assert.Equal("10/2 Yeni Sahip", tadilat.JobName);
+        Assert.Equal("10/2 Yeni Sahip", yibf.JobName);
+        Assert.Equal("Korunacak", karot.Aciklama);
+        Assert.Equal("Korunacak", missing.Description);
+        Assert.Equal("Korunacak", action.WorkText);
+        Assert.Equal("Korunacak", tadilat.Description1);
+    }
+
     private sealed class InMemoryProjectCatalogRepository : IProjectCatalogRepository
     {
         private List<ProjectCatalogEntry> _entries = [];

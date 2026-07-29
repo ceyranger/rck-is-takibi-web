@@ -13,6 +13,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Threading;
 
 namespace RizaCanKilicIsTakibi.ViewModels;
@@ -67,6 +68,8 @@ public sealed partial class MainViewModel : ViewModelBase
     private bool _hasUnsavedCatalogChanges;
     private DateTime? _lastSuccessfulSaveAt;
     private TaskBoardViewModel _activeBoard;
+    private string _taskBoardSearchText = string.Empty;
+    private string _acilIsOzetSearchText = string.Empty;
     private Task? _actionModuleInitializationTask;
     private Task? _missingProjectModuleInitializationTask;
     private Task? _karotModuleInitializationTask;
@@ -202,6 +205,7 @@ public sealed partial class MainViewModel : ViewModelBase
         KarotModule = karotModule;
         TadilatModule = tadilatModule;
         YibfModule = yibfModule;
+        KarotModule.NegativeStatusActionDraftHandler = CreateActionDraftFromNegativeKarotAsync;
         TumEksikler = new TumEksiklerViewModel();
         ProjectCatalogEntries = new ObservableCollection<ProjectCatalogEntry>();
         ClearableTabs = BuildClearableTabs();
@@ -210,6 +214,9 @@ public sealed partial class MainViewModel : ViewModelBase
         UrgentBoard = new TaskBoardViewModel("Acil İşler", TaskBoardType.Acil);
         GeneralBoard = new TaskBoardViewModel("Genel İşler", TaskBoardType.Genel);
         _activeBoard = GeneralBoard;
+        AcilIsOzetItemsView = CollectionViewSource.GetDefaultView(AcilIsOzetItems);
+        AcilIsOzetItemsView.Filter = FilterAcilIsOzetItem;
+        AcilIsOzetItemsView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(AcilIsOzetItemViewModel.Category)));
 
         SelectMainTabCommand = new RelayCommand<MainNavigationTab>(SelectMainTab);
 
@@ -233,6 +240,8 @@ public sealed partial class MainViewModel : ViewModelBase
         OpenSearchCommand = new RelayCommand(OpenSearch);
         OpenGlobalSearchCommand = new RelayCommand(OpenGlobalSearch);
         CloseSearchCommand = new RelayCommand(CloseSearchUi);
+        ClearTaskBoardSearchCommand = new RelayCommand(() => TaskBoardSearchText = string.Empty, () => HasActiveTaskBoardSearch);
+        ClearAcilIsOzetSearchCommand = new RelayCommand(() => AcilIsOzetSearchText = string.Empty, () => HasActiveAcilIsOzetSearch);
         RunContextQueryCommand = new RelayCommand(RunContextQuery);
         EscapeCommand = new RelayCommand(HandleEscape);
 
@@ -327,7 +336,43 @@ public sealed partial class MainViewModel : ViewModelBase
     public TaskBoardViewModel UrgentBoard { get; }
     public TaskBoardViewModel GeneralBoard { get; }
     public ObservableRangeCollection<AcilIsOzetItemViewModel> AcilIsOzetItems { get; } = [];
+    public ICollectionView AcilIsOzetItemsView { get; }
     public ObservableCollection<ClearTabOption> ClearableTabs { get; }
+
+    public string TaskBoardSearchText
+    {
+        get => _taskBoardSearchText;
+        set
+        {
+            if (SetProperty(ref _taskBoardSearchText, value ?? string.Empty))
+            {
+                UrgentBoard.FilterText = _taskBoardSearchText;
+                GeneralBoard.FilterText = _taskBoardSearchText;
+                OnPropertyChanged(nameof(HasActiveTaskBoardSearch));
+                ClearTaskBoardSearchCommand.NotifyCanExecuteChanged();
+            }
+        }
+    }
+
+    public bool HasActiveTaskBoardSearch => !string.IsNullOrWhiteSpace(TaskBoardSearchText);
+
+    public string AcilIsOzetSearchText
+    {
+        get => _acilIsOzetSearchText;
+        set
+        {
+            if (SetProperty(ref _acilIsOzetSearchText, value ?? string.Empty))
+            {
+                AcilIsOzetItemsView.Refresh();
+                OnPropertyChanged(nameof(HasActiveAcilIsOzetSearch));
+                OnPropertyChanged(nameof(AcilIsOzetVisibleCount));
+                ClearAcilIsOzetSearchCommand.NotifyCanExecuteChanged();
+            }
+        }
+    }
+
+    public bool HasActiveAcilIsOzetSearch => !string.IsNullOrWhiteSpace(AcilIsOzetSearchText);
+    public int AcilIsOzetVisibleCount => AcilIsOzetItemsView.Cast<object>().Count();
 
     public MainNavigationTab SelectedMainTab
     {
@@ -547,6 +592,8 @@ public sealed partial class MainViewModel : ViewModelBase
     public RelayCommand OpenSearchCommand { get; }
     public RelayCommand OpenGlobalSearchCommand { get; }
     public RelayCommand CloseSearchCommand { get; }
+    public RelayCommand ClearTaskBoardSearchCommand { get; }
+    public RelayCommand ClearAcilIsOzetSearchCommand { get; }
     public RelayCommand RunContextQueryCommand { get; }
     public RelayCommand EscapeCommand { get; }
 
@@ -656,6 +703,7 @@ public sealed partial class MainViewModel : ViewModelBase
             {
                 await _projectCatalogService.SaveAsync(GetProjectCatalogSnapshot());
                 HasUnsavedCatalogChanges = false;
+                await RefreshProjectLinkHealthAsync();
             }
             if (HasUnsavedSettings)
             {
@@ -736,8 +784,7 @@ public sealed partial class MainViewModel : ViewModelBase
 
     private void ClearGeneralBoardSearchFilters()
     {
-        UrgentBoard.FilterText = string.Empty;
-        GeneralBoard.FilterText = string.Empty;
+        TaskBoardSearchText = string.Empty;
     }
 
     private static bool HasUiDispatcherContext()
@@ -1284,7 +1331,16 @@ public sealed partial class MainViewModel : ViewModelBase
             .ToList();
 
         AcilIsOzetItems.ReplaceRange(orderedItems);
+        AcilIsOzetItemsView.Refresh();
+        OnPropertyChanged(nameof(AcilIsOzetVisibleCount));
     }
+
+    private bool FilterAcilIsOzetItem(object item)
+        => item is AcilIsOzetItemViewModel summary
+           && (!HasActiveAcilIsOzetSearch
+               || SearchTextNormalizer.Contains(summary.Category, AcilIsOzetSearchText)
+               || SearchTextNormalizer.Contains(summary.PriorityLabel, AcilIsOzetSearchText)
+               || SearchTextNormalizer.Contains(summary.Summary, AcilIsOzetSearchText));
 
     private async Task ActivateTabAsync(MainNavigationTab tab)
     {
@@ -1313,6 +1369,12 @@ public sealed partial class MainViewModel : ViewModelBase
 
     private Task EnsureActionModuleInitializedAsync()
         => EnsureModuleInitializedAsync(ref _actionModuleInitializationTask, ActionModule.InitializeAsync);
+
+    private async Task CreateActionDraftFromNegativeKarotAsync(KarotEntry entry)
+    {
+        await EnsureActionModuleInitializedAsync();
+        await ActionModule.CreateDraftFromNegativeKarotAsync(entry);
+    }
 
     private Task EnsureMissingProjectModuleInitializedAsync()
         => EnsureModuleInitializedAsync(ref _missingProjectModuleInitializationTask, MissingProjectModule.InitializeAsync);
@@ -1445,6 +1507,7 @@ public sealed partial class MainViewModel : ViewModelBase
             await EnsureYibfModuleInitializedAsync();
             await TryAutoSeedProjectCatalogAsync();
             RefreshAcilIsOzet();
+            await RefreshProjectLinkHealthAsync();
         }
         catch
         {
@@ -1829,14 +1892,7 @@ public sealed partial class MainViewModel : ViewModelBase
 
     private void OpenSearch()
     {
-        if (IsTableSearchTab(SelectedMainTab))
-        {
-            SearchOverlay.OpenForTab(MapSearchScope(SelectedMainTab));
-            OnSearchQueryChanged(this, SearchOverlay.Query);
-            _searchWarmupTask ??= WarmupSearchAsync();
-            return;
-        }
-
+        // Deep search always opens the ARAMA tab; list tabs use in-place toolbar filters.
         OpenGlobalSearch();
     }
 
@@ -2253,6 +2309,7 @@ public sealed partial class MainViewModel : ViewModelBase
                         await _projectCatalogService.SaveAsync(GetProjectCatalogSnapshot());
                         HasUnsavedCatalogChanges = false;
                         catalogSaved = true;
+                        await RefreshProjectLinkHealthAsync();
                     }
 
                     if (YibfModule.HasUnsavedChanges)
@@ -2286,6 +2343,9 @@ public sealed partial class MainViewModel : ViewModelBase
                 }
             }
         });
+
+    public Task CommitAllPendingEditsAsync()
+        => CommitPendingEditsAcrossAllTabsAsync();
 
     private async Task CommitPendingEditsAcrossAllTabsAsync()
     {
@@ -2953,7 +3013,10 @@ public sealed partial class MainViewModel : ViewModelBase
             ("Aksiyon", BuildActionExcelWorkbook()),
             ("Eksik Proje", BuildMissingProjectExcelWorkbook()),
             ("Karot Takibi", BuildKarotExcelWorkbook()),
-            ("Tadilat Takibi", BuildTadilatExcelWorkbook())
+            ("Tadilat Takibi", BuildTadilatExcelWorkbook()),
+            ("YİBF Ana Bilgi", BuildYibfAnaBilgiExcelWorkbook()),
+            ("YİBF İş Takibi", BuildYibfIsTakibiExcelWorkbook()),
+            ("ACİL İŞ ÖZET", BuildYibfPendingExcelWorkbook())
         };
 
         var sections = new List<ReportPackSectionModel>();
@@ -3554,6 +3617,7 @@ public sealed partial class MainViewModel : ViewModelBase
             }
 
             await EnsureAllModulesInitializedAsync();
+            RefreshAcilIsOzet();
             var pack = BuildReportPackModel();
             await _importExportService.ExportReportPackAsync(pack, path);
             _notificationService.ShowToast("PDF rapor paketi oluşturuldu.", ToastType.Success);

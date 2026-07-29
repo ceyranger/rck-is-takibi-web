@@ -163,6 +163,140 @@ public sealed class ProjectCatalogService : IProjectCatalogService
         FillIfEmpty(entry.Muteahhit, project.Muteahhit, value => entry.Muteahhit = value);
     }
 
+    public ProjectCatalogSyncResult PreviewLinkedIdentityOverwrite(
+        ProjectCatalogEntry project,
+        IReadOnlyList<KarotEntry> karot,
+        IReadOnlyList<MissingProjectEntry> missing,
+        IReadOnlyList<ActionEntry> action,
+        IReadOnlyList<TadilatEntry> tadilat,
+        IReadOnlyList<YibfIsTakibiEntry> yibfIsTakibi)
+        => SynchronizeLinkedIdentityFields(project, karot, missing, action, tadilat, yibfIsTakibi, apply: false);
+
+    public ProjectCatalogSyncResult OverwriteLinkedIdentityFields(
+        ProjectCatalogEntry project,
+        IReadOnlyList<KarotEntry> karot,
+        IReadOnlyList<MissingProjectEntry> missing,
+        IReadOnlyList<ActionEntry> action,
+        IReadOnlyList<TadilatEntry> tadilat,
+        IReadOnlyList<YibfIsTakibiEntry> yibfIsTakibi)
+        => SynchronizeLinkedIdentityFields(project, karot, missing, action, tadilat, yibfIsTakibi, apply: true);
+
+    private static ProjectCatalogSyncResult SynchronizeLinkedIdentityFields(
+        ProjectCatalogEntry project,
+        IReadOnlyList<KarotEntry> karot,
+        IReadOnlyList<MissingProjectEntry> missing,
+        IReadOnlyList<ActionEntry> action,
+        IReadOnlyList<TadilatEntry> tadilat,
+        IReadOnlyList<YibfIsTakibiEntry> yibfIsTakibi,
+        bool apply)
+    {
+        var adaParsel = project.AdaParsel?.Trim() ?? string.Empty;
+        var yapiSahibi = project.YapiSahibi?.Trim() ?? string.Empty;
+        var yibfNo = project.YibfNo?.Trim() ?? string.Empty;
+        var muteahhit = project.Muteahhit?.Trim() ?? string.Empty;
+        var ownerParcel = BuildOwnerParcelText(project);
+        var jobName = ChooseRicherText(project.DisplayName, ownerParcel);
+        var now = DateTime.Now;
+
+        var karotCount = 0;
+        foreach (var entry in karot.Where(item => item.ProjectId == project.Id))
+        {
+            if (entry.AdaParsel == adaParsel
+                && entry.YapiSahibi == yapiSahibi
+                && entry.YibfNo == yibfNo
+                && entry.Muteahhit == muteahhit)
+            {
+                continue;
+            }
+
+            karotCount++;
+            if (apply)
+            {
+                entry.AdaParsel = adaParsel;
+                entry.YapiSahibi = yapiSahibi;
+                entry.YibfNo = yibfNo;
+                entry.Muteahhit = muteahhit;
+                entry.UpdatedAt = now;
+            }
+        }
+
+        var missingCount = 0;
+        foreach (var entry in missing.Where(item => item.ProjectId == project.Id))
+        {
+            if (entry.AdaParsel == adaParsel && entry.YapiSahibi == yapiSahibi)
+            {
+                continue;
+            }
+
+            missingCount++;
+            if (apply)
+            {
+                entry.AdaParsel = adaParsel;
+                entry.YapiSahibi = yapiSahibi;
+                entry.UpdatedAt = now;
+            }
+        }
+
+        var actionCount = 0;
+        foreach (var entry in action.Where(item => item.ProjectId == project.Id))
+        {
+            if (entry.OwnerParcelText == ownerParcel)
+            {
+                continue;
+            }
+
+            actionCount++;
+            if (apply)
+            {
+                entry.OwnerParcelText = ownerParcel;
+                entry.UpdatedAt = now;
+            }
+        }
+
+        var tadilatCount = 0;
+        foreach (var entry in tadilat.Where(item => item.ProjectId == project.Id))
+        {
+            if (entry.JobName == jobName)
+            {
+                continue;
+            }
+
+            tadilatCount++;
+            if (apply)
+            {
+                entry.JobName = jobName;
+                entry.UpdatedAt = now;
+            }
+        }
+
+        var yibfCount = 0;
+        foreach (var entry in yibfIsTakibi.Where(item =>
+                     item.WorkIdentityId == project.Id
+                     || (project.Kind != ProjectCatalogKind.Istinat && item.WorkGroupId == project.Id)))
+        {
+            if (entry.JobName == jobName)
+            {
+                continue;
+            }
+
+            yibfCount++;
+            if (apply)
+            {
+                entry.JobName = jobName;
+                entry.UpdatedAt = now;
+            }
+        }
+
+        return new ProjectCatalogSyncResult
+        {
+            KarotCount = karotCount,
+            MissingProjectCount = missingCount,
+            ActionCount = actionCount,
+            TadilatCount = tadilatCount,
+            YibfIsTakibiCount = yibfCount
+        };
+    }
+
     private static YibfAnaBilgiEntry BuildAnaBilgiStub(ProjectCatalogEntry entry)
     {
         var now = DateTime.Now;

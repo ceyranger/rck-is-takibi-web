@@ -16,17 +16,37 @@ public sealed class AddActionEntryDialogViewModel : ViewModelBase
     private string _projectSummaryText = string.Empty;
     private bool _isIdentityManualEdit;
     private bool _isProjectIdentityIncomplete;
+    private string _district = string.Empty;
 
     public AddActionEntryDialogViewModel(
         string district,
         ActionEntryCategory category,
         IEnumerable<ProjectCatalogEntry> catalogEntries,
         IProjectCatalogService catalogService)
+        : this(
+            new AddActionEntryDialogRequest
+            {
+                District = district,
+                Category = category
+            },
+            catalogEntries,
+            catalogService)
     {
-        District = district;
-        Category = category;
+    }
+
+    public AddActionEntryDialogViewModel(
+        AddActionEntryDialogRequest request,
+        IEnumerable<ProjectCatalogEntry> catalogEntries,
+        IProjectCatalogService catalogService)
+    {
+        _district = request.District;
+        Category = request.Category;
         _catalogService = catalogService;
         CatalogEntries = new ObservableCollection<ProjectCatalogEntry>(catalogEntries);
+        DistrictOptions = new ObservableCollection<string>(request.DistrictOptions);
+        OwnerParcelText = request.OwnerParcelText;
+        WorkText = request.WorkText;
+        SelectedProjectId = request.ProjectId;
 
         SaveCommand = new RelayCommand(Save);
         CancelCommand = new RelayCommand(() => RequestClose?.Invoke(this, false));
@@ -35,11 +55,18 @@ public sealed class AddActionEntryDialogViewModel : ViewModelBase
 
     public event EventHandler<bool>? RequestClose;
 
-    public string District { get; }
+    public string District
+    {
+        get => _district;
+        set => SetProperty(ref _district, value);
+    }
 
     public ActionEntryCategory Category { get; }
 
     public ObservableCollection<ProjectCatalogEntry> CatalogEntries { get; }
+    public ObservableCollection<string> DistrictOptions { get; }
+    public bool RequiresDistrictSelection => DistrictOptions.Count > 0;
+    public bool HasFixedDistrict => !RequiresDistrictSelection;
 
     public Guid? SelectedProjectId
     {
@@ -211,6 +238,12 @@ public sealed class AddActionEntryDialogViewModel : ViewModelBase
 
     private void Save()
     {
+        if (string.IsNullOrWhiteSpace(District))
+        {
+            ValidationMessage = "İlçe seçimi zorunludur.";
+            return;
+        }
+
         if (string.IsNullOrWhiteSpace(OwnerParcelText) || string.IsNullOrWhiteSpace(WorkText))
         {
             ValidationMessage = "Ada/Parsel/Yapı Sahibi ve Yapılacak İş alanları zorunludur.";

@@ -147,6 +147,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
@@ -174,10 +175,21 @@
                         <Button Content="Eşleştirmeyi önizle" Command="{Binding ProjectLinkDryRunCommand}" Style="{StaticResource GhostButton}" Margin="0,0,8,8"/>
                         <Button Content="Şüphelileri çöz" Command="{Binding ResolveUnresolvedProjectLinksCommand}" Style="{StaticResource GhostButton}" Margin="0,0,8,8"/>
                         <Button Content="Bağlantıları uygula" Command="{Binding ApplyProjectLinksCommand}" Margin="0,0,8,8"/>
+                        <Button Content="Bağlı kayıtları güncelle"
+                                Command="{Binding OverwriteLinkedProjectRecordsCommand}"
+                                Style="{StaticResource GhostButton}"
+                                ToolTip="Seçili katalog projesine bağlı kayıtlardaki kimlik alanlarını katalog değerleriyle değiştirir."
+                                Margin="0,0,8,8"/>
                     </WrapPanel>
                 </DockPanel>
 
-                <DataGrid Grid.Row="2"
+                <TextBlock Grid.Row="2"
+                           Margin="0,0,0,8"
+                           Foreground="{StaticResource Brush.Warning}"
+                           TextWrapping="Wrap"
+                           Text="Uyarı: Bağlı kayıtları güncelle işlemi, elle girilmiş proje kimlik bilgilerini katalog değerleriyle değiştirir; otomatik kaydetmez."/>
+
+                <DataGrid Grid.Row="3"
                           ItemsSource="{Binding FilteredProjectCatalogListItems}"
                           SelectedItem="{Binding SelectedProjectCatalogListItem, Mode=TwoWay}"
                           AutoGenerateColumns="False"

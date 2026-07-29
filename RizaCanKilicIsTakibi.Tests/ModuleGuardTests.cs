@@ -30,6 +30,33 @@ public class ModuleGuardTests
     }
 
     [Fact]
+    public async Task Karot_Negative_Status_Requests_Action_Draft_After_Confirmation()
+    {
+        var statusDialog = new TestKarotStatusDialogService { Result = KarotStatus.KarotAlindiOlumsuz };
+        var module = new KarotModuleViewModel(
+            new SqliteKarotRepository(BuildDatabasePath()),
+            statusDialog,
+            new NotificationService(),
+            new CallbackConfirmationService(),
+            new TestTadilatCellNoteDialogService(),
+            new UndoRedoService());
+        var entry = new KarotEntry { AdaParsel = "101/1", YapiSahibi = "Sahip" };
+        KarotEntry? requested = null;
+        module.NegativeStatusActionDraftHandler = item =>
+        {
+            requested = item;
+            return Task.CompletedTask;
+        };
+        module.LoadFromBackup([entry]);
+
+        await module.OpenKarotStatusDialogCommand.ExecuteAsync(module.Entries.Single());
+
+        Assert.NotNull(requested);
+        Assert.Equal(KarotStatus.KarotAlindiOlumsuz, requested!.Status);
+        Assert.Equal(entry.Id, requested.Id);
+    }
+
+    [Fact]
     public async Task Tadilat_Delete_Command_Does_Not_Crash_When_Selection_Clears_During_Confirmation()
     {
         var confirmationService = new CallbackConfirmationService();
@@ -549,8 +576,10 @@ public class ModuleGuardTests
 
     private sealed class TestKarotStatusDialogService : IKarotStatusDialogService
     {
+        public KarotStatus? Result { get; init; }
+
         public Task<KarotStatus?> ShowDialogAsync(KarotStatus currentStatus, CancellationToken cancellationToken = default)
-            => Task.FromResult<KarotStatus?>(null);
+            => Task.FromResult(Result);
     }
 
     private sealed class TestTadilatCellNoteDialogService : ITadilatCellNoteDialogService

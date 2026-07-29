@@ -156,6 +156,50 @@
                                         </Style>
                                     </Button.Style>
                                 </Button>
+                                <Border Style="{StaticResource MissingProjectToolbarChipStyle}"
+                                        Padding="0"
+                                        MinWidth="240"
+                                        Margin="8,0,0,0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0"
+                                                 Text="{Binding ActionModule.SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                                 MinHeight="34"
+                                                 Margin="8,0,0,0"
+                                                 VerticalContentAlignment="Center"
+                                                 BorderThickness="0"
+                                                 Background="Transparent"
+                                                 ToolTip="İlçe, ada parsel, yapı sahibi veya işte ara"/>
+                                        <TextBlock Grid.Column="0"
+                                                   IsHitTestVisible="False"
+                                                   Margin="10,0,0,0"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="#FF8A9BB0"
+                                                   Text="Ara (ilçe, proje, iş...)">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ActionModule.SearchText}" Value="">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                        <Button Grid.Column="1"
+                                                Content="×"
+                                                Command="{Binding ActionModule.ClearSearchCommand}"
+                                                MinWidth="28"
+                                                MinHeight="28"
+                                                Margin="2"
+                                                Padding="0"
+                                                Style="{StaticResource GhostButton}"/>
+                                    </Grid>
+                                </Border>
                             </WrapPanel>
                             <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
                                 <Button Content="Excel Dışa" Command="{Binding ExportExcelCommand}" Style="{StaticResource GhostButton}"/>

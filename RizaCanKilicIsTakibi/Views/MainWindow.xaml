@@ -794,8 +794,52 @@
                     <Border Grid.Row="0" Style="{StaticResource CardBorderStyle}">
                         <DockPanel>
                             <TextBlock Text="GENEL İŞ TAKİBİ" FontFamily="{StaticResource Font.Primary}" FontSize="24" FontWeight="SemiBold" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                            <Border Style="{StaticResource MissingProjectToolbarChipStyle}"
+                                    DockPanel.Dock="Left"
+                                    Padding="0"
+                                    MinWidth="260"
+                                    Margin="18,0,0,0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0"
+                                             Text="{Binding TaskBoardSearchText, UpdateSourceTrigger=PropertyChanged}"
+                                             MinHeight="34"
+                                             Margin="8,0,0,0"
+                                             VerticalContentAlignment="Center"
+                                             BorderThickness="0"
+                                             Background="Transparent"
+                                             ToolTip="Acil ve genel görevlerde ara"/>
+                                    <TextBlock Grid.Column="0"
+                                               IsHitTestVisible="False"
+                                               Margin="10,0,0,0"
+                                               VerticalAlignment="Center"
+                                               Foreground="#FF8A9BB0"
+                                               Text="Ara (başlık, açıklama, not...)">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding TaskBoardSearchText}" Value="">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <Button Grid.Column="1"
+                                            Content="×"
+                                            Command="{Binding ClearTaskBoardSearchCommand}"
+                                            MinWidth="28"
+                                            MinHeight="28"
+                                            Margin="2"
+                                            Padding="0"
+                                            Style="{StaticResource GhostButton}"/>
+                                </Grid>
+                            </Border>
                             <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
-                                <Button Content="Ara" Command="{Binding OpenGlobalSearchCommand}" Style="{StaticResource GhostButton}" ToolTip="Arama sekmesine git (Ctrl+F)"/>
                                 <Button Content="Kaydet" Command="{Binding SaveActiveTabCommand}" ToolTip="Kaydet (Ctrl+S)"/>
                                 <Button Content="Excel Dışa" Command="{Binding ExportExcelCommand}" ToolTip="Excel'e Aktar"/>
                                 <Button Content="Excel İçe (Ekle)" Command="{Binding AppendImportGenelExcelCommand}" Style="{StaticResource GhostButton}" ToolTip="Mevcut kayıtlara Excel'den ekler; silmez"/>
@@ -805,11 +849,19 @@
                         </DockPanel>
                     </Border>
 
-                    <UniformGrid Grid.Row="1" Columns="4" Margin="0,8,0,8">
+                    <UniformGrid Grid.Row="1" Columns="5" Margin="0,8,0,8">
                         <Border Style="{StaticResource CardBorderStyle}"><StackPanel><TextBlock Text="Toplam" Style="{StaticResource MetricLabelText}"/><TextBlock Text="{Binding Dashboard.TotalJobs}" Style="{StaticResource MetricValueText}"/></StackPanel></Border>
                         <Border Style="{StaticResource CardBorderStyle}"><StackPanel><TextBlock Text="Acil" Style="{StaticResource MetricLabelText}"/><TextBlock Text="{Binding Dashboard.UrgentJobs}" Style="{StaticResource MetricValueText}" Foreground="{StaticResource Brush.Danger}"/></StackPanel></Border>
                         <Border Style="{StaticResource CardBorderStyle}"><StackPanel><TextBlock Text="Genel" Style="{StaticResource MetricLabelText}"/><TextBlock Text="{Binding Dashboard.GeneralJobs}" Style="{StaticResource MetricValueText}" Foreground="{StaticResource Brush.Primary}"/></StackPanel></Border>
                         <Border Style="{StaticResource CardBorderStyle}"><StackPanel><TextBlock Text="Not Sayısı" Style="{StaticResource MetricLabelText}"/><TextBlock Text="{Binding Dashboard.TotalNotes}" Style="{StaticResource MetricValueText}" Foreground="{StaticResource Brush.Success}"/></StackPanel></Border>
+                        <Button Command="{Binding OpenProjectLinkHealthCommand}"
+                                Style="{StaticResource GhostButton}"
+                                ToolTip="Ayarlar'da bağlanmamış proje kayıtlarını çöz">
+                            <StackPanel>
+                                <TextBlock Text="Bağlanmamış" Style="{StaticResource MetricLabelText}"/>
+                                <TextBlock Text="{Binding UnresolvedProjectLinkCount}" Style="{StaticResource MetricValueText}" Foreground="{StaticResource Brush.Warning}"/>
+                            </StackPanel>
+                        </Button>
                     </UniformGrid>
 
                     <Grid Grid.Row="2">
@@ -1113,8 +1165,51 @@
                             </DockPanel>
 
                             <WrapPanel Grid.Row="1" Margin="0,10,0,0" VerticalAlignment="Center">
+                                <Border Style="{StaticResource MissingProjectToolbarChipStyle}"
+                                        Padding="0"
+                                        MinWidth="260">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0"
+                                                 Text="{Binding MissingProjectModule.SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                                 MinHeight="34"
+                                                 Margin="8,0,0,0"
+                                                 VerticalContentAlignment="Center"
+                                                 BorderThickness="0"
+                                                 Background="Transparent"
+                                                 ToolTip="Eksik proje kayıtlarında ara"/>
+                                        <TextBlock Grid.Column="0"
+                                                   IsHitTestVisible="False"
+                                                   Margin="10,0,0,0"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="#FF8A9BB0"
+                                                   Text="Ara (ada parsel, sahip, eksik...)">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding MissingProjectModule.SearchText}" Value="">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                        <Button Grid.Column="1"
+                                                Content="×"
+                                                Command="{Binding MissingProjectModule.ClearSearchCommand}"
+                                                MinWidth="28"
+                                                MinHeight="28"
+                                                Margin="2"
+                                                Padding="0"
+                                                Style="{StaticResource GhostButton}"/>
+                                    </Grid>
+                                </Border>
                                 <Border Style="{StaticResource MissingProjectToolbarChipStyle}">
-                                    <TextBlock Text="{Binding MissingProjectModule.Entries.Count, StringFormat=Toplam Kayıt: {0}}"
+                                    <TextBlock Text="{Binding MissingProjectModule.VisibleEntryCount, StringFormat=Görünen Kayıt: {0}}"
                                                FontWeight="SemiBold"
                                                Foreground="#FF20344C"/>
                                 </Border>

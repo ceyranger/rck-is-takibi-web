@@ -46,6 +46,7 @@ public sealed class MissingProjectModuleViewModel : ViewModelBase
     private bool _isInitialized;
     private bool _isPersisting;
     private bool _hasUnsavedChanges;
+    private string _searchText = string.Empty;
     private MissingProjectEntry? _selectedEntry;
     private MissingProjectRowViewModel? _selectedRow;
     private sealed record MissingProjectUndoSnapshot(
@@ -102,6 +103,7 @@ public sealed class MissingProjectModuleViewModel : ViewModelBase
         ClearCellColorCommand = new RelayCommand<MissingProjectCellViewModel?>(cell => SetCellColor(cell, string.Empty));
         CopyCellCommand = new RelayCommand<MissingProjectCellViewModel?>(CopyCell);
         PasteCellCommand = new RelayCommand<MissingProjectCellViewModel?>(PasteCell, cell => cell?.IsInteractive == true);
+        ClearSearchCommand = new RelayCommand(() => SearchText = string.Empty, () => HasActiveSearch);
     }
 
     public ObservableRangeCollection<MissingProjectEntry> Entries { get; }
@@ -122,6 +124,24 @@ public sealed class MissingProjectModuleViewModel : ViewModelBase
     }
 
     public void MarkDirty() => HasUnsavedChanges = true;
+
+    public string SearchText
+    {
+        get => _searchText;
+        set
+        {
+            if (SetProperty(ref _searchText, value ?? string.Empty))
+            {
+                RefreshRows();
+                OnPropertyChanged(nameof(HasActiveSearch));
+                OnPropertyChanged(nameof(VisibleEntryCount));
+                ClearSearchCommand.NotifyCanExecuteChanged();
+            }
+        }
+    }
+
+    public bool HasActiveSearch => !string.IsNullOrWhiteSpace(SearchText);
+    public int VisibleEntryCount => Rows.Count;
 
     public MissingProjectEntry? SelectedEntry
     {
@@ -179,6 +199,7 @@ public sealed class MissingProjectModuleViewModel : ViewModelBase
     public RelayCommand<MissingProjectCellViewModel?> ClearCellColorCommand { get; }
     public RelayCommand<MissingProjectCellViewModel?> CopyCellCommand { get; }
     public RelayCommand<MissingProjectCellViewModel?> PasteCellCommand { get; }
+    public RelayCommand ClearSearchCommand { get; }
 
     public async Task InitializeAsync()
     {
@@ -823,7 +844,9 @@ public sealed class MissingProjectModuleViewModel : ViewModelBase
         var selectedId = SelectedEntry?.Id;
 
         var newRows = new List<MissingProjectRowViewModel>();
-        foreach (var entry in Entries.OrderBy(item => item.DisplayOrder))
+        foreach (var entry in Entries
+                     .Where(EntryMatchesSearch)
+                     .OrderBy(item => item.DisplayOrder))
         {
             var row = new MissingProjectRowViewModel(
                 entry,
@@ -838,7 +861,36 @@ public sealed class MissingProjectModuleViewModel : ViewModelBase
         Rows.ReplaceRange(newRows);
 
         _selectedRow = selectedId is null ? null : Rows.FirstOrDefault(row => row.Entry.Id == selectedId.Value);
+        if (selectedId is not null && _selectedRow is null && HasActiveSearch)
+        {
+            _selectedEntry = null;
+            OnPropertyChanged(nameof(SelectedEntry));
+            NotifyEntryCommands();
+        }
         OnPropertyChanged(nameof(SelectedRow));
+        OnPropertyChanged(nameof(VisibleEntryCount));
+    }
+
+    private bool EntryMatchesSearch(MissingProjectEntry entry)
+    {
+        if (!HasActiveSearch)
+        {
+            return true;
+        }
+
+        var query = SearchText;
+        if (SearchTextNormalizer.Contains(entry.AdaParsel, query)
+            || SearchTextNormalizer.Contains(entry.YapiSahibi, query)
+            || SearchTextNormalizer.Contains(entry.RecordMediumText, query)
+            || SearchTextNormalizer.Contains(entry.MissingProjectText, query)
+            || SearchTextNormalizer.Contains(entry.Description, query))
+        {
+            return true;
+        }
+
+        return CellStates.Any(state =>
+            state.EntryId == entry.Id
+            && SearchTextNormalizer.Contains(state.NoteText, query));
     }
 
     private MissingProjectCellViewModel BuildCell(MissingProjectEntry entry, string columnKey, string text)

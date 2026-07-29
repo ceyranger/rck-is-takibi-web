@@ -118,7 +118,7 @@ public class DialogAndImportValidationTests
         await module.ImportExcelCommand.ExecuteAsync(null);
 
         Assert.Single(module.AktifEntries);
-        Assert.Equal("SİNOP", module.AktifEntries[0].District);
+        Assert.Equal("MERKEZ", module.AktifEntries[0].District);
         Assert.Empty(module.CellStates);
     }
 

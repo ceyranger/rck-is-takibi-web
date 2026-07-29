@@ -36,6 +36,7 @@ public sealed class ActionModuleViewModel : ViewModelBase
     private bool _hasUnsavedChanges;
     private ActionSubTab _selectedSubTab = ActionSubTab.Aksiyon;
     private string _selectedDistrict;
+    private string _searchText = string.Empty;
     private ActionEntry? _selectedEntry;
     private Guid? _lastSelectedEntryId;
     private readonly Dictionary<string, ActionDistrictGroup> _districtGroupLookup = new(StringComparer.OrdinalIgnoreCase);
@@ -56,11 +57,7 @@ public sealed class ActionModuleViewModel : ViewModelBase
         _undoRedo = undoRedoService;
         _settings = settings;
 
-        Districts =
-        [
-            "GERZE", "BOYABAT", "BOYABAT OSB", "SARAYDÜZÜ", "DURAĞAN",
-            "AYANCIK", "TÜRKELİ", "MERKEZ", "SİNOP OSB", "ERFELEK"
-        ];
+        Districts = new ObservableCollection<string>(DistrictCatalog.All);
         _selectedDistrict = Districts.First();
 
         AksiyonEntries = [];
@@ -85,6 +82,7 @@ public sealed class ActionModuleViewModel : ViewModelBase
         MoveActionEntryUpCommand = new AsyncRelayCommand(() => MoveSelectedAsync(-1), CanMoveUp);
         MoveActionEntryDownCommand = new AsyncRelayCommand(() => MoveSelectedAsync(1), CanMoveDown);
         MoveToAksiyonCommand = new AsyncRelayCommand(MoveToAksiyonAsync, CanMoveToAksiyon);
+        ClearSearchCommand = new RelayCommand(() => SearchText = string.Empty, () => HasActiveSearch);
 
         RefreshDistrictGroups();
     }
@@ -97,6 +95,20 @@ public sealed class ActionModuleViewModel : ViewModelBase
     public bool IsBusy { get => _isBusy; private set => SetProperty(ref _isBusy, value); }
     public bool HasUnsavedChanges { get => _hasUnsavedChanges; private set => SetProperty(ref _hasUnsavedChanges, value); }
     public void MarkDirty() => HasUnsavedChanges = true;
+    public string SearchText
+    {
+        get => _searchText;
+        set
+        {
+            if (SetProperty(ref _searchText, value ?? string.Empty))
+            {
+                RefreshDistrictGroups();
+                OnPropertyChanged(nameof(HasActiveSearch));
+                ClearSearchCommand.NotifyCanExecuteChanged();
+            }
+        }
+    }
+    public bool HasActiveSearch => !string.IsNullOrWhiteSpace(SearchText);
     public ActionSubTab SelectedSubTab
     {
         get => _selectedSubTab;
@@ -148,6 +160,7 @@ public sealed class ActionModuleViewModel : ViewModelBase
     public AsyncRelayCommand MoveActionEntryUpCommand { get; }
     public AsyncRelayCommand MoveActionEntryDownCommand { get; }
     public AsyncRelayCommand MoveToAksiyonCommand { get; }
+    public RelayCommand ClearSearchCommand { get; }
 
     public async Task InitializeAsync()
     {
@@ -270,6 +283,52 @@ public sealed class ActionModuleViewModel : ViewModelBase
         if (row is null) { return; }
         if (owner) { row.OwnerParcelDraft = row.OwnerParcelText; row.IsEditingOwnerParcel = false; }
         else { row.WorkDraft = row.WorkText; row.IsEditingWork = false; }
+    }
+
+    public async Task CreateDraftFromNegativeKarotAsync(KarotEntry karot)
+    {
+        ArgumentNullException.ThrowIfNull(karot);
+
+        var ownerParcel = string.Join(
+            " ",
+            new[] { karot.AdaParsel?.Trim(), karot.YapiSahibi?.Trim() }
+                .Where(part => !string.IsNullOrWhiteSpace(part)));
+        var selectedDistrict = string.IsNullOrWhiteSpace(SelectedDistrict) ? string.Empty : SelectedDistrict;
+        var created = await _dialog.ShowDialogAsync(new AddActionEntryDialogRequest
+        {
+            District = selectedDistrict,
+            DistrictOptions = string.IsNullOrWhiteSpace(selectedDistrict) ? Districts.ToList() : [],
+            Category = ActionEntryCategory.AksiyonaEklenecekler,
+            OwnerParcelText = ownerParcel,
+            WorkText = string.IsNullOrWhiteSpace(ownerParcel)
+                ? "Karot olumsuz sonucu için gerekli aksiyonları takip et."
+                : $"Karot olumsuz — {ownerParcel} için gerekli aksiyonları takip et.",
+            ProjectId = karot.ProjectId
+        });
+        if (created is null || string.IsNullOrWhiteSpace(created.District))
+        {
+            return;
+        }
+
+        created.Category = ActionEntryCategory.AksiyonaEklenecekler;
+        created.CreatedAt = DateTime.Now;
+        created.UpdatedAt = DateTime.Now;
+        var before = CaptureSnapshot();
+        var after = CloneSnapshot(before);
+        var list = after.AksiyonaEkleneceklerEntries;
+        created.DisplayOrder = NextDisplayOrder(list, created.District);
+        list.Add(CloneEntry(created));
+        NormalizeDistrictOrder(list, created.District);
+
+        SelectedSubTab = ActionSubTab.AksiyonaEklenecekler;
+        SelectDistrict(created.District);
+        await ExecuteSnapshotActionAsync(
+            "Olumsuz karottan aksiyon taslağı",
+            before,
+            after,
+            created.Id,
+            SelectedEntry?.Id);
+        _notifier.ShowToast("Aksiyon taslağı oluşturuldu.", ToastType.Success);
     }
 
     private async Task CommitEditAsync(ActionEntryRow? row, bool owner)
@@ -613,6 +672,7 @@ public sealed class ActionModuleViewModel : ViewModelBase
 
             var districtEntries = current
                 .Where(x => x.District.Equals(district, StringComparison.OrdinalIgnoreCase))
+                .Where(EntryMatchesSearch)
                 .OrderBy(x => x.DisplayOrder)
                 .ThenBy(x => x.UpdatedAt)
                 .ToList();
@@ -626,7 +686,8 @@ public sealed class ActionModuleViewModel : ViewModelBase
             }
         }
 
-        if (SelectedEntry is not null && !current.Any(x => x.Id == SelectedEntry.Id))
+        if (SelectedEntry is not null
+            && (!current.Any(x => x.Id == SelectedEntry.Id) || !EntryMatchesSearch(SelectedEntry)))
         {
             _selectedEntry = null;
             OnPropertyChanged(nameof(SelectedEntry));
@@ -640,6 +701,12 @@ public sealed class ActionModuleViewModel : ViewModelBase
         MoveActionEntryDownCommand.NotifyCanExecuteChanged();
         MoveToAksiyonCommand.NotifyCanExecuteChanged();
     }
+
+    private bool EntryMatchesSearch(ActionEntry entry)
+        => !HasActiveSearch
+           || DistrictCatalog.ContainsForFilter(entry.District, SearchText)
+           || SearchTextNormalizer.Contains(entry.OwnerParcelText, SearchText)
+           || SearchTextNormalizer.Contains(entry.WorkText, SearchText);
 
     private List<string> GetOrderedDistricts(IEnumerable<ActionEntry> current)
     {

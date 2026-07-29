@@ -43,6 +43,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
     private bool _hasUnsavedChanges;
     private string _searchQuery = string.Empty;
     private string _isTakibiSearchText = string.Empty;
+    private string _pendingSearchText = string.Empty;
     private YibfAnaBilgiEntry? _selectedAnaBilgiEntry;
     private YibfAnaBilgiEvent? _selectedAnaBilgiEvent;
     private YibfIsTakibiEntry? _selectedIsTakibiEntry;
@@ -135,6 +136,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
         MoveIsTakibiEntryUpCommand = new AsyncRelayCommand<YibfIsTakibiEntry?>(entry => MoveIsTakibiEntryAsync(entry, -1), CanMoveIsTakibiEntryUp);
         MoveIsTakibiEntryDownCommand = new AsyncRelayCommand<YibfIsTakibiEntry?>(entry => MoveIsTakibiEntryAsync(entry, 1), CanMoveIsTakibiEntryDown);
         ClearIsTakibiSearchCommand = new RelayCommand(ClearIsTakibiSearch, () => HasActiveIsTakibiSearch);
+        ClearPendingSearchCommand = new RelayCommand(() => PendingSearchText = string.Empty, () => HasActivePendingSearch);
         DeleteActiveSelectionCommand = new AsyncRelayCommand(DeleteActiveSelectionAsync, CanDeleteActiveSelection);
         BeginCellEditCommand = new RelayCommand<YibfCellViewModel?>(BeginCellEdit);
         CommitCellEditCommand = new RelayCommand<YibfCellViewModel?>(CommitCellEdit);
@@ -198,6 +200,26 @@ public sealed class YibfModuleViewModel : ViewModelBase
     }
 
     public bool HasActiveIsTakibiSearch => !string.IsNullOrWhiteSpace(IsTakibiSearchText);
+
+    public string PendingSearchText
+    {
+        get => _pendingSearchText;
+        set
+        {
+            if (SetProperty(ref _pendingSearchText, value ?? string.Empty))
+            {
+                FilteredBekleyenIslerView.Refresh();
+                ApplyPendingFilterToGroups();
+                FilteredBekleyenGruplarView.Refresh();
+                OnPropertyChanged(nameof(HasActivePendingSearch));
+                OnPropertyChanged(nameof(FilteredBekleyenIslerCount));
+                OnPropertyChanged(nameof(FilteredBekleyenGruplarCount));
+                ClearPendingSearchCommand.NotifyCanExecuteChanged();
+            }
+        }
+    }
+
+    public bool HasActivePendingSearch => !string.IsNullOrWhiteSpace(PendingSearchText);
 
     public bool HasNoVisibleIsTakibiResults => HasActiveIsTakibiSearch && IsTakibiRows.Count == 0;
 
@@ -341,6 +363,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
     public AsyncRelayCommand<YibfIsTakibiEntry?> MoveIsTakibiEntryUpCommand { get; }
     public AsyncRelayCommand<YibfIsTakibiEntry?> MoveIsTakibiEntryDownCommand { get; }
     public RelayCommand ClearIsTakibiSearchCommand { get; }
+    public RelayCommand ClearPendingSearchCommand { get; }
     public AsyncRelayCommand DeleteActiveSelectionCommand { get; }
     public RelayCommand<YibfCellViewModel?> BeginCellEditCommand { get; }
     public RelayCommand<YibfCellViewModel?> CommitCellEditCommand { get; }
@@ -2014,7 +2037,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
     {
         foreach (var group in BekleyenGruplar)
         {
-            group.ApplyFilter(PendingApprovalFilter);
+            group.ApplyFilter(PendingApprovalFilter, PendingSearchText);
         }
     }
 
@@ -2031,12 +2054,13 @@ public sealed class YibfModuleViewModel : ViewModelBase
 
     private bool MatchesPendingApprovalFilter(YibfPendingItemViewModel item)
     {
-        if (string.IsNullOrEmpty(PendingApprovalFilter))
+        if (!string.IsNullOrEmpty(PendingApprovalFilter)
+            && !string.Equals(item.FilterKey, PendingApprovalFilter, StringComparison.Ordinal))
         {
-            return true;
+            return false;
         }
 
-        return string.Equals(item.FilterKey, PendingApprovalFilter, StringComparison.Ordinal);
+        return item.MatchesSearch(PendingSearchText);
     }
 
     private bool MatchesPendingApprovalGroup(YibfPendingGroupViewModel group)
@@ -2242,6 +2266,15 @@ public sealed class YibfPendingItemViewModel : ViewModelBase
     public Brush PriorityBrush => CategoryBrush;
     public Brush StatusBrush => CategoryBrush;
 
+    public bool MatchesSearch(string? query)
+        => string.IsNullOrWhiteSpace(query)
+           || SearchTextNormalizer.Contains(Entry.AdaParsel, query)
+           || SearchTextNormalizer.Contains(Entry.YapiSahibi, query)
+           || SearchTextNormalizer.Contains(StatusLabel, query)
+           || SearchTextNormalizer.Contains(Summary, query)
+           || SearchTextNormalizer.Contains(PendingEvent.NoteText, query)
+           || SearchTextNormalizer.Contains(EventDateText, query);
+
     public void Update(YibfAnaBilgiEntry entry, YibfAnaBilgiEvent pendingEvent)
     {
         _entry = entry;
@@ -2269,6 +2302,7 @@ public sealed class YibfPendingGroupViewModel : ViewModelBase
     private IReadOnlyList<YibfPendingItemViewModel> _allEvents;
     private IReadOnlyList<YibfPendingItemViewModel> _visibleEvents;
     private string _activeFilter = YibfAnaBilgiApprovalStatuses.FilterAll;
+    private string _activeSearchText = string.Empty;
 
     public YibfPendingGroupViewModel(YibfAnaBilgiEntry entry, IReadOnlyList<YibfPendingItemViewModel> events)
     {
@@ -2295,17 +2329,20 @@ public sealed class YibfPendingGroupViewModel : ViewModelBase
         OnPropertyChanged(nameof(AllEvents));
         OnPropertyChanged(nameof(Events));
         OnPropertyChanged(nameof(TitleText));
-        ApplyFilter(_activeFilter);
+        ApplyFilter(_activeFilter, _activeSearchText);
     }
 
-    public void ApplyFilter(string? filterKey)
+    public void ApplyFilter(string? filterKey, string? searchText = null)
     {
         _activeFilter = filterKey ?? YibfAnaBilgiApprovalStatuses.FilterAll;
-        _visibleEvents = string.IsNullOrEmpty(_activeFilter)
-            ? _allEvents
-            : _allEvents
-                .Where(item => string.Equals(item.FilterKey, _activeFilter, StringComparison.Ordinal))
-                .ToList();
+        _activeSearchText = searchText ?? string.Empty;
+        var groupMatchesSearch = string.IsNullOrWhiteSpace(_activeSearchText)
+                                 || SearchTextNormalizer.Contains(TitleText, _activeSearchText);
+        _visibleEvents = _allEvents
+            .Where(item => string.IsNullOrEmpty(_activeFilter)
+                           || string.Equals(item.FilterKey, _activeFilter, StringComparison.Ordinal))
+            .Where(item => groupMatchesSearch || item.MatchesSearch(_activeSearchText))
+            .ToList();
 
         OnPropertyChanged(nameof(VisibleEvents));
         OnPropertyChanged(nameof(EventCount));

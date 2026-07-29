@@ -32,7 +32,13 @@
                         <Border Style="{StaticResource EntryProjectSummaryStyle}">
                             <StackPanel>
                                 <TextBlock Text="İLÇE" Style="{StaticResource EntryFieldLabelStyle}"/>
-                                <TextBlock Text="{Binding District}" Margin="0,0,0,8"/>
+                                <TextBlock Text="{Binding District}"
+                                           Margin="0,0,0,8"
+                                           Visibility="{Binding HasFixedDistrict, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <ComboBox ItemsSource="{Binding DistrictOptions}"
+                                          SelectedItem="{Binding District, Mode=TwoWay}"
+                                          Margin="0,0,0,8"
+                                          Visibility="{Binding RequiresDistrictSelection, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                                 <TextBlock Text="KATEGORİ" Style="{StaticResource EntryFieldLabelStyle}"/>
                                 <TextBlock Text="{Binding Category}"/>
                             </StackPanel>

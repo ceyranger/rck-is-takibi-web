@@ -16,4 +16,18 @@ public interface IProjectCatalogService
     void ApplyProjectSelection(TaskItem entry, ProjectCatalogEntry project);
     void ApplyProjectSelection(YibfIsTakibiEntry entry, ProjectCatalogEntry project);
     void ApplyProjectSelection(YibfAnaBilgiEntry entry, ProjectCatalogEntry project);
+    ProjectCatalogSyncResult PreviewLinkedIdentityOverwrite(
+        ProjectCatalogEntry project,
+        IReadOnlyList<KarotEntry> karot,
+        IReadOnlyList<MissingProjectEntry> missing,
+        IReadOnlyList<ActionEntry> action,
+        IReadOnlyList<TadilatEntry> tadilat,
+        IReadOnlyList<YibfIsTakibiEntry> yibfIsTakibi);
+    ProjectCatalogSyncResult OverwriteLinkedIdentityFields(
+        ProjectCatalogEntry project,
+        IReadOnlyList<KarotEntry> karot,
+        IReadOnlyList<MissingProjectEntry> missing,
+        IReadOnlyList<ActionEntry> action,
+        IReadOnlyList<TadilatEntry> tadilat,
+        IReadOnlyList<YibfIsTakibiEntry> yibfIsTakibi);
 }

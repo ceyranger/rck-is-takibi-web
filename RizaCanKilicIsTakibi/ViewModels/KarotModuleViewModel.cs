@@ -54,6 +54,7 @@ public sealed class KarotModuleViewModel : ViewModelBase
     private bool _isPersisting;
     private bool _isRefreshQueued;
     private bool _hasUnsavedChanges;
+    private string _searchText = string.Empty;
     private KarotSubTab _selectedSubTab = KarotSubTab.Bekleyen;
     private KarotEntry? _selectedEntry;
     private sealed record KarotUndoSnapshot(
@@ -134,12 +135,14 @@ public sealed class KarotModuleViewModel : ViewModelBase
         EditCellNoteCommand = new AsyncRelayCommand<KarotCellViewModel?>(EditCellNoteAsync);
         CopyCellCommand = new RelayCommand<KarotCellViewModel?>(CopyCell);
         PasteCellCommand = new RelayCommand<KarotCellViewModel?>(PasteCell);
+        ClearSearchCommand = new RelayCommand(() => SearchText = string.Empty, () => HasActiveSearch);
     }
 
     public ObservableRangeCollection<KarotEntry> Entries { get; }
     public ObservableRangeCollection<KarotEntry> VisibleEntries { get; }
     public ObservableRangeCollection<KarotEntryRowViewModel> VisibleRows { get; }
     public ObservableRangeCollection<KarotCellState> CellStates { get; }
+    public Func<KarotEntry, Task>? NegativeStatusActionDraftHandler { get; set; }
 
     public ColumnFilterViewModel SampleReceivedDateColumnFilter { get; }
     public ColumnFilterViewModel YibfNoColumnFilter { get; }
@@ -162,6 +165,22 @@ public sealed class KarotModuleViewModel : ViewModelBase
     public void MarkDirty() => HasUnsavedChanges = true;
 
     public int VisibleEntryCount => VisibleEntries.Count;
+
+    public string SearchText
+    {
+        get => _searchText;
+        set
+        {
+            if (SetProperty(ref _searchText, value ?? string.Empty))
+            {
+                RefreshVisibleEntries();
+                OnPropertyChanged(nameof(HasActiveSearch));
+                ClearSearchCommand.NotifyCanExecuteChanged();
+            }
+        }
+    }
+
+    public bool HasActiveSearch => !string.IsNullOrWhiteSpace(SearchText);
 
     public KarotSubTab SelectedSubTab
     {
@@ -203,6 +222,7 @@ public sealed class KarotModuleViewModel : ViewModelBase
     public RelayCommand<KarotCellViewModel?> PasteCellCommand { get; }
     public RelayCommand<KarotSubTab> SelectKarotSubTabCommand { get; }
     public RelayCommand<KarotEntry?> SelectKarotEntryCommand { get; }
+    public RelayCommand ClearSearchCommand { get; }
 
     public async Task InitializeAsync()
     {
@@ -399,6 +419,19 @@ public sealed class KarotModuleViewModel : ViewModelBase
         });
 
         _notificationService.ShowToast("Karot durumu güncellendi.", ToastType.Info, TimeSpan.FromSeconds(2));
+
+        if (result.Value == KarotStatus.KarotAlindiOlumsuz
+            && _confirmationService.Confirm(new ConfirmationRequest
+            {
+                Kind = ConfirmationKind.Save,
+                Title = "Aksiyon Taslağı",
+                Message = "Aksiyon taslağı oluşturulsun mu?"
+            })
+            && NegativeStatusActionDraftHandler is not null)
+        {
+            var currentEntry = Entries.FirstOrDefault(item => item.Id == target.Id) ?? target;
+            await NegativeStatusActionDraftHandler(currentEntry);
+        }
     }
 
     private async Task EditCellNoteAsync(KarotCellViewModel? cell)
@@ -784,7 +817,10 @@ public sealed class KarotModuleViewModel : ViewModelBase
     private void RefreshVisibleEntries()
     {
         var selectedId = SelectedEntry?.Id;
-        var visibleItems = GetSortedVisibleEntries(Entries.Where(entry => MatchesSubTab(entry.Status) && MatchesAllFilters(entry))).ToList();
+        var visibleItems = GetSortedVisibleEntries(Entries.Where(entry =>
+            MatchesSubTab(entry.Status)
+            && MatchesAllFilters(entry)
+            && EntryMatchesSearch(entry))).ToList();
 
         VisibleEntries.ReplaceRange(visibleItems);
 
@@ -1088,6 +1124,34 @@ public sealed class KarotModuleViewModel : ViewModelBase
                && BetonFirmasiColumnFilter.IsMatch(entry.BetonFirmasi)
                && LaboratuvarColumnFilter.IsMatch(entry.Laboratuvar)
                && AciklamaColumnFilter.IsMatch(entry.Aciklama);
+    }
+
+    private bool EntryMatchesSearch(KarotEntry entry)
+    {
+        if (!HasActiveSearch)
+        {
+            return true;
+        }
+
+        var query = SearchText;
+        if (SearchTextNormalizer.Contains(FormatDate(entry.SampleReceivedDate), query)
+            || SearchTextNormalizer.Contains(entry.YibfNo, query)
+            || SearchTextNormalizer.Contains(entry.AdaParsel, query)
+            || SearchTextNormalizer.Contains(entry.YapiSahibi, query)
+            || SearchTextNormalizer.Contains(entry.Muteahhit, query)
+            || SearchTextNormalizer.Contains(entry.KatBilgisi, query)
+            || SearchTextNormalizer.Contains(entry.BetonSinifi, query)
+            || SearchTextNormalizer.Contains(entry.TwentyEightDayResult, query)
+            || SearchTextNormalizer.Contains(entry.BetonFirmasi, query)
+            || SearchTextNormalizer.Contains(entry.Laboratuvar, query)
+            || SearchTextNormalizer.Contains(entry.Aciklama, query))
+        {
+            return true;
+        }
+
+        return CellStates.Any(state =>
+            state.EntryId == entry.Id
+            && SearchTextNormalizer.Contains(state.NoteText, query));
     }
 
     private IEnumerable<KarotEntry> GetSortedVisibleEntries(IEnumerable<KarotEntry> source)

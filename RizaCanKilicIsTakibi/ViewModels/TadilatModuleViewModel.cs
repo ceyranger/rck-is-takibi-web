@@ -18,28 +18,11 @@ public sealed class TadilatModuleViewModel : ViewModelBase
     private const string StrongGreenColor = "#FF92D050";
     private const string StrongBlueColor = "#FF4F81BD";
     private const string StrongGrayColor = "#FFD9D9D9";
-    private const string SinopDistrict = "SİNOP";
-    private const string MerkezDistrict = "MERKEZ";
-
     private const string LegacyPaleRedColor = "#FFF4C4C4";
     private const string LegacyPaleYellowColor = "#FFF7EDB3";
     private const string LegacyPaleGreenColor = "#FFDCEECE";
     private const string LegacyPaleBlueColor = "#FFD5E4FF";
     private const string LegacyPaleGrayColor = "#FFE8ECF2";
-
-    private static readonly IReadOnlyList<string> DefaultDistricts =
-    [
-        "AYANCIK",
-        "BOYABAT",
-        "DURAĞAN",
-        "ERFELEK",
-        "GERZE",
-        "SARAYDÜZÜ",
-        "SİNOP",
-        "SİNOP OSB",
-        "TÜRKELİ",
-        "MERKEZ"
-    ];
 
     private static readonly StringComparer TurkishDistrictComparer = StringComparer.Create(new CultureInfo("tr-TR"), ignoreCase: true);
 
@@ -112,7 +95,7 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         DisplayRows = [];
         Districts = [];
         DistrictCounts = [];
-        ReplaceDistricts(DefaultDistricts);
+        ReplaceDistricts(DistrictCatalog.All);
 
         DistrictColumnFilter = new ColumnFilterViewModel("İlçe", RefreshDistrictGroups, ApplyColumnSort);
         JobNameColumnFilter = new ColumnFilterViewModel("İşin İsmi", RefreshDistrictGroups, ApplyColumnSort);
@@ -309,17 +292,11 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         try
         {
             var allEntries = (await _repository.GetAllAsync()).Select(CloneEntry).ToList();
-            var hasDistrictMigration = NormalizeDistricts(allEntries);
             ReplaceEntries(AktifEntries, allEntries.Where(item => item.SubTab == TadilatSubTab.Aktif));
             ReplaceEntries(BitenEntries, allEntries.Where(item => item.SubTab == TadilatSubTab.Biten));
             ReplaceCellStates(await _repository.GetCellStatesAsync());
             RefreshDistrictGroups();
             HasUnsavedChanges = false;
-
-            if (hasDistrictMigration)
-            {
-                await PersistAsync(showErrorToast: true);
-            }
         }
         catch (Exception ex)
         {
@@ -337,7 +314,6 @@ public sealed class TadilatModuleViewModel : ViewModelBase
     public void LoadFromBackup(IEnumerable<TadilatEntry> entries, IEnumerable<TadilatCellState> cellStates, bool markDirty = true)
     {
         var sourceEntries = (entries ?? Array.Empty<TadilatEntry>()).Select(CloneEntry).ToList();
-        NormalizeDistricts(sourceEntries);
         ReplaceEntries(AktifEntries, sourceEntries.Where(item => item.SubTab == TadilatSubTab.Aktif));
         ReplaceEntries(BitenEntries, sourceEntries.Where(item => item.SubTab == TadilatSubTab.Biten));
         ReplaceCellStates((cellStates ?? Array.Empty<TadilatCellState>()).Select(CloneCellState));
@@ -1105,7 +1081,7 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         => EntryMatchesSearch(entry) && MatchesAllColumnFilters(entry);
 
     private bool MatchesAllColumnFilters(TadilatEntry entry)
-        => DistrictColumnFilter.IsMatch(entry.District)
+        => IsDistrictColumnMatch(entry.District)
            && JobNameColumnFilter.IsMatch(entry.JobName)
            && ProjectTypeColumnFilter.IsMatch(entry.ProjectType)
            && DigitalReceivedColumnFilter.IsMatch(entry.DigitalReceived)
@@ -1115,6 +1091,20 @@ public sealed class TadilatModuleViewModel : ViewModelBase
            && ArchivedFromMunicipalityColumnFilter.IsMatch(entry.ArchivedFromMunicipality)
            && Description1ColumnFilter.IsMatch(entry.Description1)
            && Description2ColumnFilter.IsMatch(entry.Description2);
+
+    private bool IsDistrictColumnMatch(string district)
+    {
+        if (DistrictColumnFilter.IsMatch(district))
+        {
+            return true;
+        }
+
+        var alias = DistrictCatalog.GetFilterAlias(district);
+        return alias is not null
+               && DistrictColumnFilter.Options.Any(option =>
+                   option.IsSelected
+                   && string.Equals(option.Value, alias, StringComparison.OrdinalIgnoreCase));
+    }
 
     private List<TadilatEntry> GetSortedDistrictEntries(IEnumerable<TadilatEntry> source)
     {
@@ -1201,7 +1191,7 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         }
 
         var query = SearchText;
-        if (SearchTextNormalizer.Contains(entry.District, query)
+        if (DistrictCatalog.ContainsForFilter(entry.District, query)
             || SearchTextNormalizer.Contains(entry.JobName, query)
             || SearchTextNormalizer.Contains(entry.ProjectType, query)
             || SearchTextNormalizer.Contains(entry.DigitalReceived, query)
@@ -1459,38 +1449,8 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         return storedColor ?? string.Empty;
     }
 
-    private bool NormalizeDistricts(IEnumerable<TadilatEntry> entries)
-    {
-        var hasChange = false;
-        foreach (var entry in entries)
-        {
-            var normalizedDistrict = NormalizeDistrictName(entry.District);
-            if (!string.Equals(entry.District, normalizedDistrict, StringComparison.Ordinal))
-            {
-                entry.District = normalizedDistrict;
-                entry.UpdatedAt = DateTime.Now;
-                hasChange = true;
-            }
-        }
-
-        return hasChange;
-    }
-
     private static string NormalizeDistrictName(string? district)
-    {
-        var value = district?.Trim() ?? string.Empty;
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return string.Empty;
-        }
-
-        if (value.Equals(MerkezDistrict, StringComparison.OrdinalIgnoreCase))
-        {
-            return SinopDistrict;
-        }
-
-        return value.ToUpper(new CultureInfo("tr-TR"));
-    }
+        => DistrictCatalog.NormalizeStoredValue(district);
 
     private void ReplaceDistricts(IEnumerable<string> source)
     {

@@ -15,6 +15,9 @@ public sealed partial class MainViewModel
     private string _catalogSearchQuery = string.Empty;
     private ProjectCatalogListItemViewModel? _selectedProjectCatalogListItem;
     private Guid? _pickerSelectedProjectId;
+    private int _unresolvedProjectLinkCount;
+    private int _autoLinkCandidateCount;
+    private bool _isRefreshingProjectLinkHealth;
 
     private void InitializeProjectCatalogCommands()
     {
@@ -25,6 +28,10 @@ public sealed partial class MainViewModel
         ProjectLinkDryRunCommand = new AsyncRelayCommand(ProjectLinkDryRunAsync);
         ResolveUnresolvedProjectLinksCommand = new AsyncRelayCommand(ResolveUnresolvedProjectLinksAsync, CanResolveUnresolvedProjectLinks);
         ApplyProjectLinksCommand = new AsyncRelayCommand(ApplyProjectLinksAsync, CanApplyProjectLinks);
+        OpenProjectLinkHealthCommand = new AsyncRelayCommand(OpenProjectLinkHealthAsync);
+        OverwriteLinkedProjectRecordsCommand = new AsyncRelayCommand(
+            OverwriteLinkedProjectRecordsAsync,
+            () => SelectedProjectCatalogEntry is not null);
 
         ApplySelectedProjectToKarotCommand = new RelayCommand(ApplySelectedProjectToKarot, () => PickerSelectedProjectId is not null && KarotModule.SelectedEntry is not null);
         ApplySelectedProjectToTadilatCommand = new RelayCommand(ApplySelectedProjectToTadilat, () => PickerSelectedProjectId is not null && TadilatModule.SelectedEntry is not null);
@@ -77,6 +84,7 @@ public sealed partial class MainViewModel
             {
                 EditProjectCatalogEntryCommand.NotifyCanExecuteChanged();
                 DeactivateProjectCatalogEntryCommand.NotifyCanExecuteChanged();
+                OverwriteLinkedProjectRecordsCommand.NotifyCanExecuteChanged();
             }
         }
     }
@@ -96,6 +104,17 @@ public sealed partial class MainViewModel
     }
 
     public bool IsProjectCatalogEmpty => ProjectCatalogEntries.Count == 0;
+    public int UnresolvedProjectLinkCount
+    {
+        get => _unresolvedProjectLinkCount;
+        private set => SetProperty(ref _unresolvedProjectLinkCount, value);
+    }
+
+    public int AutoLinkCandidateCount
+    {
+        get => _autoLinkCandidateCount;
+        private set => SetProperty(ref _autoLinkCandidateCount, value);
+    }
 
     public AsyncRelayCommand AddProjectCatalogEntryCommand { get; private set; } = null!;
     public AsyncRelayCommand EditProjectCatalogEntryCommand { get; private set; } = null!;
@@ -104,6 +123,8 @@ public sealed partial class MainViewModel
     public AsyncRelayCommand ProjectLinkDryRunCommand { get; private set; } = null!;
     public AsyncRelayCommand ResolveUnresolvedProjectLinksCommand { get; private set; } = null!;
     public AsyncRelayCommand ApplyProjectLinksCommand { get; private set; } = null!;
+    public AsyncRelayCommand OpenProjectLinkHealthCommand { get; private set; } = null!;
+    public AsyncRelayCommand OverwriteLinkedProjectRecordsCommand { get; private set; } = null!;
 
     public RelayCommand ApplySelectedProjectToKarotCommand { get; private set; } = null!;
     public RelayCommand ApplySelectedProjectToTadilatCommand { get; private set; } = null!;
@@ -337,6 +358,7 @@ public sealed partial class MainViewModel
             MissingProjectModule.GetEntriesSnapshot(),
             AllTasks().ToList(),
             YibfModule.GetIsTakibiEntriesSnapshot());
+        UpdateProjectLinkHealthCounts(_lastProjectLinkDryRun);
 
         _projectLinkResolutions = [];
         ResolveUnresolvedProjectLinksCommand.NotifyCanExecuteChanged();
@@ -425,9 +447,119 @@ public sealed partial class MainViewModel
         _projectLinkResolutions = [];
         ResolveUnresolvedProjectLinksCommand.NotifyCanExecuteChanged();
         ApplyProjectLinksCommand.NotifyCanExecuteChanged();
+        await RefreshProjectLinkHealthAsync();
 
         _notificationService.ShowToast("Proje bağlantıları uygulandı. Kalıcı olması için Kaydet'e basın.", ToastType.Success, TimeSpan.FromSeconds(4));
-        await Task.CompletedTask;
+    }
+
+    private async Task OpenProjectLinkHealthAsync()
+    {
+        SelectMainTab(MainNavigationTab.Ayarlar);
+        await RefreshProjectLinkHealthAsync();
+        if (CanResolveUnresolvedProjectLinks())
+        {
+            await ResolveUnresolvedProjectLinksAsync();
+        }
+    }
+
+    private async Task RefreshProjectLinkHealthAsync()
+    {
+        if (_projectLinkingService is null || _isRefreshingProjectLinkHealth)
+        {
+            return;
+        }
+
+        _isRefreshingProjectLinkHealth = true;
+        try
+        {
+            await EnsureAllModulesInitializedAsync();
+            var catalog = GetProjectCatalogSnapshot();
+            var karot = KarotModule.GetEntriesSnapshot();
+            var tadilat = TadilatModule.GetEntriesSnapshot();
+            var action = ActionModule.GetAllEntriesSnapshot();
+            var missing = MissingProjectModule.GetEntriesSnapshot();
+            var tasks = AllTasks().ToList();
+            var yibf = YibfModule.GetIsTakibiEntriesSnapshot();
+
+            _lastProjectLinkDryRun = await Task.Run(() => _projectLinkingService.DryRun(
+                catalog,
+                karot,
+                tadilat,
+                action,
+                missing,
+                tasks,
+                yibf));
+            _projectLinkResolutions = [];
+            UpdateProjectLinkHealthCounts(_lastProjectLinkDryRun);
+            ResolveUnresolvedProjectLinksCommand.NotifyCanExecuteChanged();
+            ApplyProjectLinksCommand.NotifyCanExecuteChanged();
+        }
+        finally
+        {
+            _isRefreshingProjectLinkHealth = false;
+        }
+    }
+
+    private void UpdateProjectLinkHealthCounts(ProjectLinkDryRunResult result)
+    {
+        UnresolvedProjectLinkCount = result.Unresolved.Count;
+        AutoLinkCandidateCount = result.AutoLinkCount;
+    }
+
+    private async Task OverwriteLinkedProjectRecordsAsync()
+    {
+        if (_projectCatalogService is null || SelectedProjectCatalogEntry is null)
+        {
+            return;
+        }
+
+        await EnsureAllModulesInitializedAsync();
+        var project = SelectedProjectCatalogEntry;
+        var karot = KarotModule.Entries.ToList();
+        var missing = MissingProjectModule.Entries.ToList();
+        var action = ActionModule.AksiyonEntries.Concat(ActionModule.AksiyonaEkleneceklerEntries).ToList();
+        var tadilat = TadilatModule.AktifEntries.Concat(TadilatModule.BitenEntries).ToList();
+        var yibf = YibfModule.IsTakibiEntries.ToList();
+        var preview = _projectCatalogService.PreviewLinkedIdentityOverwrite(
+            project, karot, missing, action, tadilat, yibf);
+
+        if (preview.TotalCount == 0)
+        {
+            _notificationService.ShowToast("Güncellenecek bağlı kayıt bulunamadı.", ToastType.Info);
+            return;
+        }
+
+        var message =
+            $"Karot: {preview.KarotCount}\n" +
+            $"Eksik Proje: {preview.MissingProjectCount}\n" +
+            $"Aksiyon: {preview.ActionCount}\n" +
+            $"Tadilat: {preview.TadilatCount}\n" +
+            $"YİBF İş Takibi: {preview.YibfIsTakibiCount}\n\n" +
+            "UYARI: Bağlı kayıtlardaki elle girilmiş proje kimlik bilgileri katalog değerleriyle değiştirilecek. Devam edilsin mi?";
+        if (!_confirmationService.Confirm(new ConfirmationRequest
+            {
+                Kind = ConfirmationKind.Save,
+                Title = "Bağlı Kayıtları Güncelle",
+                Message = message,
+                IsDestructive = true
+            }))
+        {
+            return;
+        }
+
+        var result = _projectCatalogService.OverwriteLinkedIdentityFields(
+            project, karot, missing, action, tadilat, yibf);
+        if (result.KarotCount > 0) KarotModule.MarkDirty();
+        if (result.MissingProjectCount > 0) MissingProjectModule.MarkDirty();
+        if (result.ActionCount > 0) ActionModule.MarkDirty();
+        if (result.TadilatCount > 0) TadilatModule.MarkDirty();
+        if (result.YibfIsTakibiCount > 0) YibfModule.MarkDirty();
+        RefreshTumEksikler();
+        InvalidateSearchCorpus();
+        _notificationService.ShowToast(
+            $"{result.TotalCount} bağlı kayıt güncellendi. Kalıcı olması için Kaydet'e basın.",
+            ToastType.Success,
+            TimeSpan.FromSeconds(4));
     }
 
     private ProjectCatalogEntry? FindActiveProject(Guid? projectId)
