@@ -122,7 +122,6 @@
                     <Button Content="↑" Command="{Binding KarotModule.MoveKarotEntryUpCommand}" Style="{StaticResource IconButton}"/>
                     <Button Content="↓" Command="{Binding KarotModule.MoveKarotEntryDownCommand}" Style="{StaticResource IconButton}"/>
                     <Button Content="Excel Dışa" Command="{Binding ExportExcelCommand}" Style="{StaticResource GhostButton}"/>
-                    <Button Content="Kaydet" Command="{Binding SaveActiveTabCommand}" Style="{StaticResource GhostButton}"/>
                     <Button Content="PNG Aktar" Command="{Binding ExportKarotPngCommand}" CommandParameter="{Binding ElementName=KarotExportHost}" Style="{StaticResource GhostButton}"/>
                     <Button Content="Sil" Command="{Binding KarotModule.DeleteKarotEntryCommand}" Style="{StaticResource GhostButton}"/>
                 </WrapPanel>

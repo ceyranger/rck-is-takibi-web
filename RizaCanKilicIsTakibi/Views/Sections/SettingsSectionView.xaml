@@ -8,141 +8,149 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" Style="{StaticResource CardBorderStyle}">
-            <DockPanel>
-                <StackPanel DockPanel.Dock="Left">
-                    <TextBlock Text="AYARLAR"
-                               FontFamily="{StaticResource Font.Primary}"
-                               FontSize="24"
-                               FontWeight="SemiBold"/>
-                    <TextBlock Text="Yedekleme, bakım ve sıfırlama seçenekleri."
-                               Margin="0,2,0,0"
-                               Foreground="{StaticResource Brush.TextSecondary}"/>
-                </StackPanel>
-                <Button Content="Ayarları Kaydet"
-                        Command="{Binding SaveSettingsCommand}"
-                        DockPanel.Dock="Right"/>
-            </DockPanel>
-        </Border>
-
-        <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}" Margin="0,8,0,0">
             <StackPanel>
-                <TextBlock Text="Uygulama Ayarları"
+                <TextBlock Text="AYARLAR"
                            FontFamily="{StaticResource Font.Primary}"
-                           FontSize="18"
+                           FontSize="24"
                            FontWeight="SemiBold"/>
-                <CheckBox Content="Otomatik yedekleme açık"
-                          Margin="0,14,0,0"
-                          IsChecked="{Binding AutoBackupEnabled, Mode=TwoWay}"/>
-                <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
-                    <TextBlock Text="Yedek aralığı:"
-                               VerticalAlignment="Center"
-                               Margin="0,0,10,0"/>
-                    <ComboBox Width="140"
-                              ItemsSource="{Binding AvailableAutoBackupIntervals}"
-                              SelectedItem="{Binding AutoBackupMinutes, Mode=TwoWay}"/>
-                    <TextBlock Text="dakika"
-                               VerticalAlignment="Center"
-                               Margin="8,0,0,0"/>
-                </StackPanel>
-                <CheckBox Content="Veri boşsa örnek görevlerle başlat"
-                          Margin="0,12,0,0"
-                          IsChecked="{Binding SeedSampleDataOnEmpty, Mode=TwoWay}"/>
-                <TextBlock Text="Bu ayar yeni veya sıfırlanmış veritabanı için geçerlidir."
-                           Margin="0,8,0,0"
+                <TextBlock Text="Yedekleme, bakım ve sıfırlama seçenekleri. Kayıt için sol paneldeki Kaydet'i kullanın."
+                           Margin="0,2,0,0"
+                           TextWrapping="Wrap"
                            Foreground="{StaticResource Brush.TextSecondary}"/>
             </StackPanel>
         </Border>
 
-        <Grid Grid.Row="2" Margin="0,8,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1.1*"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
+        <ScrollViewer Grid.Row="1"
+                      Margin="0,8,0,0"
+                      MaxHeight="280"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-            <Border Grid.Column="0" Style="{StaticResource CardBorderStyle}" Margin="0,0,6,0">
-                <StackPanel>
-                    <TextBlock Text="Bakım Araçları"
-                               FontFamily="{StaticResource Font.Primary}"
-                               FontSize="18"
-                               FontWeight="SemiBold"/>
-                    <TextBlock Text="JSON yedek, geri yükleme ve build çıktısı temizliği."
-                               Margin="0,4,0,0"
-                               Foreground="{StaticResource Brush.TextSecondary}"/>
-                    <WrapPanel Margin="0,16,0,0">
-                        <Button Content="JSON YEDEKLE"
-                                Command="{Binding ManualBackupCommand}"
-                                Margin="0,0,8,8"/>
-                        <Button Content="JSON AKTAR"
-                                Command="{Binding ImportBackupCommand}"
-                                Style="{StaticResource GhostButton}"
-                                Margin="0,0,8,8"/>
-                        <Button Content="EXCEL İÇE AKTAR (EKLE)"
-                                Command="{Binding AppendImportGenelExcelCommand}"
-                                Style="{StaticResource GhostButton}"
-                                ToolTip="GENEL İŞLER / AKSİYON / EKSİK PROJE sayfalarını mevcut kayıtlara ekler; silmez."
-                                Margin="0,0,8,8"/>
-                        <Button Content="PDF RAPOR PAKETİ"
-                                Command="{Binding ExportReportPackCommand}"
-                                Style="{StaticResource GhostButton}"
-                                ToolTip="Genel, Aksiyon, Eksik, Karot ve Tadilat bölümlerini tek PDF'te üretir."
-                                Margin="0,0,8,8"/>
-                        <Button Content="ÇIKTILARI TEMİZLE"
-                                Command="{Binding CleanupBuildArtifactsCommand}"
-                                Style="{StaticResource GhostButton}"
-                                Margin="0,0,8,8"/>
-                    </WrapPanel>
-                </StackPanel>
-            </Border>
+                <Border Grid.Row="0" Style="{StaticResource CardBorderStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Uygulama Ayarları"
+                                   FontFamily="{StaticResource Font.Primary}"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"/>
+                        <CheckBox Content="Otomatik yedekleme açık"
+                                  Margin="0,14,0,0"
+                                  IsChecked="{Binding AutoBackupEnabled, Mode=TwoWay}"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                            <TextBlock Text="Yedek aralığı:"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,10,0"/>
+                            <ComboBox Width="140"
+                                      ItemsSource="{Binding AvailableAutoBackupIntervals}"
+                                      SelectedItem="{Binding AutoBackupMinutes, Mode=TwoWay}"/>
+                            <TextBlock Text="dakika"
+                                       VerticalAlignment="Center"
+                                       Margin="8,0,0,0"/>
+                        </StackPanel>
+                        <CheckBox Content="Veri boşsa örnek görevlerle başlat"
+                                  Margin="0,12,0,0"
+                                  IsChecked="{Binding SeedSampleDataOnEmpty, Mode=TwoWay}"/>
+                        <TextBlock Text="Bu ayar yeni veya sıfırlanmış veritabanı için geçerlidir."
+                                   Margin="0,8,0,0"
+                                   Foreground="{StaticResource Brush.TextSecondary}"/>
+                    </StackPanel>
+                </Border>
 
-            <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}" Margin="6,0,0,0">
-                <StackPanel>
-                    <TextBlock Text="Veri Sıfırlama"
-                               FontFamily="{StaticResource Font.Primary}"
-                               FontSize="18"
-                               FontWeight="SemiBold"/>
-                    <TextBlock Text="Bu işlemler geri alınamaz. Önce neyin silineceği sorulur."
-                               Margin="0,4,0,0"
-                               Foreground="{StaticResource Brush.TextSecondary}"/>
-                    <Button Content="CANLI VERİLERİ SIFIRLA"
-                            Command="{Binding ResetLiveDataCommand}"
-                            Style="{StaticResource GhostButton}"
-                            Margin="0,16,0,8"/>
-                    <TextBlock Text="SQLite içindeki tablolar boşaltılır. JSON yedekler korunur."
-                               Foreground="{StaticResource Brush.TextSecondary}"
-                               TextWrapping="Wrap"/>
-                    <Button Content="VERİLERİ VE YEDEKLERİ SIFIRLA"
-                            Command="{Binding ResetAllDataAndBackupsCommand}"
-                            Margin="0,16,0,8"/>
-                    <TextBlock Text="Canlı verilerle birlikte uygulamanın yönettiği otomatik JSON yedekleri de temizlenir."
-                               Foreground="{StaticResource Brush.TextSecondary}"
-                               TextWrapping="Wrap"/>
+                <Grid Grid.Row="1" Margin="0,8,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
 
-                    <Separator Margin="0,16,0,12"/>
-                    <TextBlock Text="Sekme Sil"
-                               FontFamily="{StaticResource Font.Primary}"
-                               FontSize="16"
-                               FontWeight="SemiBold"/>
-                    <TextBlock Text="Geri alınamaz, önce JSON yedek al."
-                               Margin="0,4,0,0"
-                               Foreground="{StaticResource Brush.TextSecondary}"
-                               TextWrapping="Wrap"/>
-                    <ComboBox Margin="0,12,0,0"
-                              ItemsSource="{Binding ClearableTabs}"
-                              SelectedItem="{Binding SelectedClearTab, Mode=TwoWay}"
-                              DisplayMemberPath="DisplayName"/>
-                    <Button Content="SEKMEYİ SİL"
-                            Command="{Binding ClearSelectedTabCommand}"
-                            Margin="0,12,0,0"/>
-                </StackPanel>
-            </Border>
-        </Grid>
+                    <Border Grid.Column="0" Style="{StaticResource CardBorderStyle}" Margin="0,0,6,0">
+                        <StackPanel>
+                            <TextBlock Text="Bakım Araçları"
+                                       FontFamily="{StaticResource Font.Primary}"
+                                       FontSize="18"
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Text="JSON yedek, geri yükleme ve build çıktısı temizliği."
+                                       Margin="0,4,0,0"
+                                       Foreground="{StaticResource Brush.TextSecondary}"/>
+                            <WrapPanel Margin="0,16,0,0">
+                                <Button Content="JSON YEDEKLE"
+                                        Command="{Binding ManualBackupCommand}"
+                                        Margin="0,0,8,8"/>
+                                <Button Content="JSON AKTAR"
+                                        Command="{Binding ImportBackupCommand}"
+                                        Style="{StaticResource GhostButton}"
+                                        Margin="0,0,8,8"/>
+                                <Button Content="EXCEL İÇE AKTAR (EKLE)"
+                                        Command="{Binding AppendImportGenelExcelCommand}"
+                                        Style="{StaticResource GhostButton}"
+                                        ToolTip="GENEL İŞLER / AKSİYON / EKSİK PROJE sayfalarını mevcut kayıtlara ekler; silmez."
+                                        Margin="0,0,8,8"/>
+                                <Button Content="PDF RAPOR PAKETİ"
+                                        Command="{Binding ExportReportPackCommand}"
+                                        Style="{StaticResource GhostButton}"
+                                        ToolTip="Genel, Aksiyon, Eksik, Karot ve Tadilat bölümlerini tek PDF'te üretir."
+                                        Margin="0,0,8,8"/>
+                                <Button Content="ÇIKTILARI TEMİZLE"
+                                        Command="{Binding CleanupBuildArtifactsCommand}"
+                                        Style="{StaticResource GhostButton}"
+                                        Margin="0,0,8,8"/>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
 
-        <Border Grid.Row="3" Style="{StaticResource CardBorderStyle}" Margin="0,8,0,0">
+                    <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}" Margin="6,0,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Veri Sıfırlama"
+                                       FontFamily="{StaticResource Font.Primary}"
+                                       FontSize="18"
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Text="Bu işlemler geri alınamaz. Önce neyin silineceği sorulur."
+                                       Margin="0,4,0,0"
+                                       Foreground="{StaticResource Brush.TextSecondary}"/>
+                            <Button Content="CANLI VERİLERİ SIFIRLA"
+                                    Command="{Binding ResetLiveDataCommand}"
+                                    Style="{StaticResource GhostButton}"
+                                    Margin="0,16,0,8"/>
+                            <TextBlock Text="SQLite içindeki tablolar boşaltılır. JSON yedekler korunur."
+                                       Foreground="{StaticResource Brush.TextSecondary}"
+                                       TextWrapping="Wrap"/>
+                            <Button Content="VERİLERİ VE YEDEKLERİ SIFIRLA"
+                                    Command="{Binding ResetAllDataAndBackupsCommand}"
+                                    Margin="0,16,0,8"/>
+                            <TextBlock Text="Canlı verilerle birlikte uygulamanın yönettiği otomatik JSON yedekleri de temizlenir."
+                                       Foreground="{StaticResource Brush.TextSecondary}"
+                                       TextWrapping="Wrap"/>
+
+                            <Separator Margin="0,16,0,12"/>
+                            <TextBlock Text="Sekme Sil"
+                                       FontFamily="{StaticResource Font.Primary}"
+                                       FontSize="16"
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Text="Geri alınamaz, önce JSON yedek al."
+                                       Margin="0,4,0,0"
+                                       Foreground="{StaticResource Brush.TextSecondary}"
+                                       TextWrapping="Wrap"/>
+                            <ComboBox Margin="0,12,0,0"
+                                      ItemsSource="{Binding ClearableTabs}"
+                                      SelectedItem="{Binding SelectedClearTab, Mode=TwoWay}"
+                                      DisplayMemberPath="DisplayName"/>
+                            <Button Content="SEKMEYİ SİL"
+                                    Command="{Binding ClearSelectedTabCommand}"
+                                    Margin="0,12,0,0"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+        </ScrollViewer>
+
+        <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}" Margin="0,8,0,0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -159,6 +167,11 @@
                     <TextBlock Text="Proje bilgileri, otomatik eşleştirme ve bağlantı yönetimi."
                                Margin="0,4,0,0"
                                Foreground="{StaticResource Brush.TextSecondary}"/>
+                    <TextBlock Margin="0,8,0,0"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource Brush.Warning}"
+                               ToolTip="Kaydet ile ilgili değil. Mevcut verideki belirsiz / bağlanmamış kayıt sayısı."
+                               Text="{Binding UnresolvedProjectLinkCount, StringFormat=Çözülmemiş bağlantı: {0}}"/>
                 </StackPanel>
 
                 <DockPanel Grid.Row="1" Margin="0,12,0,8">
@@ -195,7 +208,8 @@
                           AutoGenerateColumns="False"
                           CanUserAddRows="False"
                           IsReadOnly="True"
-                          MinHeight="220">
+                          MinHeight="120"
+                          VerticalAlignment="Stretch">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Görünen Ad" Binding="{Binding DisplayName}" Width="1.4*"/>
                         <DataGridTextColumn Header="Ada Parsel" Binding="{Binding AdaParsel}" Width="*"/>

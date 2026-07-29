@@ -36,7 +36,6 @@
             </StackPanel>
             <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
                 <Button Content="Excel Dışa" Command="{Binding ExportExcelCommand}"/>
-                <Button Content="Kaydet" Command="{Binding SaveActiveTabCommand}" Style="{StaticResource GhostButton}"/>
                 <Button Content="Sil" Command="{Binding DeleteActiveSelectionCommand}" Style="{StaticResource GhostButton}"/>
                 <Border Style="{StaticResource MissingProjectToolbarChipStyle}"
                         Visibility="{Binding YibfModule.HasUnsavedChanges, Converter={StaticResource BooleanToVisibilityConverter}}">

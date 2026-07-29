@@ -574,7 +574,7 @@
 
     <Window.InputBindings>
         <KeyBinding Key="F" Modifiers="Control" Command="{Binding OpenSearchCommand}"/>
-        <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveActiveTabCommand}"/>
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveAllTabsCommand}"/>
         <KeyBinding Key="S" Modifiers="Control+Shift" Command="{Binding ManualBackupCommand}"/>
         <KeyBinding Key="Z" Modifiers="Control" Command="{Binding UndoCommand}"/>
         <KeyBinding Key="Y" Modifiers="Control" Command="{Binding RedoCommand}"/>
@@ -591,6 +591,10 @@
         <Border Grid.Column="0" Style="{StaticResource CardBorderStyle}" Padding="12">
             <DockPanel LastChildFill="False">
                 <StackPanel DockPanel.Dock="Bottom" Margin="0,14,0,0">
+                    <Button Content="Kaydet"
+                            Command="{Binding SaveAllTabsCommand}"
+                            Margin="0,0,0,10"
+                            ToolTip="Tüm sekmeleri kaydet (Ctrl+S)"/>
                     <Border BorderBrush="{StaticResource Brush.Border}"
                             BorderThickness="1"
                             CornerRadius="10"
@@ -840,7 +844,6 @@
                                 </Grid>
                             </Border>
                             <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
-                                <Button Content="Kaydet" Command="{Binding SaveActiveTabCommand}" ToolTip="Kaydet (Ctrl+S)"/>
                                 <Button Content="Excel Dışa" Command="{Binding ExportExcelCommand}" ToolTip="Excel'e Aktar"/>
                                 <Button Content="Excel İçe (Ekle)" Command="{Binding AppendImportGenelExcelCommand}" Style="{StaticResource GhostButton}" ToolTip="Mevcut kayıtlara Excel'den ekler; silmez"/>
                                 <Button Content="PDF" Command="{Binding ExportPdfCommand}" Style="{StaticResource GhostButton}" ToolTip="PDF Oluştur"/>
@@ -856,9 +859,9 @@
                         <Border Style="{StaticResource CardBorderStyle}"><StackPanel><TextBlock Text="Not Sayısı" Style="{StaticResource MetricLabelText}"/><TextBlock Text="{Binding Dashboard.TotalNotes}" Style="{StaticResource MetricValueText}" Foreground="{StaticResource Brush.Success}"/></StackPanel></Border>
                         <Button Command="{Binding OpenProjectLinkHealthCommand}"
                                 Style="{StaticResource GhostButton}"
-                                ToolTip="Ayarlar'da bağlanmamış proje kayıtlarını çöz">
+                                ToolTip="Kaydet ile ilgili değil. Katalogda birden fazla adaya düşen / bağlanmamış kayıt sayısı. Çözmek için Ayarlar → Şüphelileri çöz.">
                             <StackPanel>
-                                <TextBlock Text="Bağlanmamış" Style="{StaticResource MetricLabelText}"/>
+                                <TextBlock Text="Çözülmemiş bağlantı" Style="{StaticResource MetricLabelText}"/>
                                 <TextBlock Text="{Binding UnresolvedProjectLinkCount}" Style="{StaticResource MetricValueText}" Foreground="{StaticResource Brush.Warning}"/>
                             </StackPanel>
                         </Button>
@@ -1085,9 +1088,6 @@
                                             </ItemsControl>
                                         </ScrollViewer>
                                     </Border>
-                                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                        <Button Content="Kaydet" Command="{Binding SaveActiveTabCommand}" Margin="4,0,4,0" Style="{StaticResource GhostButton}" ToolTip="Değişiklikleri Kaydet (Ctrl+S)"/>
-                                    </StackPanel>
                                 </StackPanel>
                             </StackPanel>
                         </Border>
@@ -1158,7 +1158,6 @@
                                     <Button Content="↑" Command="{Binding MissingProjectModule.MoveEntryUpCommand}" CommandParameter="{Binding MissingProjectModule.SelectedEntry}" Style="{StaticResource IconButton}" ToolTip="Yukarı Taşı"/>
                                     <Button Content="↓" Command="{Binding MissingProjectModule.MoveEntryDownCommand}" CommandParameter="{Binding MissingProjectModule.SelectedEntry}" Style="{StaticResource IconButton}" ToolTip="Aşağı Taşı"/>
                                     <Button Content="Excel Dışa" Command="{Binding ExportExcelCommand}" Style="{StaticResource GhostButton}" ToolTip="Excel'e Aktar"/>
-                                    <Button Content="Kaydet" Command="{Binding SaveActiveTabCommand}" Style="{StaticResource GhostButton}" ToolTip="Kaydet (Ctrl+S)"/>
                                     <Button Content="PNG Aktar" Command="{Binding ExportMissingProjectPngCommand}" CommandParameter="{Binding ElementName=MissingProjectGrid}" Style="{StaticResource GhostButton}" ToolTip="PNG Olarak Kaydet"/>
                                     <Button Content="Sil" Command="{Binding MissingProjectModule.DeleteEntryCommand}" CommandParameter="{Binding MissingProjectModule.SelectedEntry}" Style="{StaticResource GhostButton}" ToolTip="Seçili Kaydı Sil (Delete)"/>
                                 </WrapPanel>
@@ -1331,7 +1330,7 @@
                 </controls:DeferredContentControl>
             </Grid>
 
-            <Grid Grid.Column="1" x:Name="YibfBekleyenTabHost">
+            <Grid x:Name="YibfBekleyenTabHost">
                 <Grid.Style>
                     <Style TargetType="Grid">
                         <Setter Property="Visibility" Value="Collapsed"/>
@@ -1352,7 +1351,7 @@
                 </controls:DeferredContentControl>
             </Grid>
 
-            <Grid Grid.Column="1" x:Name="TumEksiklerTabHost">
+            <Grid x:Name="TumEksiklerTabHost">
                 <Grid.Style>
                     <Style TargetType="Grid">
                         <Setter Property="Visibility" Value="Collapsed"/>
@@ -1373,7 +1372,7 @@
                 </controls:DeferredContentControl>
             </Grid>
 
-            <Grid Grid.Column="1" x:Name="SearchTabHost">
+            <Grid x:Name="SearchTabHost">
                 <Grid.Style>
                     <Style TargetType="Grid">
                         <Setter Property="Visibility" Value="Collapsed"/>
@@ -1394,7 +1393,7 @@
                 </controls:DeferredContentControl>
             </Grid>
 
-            <Grid Grid.Column="1" x:Name="YibfAnaBilgiTabHost">
+            <Grid x:Name="YibfAnaBilgiTabHost">
                 <Grid.Style>
                     <Style TargetType="Grid">
                         <Setter Property="Visibility" Value="Collapsed"/>
@@ -1415,7 +1414,7 @@
                 </controls:DeferredContentControl>
             </Grid>
 
-            <Grid Grid.Column="1" x:Name="YibfIsTakibiTabHost">
+            <Grid x:Name="YibfIsTakibiTabHost">
                 <Grid.Style>
                     <Style TargetType="Grid">
                         <Setter Property="Visibility" Value="Collapsed"/>
@@ -1436,7 +1435,7 @@
                 </controls:DeferredContentControl>
             </Grid>
 
-            <Grid Grid.Column="1" x:Name="SettingsTabHost">
+            <Grid x:Name="SettingsTabHost">
                 <Grid.Style>
                     <Style TargetType="Grid">
                         <Setter Property="Visibility" Value="Collapsed"/>

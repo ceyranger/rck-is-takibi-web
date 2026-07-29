@@ -1,12 +1,13 @@
 # Todo
 
-## Current Task: Proje Takibi + Karot (teslim)
-- [x] Layout 35/65 + Proje Takibi isim
-- [x] Karot tek tık seçim / çift tık düzenleme
+## Current Task: Ayarlar layout + ortak Kaydet
+- [x] Settings layout + Grid.Column düzeltmesi
+- [x] Sol panel mavi Kaydet = SaveAll; sekme Kaydet kaldırıldı; Ctrl+S global
+- [x] Çözülmemiş bağlantı metrik UX
 - [x] Build + test (200/200)
-- [x] Commit `9b625d2`
-- [x] Canonical Release publish; Data hash korundu
+- [ ] Commit + publish (kullanıcı onayı)
 
 ## Review Update
-- Commit: `9b625d2`.
-- Canonical publish exe güncellendi; `Data\tasks.db` / `Data\last-save.json` SHA256/size/timestamp değişmedi; `Backup` ve `Logs` korundu.
+- Tek Kaydet sol panelde (primary mavi); tüm sekmeleri kaydeder.
+- Data/Backup/Logs dokunulmadı; şema değişikliği yok.
+- Tests: 200/200. Canonical publish henüz güncellenmedi.

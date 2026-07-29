@@ -203,7 +203,6 @@
                             </WrapPanel>
                             <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
                                 <Button Content="Excel Dışa" Command="{Binding ExportExcelCommand}" Style="{StaticResource GhostButton}"/>
-                                <Button Content="Kaydet" Command="{Binding SaveActiveTabCommand}"/>
                             </WrapPanel>
                         </DockPanel>
                     </Border>

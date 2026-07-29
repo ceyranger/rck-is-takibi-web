@@ -37,3 +37,4 @@
 - 2026-07-29: Karot sekmesi hücre etkileşimi Tadilat ile hizalandı: tek tık satır seçimi, çift tık / F2 hücre düzenleme; Kaydet/kapanışta açık draft commit. Tests 200/200; canonical publish henüz güncellenmedi.
 - 2026-07-29: YİBF Ana Bilgi görünen adı **Proje Takibi**; sol iş listesi `0.35*` (MinWidth 260), sağ bilgi `0.65*`. Excel sheet `Proje Takibi` (import eski `ANA BİLGİ` fallback). Enum/DB değişmedi. Tests 200/200; canonical publish henüz güncellenmedi.
 - 2026-07-29: Proje Takibi + Karot hücre edit teslim edildi (`9b625d2`). Canonical publish exe güncellendi; `Data\tasks.db` / `Data\last-save.json` hash/size/timestamp değişmedi; `Backup` ve `Logs` korundu.
+- 2026-07-29: Ayarlar layout düzeltildi (katalog `*`, üst araçlar ScrollViewer); tab host `Grid.Column=1` kaldırıldı. Tek ortak mavi Kaydet (sol panel + Ctrl+S → SaveAll). “Çözülmemiş bağlantı” metriği netleştirildi (kaydetten bağımsız DryRun). Tests 200/200; canlı Data’ya dokunulmadı; publish henüz yok.

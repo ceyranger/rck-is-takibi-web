@@ -233,6 +233,7 @@ public sealed partial class MainViewModel : ViewModelBase
         MoveTaskDownCommand = new RelayCommand(() => MoveTask(1), CanMoveDown);
         CommitGeneralEditCommand = new RelayCommand(CommitGeneralEdit);
         SaveActiveTabCommand = new AsyncRelayCommand(SaveActiveTabAsync);
+        SaveAllTabsCommand = new AsyncRelayCommand(SaveAllTabsFromUiAsync);
         CopyTaskCommand = new RelayCommand(CopySelectedTask, () => SelectedTask is not null);
         PasteTaskCommand = new RelayCommand(PasteTask, () => _clipboardTask is not null);
         PasteTaskToBoardCommand = new RelayCommand<TaskBoardType>(PasteTaskToBoard, _ => _clipboardTask is not null);
@@ -585,6 +586,7 @@ public sealed partial class MainViewModel : ViewModelBase
     public RelayCommand MoveTaskDownCommand { get; }
     public RelayCommand CommitGeneralEditCommand { get; }
     public AsyncRelayCommand SaveActiveTabCommand { get; }
+    public AsyncRelayCommand SaveAllTabsCommand { get; }
     public RelayCommand CopyTaskCommand { get; }
     public RelayCommand PasteTaskCommand { get; }
     public RelayCommand<TaskBoardType> PasteTaskToBoardCommand { get; }
@@ -719,6 +721,24 @@ public sealed partial class MainViewModel : ViewModelBase
 
             return allSaved;
         });
+
+    private async Task SaveAllTabsFromUiAsync()
+    {
+        if (!HasAnyUnsavedChanges)
+        {
+            _notificationService.ShowToast("Kaydedilecek değişiklik yok.", ToastType.Info, TimeSpan.FromSeconds(2));
+            return;
+        }
+
+        var saved = await SaveAllTabsAsync();
+        if (saved)
+        {
+            _notificationService.ShowToast("Tüm değişiklikler kaydedildi.", ToastType.Success, TimeSpan.FromSeconds(2));
+            return;
+        }
+
+        _notificationService.ShowToast("Bazı kayıtlar tamamlanamadı. Durumu kontrol edin.", ToastType.Warning, TimeSpan.FromSeconds(4));
+    }
 
     public Task<bool> SaveAllTabsSafelyAsync()
         => RunExclusiveOperationAsync(async () =>
