@@ -1,13 +1,10 @@
 # Todo
 
-## Current Task: Ayarlar layout + ortak Kaydet
-- [x] Settings layout + Grid.Column düzeltmesi
-- [x] Sol panel mavi Kaydet = SaveAll; sekme Kaydet kaldırıldı; Ctrl+S global
-- [x] Çözülmemiş bağlantı metrik UX
-- [x] Build + test (200/200)
+## Current Task: Ayarlar layout + ortak Kaydet (teslim)
+- [x] Settings layout + ortak mavi Kaydet
 - [x] Commit `46f07e3`
-- [ ] Canonical publish (uygulama açık — kapatılınca)
+- [x] Canonical publish; Data hash korundu
 
 ## Review Update
 - Commit: `46f07e3`.
-- Publish bekliyor: `RizaCanKilicIsTakibi.exe` çalışıyor (PID 11068). Data hash’leri korunacak.
+- Canonical publish exe güncellendi; `Data\tasks.db` / `Data\last-save.json` SHA256/size/timestamp değişmedi; `Backup` ve `Logs` korundu.
