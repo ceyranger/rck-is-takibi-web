@@ -10,43 +10,8 @@
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResizeWithGrip"
         Background="#FFEEF3F9">
-    <Window.Resources>
-        <Style x:Key="EventFieldLabelStyle" TargetType="TextBlock">
-            <Setter Property="FontFamily" Value="{StaticResource Font.Body}"/>
-            <Setter Property="FontSize" Value="11"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Foreground" Value="{StaticResource Brush.TextSecondary}"/>
-            <Setter Property="Margin" Value="0,0,0,4"/>
-        </Style>
-        <Style x:Key="EventFieldBoxStyle" TargetType="Border">
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="CornerRadius" Value="10"/>
-            <Setter Property="Padding" Value="2"/>
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
-        </Style>
-    </Window.Resources>
-
-    <Grid>
-        <Grid.Background>
-            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="#FFE8F0FA" Offset="0"/>
-                <GradientStop Color="#FFF4F7FB" Offset="0.45"/>
-                <GradientStop Color="#FFEAF3EC" Offset="1"/>
-            </LinearGradientBrush>
-        </Grid.Background>
-
-        <Border Margin="14"
-                Background="{StaticResource Brush.Surface}"
-                BorderBrush="{StaticResource Brush.Border}"
-                BorderThickness="1"
-                CornerRadius="16"
-                SnapsToDevicePixels="True">
-            <Border.Effect>
-                <DropShadowEffect Color="#1A0A1C30" BlurRadius="24" ShadowDepth="0" Opacity="0.9"/>
-            </Border.Effect>
-
+    <Grid Background="{StaticResource Brush.EntryDialogBackground}">
+        <Border Style="{StaticResource EntryDialogCardStyle}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -54,30 +19,13 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Header (compact) -->
-                <Border CornerRadius="16,16,0,0" Padding="20,14,20,12">
-                    <Border.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                            <GradientStop Color="#FF0F5CC0" Offset="0"/>
-                            <GradientStop Color="#FF1A7AD9" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Border.Background>
+                <Border Style="{StaticResource EntryDialogHeaderStyle}">
                     <StackPanel>
-                        <TextBlock Text="ANA BİLGİ OLAYI"
-                                   FontFamily="{StaticResource Font.Primary}"
-                                   FontSize="11"
-                                   FontWeight="SemiBold"
-                                   Foreground="#CCFFFFFF"/>
-                        <TextBlock Text="Olay kaydı"
-                                   FontFamily="{StaticResource Font.Primary}"
-                                   FontSize="22"
-                                   FontWeight="SemiBold"
-                                   Foreground="White"
-                                   Margin="0,2,0,0"/>
+                        <TextBlock Text="ANA BİLGİ OLAYI" Style="{StaticResource EntryDialogEyebrowStyle}"/>
+                        <TextBlock Text="Olay kaydı" Style="{StaticResource EntryDialogTitleStyle}"/>
                     </StackPanel>
                 </Border>
 
-                <!-- Body: no outer scroll; fields share remaining height -->
                 <Grid Grid.Row="1" Margin="20,14,20,8">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -86,9 +34,8 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Date -->
                     <StackPanel>
-                        <TextBlock Text="TARİH" Style="{StaticResource EventFieldLabelStyle}"/>
+                        <TextBlock Text="TARİH" Style="{StaticResource EntryFieldLabelStyle}"/>
                         <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -96,12 +43,7 @@
                             </Grid.ColumnDefinitions>
                             <Border Style="{StaticResource EventFieldBoxStyle}" MinHeight="38">
                                 <DatePicker SelectedDate="{Binding EventDate, Mode=TwoWay}"
-                                            BorderThickness="0"
-                                            Background="Transparent"
-                                            FontSize="14"
-                                            Padding="8,6"
-                                            VerticalContentAlignment="Center"
-                                            Margin="0"/>
+                                            Style="{StaticResource EntryFieldDatePickerStyle}"/>
                             </Border>
                             <Button Grid.Column="1"
                                     Content="Bugün"
@@ -114,9 +56,8 @@
                         </Grid>
                     </StackPanel>
 
-                    <!-- Status -->
                     <StackPanel Grid.Row="1" Margin="0,0,0,10">
-                        <TextBlock Text="DURUM" Style="{StaticResource EventFieldLabelStyle}"/>
+                        <TextBlock Text="DURUM" Style="{StaticResource EntryFieldLabelStyle}"/>
                         <Border Style="{StaticResource EventFieldBoxStyle}" MinHeight="38">
                             <ComboBox BorderThickness="0"
                                       Background="Transparent"
@@ -131,56 +72,34 @@
                         </Border>
                     </StackPanel>
 
-                    <!-- Description shares space -->
                     <Grid Grid.Row="2" Margin="0,0,0,10">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="AÇIKLAMA" Style="{StaticResource EventFieldLabelStyle}"/>
+                        <TextBlock Text="AÇIKLAMA" Style="{StaticResource EntryFieldLabelStyle}"/>
                         <Border Grid.Row="1" Style="{StaticResource EventFieldBoxStyle}">
                             <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                                     BorderThickness="0"
-                                     Background="Transparent"
-                                     Padding="10,8"
-                                     AcceptsReturn="True"
-                                     TextWrapping="Wrap"
-                                     VerticalContentAlignment="Top"
-                                     VerticalScrollBarVisibility="Auto"
-                                     behaviors:TextBoxMouseWheelBehavior.IsEnabled="True"
-                                     Margin="0"/>
+                                     Style="{StaticResource EntryFieldMultilineTextBoxStyle}"
+                                     behaviors:TextBoxMouseWheelBehavior.IsEnabled="True"/>
                         </Border>
                     </Grid>
 
-                    <!-- Note shares space -->
                     <Grid Grid.Row="3">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="NOT" Style="{StaticResource EventFieldLabelStyle}"/>
+                        <TextBlock Text="NOT" Style="{StaticResource EntryFieldLabelStyle}"/>
                         <Border Grid.Row="1" Style="{StaticResource EventFieldBoxStyle}">
                             <TextBox Text="{Binding NoteText, UpdateSourceTrigger=PropertyChanged}"
-                                     BorderThickness="0"
-                                     Background="Transparent"
-                                     Padding="10,8"
-                                     AcceptsReturn="True"
-                                     TextWrapping="Wrap"
-                                     VerticalContentAlignment="Top"
-                                     VerticalScrollBarVisibility="Auto"
-                                     behaviors:TextBoxMouseWheelBehavior.IsEnabled="True"
-                                     Margin="0"/>
+                                     Style="{StaticResource EntryFieldMultilineTextBoxStyle}"
+                                     behaviors:TextBoxMouseWheelBehavior.IsEnabled="True"/>
                         </Border>
                     </Grid>
                 </Grid>
 
-                <!-- Footer -->
-                <Border Grid.Row="2"
-                        BorderBrush="{StaticResource Brush.Border}"
-                        BorderThickness="0,1,0,0"
-                        Background="{StaticResource Brush.SurfaceAlt}"
-                        CornerRadius="0,0,16,16"
-                        Padding="16,10">
+                <Border Grid.Row="2" Style="{StaticResource EntryDialogFooterStyle}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button Content="İptal"
                                 Width="100"

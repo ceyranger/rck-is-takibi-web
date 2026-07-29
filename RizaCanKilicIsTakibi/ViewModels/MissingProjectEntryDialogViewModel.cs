@@ -17,6 +17,9 @@ public sealed class MissingProjectEntryDialogViewModel : ViewModelBase
     private string _recordMediumText = MissingProjectMediumLabelProvider.GetLabel(MissingProjectMedium.Fiziki);
     private Guid? _selectedProjectId;
     private string _validationMessage = string.Empty;
+    private string _projectSummaryText = string.Empty;
+    private bool _isIdentityManualEdit;
+    private bool _isProjectIdentityIncomplete;
 
     public MissingProjectEntryDialogViewModel(
         IEnumerable<ProjectCatalogEntry> catalogEntries,
@@ -31,6 +34,7 @@ public sealed class MissingProjectEntryDialogViewModel : ViewModelBase
 
         SaveCommand = new RelayCommand(Save);
         CancelCommand = new RelayCommand(() => RequestClose?.Invoke(this, null));
+        ToggleIdentityManualEditCommand = new RelayCommand(ToggleIdentityManualEdit);
     }
 
     public event EventHandler<MissingProjectEntry?>? RequestClose;
@@ -101,15 +105,53 @@ public sealed class MissingProjectEntryDialogViewModel : ViewModelBase
         private set => SetProperty(ref _validationMessage, value);
     }
 
+    public string ProjectSummaryText
+    {
+        get => _projectSummaryText;
+        private set => SetProperty(ref _projectSummaryText, value);
+    }
+
+    public bool HasSelectedProject => SelectedProjectId is not null;
+
+    public bool IsIdentityManualEdit
+    {
+        get => _isIdentityManualEdit;
+        private set
+        {
+            if (SetProperty(ref _isIdentityManualEdit, value))
+            {
+                OnPropertyChanged(nameof(ShowIdentityFields));
+                OnPropertyChanged(nameof(IdentityEditToggleText));
+            }
+        }
+    }
+
+    public bool IsProjectIdentityIncomplete
+    {
+        get => _isProjectIdentityIncomplete;
+        private set
+        {
+            if (SetProperty(ref _isProjectIdentityIncomplete, value))
+            {
+                OnPropertyChanged(nameof(ShowIdentityFields));
+            }
+        }
+    }
+
+    public bool ShowIdentityFields => !HasSelectedProject || IsIdentityManualEdit || IsProjectIdentityIncomplete;
+
+    public string IdentityEditToggleText => IsIdentityManualEdit ? "Projeden kullan" : "Elle düzenle";
+
     public RelayCommand SaveCommand { get; }
     public RelayCommand CancelCommand { get; }
+    public RelayCommand ToggleIdentityManualEditCommand { get; }
 
     public MissingProjectEntry BuildEntry()
     {
         var entry = new MissingProjectEntry
         {
-            AdaParsel = AdaParsel.Trim(),
-            YapiSahibi = YapiSahibi.Trim(),
+            AdaParsel = IsIdentityManualEdit || SelectedProjectId is null ? AdaParsel.Trim() : string.Empty,
+            YapiSahibi = IsIdentityManualEdit || SelectedProjectId is null ? YapiSahibi.Trim() : string.Empty,
             MissingProjectText = MissingProjectText.Trim(),
             Description = Description.Trim(),
             RecordMedium = RecordMedium,
@@ -124,10 +166,18 @@ public sealed class MissingProjectEntryDialogViewModel : ViewModelBase
             if (project is not null)
             {
                 _catalogService.ApplyProjectSelection(entry, project);
+                if (IsIdentityManualEdit)
+                {
+                    entry.AdaParsel = AdaParsel.Trim();
+                    entry.YapiSahibi = YapiSahibi.Trim();
+                    entry.ProjectId = project.Id;
+                }
             }
             else
             {
                 entry.ProjectId = projectId;
+                entry.AdaParsel = AdaParsel.Trim();
+                entry.YapiSahibi = YapiSahibi.Trim();
             }
         }
 
@@ -138,23 +188,60 @@ public sealed class MissingProjectEntryDialogViewModel : ViewModelBase
     {
         if (SelectedProjectId is not Guid projectId)
         {
+            ProjectSummaryText = string.Empty;
+            IsProjectIdentityIncomplete = false;
+            IsIdentityManualEdit = false;
+            NotifyProjectUi();
             return;
         }
 
         var project = CatalogEntries.FirstOrDefault(item => item.Id == projectId);
         if (project is null)
         {
+            ProjectSummaryText = string.Empty;
+            IsProjectIdentityIncomplete = true;
+            IsIdentityManualEdit = true;
+            NotifyProjectUi();
             return;
         }
 
-        var temp = new MissingProjectEntry
-        {
-            AdaParsel = AdaParsel,
-            YapiSahibi = YapiSahibi
-        };
+        var temp = new MissingProjectEntry();
         _catalogService.ApplyProjectSelection(temp, project);
         AdaParsel = temp.AdaParsel;
         YapiSahibi = temp.YapiSahibi;
+        ProjectSummaryText = EntryDialogProjectHelper.BuildOwnerParcelSummary(project);
+        IsProjectIdentityIncomplete = EntryDialogProjectHelper.IsOwnerParcelIncomplete(project);
+        IsIdentityManualEdit = IsProjectIdentityIncomplete;
+        NotifyProjectUi();
+    }
+
+    private void ToggleIdentityManualEdit()
+    {
+        if (!HasSelectedProject)
+        {
+            return;
+        }
+
+        IsIdentityManualEdit = !IsIdentityManualEdit;
+        if (!IsIdentityManualEdit && SelectedProjectId is Guid projectId)
+        {
+            var project = CatalogEntries.FirstOrDefault(item => item.Id == projectId);
+            if (project is not null)
+            {
+                var temp = new MissingProjectEntry();
+                _catalogService.ApplyProjectSelection(temp, project);
+                AdaParsel = temp.AdaParsel;
+                YapiSahibi = temp.YapiSahibi;
+                ProjectSummaryText = EntryDialogProjectHelper.BuildOwnerParcelSummary(project);
+            }
+        }
+    }
+
+    private void NotifyProjectUi()
+    {
+        OnPropertyChanged(nameof(HasSelectedProject));
+        OnPropertyChanged(nameof(ShowIdentityFields));
+        OnPropertyChanged(nameof(IdentityEditToggleText));
     }
 
     private void Save()

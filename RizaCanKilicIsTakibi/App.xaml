@@ -9,6 +9,7 @@
                 <ResourceDictionary Source="Themes/Spacing.xaml" />
                 <ResourceDictionary Source="Themes/ControlStyles.xaml" />
                 <ResourceDictionary Source="Themes/CardStyles.xaml" />
+                <ResourceDictionary Source="Themes/DialogFieldStyles.xaml" />
                 <ResourceDictionary Source="Themes/DataGridStyles.xaml" />
                 <ResourceDictionary Source="Themes/ToastStyles.xaml" />
                 <ResourceDictionary Source="Themes/SectionHostStyles.xaml" />

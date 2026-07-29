@@ -4,91 +4,162 @@
         xmlns:behaviors="clr-namespace:RizaCanKilicIsTakibi.Behaviors"
         xmlns:controls="clr-namespace:RizaCanKilicIsTakibi.Views.Controls"
         Title="Karot Kaydı Ekle"
-        Width="620"
-        Height="560"
-        MinWidth="560"
-        MinHeight="480"
+        Width="640"
+        Height="680"
+        MinWidth="580"
+        MinHeight="520"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResizeWithGrip"
-        Background="{StaticResource Brush.AppBackground}">
-    <Grid Margin="16">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+        Background="#FFEEF3F9">
+    <Grid Background="{StaticResource Brush.EntryDialogBackground}">
+        <Border Style="{StaticResource EntryDialogCardStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0"
-                   Text="Yeni Karot Kaydı"
-                   FontFamily="{StaticResource Font.Primary}"
-                   FontWeight="SemiBold"
-                   FontSize="22"
-                   Margin="0,0,0,10" />
+                <Border Style="{StaticResource EntryDialogHeaderStyle}">
+                    <StackPanel>
+                        <TextBlock Text="KAROT TAKİBİ" Style="{StaticResource EntryDialogEyebrowStyle}"/>
+                        <TextBlock Text="Yeni kayıt" Style="{StaticResource EntryDialogTitleStyle}"/>
+                    </StackPanel>
+                </Border>
 
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-            <StackPanel>
-                <TextBlock Text="Proje (isteğe bağlı)" FontWeight="SemiBold" />
-                <controls:ProjectPickerControl Margin="0,4,0,8"
-                                               SelectedProjectId="{Binding SelectedProjectId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                               Catalog="{Binding CatalogEntries}" />
+                <ScrollViewer Grid.Row="1"
+                              Margin="20,14,20,8"
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel>
+                        <TextBlock Text="PROJE (İSTEĞE BAĞLI)" Style="{StaticResource EntryFieldLabelStyle}"/>
+                        <Border Style="{StaticResource EntryFieldBoxStyle}" Padding="6">
+                            <controls:ProjectPickerControl
+                                SelectedProjectId="{Binding SelectedProjectId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Catalog="{Binding CatalogEntries}"/>
+                        </Border>
 
-                <TextBlock Text="Numune Alınma Tarihi" FontWeight="SemiBold" />
-                <DatePicker Margin="0,4,0,8"
-                            SelectedDate="{Binding SampleReceivedDate, Mode=TwoWay}" />
+                        <Border Style="{StaticResource EntryProjectSummaryStyle}"
+                                Visibility="{Binding HasSelectedProject, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <StackPanel>
+                                <TextBlock Text="{Binding ProjectSummaryText}"
+                                           TextWrapping="Wrap"
+                                           Foreground="{StaticResource Brush.TextPrimary}"/>
+                                <TextBlock Text="Projede Ada/Parsel veya Yapı Sahibi eksik; elle doldurun."
+                                           Margin="0,6,0,0"
+                                           TextWrapping="Wrap"
+                                           Foreground="{StaticResource Brush.Warning}"
+                                           Visibility="{Binding IsProjectIdentityIncomplete, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <Button Content="{Binding IdentityEditToggleText}"
+                                        Margin="0,8,0,0"
+                                        Style="{StaticResource EntryLinkButtonStyle}"
+                                        Command="{Binding ToggleIdentityManualEditCommand}"/>
+                            </StackPanel>
+                        </Border>
 
-                <TextBlock Text="Ada Parsel" FontWeight="SemiBold" />
-                <TextBox Margin="0,4,0,8" Text="{Binding AdaParsel, UpdateSourceTrigger=PropertyChanged}" />
+                        <StackPanel Visibility="{Binding ShowIdentityFields, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBlock Text="ADA PARSEL" Style="{StaticResource EntryFieldLabelStyle}"/>
+                            <Border Style="{StaticResource EntryFieldBoxStyle}">
+                                <TextBox Style="{StaticResource EntryFieldTextBoxStyle}"
+                                         Text="{Binding AdaParsel, UpdateSourceTrigger=PropertyChanged}"/>
+                            </Border>
 
-                <TextBlock Text="Yapı Sahibi" FontWeight="SemiBold" />
-                <TextBox Margin="0,4,0,8" Text="{Binding YapiSahibi, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Text="YAPI SAHİBİ" Style="{StaticResource EntryFieldLabelStyle}"/>
+                            <Border Style="{StaticResource EntryFieldBoxStyle}">
+                                <TextBox Style="{StaticResource EntryFieldTextBoxStyle}"
+                                         Text="{Binding YapiSahibi, UpdateSourceTrigger=PropertyChanged}"/>
+                            </Border>
 
-                <TextBlock Text="YİBF No" FontWeight="SemiBold" />
-                <TextBox Margin="0,4,0,8" Text="{Binding YibfNo, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Text="YİBF NO" Style="{StaticResource EntryFieldLabelStyle}"/>
+                            <Border Style="{StaticResource EntryFieldBoxStyle}">
+                                <TextBox Style="{StaticResource EntryFieldTextBoxStyle}"
+                                         Text="{Binding YibfNo, UpdateSourceTrigger=PropertyChanged}"/>
+                            </Border>
 
-                <TextBlock Text="Müteahhit" FontWeight="SemiBold" />
-                <TextBox Margin="0,4,0,8" Text="{Binding Muteahhit, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Text="MÜTEAHHİT" Style="{StaticResource EntryFieldLabelStyle}"/>
+                            <Border Style="{StaticResource EntryFieldBoxStyle}">
+                                <TextBox Style="{StaticResource EntryFieldTextBoxStyle}"
+                                         Text="{Binding Muteahhit, UpdateSourceTrigger=PropertyChanged}"/>
+                            </Border>
+                        </StackPanel>
 
-                <TextBlock Text="Kat Bilgisi" FontWeight="SemiBold" />
-                <TextBox Margin="0,4,0,8" Text="{Binding KatBilgisi, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="NUMUNE ALINMA TARİHİ" Style="{StaticResource EntryFieldLabelStyle}"/>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Style="{StaticResource EventFieldBoxStyle}" MinHeight="38">
+                                <DatePicker SelectedDate="{Binding SampleReceivedDate, Mode=TwoWay}"
+                                            Style="{StaticResource EntryFieldDatePickerStyle}"/>
+                            </Border>
+                            <Button Grid.Column="1"
+                                    Content="Bugün"
+                                    MinWidth="80"
+                                    MinHeight="38"
+                                    Margin="8,0,0,0"
+                                    Padding="12,6"
+                                    Style="{StaticResource GhostButton}"
+                                    Command="{Binding SetTodayCommand}"/>
+                        </Grid>
 
-                <TextBlock Text="Beton Sınıfı" FontWeight="SemiBold" />
-                <TextBox Margin="0,4,0,8" Text="{Binding BetonSinifi, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="KAT BİLGİSİ" Style="{StaticResource EntryFieldLabelStyle}"/>
+                        <Border Style="{StaticResource EntryFieldBoxStyle}">
+                            <TextBox Style="{StaticResource EntryFieldTextBoxStyle}"
+                                     Text="{Binding KatBilgisi, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Border>
 
-                <TextBlock Text="28 Günlük Sonuç" FontWeight="SemiBold" />
-                <TextBox Margin="0,4,0,8" Text="{Binding TwentyEightDayResult, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="BETON SINIFI" Style="{StaticResource EntryFieldLabelStyle}"/>
+                        <Border Style="{StaticResource EntryFieldBoxStyle}">
+                            <TextBox Style="{StaticResource EntryFieldTextBoxStyle}"
+                                     Text="{Binding BetonSinifi, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Border>
 
-                <TextBlock Text="Beton Firması" FontWeight="SemiBold" />
-                <TextBox Margin="0,4,0,8" Text="{Binding BetonFirmasi, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="28 GÜNLÜK SONUÇ" Style="{StaticResource EntryFieldLabelStyle}"/>
+                        <Border Style="{StaticResource EntryFieldBoxStyle}">
+                            <TextBox Style="{StaticResource EntryFieldTextBoxStyle}"
+                                     Text="{Binding TwentyEightDayResult, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Border>
 
-                <TextBlock Text="Laboratuvar" FontWeight="SemiBold" />
-                <TextBox Margin="0,4,0,8" Text="{Binding Laboratuvar, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="BETON FİRMASI" Style="{StaticResource EntryFieldLabelStyle}"/>
+                        <Border Style="{StaticResource EntryFieldBoxStyle}">
+                            <TextBox Style="{StaticResource EntryFieldTextBoxStyle}"
+                                     Text="{Binding BetonFirmasi, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Border>
 
-                <TextBlock Text="Açıklama" FontWeight="SemiBold" />
-                <TextBox Margin="0,4,0,8"
-                         MinHeight="80"
-                         AcceptsReturn="True"
-                         TextWrapping="Wrap"
-                         VerticalContentAlignment="Top"
-                         VerticalScrollBarVisibility="Auto"
-                         behaviors:TextBoxMouseWheelBehavior.IsEnabled="True"
-                         Text="{Binding Aciklama, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="LABORATUVAR" Style="{StaticResource EntryFieldLabelStyle}"/>
+                        <Border Style="{StaticResource EntryFieldBoxStyle}">
+                            <TextBox Style="{StaticResource EntryFieldTextBoxStyle}"
+                                     Text="{Binding Laboratuvar, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Border>
 
-                <TextBlock Text="{Binding ValidationMessage}"
-                           Foreground="{StaticResource Brush.Danger}"
-                           Margin="0,2,0,4"
-                           TextWrapping="Wrap" />
-            </StackPanel>
-        </ScrollViewer>
+                        <TextBlock Text="AÇIKLAMA" Style="{StaticResource EntryFieldLabelStyle}"/>
+                        <Border Style="{StaticResource EntryFieldBoxStyle}">
+                            <TextBox Style="{StaticResource EntryFieldMultilineTextBoxStyle}"
+                                     behaviors:TextBoxMouseWheelBehavior.IsEnabled="True"
+                                     Text="{Binding Aciklama, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Border>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
-            <Button Content="İptal"
-                    Style="{StaticResource GhostButton}"
-                    Width="96"
-                    Margin="0,0,8,0"
-                    Command="{Binding CancelCommand}" />
-            <Button Content="Kaydet"
-                    Width="120"
-                    Command="{Binding SaveCommand}" />
-        </StackPanel>
+                        <TextBlock Text="{Binding ValidationMessage}"
+                                   Foreground="{StaticResource Brush.Danger}"
+                                   Margin="0,2,0,4"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <Border Grid.Row="2" Style="{StaticResource EntryDialogFooterStyle}">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="İptal"
+                                Width="100"
+                                Margin="0,0,8,0"
+                                Style="{StaticResource GhostButton}"
+                                Command="{Binding CancelCommand}"/>
+                        <Button Content="Kaydet"
+                                Width="120"
+                                Command="{Binding SaveCommand}"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

@@ -3,68 +3,93 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:RizaCanKilicIsTakibi.Views.Controls"
         Title="YİBF İş Takibi Kaydı Ekle"
-        Width="620"
-        Height="520"
-        MinWidth="560"
-        MinHeight="440"
+        Width="640"
+        Height="620"
+        MinWidth="580"
+        MinHeight="500"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResizeWithGrip"
-        Background="{StaticResource Brush.AppBackground}">
-    <Grid Margin="16">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+        Background="#FFEEF3F9">
+    <Grid Background="{StaticResource Brush.EntryDialogBackground}">
+        <Border Style="{StaticResource EntryDialogCardStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0"
-                   Text="Yeni YİBF İş Takibi Kaydı"
-                   FontFamily="{StaticResource Font.Primary}"
-                   FontWeight="SemiBold"
-                   FontSize="22"
-                   Margin="0,0,0,10" />
+                <Border Style="{StaticResource EntryDialogHeaderStyle}">
+                    <StackPanel>
+                        <TextBlock Text="YİBF İŞ TAKİBİ" Style="{StaticResource EntryDialogEyebrowStyle}"/>
+                        <TextBlock Text="Yeni kayıt" Style="{StaticResource EntryDialogTitleStyle}"/>
+                    </StackPanel>
+                </Border>
 
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-            <StackPanel>
-                <TextBlock Text="Proje (isteğe bağlı)" FontWeight="SemiBold" />
-                <controls:ProjectPickerControl Margin="0,4,0,8"
-                                               SelectedProjectId="{Binding SelectedProjectId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                               Catalog="{Binding CatalogEntries}" />
+                <ScrollViewer Grid.Row="1" Margin="20,14,20,8" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel>
+                        <TextBlock Text="PROJE (İSTEĞE BAĞLI)" Style="{StaticResource EntryFieldLabelStyle}"/>
+                        <Border Style="{StaticResource EntryFieldBoxStyle}" Padding="6">
+                            <controls:ProjectPickerControl
+                                SelectedProjectId="{Binding SelectedProjectId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Catalog="{Binding CatalogEntries}"/>
+                        </Border>
 
-                <TextBlock Text="İşin İsmi" FontWeight="SemiBold" />
-                <TextBox Margin="0,4,0,8" Text="{Binding JobName, UpdateSourceTrigger=PropertyChanged}" />
+                        <Border Style="{StaticResource EntryProjectSummaryStyle}"
+                                Visibility="{Binding HasSelectedProject, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <StackPanel>
+                                <TextBlock Text="{Binding ProjectSummaryText}" TextWrapping="Wrap"/>
+                                <TextBlock Text="Projede iş adı üretilemedi; elle doldurun."
+                                           Margin="0,6,0,0"
+                                           TextWrapping="Wrap"
+                                           Foreground="{StaticResource Brush.Warning}"
+                                           Visibility="{Binding IsProjectIdentityIncomplete, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <Button Content="{Binding IdentityEditToggleText}"
+                                        Margin="0,8,0,0"
+                                        Style="{StaticResource EntryLinkButtonStyle}"
+                                        Command="{Binding ToggleIdentityManualEditCommand}"/>
+                            </StackPanel>
+                        </Border>
 
-                <TextBlock Text="İş Varyant Etiketi" FontWeight="SemiBold" />
-                <TextBox Margin="0,4,0,8" Text="{Binding WorkVariantLabel, UpdateSourceTrigger=PropertyChanged}" />
+                        <StackPanel Visibility="{Binding ShowIdentityFields, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBlock Text="İŞİN İSMİ" Style="{StaticResource EntryFieldLabelStyle}"/>
+                            <Border Style="{StaticResource EntryFieldBoxStyle}">
+                                <TextBox Style="{StaticResource EntryFieldTextBoxStyle}" Text="{Binding JobName, UpdateSourceTrigger=PropertyChanged}"/>
+                            </Border>
+                        </StackPanel>
 
-                <TextBlock Text="Belediye" FontWeight="SemiBold" />
-                <TextBox Margin="0,4,0,8"
-                         Text="{Binding Belediye}"
-                         IsReadOnly="True"
-                         Opacity="0.9" />
+                        <TextBlock Text="İŞ VARYANT ETİKETİ" Style="{StaticResource EntryFieldLabelStyle}"/>
+                        <Border Style="{StaticResource EntryFieldBoxStyle}">
+                            <TextBox Style="{StaticResource EntryFieldTextBoxStyle}" Text="{Binding WorkVariantLabel, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Border>
 
-                <TextBlock Text="Müteahhit" FontWeight="SemiBold" />
-                <TextBox Margin="0,4,0,8"
-                         Text="{Binding Muteahhit}"
-                         IsReadOnly="True"
-                         Opacity="0.9" />
+                        <TextBlock Text="BELEDİYE" Style="{StaticResource EntryFieldLabelStyle}"/>
+                        <Border Style="{StaticResource EntryFieldBoxStyle}">
+                            <TextBox Style="{StaticResource EntryFieldTextBoxStyle}"
+                                     Text="{Binding Belediye}"
+                                     IsReadOnly="True"
+                                     Opacity="0.9"/>
+                        </Border>
 
-                <TextBlock Text="{Binding ValidationMessage}"
-                           Foreground="{StaticResource Brush.Danger}"
-                           Margin="0,2,0,4"
-                           TextWrapping="Wrap" />
-            </StackPanel>
-        </ScrollViewer>
+                        <TextBlock Text="MÜTEAHHİT" Style="{StaticResource EntryFieldLabelStyle}"/>
+                        <Border Style="{StaticResource EntryFieldBoxStyle}">
+                            <TextBox Style="{StaticResource EntryFieldTextBoxStyle}"
+                                     Text="{Binding Muteahhit}"
+                                     IsReadOnly="True"
+                                     Opacity="0.9"/>
+                        </Border>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
-            <Button Content="İptal"
-                    Style="{StaticResource GhostButton}"
-                    Width="96"
-                    Margin="0,0,8,0"
-                    Command="{Binding CancelCommand}" />
-            <Button Content="Kaydet"
-                    Width="120"
-                    Command="{Binding SaveCommand}" />
-        </StackPanel>
+                        <TextBlock Text="{Binding ValidationMessage}" Foreground="{StaticResource Brush.Danger}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <Border Grid.Row="2" Style="{StaticResource EntryDialogFooterStyle}">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="İptal" Width="100" Margin="0,0,8,0" Style="{StaticResource GhostButton}" Command="{Binding CancelCommand}"/>
+                        <Button Content="Kaydet" Width="120" Command="{Binding SaveCommand}"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

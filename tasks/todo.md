@@ -1,13 +1,13 @@
 # Todo
 
-## Current Task: Karot Yeni Kayıt Diyaloğuna Eksik Sütunlar
-- [x] KarotEntryDialogViewModel: 4 eksik property + BuildEntry ataması
-- [x] KarotEntryWindow.xaml: DatePicker + 3 TextBox alanları ekle
-- [x] BuildEntry testi yaz; build + solution test çalıştır
-- [x] Git commit + Release publish (Data korumalı)
+## Current Task: Kayıt Ekle Soft Cards + Proje Özeti
+- [x] DialogFieldStyles.xaml + App merge; Event window stillerini paylaşılan temaya taşı
+- [x] Karot Soft Cards + Bugün DatePicker + proje özeti/Elle düzenle + Muteahhit sync
+- [x] Tadilat, Ana Bilgi, İş Takibi, Eksik Proje, Görev pencerelerine aynı shell/pattern
+- [x] VM testleri + build/test; todo/critical-notes güncelle
 
 ## Review Update
-- Yeni kayıt diyaloğuna Numune Alınma Tarihi, 28 Günlük Sonuç, Beton Firması, Laboratuvar eklendi.
-- Status alt sekmeden türetilmeye devam ediyor (formda yok).
-- Tests: 187/187. Commit: `8020417`.
-- Canonical publish exe güncellendi; `Data\tasks.db` / `Data\last-save.json` SHA256/size/timestamp değişmedi; `Backup` ve `Logs` korundu.
+- Soft Field Cards (mockup A) paylaşılan tema: `Themes/DialogFieldStyles.xaml`.
+- Proje seçilince kimlik alanları katalogdan dolar; özet gösterilir; kutular gizlenir; “Elle düzenle” ile açılır.
+- Eksik katalog kimliğinde uyarı + Elle düzenle otomatik açık.
+- Tests: 190/190. Canonical publish henüz güncellenmedi.

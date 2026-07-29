@@ -23,6 +23,9 @@ public sealed class KarotEntryDialogViewModel : ViewModelBase
     private string _aciklama = string.Empty;
     private Guid? _selectedProjectId;
     private string _validationMessage = string.Empty;
+    private string _projectSummaryText = string.Empty;
+    private bool _isIdentityManualEdit;
+    private bool _isProjectIdentityIncomplete;
 
     public KarotEntryDialogViewModel(
         KarotSubTab subTab,
@@ -35,6 +38,8 @@ public sealed class KarotEntryDialogViewModel : ViewModelBase
 
         SaveCommand = new RelayCommand(Save);
         CancelCommand = new RelayCommand(() => RequestClose?.Invoke(this, null));
+        SetTodayCommand = new RelayCommand(() => SampleReceivedDate = DateTime.Today);
+        ToggleIdentityManualEditCommand = new RelayCommand(ToggleIdentityManualEdit);
     }
 
     public event EventHandler<KarotEntry?>? RequestClose;
@@ -52,6 +57,7 @@ public sealed class KarotEntryDialogViewModel : ViewModelBase
             }
 
             ApplySelectedProject();
+            RefreshProjectUiState();
         }
     }
 
@@ -127,8 +133,47 @@ public sealed class KarotEntryDialogViewModel : ViewModelBase
         private set => SetProperty(ref _validationMessage, value);
     }
 
+    public string ProjectSummaryText
+    {
+        get => _projectSummaryText;
+        private set => SetProperty(ref _projectSummaryText, value);
+    }
+
+    public bool HasSelectedProject => SelectedProjectId is not null;
+
+    public bool IsIdentityManualEdit
+    {
+        get => _isIdentityManualEdit;
+        private set
+        {
+            if (SetProperty(ref _isIdentityManualEdit, value))
+            {
+                OnPropertyChanged(nameof(ShowIdentityFields));
+                OnPropertyChanged(nameof(IdentityEditToggleText));
+            }
+        }
+    }
+
+    public bool IsProjectIdentityIncomplete
+    {
+        get => _isProjectIdentityIncomplete;
+        private set
+        {
+            if (SetProperty(ref _isProjectIdentityIncomplete, value))
+            {
+                OnPropertyChanged(nameof(ShowIdentityFields));
+            }
+        }
+    }
+
+    public bool ShowIdentityFields => !HasSelectedProject || IsIdentityManualEdit || IsProjectIdentityIncomplete;
+
+    public string IdentityEditToggleText => IsIdentityManualEdit ? "Projeden kullan" : "Elle düzenle";
+
     public RelayCommand SaveCommand { get; }
     public RelayCommand CancelCommand { get; }
+    public RelayCommand SetTodayCommand { get; }
+    public RelayCommand ToggleIdentityManualEditCommand { get; }
 
     public KarotEntry BuildEntry()
     {
@@ -155,7 +200,25 @@ public sealed class KarotEntryDialogViewModel : ViewModelBase
             var project = CatalogEntries.FirstOrDefault(item => item.Id == projectId);
             if (project is not null)
             {
+                // Clear identity so service fills from project when not manually overridden.
+                if (!IsIdentityManualEdit)
+                {
+                    entry.AdaParsel = string.Empty;
+                    entry.YapiSahibi = string.Empty;
+                    entry.YibfNo = string.Empty;
+                    entry.Muteahhit = string.Empty;
+                }
+
                 _catalogService.ApplyProjectSelection(entry, project);
+
+                if (IsIdentityManualEdit)
+                {
+                    entry.AdaParsel = AdaParsel.Trim();
+                    entry.YapiSahibi = YapiSahibi.Trim();
+                    entry.YibfNo = YibfNo.Trim();
+                    entry.Muteahhit = Muteahhit.Trim();
+                    entry.ProjectId = project.Id;
+                }
             }
             else
             {
@@ -170,25 +233,70 @@ public sealed class KarotEntryDialogViewModel : ViewModelBase
     {
         if (SelectedProjectId is not Guid projectId)
         {
+            ProjectSummaryText = string.Empty;
+            IsProjectIdentityIncomplete = false;
+            IsIdentityManualEdit = false;
+            OnPropertyChanged(nameof(HasSelectedProject));
+            OnPropertyChanged(nameof(ShowIdentityFields));
             return;
         }
 
         var project = CatalogEntries.FirstOrDefault(item => item.Id == projectId);
         if (project is null)
         {
+            ProjectSummaryText = string.Empty;
+            IsProjectIdentityIncomplete = true;
+            IsIdentityManualEdit = true;
+            OnPropertyChanged(nameof(HasSelectedProject));
+            OnPropertyChanged(nameof(ShowIdentityFields));
             return;
         }
 
-        var temp = new KarotEntry
-        {
-            AdaParsel = AdaParsel,
-            YapiSahibi = YapiSahibi,
-            YibfNo = YibfNo
-        };
+        // Project is source of truth on select: overwrite identity fields.
+        var temp = new KarotEntry();
         _catalogService.ApplyProjectSelection(temp, project);
         AdaParsel = temp.AdaParsel;
         YapiSahibi = temp.YapiSahibi;
         YibfNo = temp.YibfNo;
+        Muteahhit = temp.Muteahhit;
+
+        ProjectSummaryText = EntryDialogProjectHelper.BuildOwnerParcelSummary(project);
+        IsProjectIdentityIncomplete = EntryDialogProjectHelper.IsOwnerParcelIncomplete(project);
+        IsIdentityManualEdit = IsProjectIdentityIncomplete;
+        OnPropertyChanged(nameof(HasSelectedProject));
+        OnPropertyChanged(nameof(ShowIdentityFields));
+        OnPropertyChanged(nameof(IdentityEditToggleText));
+    }
+
+    private void RefreshProjectUiState()
+    {
+        OnPropertyChanged(nameof(HasSelectedProject));
+        OnPropertyChanged(nameof(ShowIdentityFields));
+        OnPropertyChanged(nameof(IdentityEditToggleText));
+    }
+
+    private void ToggleIdentityManualEdit()
+    {
+        if (!HasSelectedProject)
+        {
+            return;
+        }
+
+        IsIdentityManualEdit = !IsIdentityManualEdit;
+        if (!IsIdentityManualEdit && SelectedProjectId is Guid projectId)
+        {
+            var project = CatalogEntries.FirstOrDefault(item => item.Id == projectId);
+            if (project is not null)
+            {
+                var temp = new KarotEntry();
+                _catalogService.ApplyProjectSelection(temp, project);
+                AdaParsel = temp.AdaParsel;
+                YapiSahibi = temp.YapiSahibi;
+                YibfNo = temp.YibfNo;
+                Muteahhit = temp.Muteahhit;
+                ProjectSummaryText = EntryDialogProjectHelper.BuildOwnerParcelSummary(project);
+            }
+        }
     }
 
     private void Save()

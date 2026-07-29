@@ -16,6 +16,9 @@ public sealed class YibfAnaBilgiEntryDialogViewModel : ViewModelBase
     private string _muteahhit = string.Empty;
     private Guid? _selectedProjectId;
     private string _validationMessage = string.Empty;
+    private string _projectSummaryText = string.Empty;
+    private bool _isIdentityManualEdit;
+    private bool _isProjectIdentityIncomplete;
 
     public YibfAnaBilgiEntryDialogViewModel(
         IEnumerable<ProjectCatalogEntry> catalogEntries,
@@ -41,6 +44,12 @@ public sealed class YibfAnaBilgiEntryDialogViewModel : ViewModelBase
         PrimaryActionText = isEditMode ? "Güncelle" : "Kaydet";
         SaveCommand = new RelayCommand(Save);
         CancelCommand = new RelayCommand(() => RequestClose?.Invoke(this, null));
+        ToggleIdentityManualEditCommand = new RelayCommand(ToggleIdentityManualEdit);
+
+        if (_selectedProjectId is not null)
+        {
+            RefreshSummaryFromSelection(overwriteFields: false);
+        }
     }
 
     public event EventHandler<YibfAnaBilgiEntryDialogResult?>? RequestClose;
@@ -100,10 +109,62 @@ public sealed class YibfAnaBilgiEntryDialogViewModel : ViewModelBase
         private set => SetProperty(ref _validationMessage, value);
     }
 
+    public string ProjectSummaryText
+    {
+        get => _projectSummaryText;
+        private set => SetProperty(ref _projectSummaryText, value);
+    }
+
+    public bool HasSelectedProject => SelectedProjectId is not null;
+
+    public bool IsIdentityManualEdit
+    {
+        get => _isIdentityManualEdit;
+        private set
+        {
+            if (SetProperty(ref _isIdentityManualEdit, value))
+            {
+                OnPropertyChanged(nameof(ShowIdentityFields));
+                OnPropertyChanged(nameof(IdentityEditToggleText));
+            }
+        }
+    }
+
+    public bool IsProjectIdentityIncomplete
+    {
+        get => _isProjectIdentityIncomplete;
+        private set
+        {
+            if (SetProperty(ref _isProjectIdentityIncomplete, value))
+            {
+                OnPropertyChanged(nameof(ShowIdentityFields));
+            }
+        }
+    }
+
+    public bool ShowIdentityFields => !HasSelectedProject || IsIdentityManualEdit || IsProjectIdentityIncomplete;
+
+    public string IdentityEditToggleText => IsIdentityManualEdit ? "Projeden kullan" : "Elle düzenle";
+
     public RelayCommand SaveCommand { get; }
     public RelayCommand CancelCommand { get; }
+    public RelayCommand ToggleIdentityManualEditCommand { get; }
 
     private void ApplySelectedProject()
+    {
+        if (SelectedProjectId is not Guid projectId)
+        {
+            ProjectSummaryText = string.Empty;
+            IsProjectIdentityIncomplete = false;
+            IsIdentityManualEdit = false;
+            NotifyProjectUi();
+            return;
+        }
+
+        RefreshSummaryFromSelection(overwriteFields: true);
+    }
+
+    private void RefreshSummaryFromSelection(bool overwriteFields)
     {
         if (SelectedProjectId is not Guid projectId)
         {
@@ -113,19 +174,55 @@ public sealed class YibfAnaBilgiEntryDialogViewModel : ViewModelBase
         var project = CatalogEntries.FirstOrDefault(item => item.Id == projectId);
         if (project is null)
         {
+            ProjectSummaryText = string.Empty;
+            IsProjectIdentityIncomplete = true;
+            IsIdentityManualEdit = true;
+            NotifyProjectUi();
             return;
         }
 
-        var temp = new YibfAnaBilgiEntry
+        if (overwriteFields)
         {
-            AdaParsel = AdaParsel,
-            YapiSahibi = YapiSahibi,
-            YibfNo = YibfNo
-        };
-        _catalogService.ApplyProjectSelection(temp, project);
-        AdaParsel = temp.AdaParsel;
-        YapiSahibi = temp.YapiSahibi;
-        YibfNo = temp.YibfNo;
+            var temp = new YibfAnaBilgiEntry();
+            _catalogService.ApplyProjectSelection(temp, project);
+            AdaParsel = temp.AdaParsel;
+            YapiSahibi = temp.YapiSahibi;
+            YibfNo = temp.YibfNo;
+            Idare = temp.Idare;
+            Muteahhit = temp.Muteahhit;
+        }
+
+        ProjectSummaryText = EntryDialogProjectHelper.BuildOwnerParcelSummary(project);
+        IsProjectIdentityIncomplete = EntryDialogProjectHelper.IsOwnerParcelIncomplete(project)
+            || string.IsNullOrWhiteSpace(AdaParsel)
+            || string.IsNullOrWhiteSpace(YapiSahibi);
+        if (overwriteFields)
+        {
+            IsIdentityManualEdit = IsProjectIdentityIncomplete;
+        }
+
+        NotifyProjectUi();
+    }
+
+    private void ToggleIdentityManualEdit()
+    {
+        if (!HasSelectedProject)
+        {
+            return;
+        }
+
+        IsIdentityManualEdit = !IsIdentityManualEdit;
+        if (!IsIdentityManualEdit)
+        {
+            RefreshSummaryFromSelection(overwriteFields: true);
+        }
+    }
+
+    private void NotifyProjectUi()
+    {
+        OnPropertyChanged(nameof(HasSelectedProject));
+        OnPropertyChanged(nameof(ShowIdentityFields));
+        OnPropertyChanged(nameof(IdentityEditToggleText));
     }
 
     private void Save()
