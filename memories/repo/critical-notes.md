@@ -40,3 +40,4 @@
 - 2026-07-29: Ayarlar layout düzeltildi (katalog `*`, üst araçlar ScrollViewer); tab host `Grid.Column=1` kaldırıldı. Tek ortak mavi Kaydet (sol panel + Ctrl+S → SaveAll). “Çözülmemiş bağlantı” metriği netleştirildi (kaydetten bağımsız DryRun). Tests 200/200; canlı Data’ya dokunulmadı; publish henüz yok.
 - 2026-07-29: Ortak Kaydet + Ayarlar UX commit `46f07e3`. Canonical publish bekliyor — canlı exe açık (Data hash korunacak).
 - 2026-07-29: Ortak Kaydet + Ayarlar UX teslim (`46f07e3`). Canonical publish exe güncellendi; `Data\tasks.db` / `Data\last-save.json` hash/size/timestamp değişmedi; `Backup` ve `Logs` korundu.
+- 2026-07-29: Çözülmemiş bağlantı Apply+Kaydet sonrası düşmeme bug’ı: `CloneEntry` `ProjectId` kopyalamıyordu (Karot/Aksiyon/Tadilat/Eksik). Fix + tests 203/203; publish henüz yok. Eski Apply’lar DB’de olmayabilir — yeniden uygula+kaydet gerekir.

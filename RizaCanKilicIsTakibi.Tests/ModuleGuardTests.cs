@@ -30,6 +30,45 @@ public class ModuleGuardTests
     }
 
     [Fact]
+    public async Task Karot_GetEntriesSnapshot_And_Persist_Preserve_ProjectId()
+    {
+        var databasePath = BuildDatabasePath();
+        var projectId = Guid.NewGuid();
+        var repository = new SqliteKarotRepository(databasePath);
+        var module = new KarotModuleViewModel(
+            repository,
+            new TestKarotStatusDialogService(),
+            new NotificationService(),
+            new CallbackConfirmationService(),
+            new TestTadilatCellNoteDialogService(),
+            new UndoRedoService());
+
+        var entryId = Guid.NewGuid();
+        module.LoadFromBackup(
+        [
+            new KarotEntry
+            {
+                Id = entryId,
+                AdaParsel = "101/1",
+                YapiSahibi = "Sahip",
+                Status = KarotStatus.KarotAlinacak,
+                ProjectId = projectId,
+                DisplayOrder = 0,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            }
+        ], markDirty: false);
+
+        Assert.Equal(projectId, module.GetEntriesSnapshot().Single().ProjectId);
+
+        module.MarkDirty();
+        await module.PersistAsync();
+
+        var saved = await repository.GetAllAsync();
+        Assert.Equal(projectId, Assert.Single(saved).ProjectId);
+    }
+
+    [Fact]
     public async Task Karot_Negative_Status_Requests_Action_Draft_After_Confirmation()
     {
         var statusDialog = new TestKarotStatusDialogService { Result = KarotStatus.KarotAlindiOlumsuz };

@@ -1,10 +1,9 @@
 # Todo
 
-## Current Task: Ayarlar layout + ortak Kaydet (teslim)
-- [x] Settings layout + ortak mavi Kaydet
-- [x] Commit `46f07e3`
-- [x] Canonical publish; Data hash korundu
+## Current Task: ProjectId snapshot bug (teslim)
+- [x] CloneEntry ProjectId fix
+- [x] Tests 203/203
+- [x] Commit + güvenli publish
 
 ## Review Update
-- Commit: `46f07e3`.
-- Canonical publish exe güncellendi; `Data\tasks.db` / `Data\last-save.json` SHA256/size/timestamp değişmedi; `Backup` ve `Logs` korundu.
+- Fix teslim edilecek; önceki Apply’lar DB’de olmayabilir — yeniden uygula+kaydet.

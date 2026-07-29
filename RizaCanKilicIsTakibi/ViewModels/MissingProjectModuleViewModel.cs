@@ -984,7 +984,8 @@ public sealed class MissingProjectModuleViewModel : ViewModelBase
             Description = entry.Description,
             DisplayOrder = entry.DisplayOrder,
             CreatedAt = entry.CreatedAt,
-            UpdatedAt = entry.UpdatedAt
+            UpdatedAt = entry.UpdatedAt,
+            ProjectId = entry.ProjectId
         };
     }
 

@@ -1605,7 +1605,8 @@ public sealed class TadilatModuleViewModel : ViewModelBase
             Description2 = entry.Description2,
             DisplayOrder = entry.DisplayOrder,
             CreatedAt = entry.CreatedAt,
-            UpdatedAt = entry.UpdatedAt
+            UpdatedAt = entry.UpdatedAt,
+            ProjectId = entry.ProjectId
         };
     }
 

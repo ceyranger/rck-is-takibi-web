@@ -620,7 +620,8 @@ public sealed class ActionModuleViewModel : ViewModelBase
         WorkText = entry.WorkText,
         DisplayOrder = entry.DisplayOrder,
         CreatedAt = entry.CreatedAt,
-        UpdatedAt = entry.UpdatedAt
+        UpdatedAt = entry.UpdatedAt,
+        ProjectId = entry.ProjectId
     };
 
     private void SelectEntry(ActionEntry? entry)

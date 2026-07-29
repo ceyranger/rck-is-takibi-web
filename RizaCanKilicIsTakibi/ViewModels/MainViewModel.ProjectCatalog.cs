@@ -449,6 +449,16 @@ public sealed partial class MainViewModel
         ApplyProjectLinksCommand.NotifyCanExecuteChanged();
         await RefreshProjectLinkHealthAsync();
 
+        var remaining = UnresolvedProjectLinkCount;
+        if (remaining > 0)
+        {
+            _notificationService.ShowToast(
+                $"Bağlantılar uygulandı. {remaining} çözülmemiş kaldı — Şüphelileri çöz ile seçin, sonra Kaydet.",
+                ToastType.Warning,
+                TimeSpan.FromSeconds(6));
+            return;
+        }
+
         _notificationService.ShowToast("Proje bağlantıları uygulandı. Kalıcı olması için Kaydet'e basın.", ToastType.Success, TimeSpan.FromSeconds(4));
     }
 

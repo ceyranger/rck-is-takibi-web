@@ -1415,7 +1415,8 @@ public sealed class KarotModuleViewModel : ViewModelBase
             Status = entry.Status,
             DisplayOrder = entry.DisplayOrder,
             CreatedAt = entry.CreatedAt,
-            UpdatedAt = entry.UpdatedAt
+            UpdatedAt = entry.UpdatedAt,
+            ProjectId = entry.ProjectId
         };
     }
 

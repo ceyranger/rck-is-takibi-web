@@ -1,0 +1,14 @@
+---
+description: Meaningful work sonrası sormadan commit + güvenli Release publish
+alwaysApply: true
+---
+
+# Commit ve Publish
+
+Anlamlı kod değişikliği tamamlanıp build/test geçince:
+
+1. Kullanıcıya tekrar sormadan `git commit` yap.
+2. Canonical exe çalışmıyorsa güvenli Release publish yap: önce temp klasöre publish, sonra yalnız uygulama dosyalarını `RizaCanKilicIsTakibi\bin\Release\publish` içine kopyala.
+3. Asla `Data`, `Backup`, `Logs` silme/üzerine yazma; publish sonrası `tasks.db` ve `last-save.json` hash/size/timestamp doğrula.
+4. Exe açıksa publish’i blokla, kullanıcıya kısaca söyle; commit yine yapılabilir.
+5. Commit mesajında nedeni yaz; publish sonucunu kısa raporla.

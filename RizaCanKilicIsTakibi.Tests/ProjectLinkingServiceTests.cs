@@ -354,6 +354,82 @@ public sealed class ProjectLinkingServiceTests
         Assert.Equal(projectId, result.AutoActions[0].ProjectId);
     }
 
+    [Fact]
+    public void DryRun_Skips_WhenProjectIdAlreadySet()
+    {
+        var projectId = Guid.NewGuid();
+        var catalog = new List<ProjectCatalogEntry>
+        {
+            new()
+            {
+                Id = projectId,
+                DisplayName = "100-1 Sahip",
+                AdaParsel = "100-1",
+                YapiSahibi = "Sahip",
+                YibfNo = "555",
+                Kind = ProjectCatalogKind.Normal,
+                IsActive = true
+            }
+        };
+        var karot = new List<KarotEntry>
+        {
+            new()
+            {
+                Id = Guid.NewGuid(),
+                AdaParsel = "100-1",
+                YapiSahibi = "Sahip",
+                YibfNo = "555",
+                ProjectId = projectId
+            }
+        };
+
+        var result = CreateService().DryRun(catalog, karot, [], [], [], [], []);
+
+        Assert.Equal(0, result.AutoLinkCount);
+        Assert.Empty(result.Unresolved);
+        Assert.Equal(1, result.SkippedAlreadyLinkedCount);
+    }
+
+    [Fact]
+    public void Apply_Then_DryRun_Clears_AutoLinkable_Unresolved()
+    {
+        var projectId = Guid.NewGuid();
+        var catalog = new List<ProjectCatalogEntry>
+        {
+            new()
+            {
+                Id = projectId,
+                DisplayName = "100-1 Sahip",
+                AdaParsel = "100-1",
+                YapiSahibi = "Sahip",
+                YibfNo = "555",
+                Kind = ProjectCatalogKind.Normal,
+                IsActive = true
+            }
+        };
+        var karot = new List<KarotEntry>
+        {
+            new()
+            {
+                Id = Guid.NewGuid(),
+                AdaParsel = "farklı",
+                YapiSahibi = "farklı",
+                YibfNo = "555"
+            }
+        };
+
+        var service = CreateService();
+        var dryRun = service.DryRun(catalog, karot, [], [], [], [], []);
+        Assert.Equal(1, dryRun.AutoLinkCount);
+
+        service.Apply(dryRun.AutoActions, [], karot, [], [], [], [], [], catalog);
+        Assert.Equal(projectId, karot[0].ProjectId);
+
+        var after = service.DryRun(catalog, karot, [], [], [], [], []);
+        Assert.Equal(0, after.AutoLinkCount);
+        Assert.Empty(after.Unresolved);
+    }
+
     private static ProjectLinkingService CreateService()
         => new(new ProjectCatalogService(new NoOpCatalogRepository()));
 
