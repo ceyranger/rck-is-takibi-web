@@ -41,3 +41,4 @@
 - 2026-07-29: Ortak Kaydet + Ayarlar UX commit `46f07e3`. Canonical publish bekliyor — canlı exe açık (Data hash korunacak).
 - 2026-07-29: Ortak Kaydet + Ayarlar UX teslim (`46f07e3`). Canonical publish exe güncellendi; `Data\tasks.db` / `Data\last-save.json` hash/size/timestamp değişmedi; `Backup` ve `Logs` korundu.
 - 2026-07-29: Çözülmemiş bağlantı Apply+Kaydet sonrası düşmeme bug’ı: `CloneEntry` `ProjectId` kopyalamıyordu (Karot/Aksiyon/Tadilat/Eksik). Fix + tests 203/203; publish henüz yok. Eski Apply’lar DB’de olmayabilir — yeniden uygula+kaydet gerekir.
+- 2026-07-29: ProjectId snapshot fix teslim (`d6ac691`). Canonical publish exe güncellendi; `Data\tasks.db` / `Data\last-save.json` hash/size/timestamp değişmedi. Kullanıcı isteği: anlamlı iş sonrası sormadan commit+güvenli publish (`.cursor/rules/auto-commit-publish.mdc`).
