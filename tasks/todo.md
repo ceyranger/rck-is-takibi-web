@@ -1,18 +1,12 @@
 # Todo
 
-## Current Task: Proje Takibi layout + isim
-- [x] Sol liste 0.35* / sağ panel 0.65*
-- [x] Görünen isim: PROJE TAKİBİ / Proje Takibi
-- [x] Toast, rapor, arama, recovery, settings metinleri
-- [x] Excel import: Proje Takibi (+ eski ANA BİLGİ fallback)
-- [x] Test assert güncellemesi
+## Current Task: Proje Takibi + Karot (teslim)
+- [x] Layout 35/65 + Proje Takibi isim
+- [x] Karot tek tık seçim / çift tık düzenleme
 - [x] Build + test (200/200)
-- [ ] Commit + publish (kullanıcı onayı bekleniyor)
-
-## Previous: Karot tek tık / çift tık
-- [x] Draft edit modeli; tests 200/200; publish bekliyor
+- [x] Commit `9b625d2`
+- [x] Canonical Release publish; Data hash korundu
 
 ## Review Update
-- YİBF Ana Bilgi UI adı Proje Takibi; layout 35/65.
-- Enum/DB/tip adları değişmedi.
-- Tests: 200/200. Canonical publish henüz güncellenmedi.
+- Commit: `9b625d2`.
+- Canonical publish exe güncellendi; `Data\tasks.db` / `Data\last-save.json` SHA256/size/timestamp değişmedi; `Backup` ve `Logs` korundu.
