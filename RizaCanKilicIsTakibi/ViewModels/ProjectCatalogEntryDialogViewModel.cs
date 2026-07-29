@@ -162,7 +162,7 @@ public sealed class ProjectCatalogEntryDialogViewModel : ViewModelBase
 
             if (!HasParentProjects)
             {
-                return "Seçilebilecek Normal üst proje yok. Önce Normal bir proje ekleyin veya Ana Bilgi'den kataloğu doldurun.";
+                return "Seçilebilecek Normal üst proje yok. Önce Normal bir proje ekleyin veya Proje Takibi'den kataloğu doldurun.";
             }
 
             if (ParentProjectId is null || ParentProjectId == Guid.Empty)

@@ -47,7 +47,7 @@ public class ContextInsightBuilderTests
                 Kind = SearchResultKind.YibfAnaBilgiEntry,
                 TargetTab = MainNavigationTab.YibfAnaBilgi,
                 ItemId = entryId,
-                BoardLabel = "YİBF Ana Bilgi",
+                BoardLabel = "Proje Takibi",
                 Title = "642-25",
                 Summary = "ALAADDİN BEYAZ",
                 SearchText = "642-25 ALAADDİN BEYAZ 1855397"
@@ -366,7 +366,7 @@ public class ContextInsightBuilderTests
                 TargetTab = MainNavigationTab.YibfAnaBilgi,
                 ItemId = anaBilgiEventId,
                 ParentItemId = anaBilgiEntryId,
-                BoardLabel = "YİBF Ana Bilgi",
+                BoardLabel = "Proje Takibi",
                 Title = "642-25",
                 Summary = "SEKVAN",
                 SearchText = "642-25 ALAADDİN BEYAZ SEKVAN eksik evrak"
@@ -430,7 +430,7 @@ public class ContextInsightBuilderTests
 
         Assert.Equal(2, result.Sections.Count);
         Assert.Equal("Karot", result.Sections[0].Title);
-        Assert.Equal("YİBF Ana Bilgi", result.Sections[1].Title);
+        Assert.Equal("Proje Takibi", result.Sections[1].Title);
         Assert.Equal(1, result.Sections[0].SourceCount);
         Assert.Equal(1, result.Sections[1].SourceCount);
         Assert.Contains("[MÜTEAHHİT]", result.Sections[0].Items[0]);

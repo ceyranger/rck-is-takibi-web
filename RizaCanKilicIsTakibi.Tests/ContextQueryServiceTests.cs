@@ -52,7 +52,7 @@ public class ContextQueryServiceTests
                 Kind = SearchResultKind.YibfAnaBilgiEntry,
                 TargetTab = MainNavigationTab.YibfAnaBilgi,
                 ItemId = Guid.NewGuid(),
-                BoardLabel = "YİBF Ana Bilgi",
+                BoardLabel = "Proje Takibi",
                 Title = "1855397",
                 Summary = "YİBF",
                 SearchText = "1855397 ORSA ENERJI"
@@ -77,7 +77,7 @@ public class ContextQueryServiceTests
                 Kind = SearchResultKind.YibfAnaBilgiEntry,
                 TargetTab = MainNavigationTab.YibfAnaBilgi,
                 ItemId = Guid.NewGuid(),
-                BoardLabel = "YİBF Ana Bilgi",
+                BoardLabel = "Proje Takibi",
                 Title = "235-1 ORSA ENERJİ",
                 Summary = "SEKVAN İNŞAAT",
                 SearchText = "235-1 ORSA ENERJİ SEKVAN İNŞAAT"

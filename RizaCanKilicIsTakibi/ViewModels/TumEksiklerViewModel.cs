@@ -56,7 +56,7 @@ public sealed class TumEksiklerViewModel : ViewModelBase
 
     public TumEksiklerViewModel()
     {
-        SourceFilters = [AllFilter, "YİBF Ana Bilgi", "YİBF İş Takibi", "Tadilat", "Eksik Proje", "Karot"];
+        SourceFilters = [AllFilter, "Proje Takibi", "YİBF İş Takibi", "Tadilat", "Eksik Proje", "Karot"];
         SeverityFilters = [AllFilter, CriticalFilter, WarningFilter, BlankRequiredFilter];
         Groups = [];
         RefreshFiltersCommand = new RelayCommand(ApplyFilters);
@@ -224,7 +224,7 @@ public sealed class TumEksiklerViewModel : ViewModelBase
 
             var severity = IsRedColor(item.BackgroundColor) ? EksikSeverity.Critical : EksikSeverity.Warning;
             group.Items.Add(new EksikItemViewModel(
-                "YİBF Ana Bilgi",
+                "Proje Takibi",
                 "Olay Akışı",
                 FirstNonEmpty(item.Description, item.NoteText, "İşaretli olay"),
                 FirstNonEmpty(item.Description, "-"),

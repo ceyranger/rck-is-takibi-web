@@ -133,6 +133,9 @@ public sealed class KarotModuleViewModel : ViewModelBase
         InsertKarotEntryBelowCommand = new AsyncRelayCommand<KarotEntry?>(entry => InsertEntryRelativeAsync(entry, insertAfter: true), entry => entry is not null);
         OpenKarotStatusDialogCommand = new AsyncRelayCommand<KarotEntry?>(OpenStatusDialogAsync, entry => (entry ?? SelectedEntry) is not null);
         EditCellNoteCommand = new AsyncRelayCommand<KarotCellViewModel?>(EditCellNoteAsync);
+        BeginCellEditCommand = new RelayCommand<KarotCellViewModel?>(BeginCellEdit);
+        CommitCellEditCommand = new RelayCommand<KarotCellViewModel?>(CommitCellEdit);
+        CancelCellEditCommand = new RelayCommand<KarotCellViewModel?>(CancelCellEdit);
         CopyCellCommand = new RelayCommand<KarotCellViewModel?>(CopyCell);
         PasteCellCommand = new RelayCommand<KarotCellViewModel?>(PasteCell);
         ClearSearchCommand = new RelayCommand(() => SearchText = string.Empty, () => HasActiveSearch);
@@ -189,6 +192,7 @@ public sealed class KarotModuleViewModel : ViewModelBase
         {
             if (SetProperty(ref _selectedSubTab, value))
             {
+                CloseAllEditors();
                 RefreshColumnFilters();
                 NotifyCommands();
             }
@@ -218,11 +222,25 @@ public sealed class KarotModuleViewModel : ViewModelBase
     public AsyncRelayCommand<KarotEntry?> InsertKarotEntryBelowCommand { get; }
     public AsyncRelayCommand<KarotEntry?> OpenKarotStatusDialogCommand { get; }
     public AsyncRelayCommand<KarotCellViewModel?> EditCellNoteCommand { get; }
+    public RelayCommand<KarotCellViewModel?> BeginCellEditCommand { get; }
+    public RelayCommand<KarotCellViewModel?> CommitCellEditCommand { get; }
+    public RelayCommand<KarotCellViewModel?> CancelCellEditCommand { get; }
     public RelayCommand<KarotCellViewModel?> CopyCellCommand { get; }
     public RelayCommand<KarotCellViewModel?> PasteCellCommand { get; }
     public RelayCommand<KarotSubTab> SelectKarotSubTabCommand { get; }
     public RelayCommand<KarotEntry?> SelectKarotEntryCommand { get; }
     public RelayCommand ClearSearchCommand { get; }
+
+    public void CommitPendingEdits()
+    {
+        foreach (var row in VisibleRows.ToList())
+        {
+            foreach (var cell in row.GetCells())
+            {
+                CommitPendingEdit(cell);
+            }
+        }
+    }
 
     public async Task InitializeAsync()
     {
@@ -458,6 +476,70 @@ public sealed class KarotModuleViewModel : ViewModelBase
         });
     }
 
+    private void BeginCellEdit(KarotCellViewModel? cell)
+    {
+        if (cell is null)
+        {
+            return;
+        }
+
+        CloseAllEditors();
+        SelectKarotEntryCommand.Execute(cell.Row.Entry);
+        cell.DraftText = cell.Text;
+        cell.IsEditing = true;
+    }
+
+    private void CommitPendingEdit(KarotCellViewModel cell)
+    {
+        if (cell.IsEditing)
+        {
+            CommitCellEdit(cell);
+        }
+    }
+
+    private void CommitCellEdit(KarotCellViewModel? cell)
+    {
+        if (cell?.Row.Entry is null)
+        {
+            return;
+        }
+
+        var newValue = cell.DraftText.Trim();
+        if (string.Equals(newValue, cell.Text, StringComparison.Ordinal))
+        {
+            cell.IsEditing = false;
+            return;
+        }
+
+        ExecuteUndoableMutation("Karot hücre düzenle", () =>
+        {
+            cell.Text = newValue;
+            cell.DraftText = newValue;
+            cell.IsEditing = false;
+            cell.Row.Entry.UpdatedAt = DateTime.Now;
+            HasUnsavedChanges = true;
+        });
+    }
+
+    private void CancelCellEdit(KarotCellViewModel? cell)
+    {
+        if (cell is null)
+        {
+            return;
+        }
+
+        cell.DraftText = cell.Text;
+        cell.IsEditing = false;
+    }
+
+    private void CloseAllEditors()
+    {
+        foreach (var row in VisibleRows)
+        {
+            row.CloseEditors();
+        }
+    }
+
     private void CopyCell(KarotCellViewModel? cell)
     {
         if (cell is null)
@@ -488,6 +570,7 @@ public sealed class KarotModuleViewModel : ViewModelBase
             return;
         }
 
+        CloseAllEditors();
         SelectKarotEntryCommand.Execute(cell.Row.Entry);
         var normalizedText = text ?? string.Empty;
         if (string.Equals(cell.Text, normalizedText, StringComparison.Ordinal))
@@ -498,6 +581,7 @@ public sealed class KarotModuleViewModel : ViewModelBase
         ExecuteUndoableMutation("Karot hücre yapıştır", () =>
         {
             cell.Text = normalizedText;
+            cell.DraftText = normalizedText;
             cell.Row.Entry.UpdatedAt = DateTime.Now;
             HasUnsavedChanges = true;
         });
@@ -1414,6 +1498,30 @@ public sealed class KarotEntryRowViewModel : ViewModelBase
         OnPropertyChanged(nameof(RowBackgroundBrush));
     }
 
+    public void CloseEditors()
+    {
+        foreach (var cell in GetCells())
+        {
+            cell.IsEditing = false;
+            cell.DraftText = cell.Text;
+        }
+    }
+
+    public IEnumerable<KarotCellViewModel> GetCells()
+    {
+        yield return SampleReceivedDateCell;
+        yield return YibfNoCell;
+        yield return AdaParselCell;
+        yield return YapiSahibiCell;
+        yield return MuteahhitCell;
+        yield return KatBilgisiCell;
+        yield return BetonSinifiCell;
+        yield return TwentyEightDayResultCell;
+        yield return BetonFirmasiCell;
+        yield return LaboratuvarCell;
+        yield return AciklamaCell;
+    }
+
     private KarotCellViewModel Attach(KarotCellViewModel cell)
     {
         cell.Row = this;
@@ -1426,7 +1534,9 @@ public sealed class KarotCellViewModel : ViewModelBase
     private readonly Func<string> _readText;
     private readonly Action<string> _writeText;
     private string _text;
+    private string _draftText;
     private string _noteText;
+    private bool _isEditing;
     private bool _suppressWrite;
 
     public KarotCellViewModel(string columnKey, Func<string> readText, Action<string> writeText, string noteText)
@@ -1435,6 +1545,7 @@ public sealed class KarotCellViewModel : ViewModelBase
         _readText = readText;
         _writeText = writeText;
         _text = readText();
+        _draftText = _text;
         _noteText = noteText;
     }
 
@@ -1458,6 +1569,18 @@ public sealed class KarotCellViewModel : ViewModelBase
         }
     }
 
+    public string DraftText
+    {
+        get => _draftText;
+        set => SetProperty(ref _draftText, value);
+    }
+
+    public bool IsEditing
+    {
+        get => _isEditing;
+        set => SetProperty(ref _isEditing, value);
+    }
+
     public string NoteText
     {
         get => _noteText;
@@ -1477,6 +1600,11 @@ public sealed class KarotCellViewModel : ViewModelBase
         var next = _readText();
         if (string.Equals(_text, next, StringComparison.Ordinal))
         {
+            if (!IsEditing && !string.Equals(_draftText, next, StringComparison.Ordinal))
+            {
+                DraftText = next;
+            }
+
             return;
         }
 
@@ -1484,5 +1612,9 @@ public sealed class KarotCellViewModel : ViewModelBase
         _text = next;
         OnPropertyChanged(nameof(Text));
         _suppressWrite = false;
+        if (!IsEditing)
+        {
+            DraftText = next;
+        }
     }
 }

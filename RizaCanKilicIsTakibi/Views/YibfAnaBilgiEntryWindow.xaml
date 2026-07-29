@@ -21,7 +21,7 @@
 
                 <Border Style="{StaticResource EntryDialogHeaderStyle}">
                     <StackPanel>
-                        <TextBlock Text="YİBF ANA BİLGİ" Style="{StaticResource EntryDialogEyebrowStyle}"/>
+                        <TextBlock Text="PROJE TAKİBİ" Style="{StaticResource EntryDialogEyebrowStyle}"/>
                         <TextBlock Text="{Binding WindowTitle}" Style="{StaticResource EntryDialogTitleStyle}"/>
                     </StackPanel>
                 </Border>

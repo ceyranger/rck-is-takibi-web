@@ -193,7 +193,7 @@ public sealed partial class MainViewModel
         await EnsureYibfModuleInitializedAsync();
         if (YibfModule.AnaBilgiEntries.Count == 0)
         {
-            _notificationService.ShowToast("YİBF Ana Bilgi kaydı bulunamadı.", ToastType.Warning);
+            _notificationService.ShowToast("Proje Takibi kaydı bulunamadı.", ToastType.Warning);
             return;
         }
 
@@ -236,7 +236,7 @@ public sealed partial class MainViewModel
         ReplaceProjectCatalogEntries(seed.Select(entry => entry.Clone()));
         MarkCatalogDirty();
         RefreshFilteredProjectCatalogList();
-        _notificationService.ShowToast("Proje kataloğu Ana Bilgi'den oluşturuldu. Kaydet ile kalıcı olur.", ToastType.Success, TimeSpan.FromSeconds(4));
+        _notificationService.ShowToast("Proje kataloğu Proje Takibi'den oluşturuldu. Kaydet ile kalıcı olur.", ToastType.Success, TimeSpan.FromSeconds(4));
     }
 
     private async Task AddProjectCatalogEntryAsync()

@@ -1,16 +1,18 @@
 # Todo
 
-## Current Task: Ürün Yol Haritası P1–P7
-- [x] P1 Kaydet/kapanış draft commit
-- [x] P2 Arama UX
-- [x] P3 PDF paket
-- [x] P4 Bağlantı sağlığı
-- [x] P5 Katalog sync
-- [x] P6 Karot → Aksiyon
-- [x] P7 İlçe filtresi
-- [x] Doğrulama (build + 198 test)
-- [x] Commit + güvenli publish
+## Current Task: Proje Takibi layout + isim
+- [x] Sol liste 0.35* / sağ panel 0.65*
+- [x] Görünen isim: PROJE TAKİBİ / Proje Takibi
+- [x] Toast, rapor, arama, recovery, settings metinleri
+- [x] Excel import: Proje Takibi (+ eski ANA BİLGİ fallback)
+- [x] Test assert güncellemesi
+- [x] Build + test (200/200)
+- [ ] Commit + publish (kullanıcı onayı bekleniyor)
+
+## Previous: Karot tek tık / çift tık
+- [x] Draft edit modeli; tests 200/200; publish bekliyor
 
 ## Review Update
-- Commit: `7fa09ee`. Tests: 198/198.
-- Canonical publish exe güncellendi; `Data\tasks.db` / `Data\last-save.json` SHA256/size/timestamp değişmedi; `Backup` ve `Logs` korundu.
+- YİBF Ana Bilgi UI adı Proje Takibi; layout 35/65.
+- Enum/DB/tip adları değişmedi.
+- Tests: 200/200. Canonical publish henüz güncellenmedi.

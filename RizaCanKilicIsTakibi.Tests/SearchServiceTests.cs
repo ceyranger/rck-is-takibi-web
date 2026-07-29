@@ -65,7 +65,7 @@ public class SearchServiceTests
                 Kind = SearchResultKind.YibfAnaBilgiEntry,
                 TargetTab = MainNavigationTab.YibfAnaBilgi,
                 ItemId = Guid.NewGuid(),
-                BoardLabel = "YİBF Ana Bilgi",
+                BoardLabel = "Proje Takibi",
                 Title = "Başka kayıt",
                 Summary = "ŞEVKET içinde geçiyor",
                 SearchText = "Başka kayıt ŞEVKET içinde geçiyor"

@@ -542,7 +542,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
         var targetEntry = SelectedAnaBilgiEntry;
         if (targetEntry is null)
         {
-            _notificationService.ShowToast("Önce bir ana bilgi kaydı seçin.", ToastType.Warning, TimeSpan.FromSeconds(2));
+            _notificationService.ShowToast("Önce bir proje takibi kaydı seçin.", ToastType.Warning, TimeSpan.FromSeconds(2));
             return;
         }
 
@@ -554,11 +554,11 @@ public sealed class YibfModuleViewModel : ViewModelBase
 
         if (SelectedAnaBilgiEntry?.Id != targetEntry.Id || !AnaBilgiEntries.Any(item => item.Id == targetEntry.Id))
         {
-            _notificationService.ShowToast("Seçili ana bilgi kaydı artık mevcut değil.", ToastType.Warning, TimeSpan.FromSeconds(2));
+            _notificationService.ShowToast("Seçili proje takibi kaydı artık mevcut değil.", ToastType.Warning, TimeSpan.FromSeconds(2));
             return;
         }
 
-        ExecuteUndoableMutation("YİBF ana bilgi olay ekle", () =>
+        ExecuteUndoableMutation("Proje takibi olay ekle", () =>
         {
             var item = new YibfAnaBilgiEvent
             {
@@ -579,7 +579,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
             RefreshAnaBilgiCollections();
             SelectedAnaBilgiEvent = item;
         });
-        _notificationService.ShowToast("Ana bilgi olayı eklendi.", ToastType.Success, TimeSpan.FromSeconds(2));
+        _notificationService.ShowToast("Proje takibi olayı eklendi.", ToastType.Success, TimeSpan.FromSeconds(2));
     }
 
     private async Task AddAnaBilgiEntryAsync()
@@ -595,7 +595,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
             return;
         }
 
-        ExecuteUndoableMutation("YİBF ana bilgi kayıt ekle", () =>
+        ExecuteUndoableMutation("Proje takibi kayıt ekle", () =>
         {
             var entry = new YibfAnaBilgiEntry
             {
@@ -629,7 +629,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
             RefreshAnaBilgiCollections();
             SelectedAnaBilgiEntry = entry;
         });
-        _notificationService.ShowToast("YİBF ana bilgi kaydı eklendi.", ToastType.Success, TimeSpan.FromSeconds(2));
+        _notificationService.ShowToast("Proje takibi kaydı eklendi.", ToastType.Success, TimeSpan.FromSeconds(2));
         await Task.CompletedTask;
     }
 
@@ -664,11 +664,11 @@ public sealed class YibfModuleViewModel : ViewModelBase
 
         if (SelectedAnaBilgiEntry?.Id != target.Id || !AnaBilgiEntries.Any(item => item.Id == target.Id))
         {
-            _notificationService.ShowToast("Seçili ana bilgi kaydı artık mevcut değil.", ToastType.Warning, TimeSpan.FromSeconds(2));
+            _notificationService.ShowToast("Seçili proje takibi kaydı artık mevcut değil.", ToastType.Warning, TimeSpan.FromSeconds(2));
             return;
         }
 
-        ExecuteUndoableMutation("YİBF ana bilgi kayıt düzenle", () =>
+        ExecuteUndoableMutation("Proje takibi kayıt düzenle", () =>
         {
             target.AdaParsel = result.AdaParsel;
             target.YibfNo = result.YibfNo;
@@ -682,7 +682,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
             RefreshAnaBilgiCollections();
             RefreshVisibleEvents();
         });
-        _notificationService.ShowToast("YİBF ana bilgi kaydı güncellendi.", ToastType.Success, TimeSpan.FromSeconds(2));
+        _notificationService.ShowToast("Proje takibi kaydı güncellendi.", ToastType.Success, TimeSpan.FromSeconds(2));
         await Task.CompletedTask;
     }
 
@@ -708,7 +708,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
 
         if (SelectedAnaBilgiEvent?.Id != targetEvent.Id || !AnaBilgiEvents.Any(item => item.Id == targetEvent.Id))
         {
-            _notificationService.ShowToast("Seçili ana bilgi olayı artık mevcut değil.", ToastType.Warning, TimeSpan.FromSeconds(2));
+            _notificationService.ShowToast("Seçili proje takibi olayı artık mevcut değil.", ToastType.Warning, TimeSpan.FromSeconds(2));
             return;
         }
 
@@ -718,7 +718,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
             return;
         }
 
-        ExecuteUndoableMutation("YİBF ana bilgi olay düzenle", () =>
+        ExecuteUndoableMutation("Proje takibi olay düzenle", () =>
         {
             targetEvent.EventDate = result.EventDate;
             targetEvent.Description = result.Description.Trim();
@@ -735,7 +735,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
             HasUnsavedChanges = true;
             RefreshAnaBilgiCollections();
         });
-        _notificationService.ShowToast("Ana bilgi olayı güncellendi.", ToastType.Success, TimeSpan.FromSeconds(2));
+        _notificationService.ShowToast("Proje takibi olayı güncellendi.", ToastType.Success, TimeSpan.FromSeconds(2));
     }
 
     private async Task DeleteSelectedAnaBilgiEntryAsync()
@@ -749,7 +749,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
         if (!_confirmationService.Confirm(new ConfirmationRequest
             {
                 Kind = ConfirmationKind.Delete,
-                Title = "YİBF Ana Bilgi Kaydını Sil",
+                Title = "Proje Takibi Kaydını Sil",
                 Message = $"\"{target.AdaParsel}\" kaydı silinecek.\n\nDevam edilsin mi?",
                 IsDestructive = true
             }))
@@ -757,7 +757,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
             return;
         }
 
-        ExecuteUndoableMutation("YİBF ana bilgi kayıt sil", () =>
+        ExecuteUndoableMutation("Proje takibi kayıt sil", () =>
         {
             var nextSelection = AnaBilgiEntries
                 .Where(item => item.Id != target.Id)
@@ -775,7 +775,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
             RefreshAnaBilgiCollections();
             SelectedAnaBilgiEntry = nextSelection;
         });
-        _notificationService.ShowToast("YİBF ana bilgi kaydı silindi.", ToastType.Warning, TimeSpan.FromSeconds(2));
+        _notificationService.ShowToast("Proje takibi kaydı silindi.", ToastType.Warning, TimeSpan.FromSeconds(2));
         await Task.CompletedTask;
     }
 
@@ -795,7 +795,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
             return;
         }
 
-        ExecuteUndoableMutation("YİBF ana bilgi sıralama değiştir", () =>
+        ExecuteUndoableMutation("Proje takibi sıralama değiştir", () =>
         {
             var currentTarget = ResolveAnaBilgiEntry(target);
             if (currentTarget is null)
@@ -853,7 +853,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
         if (!_confirmationService.Confirm(new ConfirmationRequest
             {
                 Kind = ConfirmationKind.Delete,
-                Title = "Ana Bilgi Olayını Sil",
+                Title = "Proje Takibi Olayını Sil",
                 Message = $"\"{target.Description}\" olayı silinecek.\n\nDevam edilsin mi?",
                 IsDestructive = true
             }))
@@ -861,7 +861,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
             return;
         }
 
-        ExecuteUndoableMutation("YİBF ana bilgi olay sil", () =>
+        ExecuteUndoableMutation("Proje takibi olay sil", () =>
         {
             var currentTarget = AnaBilgiEvents.FirstOrDefault(item => item.Id == target.Id);
             if (currentTarget is null)
@@ -884,7 +884,7 @@ public sealed class YibfModuleViewModel : ViewModelBase
             RefreshAnaBilgiCollections();
         });
         await Task.CompletedTask;
-        _notificationService.ShowToast("Ana bilgi olayı silindi.", ToastType.Warning, TimeSpan.FromSeconds(2));
+        _notificationService.ShowToast("Proje takibi olayı silindi.", ToastType.Warning, TimeSpan.FromSeconds(2));
     }
 
     private async Task AddIsTakibiEntryAsync()

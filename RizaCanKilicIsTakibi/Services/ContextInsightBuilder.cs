@@ -10,7 +10,7 @@ public sealed class ContextInsightBuilder : IContextInsightBuilder
     [
         "Eksik Proje",
         "Karot",
-        "YİBF Ana Bilgi",
+        "Proje Takibi",
         "YİBF İş Takibi",
         "Tadilat",
         "Aksiyon",
@@ -366,7 +366,7 @@ public sealed class ContextInsightBuilder : IContextInsightBuilder
 
             var ownerParcel = BuildOwnerParcelSummary(entry.AdaParsel, entry.YapiSahibi);
             var roleLabel = BuildRoleLabel(match, entry.Muteahhit, entry.YapiSahibi);
-            AddInsight(insights, sectionItems, "YİBF Ana Bilgi", $"{ownerParcel} - {FirstNonEmpty(evt.Description, evt.NoteText, "-")}{roleLabel}");
+            AddInsight(insights, sectionItems, "Proje Takibi", $"{ownerParcel} - {FirstNonEmpty(evt.Description, evt.NoteText, "-")}{roleLabel}");
             AddSource(sourceKeys, sourceLookup, sourceRoleLabels, SearchResultKind.YibfAnaBilgiEvent, evt.Id, roleLabel);
         }
     }

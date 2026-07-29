@@ -28,7 +28,7 @@ public sealed class YibfExcelImportService : IYibfImportService
     {
         using var workbook = new XLWorkbook(filePath);
 
-        var anaBilgiEntries = ImportAnaBilgi(workbook.Worksheet("ANA BİLGİ"), out var anaEvents, cancellationToken);
+        var anaBilgiEntries = ImportAnaBilgi(ResolveAnaBilgiWorksheet(workbook), out var anaEvents, cancellationToken);
         var isTakibiEntries = ImportIsTakibi(workbook.Worksheet("İŞ TAKİBİ"), out var cellStates, cancellationToken);
 
         return Task.FromResult(new YibfImportData
@@ -38,6 +38,19 @@ public sealed class YibfExcelImportService : IYibfImportService
             IsTakibiEntries = isTakibiEntries,
             CellStates = cellStates
         });
+    }
+
+    private static IXLWorksheet ResolveAnaBilgiWorksheet(XLWorkbook workbook)
+    {
+        foreach (var name in new[] { "Proje Takibi", "ANA BİLGİ" })
+        {
+            if (workbook.TryGetWorksheet(name, out var worksheet))
+            {
+                return worksheet;
+            }
+        }
+
+        throw new InvalidOperationException("Excel dosyasında 'Proje Takibi' veya 'ANA BİLGİ' sayfası bulunamadı.");
     }
 
     private static List<YibfAnaBilgiEntry> ImportAnaBilgi(IXLWorksheet worksheet, out List<YibfAnaBilgiEvent> events, CancellationToken cancellationToken)

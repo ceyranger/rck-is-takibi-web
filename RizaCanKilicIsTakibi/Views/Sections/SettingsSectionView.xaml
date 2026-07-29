@@ -171,7 +171,7 @@
                         <Button Content="Ekle" Command="{Binding AddProjectCatalogEntryCommand}" Margin="0,0,8,8"/>
                         <Button Content="Düzenle" Command="{Binding EditProjectCatalogEntryCommand}" Style="{StaticResource GhostButton}" Margin="0,0,8,8"/>
                         <Button Content="Pasife Al" Command="{Binding DeactivateProjectCatalogEntryCommand}" Style="{StaticResource GhostButton}" Margin="0,0,8,8"/>
-                        <Button Content="Ana Bilgi'den doldur" Command="{Binding SeedProjectCatalogCommand}" Style="{StaticResource GhostButton}" Margin="0,0,8,8"/>
+                        <Button Content="Proje Takibi'den doldur" Command="{Binding SeedProjectCatalogCommand}" Style="{StaticResource GhostButton}" Margin="0,0,8,8"/>
                         <Button Content="Eşleştirmeyi önizle" Command="{Binding ProjectLinkDryRunCommand}" Style="{StaticResource GhostButton}" Margin="0,0,8,8"/>
                         <Button Content="Şüphelileri çöz" Command="{Binding ResolveUnresolvedProjectLinksCommand}" Style="{StaticResource GhostButton}" Margin="0,0,8,8"/>
                         <Button Content="Bağlantıları uygula" Command="{Binding ApplyProjectLinksCommand}" Margin="0,0,8,8"/>

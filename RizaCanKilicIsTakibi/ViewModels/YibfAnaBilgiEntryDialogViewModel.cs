@@ -250,7 +250,7 @@ public sealed class YibfAnaBilgiEntryDialogViewModel : ViewModelBase
             var project = CatalogEntries.FirstOrDefault(item => item.Id == projectId);
             if (project is null)
             {
-                ValidationMessage = "Ana Bilgi için yalnızca normal proje seçilebilir.";
+                ValidationMessage = "Proje Takibi için yalnızca normal proje seçilebilir.";
                 return;
             }
         }

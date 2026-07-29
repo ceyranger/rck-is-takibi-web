@@ -23,17 +23,6 @@
                 <Setter Property="SnapsToDevicePixels" Value="True"/>
             </Style>
 
-            <Style x:Key="KarotInlineTextBoxStyle" TargetType="TextBox">
-                <Setter Property="TextWrapping" Value="Wrap"/>
-                <Setter Property="AcceptsReturn" Value="True"/>
-                <Setter Property="TextAlignment" Value="Center"/>
-                <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="Padding" Value="8,8"/>
-            </Style>
-
             <Style x:Key="KarotRowActionButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                 <Setter Property="MinWidth" Value="0"/>
                 <Setter Property="MinHeight" Value="0"/>
@@ -51,10 +40,31 @@
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
             </Style>
 
+            <DataTemplate x:Key="KarotCellDisplayTemplate" DataType="{x:Type viewModels:KarotCellViewModel}">
+                <TextBlock Text="{Binding Text}"
+                           TextWrapping="Wrap"
+                           TextAlignment="Center"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Stretch"
+                           Padding="8,8"/>
+            </DataTemplate>
+
+            <DataTemplate x:Key="KarotCellEditorTemplate" DataType="{x:Type viewModels:KarotCellViewModel}">
+                <TextBox Text="{Binding DraftText, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource InlineEditableCellTextBoxStyle}"
+                         TextAlignment="Center"
+                         HorizontalContentAlignment="Center"
+                         behaviors:TextBoxEditCommitBehavior.CommitCommand="{Binding DataContext.KarotModule.CommitCellEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                         behaviors:TextBoxEditCommitBehavior.CancelCommand="{Binding DataContext.KarotModule.CancelCellEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                         behaviors:TextBoxEditCommitBehavior.CommandParameter="{Binding}"/>
+            </DataTemplate>
+
             <DataTemplate x:Key="KarotCellTemplate" DataType="{x:Type viewModels:KarotCellViewModel}">
                 <Border Style="{StaticResource TadilatCellBorderStyle}"
                         Background="{Binding Row.RowBackgroundBrush}"
-                        Tag="{Binding DataContext.KarotModule, RelativeSource={RelativeSource AncestorType=Window}}">
+                        Tag="{Binding DataContext.KarotModule, RelativeSource={RelativeSource AncestorType=Window}}"
+                        behaviors:InlineEditActivatorBehavior.BeginEditCommand="{Binding DataContext.KarotModule.BeginCellEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        behaviors:InlineEditActivatorBehavior.CommandParameter="{Binding}">
                     <Border.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Kopyala"
@@ -70,8 +80,18 @@
                         </ContextMenu>
                     </Border.ContextMenu>
                     <Grid>
-                        <TextBox Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource KarotInlineTextBoxStyle}"/>
+                        <ContentControl Content="{Binding}">
+                            <ContentControl.Style>
+                                <Style TargetType="ContentControl">
+                                    <Setter Property="ContentTemplate" Value="{StaticResource KarotCellDisplayTemplate}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                            <Setter Property="ContentTemplate" Value="{StaticResource KarotCellEditorTemplate}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentControl.Style>
+                        </ContentControl>
                         <Border Style="{StaticResource CellNoteBadgeStyle}"/>
                     </Grid>
                 </Border>

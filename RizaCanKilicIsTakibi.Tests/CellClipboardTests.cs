@@ -164,6 +164,103 @@ public class CellClipboardTests
     }
 
     [Fact]
+    public void Karot_Begin_Commit_CellEdit_Updates_Model_Only_On_Commit()
+    {
+        var databasePath = BuildDatabasePath();
+
+        try
+        {
+            var module = new KarotModuleViewModel(
+                new SqliteKarotRepository(databasePath),
+                new TestKarotStatusDialogService(),
+                new NotificationService(),
+                new ConfirmationServiceStub(),
+                new TestTadilatCellNoteDialogService(),
+                new UndoRedoService(),
+                new FakeClipboardService());
+
+            module.LoadFromBackup(
+            [
+                new KarotEntry
+                {
+                    Id = Guid.NewGuid(),
+                    AdaParsel = "101/1",
+                    Status = KarotStatus.KarotAlinacak,
+                    DisplayOrder = 0,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
+                }
+            ], markDirty: false);
+
+            var cell = module.VisibleRows.Single().AdaParselCell;
+            module.BeginCellEditCommand.Execute(cell);
+
+            Assert.True(cell.IsEditing);
+            cell.DraftText = "202/2";
+            Assert.Equal("101/1", cell.Text);
+            Assert.Equal("101/1", cell.Row.Entry.AdaParsel);
+            Assert.False(module.HasUnsavedChanges);
+
+            module.CommitCellEditCommand.Execute(cell);
+
+            Assert.False(cell.IsEditing);
+            Assert.Equal("202/2", cell.Text);
+            Assert.Equal("202/2", cell.Row.Entry.AdaParsel);
+            Assert.True(module.HasUnsavedChanges);
+        }
+        finally
+        {
+            DeleteDatabaseArtifacts(databasePath);
+        }
+    }
+
+    [Fact]
+    public void Karot_CommitPendingEdits_Commits_Open_Draft()
+    {
+        var databasePath = BuildDatabasePath();
+
+        try
+        {
+            var module = new KarotModuleViewModel(
+                new SqliteKarotRepository(databasePath),
+                new TestKarotStatusDialogService(),
+                new NotificationService(),
+                new ConfirmationServiceStub(),
+                new TestTadilatCellNoteDialogService(),
+                new UndoRedoService(),
+                new FakeClipboardService());
+
+            module.LoadFromBackup(
+            [
+                new KarotEntry
+                {
+                    Id = Guid.NewGuid(),
+                    YibfNo = "Y-1",
+                    Status = KarotStatus.KarotAlinacak,
+                    DisplayOrder = 0,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
+                }
+            ], markDirty: false);
+
+            var cell = module.VisibleRows.Single().YibfNoCell;
+            module.BeginCellEditCommand.Execute(cell);
+            cell.DraftText = "Y-9";
+
+            module.CommitPendingEdits();
+
+            Assert.False(cell.IsEditing);
+            Assert.Equal("Y-9", cell.Text);
+            Assert.Equal("Y-9", cell.Row.Entry.YibfNo);
+            Assert.True(module.HasUnsavedChanges);
+        }
+        finally
+        {
+            DeleteDatabaseArtifacts(databasePath);
+        }
+    }
+
+    [Fact]
     public async Task MissingProject_Paste_Clears_Target_Color_And_Note_When_Source_Is_Empty()
     {
         var databasePath = BuildDatabasePath();

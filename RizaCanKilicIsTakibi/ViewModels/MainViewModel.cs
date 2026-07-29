@@ -2351,6 +2351,7 @@ public sealed partial class MainViewModel : ViewModelBase
     {
         await ActionModule.CommitPendingEditsAsync();
         MissingProjectModule.CommitPendingEdits();
+        KarotModule.CommitPendingEdits();
         TadilatModule.CommitPendingEdits();
         YibfModule.CommitPendingEdits();
     }
@@ -2364,6 +2365,9 @@ public sealed partial class MainViewModel : ViewModelBase
                 break;
             case MainNavigationTab.EksikProje:
                 MissingProjectModule.CommitPendingEdits();
+                break;
+            case MainNavigationTab.KarotTakibi:
+                KarotModule.CommitPendingEdits();
                 break;
             case MainNavigationTab.TadilatTakibi:
                 TadilatModule.CommitPendingEdits();
@@ -2541,7 +2545,7 @@ public sealed partial class MainViewModel : ViewModelBase
             new(MainNavigationTab.EksikProje, "EKSİK PROJE"),
             new(MainNavigationTab.KarotTakibi, "KAROT TAKİBİ"),
             new(MainNavigationTab.TadilatTakibi, "TADİLAT TAKİBİ"),
-            new(MainNavigationTab.YibfAnaBilgi, "YİBF ANA BİLGİ"),
+            new(MainNavigationTab.YibfAnaBilgi, "PROJE TAKİBİ"),
             new(MainNavigationTab.YibfIsTakibi, "YİBF İŞ TAKİBİ")
         ];
 
@@ -3014,7 +3018,7 @@ public sealed partial class MainViewModel : ViewModelBase
             ("Eksik Proje", BuildMissingProjectExcelWorkbook()),
             ("Karot Takibi", BuildKarotExcelWorkbook()),
             ("Tadilat Takibi", BuildTadilatExcelWorkbook()),
-            ("YİBF Ana Bilgi", BuildYibfAnaBilgiExcelWorkbook()),
+            ("Proje Takibi", BuildYibfAnaBilgiExcelWorkbook()),
             ("YİBF İş Takibi", BuildYibfIsTakibiExcelWorkbook()),
             ("ACİL İŞ ÖZET", BuildYibfPendingExcelWorkbook())
         };
@@ -3052,7 +3056,7 @@ public sealed partial class MainViewModel : ViewModelBase
             MainNavigationTab.EksikProje => "Eksik proje",
             MainNavigationTab.KarotTakibi => "Karot takibi",
             MainNavigationTab.TadilatTakibi => "Tadilat takibi",
-            MainNavigationTab.YibfAnaBilgi => "YİBF ana bilgi",
+            MainNavigationTab.YibfAnaBilgi => "Proje takibi",
             MainNavigationTab.YibfBekleyenIsler => "ACİL İŞ ÖZET",
             MainNavigationTab.YibfIsTakibi => "YİBF iş takibi",
             _ => "Excel"
@@ -3228,7 +3232,7 @@ public sealed partial class MainViewModel : ViewModelBase
             [
                 new ExcelSheetExportModel
                 {
-                    Name = "Ana Bilgi",
+                    Name = "Proje Takibi",
                     Headers = ["Ada Parsel", "YİBF No", "İdare", "Yapı Sahibi", "Müteahhit"],
                     Rows = entries
                         .OrderBy(item => item.DisplayOrder)
@@ -4169,7 +4173,7 @@ public sealed partial class MainViewModel : ViewModelBase
                 Kind = SearchResultKind.YibfAnaBilgiEntry,
                 TargetTab = MainNavigationTab.YibfAnaBilgi,
                 ItemId = entry.Id,
-                BoardLabel = "YİBF Ana Bilgi",
+                BoardLabel = "Proje Takibi",
                 Title = FirstNonEmpty(entry.AdaParsel, entry.YibfNo, "(Boş YİBF kaydı)"),
                 Summary = FirstNonEmpty(entry.YapiSahibi, entry.Muteahhit, entry.Idare),
                 SearchText = SearchContextAliasBuilder.EnrichSearchText(rawSearchText, aliasLookup),
@@ -4187,7 +4191,7 @@ public sealed partial class MainViewModel : ViewModelBase
                 TargetTab = MainNavigationTab.YibfAnaBilgi,
                 ItemId = eventItem.Id,
                 ParentItemId = eventItem.EntryId,
-                BoardLabel = "YİBF Ana Bilgi / Olay Akışı",
+                BoardLabel = "Proje Takibi / Olay Akışı",
                 Title = FirstNonEmpty(eventItem.Description, parent?.AdaParsel, "(Boş olay)"),
                 Summary = FirstNonEmpty(parent?.AdaParsel, parent?.YibfNo, eventItem.NoteText),
                 SearchText = SearchContextAliasBuilder.EnrichSearchText(rawSearchText, aliasLookup),

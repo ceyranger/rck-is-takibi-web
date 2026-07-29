@@ -24,7 +24,7 @@
         <DockPanel>
             <StackPanel DockPanel.Dock="Left">
                 <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="YİBF ANA BİLGİ" FontFamily="{StaticResource Font.Primary}" FontSize="24" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    <TextBlock Text="PROJE TAKİBİ" FontFamily="{StaticResource Font.Primary}" FontSize="24" FontWeight="SemiBold" VerticalAlignment="Center"/>
                     <Border Style="{StaticResource MissingProjectToolbarChipStyle}" Margin="14,0,0,0">
                         <TextBlock Text="{Binding YibfModule.TumIsler.Count, StringFormat=Toplam İş: {0}}" FontWeight="SemiBold" Foreground="#FF20344C"/>
                     </Border>
@@ -48,9 +48,9 @@
 
     <Grid Grid.Row="1" x:Name="YibfAnaBilgiPanel" Margin="0,8,0,0">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="0.35*" MinWidth="260"/>
             <ColumnDefinition Width="12"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="0.65*"/>
         </Grid.ColumnDefinitions>
 
         <Border Grid.Column="0" Style="{StaticResource CardBorderStyle}">

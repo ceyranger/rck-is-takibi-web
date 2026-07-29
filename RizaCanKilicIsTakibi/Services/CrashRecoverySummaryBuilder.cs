@@ -15,13 +15,13 @@ public static class CrashRecoverySummaryBuilder
         AddCountLine(lines, "Tadilat", recovery.TadilatEntries.Count, current.TadilatEntries.Count);
         AddCountLine(
             lines,
-            "YİBF Ana Bilgi kayıt",
+            "Proje Takibi kayıt",
             recovery.YibfAnaBilgiEntries.Count,
             current.YibfAnaBilgiEntries.Count,
             SampleTitles(recovery.YibfAnaBilgiEntries.Select(e => e.AdaParsel), current.YibfAnaBilgiEntries.Select(e => e.AdaParsel)));
         AddCountLine(
             lines,
-            "YİBF Ana Bilgi olay",
+            "Proje Takibi olay",
             recovery.YibfAnaBilgiEvents.Count,
             current.YibfAnaBilgiEvents.Count,
             SampleTitles(recovery.YibfAnaBilgiEvents.Select(e => e.Description), current.YibfAnaBilgiEvents.Select(e => e.Description)));

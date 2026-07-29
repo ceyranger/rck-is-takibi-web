@@ -728,7 +728,7 @@
                             </Style>
                         </Button.Style>
                     </Button>
-                    <Button Content="YİBF ANA BİLGİ" Command="{Binding SelectMainTabCommand}" CommandParameter="{x:Static models:MainNavigationTab.YibfAnaBilgi}" Margin="0,8,0,0">
+                    <Button Content="PROJE TAKİBİ" Command="{Binding SelectMainTabCommand}" CommandParameter="{x:Static models:MainNavigationTab.YibfAnaBilgi}" Margin="0,8,0,0">
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
                                 <Style.Triggers>
@@ -1499,7 +1499,7 @@
                             <Button Content="Tadilat" Command="{Binding SearchOverlay.SelectScopeCommand}" CommandParameter="{x:Static models:SearchScope.TadilatTakibi}">
                                 <Button.Style><Style TargetType="Button" BasedOn="{StaticResource GhostButton}"><Style.Triggers><DataTrigger Binding="{Binding SearchOverlay.SelectedScope}" Value="{x:Static models:SearchScope.TadilatTakibi}"><Setter Property="Background" Value="{StaticResource Brush.Primary}"/><Setter Property="Foreground" Value="White"/><Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/></DataTrigger></Style.Triggers></Style></Button.Style>
                             </Button>
-                            <Button Content="YİBF Ana" Command="{Binding SearchOverlay.SelectScopeCommand}" CommandParameter="{x:Static models:SearchScope.YibfAnaBilgi}">
+                            <Button Content="Proje Takibi" Command="{Binding SearchOverlay.SelectScopeCommand}" CommandParameter="{x:Static models:SearchScope.YibfAnaBilgi}">
                                 <Button.Style><Style TargetType="Button" BasedOn="{StaticResource GhostButton}"><Style.Triggers><DataTrigger Binding="{Binding SearchOverlay.SelectedScope}" Value="{x:Static models:SearchScope.YibfAnaBilgi}"><Setter Property="Background" Value="{StaticResource Brush.Primary}"/><Setter Property="Foreground" Value="White"/><Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/></DataTrigger></Style.Triggers></Style></Button.Style>
                             </Button>
                             <Button Content="YİBF İş" Command="{Binding SearchOverlay.SelectScopeCommand}" CommandParameter="{x:Static models:SearchScope.YibfIsTakibi}">

@@ -33,7 +33,7 @@ public class CrashRecoveryTests
         var lines = CrashRecoverySummaryBuilder.Build(recovery, current);
 
         Assert.Contains(lines, line => line.Contains("Genel / Acil işler", StringComparison.Ordinal) && line.Contains("+1", StringComparison.Ordinal));
-        Assert.Contains(lines, line => line.Contains("YİBF Ana Bilgi olay", StringComparison.Ordinal) && line.Contains("Yeni olay", StringComparison.Ordinal));
+        Assert.Contains(lines, line => line.Contains("Proje Takibi olay", StringComparison.Ordinal) && line.Contains("Yeni olay", StringComparison.Ordinal));
     }
 
     [Fact]
