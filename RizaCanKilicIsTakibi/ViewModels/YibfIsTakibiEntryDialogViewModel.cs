@@ -125,7 +125,7 @@ public sealed class YibfIsTakibiEntryDialogViewModel : ViewModelBase
         var entry = new YibfIsTakibiEntry
         {
             Id = Guid.NewGuid(),
-            JobName = IsIdentityManualEdit || SelectedProjectId is null ? JobName.Trim() : string.Empty,
+            JobName = JobName.Trim(),
             WorkVariantLabel = WorkVariantLabel.Trim(),
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
@@ -136,16 +136,11 @@ public sealed class YibfIsTakibiEntryDialogViewModel : ViewModelBase
             if (project is not null)
             {
                 _catalogService.ApplyProjectSelection(entry, project);
-                if (IsIdentityManualEdit)
-                {
-                    entry.JobName = JobName.Trim();
-                }
             }
             else
             {
                 entry.WorkGroupId = entry.Id;
                 entry.WorkIdentityId = entry.Id;
-                entry.JobName = JobName.Trim();
             }
         }
         else
@@ -203,6 +198,11 @@ public sealed class YibfIsTakibiEntryDialogViewModel : ViewModelBase
     private void ToggleIdentityManualEdit()
     {
         if (!HasSelectedProject)
+        {
+            return;
+        }
+
+        if (IsIdentityManualEdit && IsProjectIdentityIncomplete)
         {
             return;
         }

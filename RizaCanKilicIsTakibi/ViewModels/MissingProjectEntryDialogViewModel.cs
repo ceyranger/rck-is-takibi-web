@@ -150,8 +150,8 @@ public sealed class MissingProjectEntryDialogViewModel : ViewModelBase
     {
         var entry = new MissingProjectEntry
         {
-            AdaParsel = IsIdentityManualEdit || SelectedProjectId is null ? AdaParsel.Trim() : string.Empty,
-            YapiSahibi = IsIdentityManualEdit || SelectedProjectId is null ? YapiSahibi.Trim() : string.Empty,
+            AdaParsel = AdaParsel.Trim(),
+            YapiSahibi = YapiSahibi.Trim(),
             MissingProjectText = MissingProjectText.Trim(),
             Description = Description.Trim(),
             RecordMedium = RecordMedium,
@@ -166,18 +166,10 @@ public sealed class MissingProjectEntryDialogViewModel : ViewModelBase
             if (project is not null)
             {
                 _catalogService.ApplyProjectSelection(entry, project);
-                if (IsIdentityManualEdit)
-                {
-                    entry.AdaParsel = AdaParsel.Trim();
-                    entry.YapiSahibi = YapiSahibi.Trim();
-                    entry.ProjectId = project.Id;
-                }
             }
             else
             {
                 entry.ProjectId = projectId;
-                entry.AdaParsel = AdaParsel.Trim();
-                entry.YapiSahibi = YapiSahibi.Trim();
             }
         }
 
@@ -218,6 +210,11 @@ public sealed class MissingProjectEntryDialogViewModel : ViewModelBase
     private void ToggleIdentityManualEdit()
     {
         if (!HasSelectedProject)
+        {
+            return;
+        }
+
+        if (IsIdentityManualEdit && IsProjectIdentityIncomplete)
         {
             return;
         }

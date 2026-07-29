@@ -128,7 +128,7 @@ public sealed class TadilatEntryDialogViewModel : ViewModelBase
             Id = Guid.NewGuid(),
             SubTab = _subTab,
             District = _district,
-            JobName = IsIdentityManualEdit || SelectedProjectId is null ? JobName.Trim() : string.Empty,
+            JobName = JobName.Trim(),
             ProjectType = ProjectType.Trim(),
             Description1 = Description1.Trim(),
             CreatedAt = DateTime.Now,
@@ -141,16 +141,10 @@ public sealed class TadilatEntryDialogViewModel : ViewModelBase
             if (project is not null)
             {
                 _catalogService.ApplyProjectSelection(entry, project);
-                if (IsIdentityManualEdit)
-                {
-                    entry.JobName = JobName.Trim();
-                    entry.ProjectId = project.Id;
-                }
             }
             else
             {
                 entry.ProjectId = projectId;
-                entry.JobName = JobName.Trim();
             }
         }
 
@@ -190,6 +184,11 @@ public sealed class TadilatEntryDialogViewModel : ViewModelBase
     private void ToggleIdentityManualEdit()
     {
         if (!HasSelectedProject)
+        {
+            return;
+        }
+
+        if (IsIdentityManualEdit && IsProjectIdentityIncomplete)
         {
             return;
         }

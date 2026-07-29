@@ -102,6 +102,39 @@ public sealed class KarotEntryDialogViewModelTests
     }
 
     [Fact]
+    public void Incomplete_Project_Keeps_Manual_Identity_On_Save()
+    {
+        var project = new ProjectCatalogEntry
+        {
+            Id = Guid.NewGuid(),
+            DisplayName = "Boş Kimlik",
+            Kind = ProjectCatalogKind.Normal,
+            IsActive = true
+        };
+        var catalogService = new ProjectCatalogService(new StubProjectCatalogRepository());
+        var vm = new KarotEntryDialogViewModel(KarotSubTab.Bekleyen, [project], catalogService);
+        vm.SelectedProjectId = project.Id;
+
+        Assert.True(vm.IsProjectIdentityIncomplete);
+        Assert.True(vm.IsIdentityManualEdit);
+
+        vm.AdaParsel = "99-1";
+        vm.YapiSahibi = "Elle Sahip";
+        vm.Muteahhit = "Elle Muteahhit";
+
+        // Must not wipe visible manual identity.
+        vm.ToggleIdentityManualEditCommand.Execute(null);
+        Assert.True(vm.IsIdentityManualEdit);
+        Assert.Equal("99-1", vm.AdaParsel);
+
+        var entry = vm.BuildEntry();
+        Assert.Equal(project.Id, entry.ProjectId);
+        Assert.Equal("99-1", entry.AdaParsel);
+        Assert.Equal("Elle Sahip", entry.YapiSahibi);
+        Assert.Equal("Elle Muteahhit", entry.Muteahhit);
+    }
+
+    [Fact]
     public void Toggle_Elle_Duzenle_Shows_And_Restores_From_Project()
     {
         var project = new ProjectCatalogEntry

@@ -123,7 +123,7 @@ public sealed class AddActionEntryDialogViewModel : ViewModelBase
             Id = Guid.NewGuid(),
             Category = Category,
             District = District,
-            OwnerParcelText = IsIdentityManualEdit || SelectedProjectId is null ? OwnerParcelText.Trim() : string.Empty,
+            OwnerParcelText = OwnerParcelText.Trim(),
             WorkText = WorkText.Trim(),
             DisplayOrder = displayOrder,
             CreatedAt = DateTime.Now,
@@ -136,16 +136,10 @@ public sealed class AddActionEntryDialogViewModel : ViewModelBase
             if (project is not null)
             {
                 _catalogService.ApplyProjectSelection(entry, project);
-                if (IsIdentityManualEdit)
-                {
-                    entry.OwnerParcelText = OwnerParcelText.Trim();
-                    entry.ProjectId = project.Id;
-                }
             }
             else
             {
                 entry.ProjectId = projectId;
-                entry.OwnerParcelText = OwnerParcelText.Trim();
             }
         }
 
@@ -185,6 +179,11 @@ public sealed class AddActionEntryDialogViewModel : ViewModelBase
     private void ToggleIdentityManualEdit()
     {
         if (!HasSelectedProject)
+        {
+            return;
+        }
+
+        if (IsIdentityManualEdit && IsProjectIdentityIncomplete)
         {
             return;
         }

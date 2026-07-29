@@ -200,25 +200,8 @@ public sealed class KarotEntryDialogViewModel : ViewModelBase
             var project = CatalogEntries.FirstOrDefault(item => item.Id == projectId);
             if (project is not null)
             {
-                // Clear identity so service fills from project when not manually overridden.
-                if (!IsIdentityManualEdit)
-                {
-                    entry.AdaParsel = string.Empty;
-                    entry.YapiSahibi = string.Empty;
-                    entry.YibfNo = string.Empty;
-                    entry.Muteahhit = string.Empty;
-                }
-
+                // Keep VM identity; FillIfEmpty only tops up blanks and sets ProjectId.
                 _catalogService.ApplyProjectSelection(entry, project);
-
-                if (IsIdentityManualEdit)
-                {
-                    entry.AdaParsel = AdaParsel.Trim();
-                    entry.YapiSahibi = YapiSahibi.Trim();
-                    entry.YibfNo = YibfNo.Trim();
-                    entry.Muteahhit = Muteahhit.Trim();
-                    entry.ProjectId = project.Id;
-                }
             }
             else
             {
@@ -279,6 +262,12 @@ public sealed class KarotEntryDialogViewModel : ViewModelBase
     {
         if (!HasSelectedProject)
         {
+            return;
+        }
+
+        if (IsIdentityManualEdit && IsProjectIdentityIncomplete)
+        {
+            // Incomplete catalog cannot replace visible manual identity; keep edits.
             return;
         }
 

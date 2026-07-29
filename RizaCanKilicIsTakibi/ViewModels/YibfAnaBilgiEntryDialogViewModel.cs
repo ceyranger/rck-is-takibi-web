@@ -211,6 +211,12 @@ public sealed class YibfAnaBilgiEntryDialogViewModel : ViewModelBase
             return;
         }
 
+        if (IsIdentityManualEdit && IsProjectIdentityIncomplete)
+        {
+            // Incomplete catalog cannot replace visible manual identity; keep edits.
+            return;
+        }
+
         IsIdentityManualEdit = !IsIdentityManualEdit;
         if (!IsIdentityManualEdit)
         {
