@@ -20,3 +20,4 @@
 - Kaydetmeden önce yalnız odaktaki WPF editörü flush etmek yeterli olmayabilir; draft tabanlı modüllerde edit modunda kalan hücreler model seviyesinde ayrıca commit edilmelidir, aksi halde kullanıcı doğrudan `Kaydet` dediğinde mevcut kayıt güncellemesi sessizce kaybolabilir.
 - Modül `CloneEntry` / `GetEntriesSnapshot` proje bağlantısı (`ProjectId`) alanını kopyalamazsa DryRun “çözülmemiş” sayar ve Persist bağlantıyı DB’ye yazmaz; Apply + Kaydet sonrası sayaç düşmez.
 - Genel İş Takibi gibi WPF `DataGrid` ve detay paneli birlikte kullanılan yüzeylerde dirty-state'i sadece commit/lost-focus anına bırakma; `TextChanged` seviyesinde dirty işaretlemek, butona basarken focus geçişinden doğan yanlış "Kaydedilecek değişiklik yok" durumlarını kapatır.
+- ViewModel'de `private set` olan string özellikler `TextBox.Text` varsayılan TwoWay bağlama ile çöker (`InvalidOperationException`); salt okunur gösterimde `Mode=OneWay` kullan.

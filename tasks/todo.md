@@ -1,11 +1,10 @@
 # Todo
 
-## Current Task: ProjectId snapshot bug (teslim)
-- [x] Fix + tests 203/203
-- [x] Commit `d6ac691`
-- [x] Canonical publish; Data hash korundu
+## Current Task: YİBF İş Takibi Satır Ekle crash
+- [x] Diagnose: Belediye/Muteahhit private setter + TextBox TwoWay binding
+- [ ] Fix XAML Mode=OneWay
+- [ ] Build + tests
+- [ ] Commit + safe publish
 
 ## Review Update
-- Commit: `d6ac691`. Auto commit/publish kuralı eklendi.
-- Canonical publish exe güncellendi; Data hash değişmedi.
-- Kullanıcı: yeniden Eşleştir/Uygula + Kaydet; belirsizler için Şüphelileri çöz.
+- Log: `app-errors.log` 2026-08-03 — InvalidOperationException on Belediye read-only TwoWay bind when opening Satır Ekle dialog.
