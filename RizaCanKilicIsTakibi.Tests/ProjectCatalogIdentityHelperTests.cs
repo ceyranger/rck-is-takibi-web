@@ -90,6 +90,38 @@ public sealed class ProjectCatalogIdentityHelperTests
         };
 
         Assert.True(ProjectCatalogIdentityHelper.MatchesSearch(istinat, "Fahrettin", [parent, istinat]));
-        Assert.Equal("İstinat · Fahrettin Gençgün", ProjectCatalogIdentityHelper.BuildPickerSubtitle(istinat, [parent, istinat]));
+        Assert.Equal("İstinat · Fahrettin Gençgün", ProjectCatalogIdentityHelper.BuildPickerTitle(istinat, [parent, istinat]));
+        Assert.Equal("İstinat", ProjectCatalogIdentityHelper.BuildPickerSubtitle(istinat, [parent, istinat]));
+    }
+
+    [Fact]
+    public void GetPickerSortKey_OrdersNormalBeforeIstinat_ForSameOwner()
+    {
+        var parentId = Guid.NewGuid();
+        var parent = new ProjectCatalogEntry
+        {
+            Id = parentId,
+            DisplayName = "100-1 Fahrettin Gençgün",
+            AdaParsel = "100-1",
+            YapiSahibi = "Fahrettin Gençgün",
+            Kind = ProjectCatalogKind.Normal,
+            DisplayOrder = 5
+        };
+        var istinat = new ProjectCatalogEntry
+        {
+            Id = Guid.NewGuid(),
+            DisplayName = "İstinat",
+            Kind = ProjectCatalogKind.Istinat,
+            ParentProjectId = parentId,
+            DisplayOrder = 1
+        };
+        var catalog = new[] { parent, istinat };
+
+        var ordered = catalog
+            .OrderBy(item => ProjectCatalogIdentityHelper.GetPickerSortKey(item, catalog))
+            .Select(item => item.Id)
+            .ToList();
+
+        Assert.Equal([parentId, istinat.Id], ordered);
     }
 }

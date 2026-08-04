@@ -27,7 +27,7 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="{x:Type controls:ProjectPickerListItem}">
                             <StackPanel Margin="2,4">
-                                <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold"/>
+                                <TextBlock Text="{Binding Title}" FontWeight="SemiBold"/>
                                 <TextBlock Text="{Binding Subtitle}"
                                            FontSize="11"
                                            Foreground="#FF5A6B7D"/>

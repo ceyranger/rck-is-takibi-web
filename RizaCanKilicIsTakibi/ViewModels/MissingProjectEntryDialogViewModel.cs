@@ -165,7 +165,7 @@ public sealed class MissingProjectEntryDialogViewModel : ViewModelBase
             var project = CatalogEntries.FirstOrDefault(item => item.Id == projectId);
             if (project is not null)
             {
-                _catalogService.ApplyProjectSelection(entry, project);
+                _catalogService.ApplyProjectSelection(entry, project, CatalogEntries);
             }
             else
             {
@@ -198,7 +198,7 @@ public sealed class MissingProjectEntryDialogViewModel : ViewModelBase
         }
 
         var temp = new MissingProjectEntry();
-        _catalogService.ApplyProjectSelection(temp, project);
+        _catalogService.ApplyProjectSelection(temp, project, CatalogEntries);
         AdaParsel = temp.AdaParsel;
         YapiSahibi = temp.YapiSahibi;
         ProjectSummaryText = EntryDialogProjectHelper.BuildOwnerParcelSummary(project);
@@ -226,7 +226,7 @@ public sealed class MissingProjectEntryDialogViewModel : ViewModelBase
             if (project is not null)
             {
                 var temp = new MissingProjectEntry();
-                _catalogService.ApplyProjectSelection(temp, project);
+                _catalogService.ApplyProjectSelection(temp, project, CatalogEntries);
                 AdaParsel = temp.AdaParsel;
                 YapiSahibi = temp.YapiSahibi;
                 ProjectSummaryText = EntryDialogProjectHelper.BuildOwnerParcelSummary(project);

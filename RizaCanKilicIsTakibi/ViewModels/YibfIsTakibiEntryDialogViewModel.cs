@@ -135,7 +135,7 @@ public sealed class YibfIsTakibiEntryDialogViewModel : ViewModelBase
             var project = CatalogEntries.FirstOrDefault(item => item.Id == projectId);
             if (project is not null)
             {
-                _catalogService.ApplyProjectSelection(entry, project);
+                _catalogService.ApplyProjectSelection(entry, project, CatalogEntries);
             }
             else
             {
@@ -176,7 +176,7 @@ public sealed class YibfIsTakibiEntryDialogViewModel : ViewModelBase
         }
 
         var temp = new YibfIsTakibiEntry();
-        _catalogService.ApplyProjectSelection(temp, project);
+        _catalogService.ApplyProjectSelection(temp, project, CatalogEntries);
         JobName = temp.JobName;
 
         var sourceProject = project;
@@ -214,7 +214,7 @@ public sealed class YibfIsTakibiEntryDialogViewModel : ViewModelBase
             if (project is not null)
             {
                 var temp = new YibfIsTakibiEntry();
-                _catalogService.ApplyProjectSelection(temp, project);
+                _catalogService.ApplyProjectSelection(temp, project, CatalogEntries);
                 JobName = temp.JobName;
                 ProjectSummaryText = EntryDialogProjectHelper.BuildJobSummary(project, temp.JobName);
             }

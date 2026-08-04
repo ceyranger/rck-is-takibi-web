@@ -10,11 +10,11 @@ public interface IProjectCatalogService
     IReadOnlyList<ProjectCatalogEntry> BuildSeedFromAnaBilgi(IEnumerable<YibfAnaBilgiEntry> anaBilgi);
     ProjectCatalogFanOutResult BuildFanOut(ProjectCatalogEntry entry);
     void ApplyProjectSelection(KarotEntry entry, ProjectCatalogEntry project, IEnumerable<ProjectCatalogEntry>? catalog = null);
-    void ApplyProjectSelection(TadilatEntry entry, ProjectCatalogEntry project);
-    void ApplyProjectSelection(ActionEntry entry, ProjectCatalogEntry project);
-    void ApplyProjectSelection(MissingProjectEntry entry, ProjectCatalogEntry project);
+    void ApplyProjectSelection(TadilatEntry entry, ProjectCatalogEntry project, IEnumerable<ProjectCatalogEntry>? catalog = null);
+    void ApplyProjectSelection(ActionEntry entry, ProjectCatalogEntry project, IEnumerable<ProjectCatalogEntry>? catalog = null);
+    void ApplyProjectSelection(MissingProjectEntry entry, ProjectCatalogEntry project, IEnumerable<ProjectCatalogEntry>? catalog = null);
     void ApplyProjectSelection(TaskItem entry, ProjectCatalogEntry project);
-    void ApplyProjectSelection(YibfIsTakibiEntry entry, ProjectCatalogEntry project);
+    void ApplyProjectSelection(YibfIsTakibiEntry entry, ProjectCatalogEntry project, IEnumerable<ProjectCatalogEntry>? catalog = null);
     void ApplyProjectSelection(YibfAnaBilgiEntry entry, ProjectCatalogEntry project);
     ProjectCatalogSyncResult PreviewLinkedIdentityOverwrite(
         ProjectCatalogEntry project,

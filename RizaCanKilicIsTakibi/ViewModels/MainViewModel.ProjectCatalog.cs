@@ -613,7 +613,7 @@ public sealed partial class MainViewModel
             return;
         }
 
-        _projectCatalogService.ApplyProjectSelection(TadilatModule.SelectedEntry, project);
+        _projectCatalogService.ApplyProjectSelection(TadilatModule.SelectedEntry, project, ProjectCatalogEntries);
         TadilatModule.MarkDirty();
         _notificationService.ShowToast("Proje tadilat satırına uygulandı.", ToastType.Success);
     }
@@ -631,7 +631,7 @@ public sealed partial class MainViewModel
             return;
         }
 
-        _projectCatalogService.ApplyProjectSelection(ActionModule.SelectedEntry, project);
+        _projectCatalogService.ApplyProjectSelection(ActionModule.SelectedEntry, project, ProjectCatalogEntries);
         ActionModule.MarkDirty();
         _notificationService.ShowToast("Proje aksiyon satırına uygulandı.", ToastType.Success);
     }
@@ -649,7 +649,7 @@ public sealed partial class MainViewModel
             return;
         }
 
-        _projectCatalogService.ApplyProjectSelection(MissingProjectModule.SelectedEntry, project);
+        _projectCatalogService.ApplyProjectSelection(MissingProjectModule.SelectedEntry, project, ProjectCatalogEntries);
         MissingProjectModule.MarkDirty();
         _notificationService.ShowToast("Proje eksik proje satırına uygulandı.", ToastType.Success);
     }
@@ -667,7 +667,7 @@ public sealed partial class MainViewModel
             return;
         }
 
-        _projectCatalogService.ApplyProjectSelection(YibfModule.SelectedIsTakibiEntry, project);
+        _projectCatalogService.ApplyProjectSelection(YibfModule.SelectedIsTakibiEntry, project, ProjectCatalogEntries);
         YibfModule.SelectedIsTakibiEntry.UpdatedAt = DateTime.Now;
         YibfModule.MarkDirty();
         _notificationService.ShowToast("Proje YİBF iş takibi satırına uygulandı.", ToastType.Success);

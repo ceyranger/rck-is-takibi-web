@@ -221,6 +221,64 @@ public sealed class ProjectCatalogServiceTests
     }
 
     [Fact]
+    public void ApplyProjectSelection_Tadilat_Istinat_UsesEffectiveJobName()
+    {
+        var parentId = Guid.NewGuid();
+        var parent = new ProjectCatalogEntry
+        {
+            Id = parentId,
+            DisplayName = "100-1 Fahrettin Gençgün",
+            AdaParsel = "100-1",
+            YapiSahibi = "Fahrettin Gençgün",
+            Kind = ProjectCatalogKind.Normal
+        };
+        var istinat = new ProjectCatalogEntry
+        {
+            Id = Guid.NewGuid(),
+            DisplayName = "İstinat",
+            Kind = ProjectCatalogKind.Istinat,
+            ParentProjectId = parentId
+        };
+        var service = new ProjectCatalogService(new InMemoryProjectCatalogRepository());
+        var tadilat = new TadilatEntry();
+
+        service.ApplyProjectSelection(tadilat, istinat, [parent, istinat]);
+
+        Assert.Equal(istinat.Id, tadilat.ProjectId);
+        Assert.Equal("İstinat · Fahrettin Gençgün", tadilat.JobName);
+    }
+
+    [Fact]
+    public void ApplyProjectSelection_ActionAndMissing_Istinat_UsesParentIdentity()
+    {
+        var parentId = Guid.NewGuid();
+        var parent = new ProjectCatalogEntry
+        {
+            Id = parentId,
+            AdaParsel = "100-1",
+            YapiSahibi = "Fahrettin Gençgün",
+            Kind = ProjectCatalogKind.Normal
+        };
+        var istinat = new ProjectCatalogEntry
+        {
+            Id = Guid.NewGuid(),
+            DisplayName = "İstinat",
+            Kind = ProjectCatalogKind.Istinat,
+            ParentProjectId = parentId
+        };
+        var service = new ProjectCatalogService(new InMemoryProjectCatalogRepository());
+        var action = new ActionEntry();
+        var missing = new MissingProjectEntry();
+
+        service.ApplyProjectSelection(action, istinat, [parent, istinat]);
+        service.ApplyProjectSelection(missing, istinat, [parent, istinat]);
+
+        Assert.Equal("100-1 Fahrettin Gençgün", action.OwnerParcelText);
+        Assert.Equal("100-1", missing.AdaParsel);
+        Assert.Equal("Fahrettin Gençgün", missing.YapiSahibi);
+    }
+
+    [Fact]
     public void ApplyProjectSelection_Action_DoesNotFillWorkTextFromDisplayName()
     {
         var service = new ProjectCatalogService(new InMemoryProjectCatalogRepository());

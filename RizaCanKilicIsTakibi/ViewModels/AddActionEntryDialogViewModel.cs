@@ -162,7 +162,7 @@ public sealed class AddActionEntryDialogViewModel : ViewModelBase
             var project = CatalogEntries.FirstOrDefault(item => item.Id == projectId);
             if (project is not null)
             {
-                _catalogService.ApplyProjectSelection(entry, project);
+                _catalogService.ApplyProjectSelection(entry, project, CatalogEntries);
             }
             else
             {
@@ -195,7 +195,7 @@ public sealed class AddActionEntryDialogViewModel : ViewModelBase
         }
 
         var temp = new ActionEntry();
-        _catalogService.ApplyProjectSelection(temp, project);
+        _catalogService.ApplyProjectSelection(temp, project, CatalogEntries);
         OwnerParcelText = temp.OwnerParcelText;
         ProjectSummaryText = EntryDialogProjectHelper.BuildOwnerParcelSummary(project);
         IsProjectIdentityIncomplete = string.IsNullOrWhiteSpace(temp.OwnerParcelText);
@@ -222,7 +222,7 @@ public sealed class AddActionEntryDialogViewModel : ViewModelBase
             if (project is not null)
             {
                 var temp = new ActionEntry();
-                _catalogService.ApplyProjectSelection(temp, project);
+                _catalogService.ApplyProjectSelection(temp, project, CatalogEntries);
                 OwnerParcelText = temp.OwnerParcelText;
                 ProjectSummaryText = EntryDialogProjectHelper.BuildOwnerParcelSummary(project);
             }

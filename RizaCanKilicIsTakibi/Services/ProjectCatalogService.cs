@@ -105,25 +105,35 @@ public sealed class ProjectCatalogService : IProjectCatalogService
         FillIfEmpty(entry.Muteahhit, identity.Muteahhit, value => entry.Muteahhit = value);
     }
 
-    public void ApplyProjectSelection(TadilatEntry entry, ProjectCatalogEntry project)
+    public void ApplyProjectSelection(
+        TadilatEntry entry,
+        ProjectCatalogEntry project,
+        IEnumerable<ProjectCatalogEntry>? catalog = null)
     {
         entry.ProjectId = project.Id;
-        FillIfEmpty(entry.JobName, ChooseRicherText(project.DisplayName, BuildOwnerParcelText(project)), value => entry.JobName = value);
+        FillIfEmpty(entry.JobName, BuildEffectiveJobName(project, catalog), value => entry.JobName = value);
     }
 
-    public void ApplyProjectSelection(ActionEntry entry, ProjectCatalogEntry project)
+    public void ApplyProjectSelection(
+        ActionEntry entry,
+        ProjectCatalogEntry project,
+        IEnumerable<ProjectCatalogEntry>? catalog = null)
     {
         entry.ProjectId = project.Id;
-        var ownerParcel = ChooseRicherText(BuildOwnerParcelText(project), project.DisplayName);
+        var ownerParcel = ProjectCatalogIdentityHelper.BuildEffectiveOwnerParcelText(project, catalog);
         FillIfEmpty(entry.OwnerParcelText, ownerParcel, value => entry.OwnerParcelText = value);
         // WorkText bilinçli olarak doldurulmaz; yapılacak iş kullanıcının yazdığı metindir.
     }
 
-    public void ApplyProjectSelection(MissingProjectEntry entry, ProjectCatalogEntry project)
+    public void ApplyProjectSelection(
+        MissingProjectEntry entry,
+        ProjectCatalogEntry project,
+        IEnumerable<ProjectCatalogEntry>? catalog = null)
     {
         entry.ProjectId = project.Id;
-        FillIfEmpty(entry.AdaParsel, project.AdaParsel, value => entry.AdaParsel = value);
-        FillIfEmpty(entry.YapiSahibi, project.YapiSahibi, value => entry.YapiSahibi = value);
+        var identity = ProjectCatalogIdentityHelper.ResolveEffectiveIdentity(project, catalog);
+        FillIfEmpty(entry.AdaParsel, identity.AdaParsel, value => entry.AdaParsel = value);
+        FillIfEmpty(entry.YapiSahibi, identity.YapiSahibi, value => entry.YapiSahibi = value);
     }
 
     public void ApplyProjectSelection(TaskItem entry, ProjectCatalogEntry project)
@@ -133,7 +143,10 @@ public sealed class ProjectCatalogService : IProjectCatalogService
         FillIfEmpty(entry.Title, project.DisplayName, value => entry.Title = value);
     }
 
-    public void ApplyProjectSelection(YibfIsTakibiEntry entry, ProjectCatalogEntry project)
+    public void ApplyProjectSelection(
+        YibfIsTakibiEntry entry,
+        ProjectCatalogEntry project,
+        IEnumerable<ProjectCatalogEntry>? catalog = null)
     {
         if (project.Kind == ProjectCatalogKind.Istinat)
         {
@@ -151,7 +164,7 @@ public sealed class ProjectCatalogService : IProjectCatalogService
             entry.WorkIdentityId = project.Id;
         }
 
-        FillIfEmpty(entry.JobName, ChooseRicherText(project.DisplayName, BuildOwnerParcelText(project)), value => entry.JobName = value);
+        FillIfEmpty(entry.JobName, BuildEffectiveJobName(project, catalog), value => entry.JobName = value);
     }
 
     public void ApplyProjectSelection(YibfAnaBilgiEntry entry, ProjectCatalogEntry project)
@@ -344,14 +357,19 @@ public sealed class ProjectCatalogService : IProjectCatalogService
     }
 
     private static string BuildOwnerParcelText(ProjectCatalogEntry project)
+        => ProjectCatalogIdentityHelper.BuildEffectiveOwnerParcelText(project);
+
+    private static string BuildEffectiveJobName(
+        ProjectCatalogEntry project,
+        IEnumerable<ProjectCatalogEntry>? catalog)
     {
-        var combined = BuildDisplayName(project.AdaParsel ?? string.Empty, project.YapiSahibi ?? string.Empty);
-        if (!string.IsNullOrWhiteSpace(combined))
+        if (project.Kind == ProjectCatalogKind.Istinat)
         {
-            return combined;
+            return ProjectCatalogIdentityHelper.BuildPickerTitle(project, catalog);
         }
 
-        return project.DisplayName?.Trim() ?? string.Empty;
+        var ownerParcel = ProjectCatalogIdentityHelper.BuildEffectiveOwnerParcelText(project, catalog);
+        return ChooseRicherText(project.DisplayName, ownerParcel);
     }
 
     private static string ChooseRicherText(string? primary, string? secondary)

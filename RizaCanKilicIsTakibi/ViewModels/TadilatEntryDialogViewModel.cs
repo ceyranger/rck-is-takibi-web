@@ -140,7 +140,7 @@ public sealed class TadilatEntryDialogViewModel : ViewModelBase
             var project = CatalogEntries.FirstOrDefault(item => item.Id == projectId);
             if (project is not null)
             {
-                _catalogService.ApplyProjectSelection(entry, project);
+                _catalogService.ApplyProjectSelection(entry, project, CatalogEntries);
             }
             else
             {
@@ -173,7 +173,7 @@ public sealed class TadilatEntryDialogViewModel : ViewModelBase
         }
 
         var temp = new TadilatEntry();
-        _catalogService.ApplyProjectSelection(temp, project);
+        _catalogService.ApplyProjectSelection(temp, project, CatalogEntries);
         JobName = temp.JobName;
         ProjectSummaryText = EntryDialogProjectHelper.BuildJobSummary(project, temp.JobName);
         IsProjectIdentityIncomplete = string.IsNullOrWhiteSpace(temp.JobName);
@@ -200,7 +200,7 @@ public sealed class TadilatEntryDialogViewModel : ViewModelBase
             if (project is not null)
             {
                 var temp = new TadilatEntry();
-                _catalogService.ApplyProjectSelection(temp, project);
+                _catalogService.ApplyProjectSelection(temp, project, CatalogEntries);
                 JobName = temp.JobName;
                 ProjectSummaryText = EntryDialogProjectHelper.BuildJobSummary(project, temp.JobName);
             }

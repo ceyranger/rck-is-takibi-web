@@ -9,6 +9,43 @@ public sealed record ProjectCatalogEffectiveIdentity(
     string Muteahhit,
     string Belediye);
 
+public readonly record struct ProjectPickerSortKey(
+    string OwnerKey,
+    string AdaKey,
+    int KindOrder,
+    int DisplayOrder,
+    string Title) : IComparable<ProjectPickerSortKey>
+{
+    public int CompareTo(ProjectPickerSortKey other)
+    {
+        var owner = string.CompareOrdinal(OwnerKey, other.OwnerKey);
+        if (owner != 0)
+        {
+            return owner;
+        }
+
+        var ada = string.CompareOrdinal(AdaKey, other.AdaKey);
+        if (ada != 0)
+        {
+            return ada;
+        }
+
+        var kind = KindOrder.CompareTo(other.KindOrder);
+        if (kind != 0)
+        {
+            return kind;
+        }
+
+        var order = DisplayOrder.CompareTo(other.DisplayOrder);
+        if (order != 0)
+        {
+            return order;
+        }
+
+        return string.CompareOrdinal(Title, other.Title);
+    }
+}
+
 public static class ProjectCatalogIdentityHelper
 {
     public static ProjectCatalogEffectiveIdentity ResolveEffectiveIdentity(
@@ -81,6 +118,12 @@ public static class ProjectCatalogIdentityHelper
             return true;
         }
 
+        var title = BuildPickerTitle(project, catalog);
+        if (SearchTextNormalizer.Contains(title, query))
+        {
+            return true;
+        }
+
         if (project.Kind == ProjectCatalogKind.Istinat
             && project.ParentProjectId is Guid parentId
             && parentId != Guid.Empty
@@ -96,6 +139,33 @@ public static class ProjectCatalogIdentityHelper
         return false;
     }
 
+    public static string BuildPickerTitle(
+        ProjectCatalogEntry project,
+        IEnumerable<ProjectCatalogEntry>? catalog = null)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+
+        var identity = ResolveEffectiveIdentity(project, catalog);
+        var detail = !string.IsNullOrWhiteSpace(identity.YapiSahibi)
+            ? identity.YapiSahibi
+            : identity.AdaParsel;
+
+        if (project.Kind == ProjectCatalogKind.Istinat)
+        {
+            return string.IsNullOrWhiteSpace(detail)
+                ? "İstinat"
+                : $"İstinat · {detail}";
+        }
+
+        var displayName = Trim(project.DisplayName);
+        if (!string.IsNullOrWhiteSpace(displayName))
+        {
+            return displayName;
+        }
+
+        return string.IsNullOrWhiteSpace(detail) ? string.Empty : detail;
+    }
+
     public static string BuildPickerSubtitle(
         ProjectCatalogEntry project,
         IEnumerable<ProjectCatalogEntry>? catalog = null)
@@ -103,14 +173,71 @@ public static class ProjectCatalogIdentityHelper
         ArgumentNullException.ThrowIfNull(project);
 
         var kind = ProjectCatalogKindLabels.ToLabel(project.Kind);
-        var identity = ResolveEffectiveIdentity(project, catalog);
-        var detail = !string.IsNullOrWhiteSpace(identity.YapiSahibi)
-            ? identity.YapiSahibi
-            : identity.AdaParsel;
+        if (project.Kind == ProjectCatalogKind.Istinat)
+        {
+            return kind;
+        }
 
-        return string.IsNullOrWhiteSpace(detail)
-            ? kind
-            : $"{kind} · {detail}";
+        var identity = ResolveEffectiveIdentity(project, catalog);
+        if (!string.IsNullOrWhiteSpace(identity.AdaParsel)
+            && !string.IsNullOrWhiteSpace(identity.YibfNo))
+        {
+            return $"{kind} · {identity.AdaParsel} · YİBF {identity.YibfNo}";
+        }
+
+        if (!string.IsNullOrWhiteSpace(identity.AdaParsel))
+        {
+            return $"{kind} · {identity.AdaParsel}";
+        }
+
+        if (!string.IsNullOrWhiteSpace(identity.YibfNo))
+        {
+            return $"{kind} · YİBF {identity.YibfNo}";
+        }
+
+        return kind;
+    }
+
+    public static ProjectPickerSortKey GetPickerSortKey(
+        ProjectCatalogEntry project,
+        IEnumerable<ProjectCatalogEntry>? catalog = null)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+
+        var identity = ResolveEffectiveIdentity(project, catalog);
+        var title = BuildPickerTitle(project, catalog);
+        var kindOrder = project.Kind switch
+        {
+            ProjectCatalogKind.Normal => 0,
+            ProjectCatalogKind.Istinat => 1,
+            ProjectCatalogKind.Special => 2,
+            _ => 9
+        };
+
+        return new ProjectPickerSortKey(
+            SearchTextNormalizer.Normalize(identity.YapiSahibi),
+            SearchTextNormalizer.Normalize(identity.AdaParsel),
+            kindOrder,
+            project.DisplayOrder,
+            SearchTextNormalizer.Normalize(title));
+    }
+
+    public static string BuildEffectiveOwnerParcelText(
+        ProjectCatalogEntry project,
+        IEnumerable<ProjectCatalogEntry>? catalog = null)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+
+        var identity = ResolveEffectiveIdentity(project, catalog);
+        var parts = new[] { identity.AdaParsel, identity.YapiSahibi }
+            .Where(part => !string.IsNullOrWhiteSpace(part));
+        var combined = string.Join(' ', parts);
+        if (!string.IsNullOrWhiteSpace(combined))
+        {
+            return combined;
+        }
+
+        return BuildPickerTitle(project, catalog);
     }
 
     private static string Coalesce(string current, string? candidate)

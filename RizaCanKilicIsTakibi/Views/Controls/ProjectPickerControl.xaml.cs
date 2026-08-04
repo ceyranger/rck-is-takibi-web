@@ -125,8 +125,11 @@ public partial class ProjectPickerControl : UserControl
     {
         if (SelectedProjectId is Guid projectId)
         {
-            var match = EnumerateCatalog().FirstOrDefault(item => item.Id == projectId);
-            SearchText = match?.DisplayName ?? string.Empty;
+            var catalog = EnumerateCatalog();
+            var match = catalog.FirstOrDefault(item => item.Id == projectId);
+            SearchText = match is null
+                ? string.Empty
+                : ProjectCatalogIdentityHelper.BuildPickerTitle(match, catalog);
         }
         else if (AllowClear)
         {
@@ -143,16 +146,16 @@ public partial class ProjectPickerControl : UserControl
         var query = SearchText?.Trim() ?? string.Empty;
         var catalog = EnumerateCatalog();
         var source = catalog.Where(item => item.IsActive);
-        IEnumerable<ProjectCatalogEntry> matches = string.IsNullOrWhiteSpace(query)
-            ? source.OrderBy(item => item.DisplayOrder).ThenBy(item => item.DisplayName)
-            : source.Where(item => ProjectCatalogIdentityHelper.MatchesSearch(item, query, catalog))
-                .OrderBy(item => item.DisplayOrder)
-                .ThenBy(item => item.DisplayName);
+        var matches = (string.IsNullOrWhiteSpace(query)
+                ? source
+                : source.Where(item => ProjectCatalogIdentityHelper.MatchesSearch(item, query, catalog)))
+            .OrderBy(item => ProjectCatalogIdentityHelper.GetPickerSortKey(item, catalog));
 
         foreach (var item in matches.Take(40))
         {
             FilteredEntries.Add(new ProjectPickerListItem(
                 item,
+                ProjectCatalogIdentityHelper.BuildPickerTitle(item, catalog),
                 ProjectCatalogIdentityHelper.BuildPickerSubtitle(item, catalog)));
         }
     }
@@ -188,8 +191,9 @@ public partial class ProjectPickerControl : UserControl
 
     private void ApplySelection(ProjectCatalogEntry entry)
     {
+        var catalog = EnumerateCatalog();
         SelectedProjectId = entry.Id;
-        SearchText = entry.DisplayName;
+        SearchText = ProjectCatalogIdentityHelper.BuildPickerTitle(entry, catalog);
         IsPopupOpen = false;
         RaiseEvent(new RoutedEventArgs(ProjectSelectedEvent, this));
     }

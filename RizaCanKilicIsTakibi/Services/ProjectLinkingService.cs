@@ -288,19 +288,19 @@ public sealed class ProjectLinkingService : IProjectLinkingService
             case ProjectLinkSourceModule.Tadilat:
                 if (tadilat.FirstOrDefault(item => item.Id == linkAction.EntryId) is { } tadilatEntry)
                 {
-                    _catalogService.ApplyProjectSelection(tadilatEntry, project);
+                    _catalogService.ApplyProjectSelection(tadilatEntry, project, catalog);
                 }
                 break;
             case ProjectLinkSourceModule.Aksiyon:
                 if (action.FirstOrDefault(item => item.Id == linkAction.EntryId) is { } actionEntry)
                 {
-                    _catalogService.ApplyProjectSelection(actionEntry, project);
+                    _catalogService.ApplyProjectSelection(actionEntry, project, catalog);
                 }
                 break;
             case ProjectLinkSourceModule.EksikProje:
                 if (missing.FirstOrDefault(item => item.Id == linkAction.EntryId) is { } missingEntry)
                 {
-                    _catalogService.ApplyProjectSelection(missingEntry, project);
+                    _catalogService.ApplyProjectSelection(missingEntry, project, catalog);
                 }
                 break;
             case ProjectLinkSourceModule.GenelIs:
@@ -312,7 +312,7 @@ public sealed class ProjectLinkingService : IProjectLinkingService
             case ProjectLinkSourceModule.YibfIsTakibi:
                 if (yibfIsTakibi.FirstOrDefault(item => item.Id == linkAction.EntryId) is { } isTakibiEntry)
                 {
-                    _catalogService.ApplyProjectSelection(isTakibiEntry, project);
+                    _catalogService.ApplyProjectSelection(isTakibiEntry, project, catalog);
                 }
                 break;
         }
