@@ -282,7 +282,7 @@ public sealed class ProjectLinkingService : IProjectLinkingService
             case ProjectLinkSourceModule.Karot:
                 if (karot.FirstOrDefault(item => item.Id == linkAction.EntryId) is { } karotEntry)
                 {
-                    _catalogService.ApplyProjectSelection(karotEntry, project);
+                    _catalogService.ApplyProjectSelection(karotEntry, project, catalog);
                 }
                 break;
             case ProjectLinkSourceModule.Tadilat:
@@ -502,13 +502,14 @@ public sealed class ProjectLinkingService : IProjectLinkingService
 
         foreach (var project in catalog.Where(item => item.IsActive))
         {
-            var projectAda = NormalizeAdaParsel(project.AdaParsel);
+            var identity = ProjectCatalogIdentityHelper.ResolveEffectiveIdentity(project, catalog);
+            var projectAda = NormalizeAdaParsel(identity.AdaParsel);
             if (string.IsNullOrWhiteSpace(projectAda))
             {
                 projectAda = NormalizeAdaParsel(project.DisplayName);
             }
 
-            var projectOwner = NormalizeOwnerName(project.YapiSahibi);
+            var projectOwner = NormalizeOwnerName(identity.YapiSahibi);
             var projectDisplayOwner = NormalizeOwnerName(TryExtractYapiSahibi(project.DisplayName) ?? project.DisplayName);
             var projectDisplay = SearchTextNormalizer.Normalize(project.DisplayName);
 
@@ -541,7 +542,7 @@ public sealed class ProjectLinkingService : IProjectLinkingService
             }
 
             var hasYibfMatch = !string.IsNullOrWhiteSpace(yibfNo)
-                              && SearchTextNormalizer.EqualsNormalized(project.YibfNo, yibfNo);
+                              && SearchTextNormalizer.EqualsNormalized(identity.YibfNo, yibfNo);
             if (hasYibfMatch)
             {
                 score += 50;

@@ -9,7 +9,7 @@ public interface IProjectCatalogService
     IReadOnlyList<ProjectCatalogEntry> Search(IEnumerable<ProjectCatalogEntry> source, string? query);
     IReadOnlyList<ProjectCatalogEntry> BuildSeedFromAnaBilgi(IEnumerable<YibfAnaBilgiEntry> anaBilgi);
     ProjectCatalogFanOutResult BuildFanOut(ProjectCatalogEntry entry);
-    void ApplyProjectSelection(KarotEntry entry, ProjectCatalogEntry project);
+    void ApplyProjectSelection(KarotEntry entry, ProjectCatalogEntry project, IEnumerable<ProjectCatalogEntry>? catalog = null);
     void ApplyProjectSelection(TadilatEntry entry, ProjectCatalogEntry project);
     void ApplyProjectSelection(ActionEntry entry, ProjectCatalogEntry project);
     void ApplyProjectSelection(MissingProjectEntry entry, ProjectCatalogEntry project);

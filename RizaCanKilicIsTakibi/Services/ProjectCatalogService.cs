@@ -21,19 +21,15 @@ public sealed class ProjectCatalogService : IProjectCatalogService
 
     public IReadOnlyList<ProjectCatalogEntry> Search(IEnumerable<ProjectCatalogEntry> source, string? query)
     {
+        var catalog = source as IReadOnlyList<ProjectCatalogEntry> ?? source.ToList();
         var normalizedQuery = SearchTextNormalizer.Normalize(query);
         if (string.IsNullOrWhiteSpace(normalizedQuery))
         {
-            return source.OrderBy(item => item.DisplayOrder).ThenBy(item => item.DisplayName).ToList();
+            return catalog.OrderBy(item => item.DisplayOrder).ThenBy(item => item.DisplayName).ToList();
         }
 
-        return source
-            .Where(item => SearchTextNormalizer.Contains(item.DisplayName, query)
-                           || SearchTextNormalizer.Contains(item.AdaParsel, query)
-                           || SearchTextNormalizer.Contains(item.YapiSahibi, query)
-                           || SearchTextNormalizer.Contains(item.YibfNo, query)
-                           || SearchTextNormalizer.Contains(item.Belediye, query)
-                           || SearchTextNormalizer.Contains(item.Muteahhit, query))
+        return catalog
+            .Where(item => ProjectCatalogIdentityHelper.MatchesSearch(item, query, catalog))
             .OrderBy(item => item.DisplayOrder)
             .ThenBy(item => item.DisplayName)
             .ToList();
@@ -96,13 +92,17 @@ public sealed class ProjectCatalogService : IProjectCatalogService
         };
     }
 
-    public void ApplyProjectSelection(KarotEntry entry, ProjectCatalogEntry project)
+    public void ApplyProjectSelection(
+        KarotEntry entry,
+        ProjectCatalogEntry project,
+        IEnumerable<ProjectCatalogEntry>? catalog = null)
     {
         entry.ProjectId = project.Id;
-        FillIfEmpty(entry.AdaParsel, project.AdaParsel, value => entry.AdaParsel = value);
-        FillIfEmpty(entry.YapiSahibi, project.YapiSahibi, value => entry.YapiSahibi = value);
-        FillIfEmpty(entry.YibfNo, project.YibfNo, value => entry.YibfNo = value);
-        FillIfEmpty(entry.Muteahhit, project.Muteahhit, value => entry.Muteahhit = value);
+        var identity = ProjectCatalogIdentityHelper.ResolveEffectiveIdentity(project, catalog);
+        FillIfEmpty(entry.AdaParsel, identity.AdaParsel, value => entry.AdaParsel = value);
+        FillIfEmpty(entry.YapiSahibi, identity.YapiSahibi, value => entry.YapiSahibi = value);
+        FillIfEmpty(entry.YibfNo, identity.YibfNo, value => entry.YibfNo = value);
+        FillIfEmpty(entry.Muteahhit, identity.Muteahhit, value => entry.Muteahhit = value);
     }
 
     public void ApplyProjectSelection(TadilatEntry entry, ProjectCatalogEntry project)

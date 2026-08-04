@@ -4,38 +4,44 @@ namespace RizaCanKilicIsTakibi.Helpers;
 
 public static class EntryDialogProjectHelper
 {
-    public static bool IsOwnerParcelIncomplete(ProjectCatalogEntry? project)
+    public static bool IsOwnerParcelIncomplete(
+        ProjectCatalogEntry? project,
+        IEnumerable<ProjectCatalogEntry>? catalog = null)
     {
         if (project is null)
         {
             return false;
         }
 
-        return string.IsNullOrWhiteSpace(project.AdaParsel)
-               && string.IsNullOrWhiteSpace(project.YapiSahibi);
+        var identity = ProjectCatalogIdentityHelper.ResolveEffectiveIdentity(project, catalog);
+        return string.IsNullOrWhiteSpace(identity.AdaParsel)
+               && string.IsNullOrWhiteSpace(identity.YapiSahibi);
     }
 
-    public static string BuildOwnerParcelSummary(ProjectCatalogEntry project)
+    public static string BuildOwnerParcelSummary(
+        ProjectCatalogEntry project,
+        IEnumerable<ProjectCatalogEntry>? catalog = null)
     {
+        var identity = ProjectCatalogIdentityHelper.ResolveEffectiveIdentity(project, catalog);
         var parts = new List<string>();
-        if (!string.IsNullOrWhiteSpace(project.AdaParsel))
+        if (!string.IsNullOrWhiteSpace(identity.AdaParsel))
         {
-            parts.Add(project.AdaParsel.Trim());
+            parts.Add(identity.AdaParsel);
         }
 
-        if (!string.IsNullOrWhiteSpace(project.YapiSahibi))
+        if (!string.IsNullOrWhiteSpace(identity.YapiSahibi))
         {
-            parts.Add(project.YapiSahibi.Trim());
+            parts.Add(identity.YapiSahibi);
         }
 
-        if (!string.IsNullOrWhiteSpace(project.YibfNo))
+        if (!string.IsNullOrWhiteSpace(identity.YibfNo))
         {
-            parts.Add($"YİBF {project.YibfNo.Trim()}");
+            parts.Add($"YİBF {identity.YibfNo}");
         }
 
-        if (!string.IsNullOrWhiteSpace(project.Muteahhit))
+        if (!string.IsNullOrWhiteSpace(identity.Muteahhit))
         {
-            parts.Add(project.Muteahhit.Trim());
+            parts.Add(identity.Muteahhit);
         }
 
         if (parts.Count == 0 && !string.IsNullOrWhiteSpace(project.DisplayName))

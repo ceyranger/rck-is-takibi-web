@@ -595,7 +595,7 @@ public sealed partial class MainViewModel
             return;
         }
 
-        _projectCatalogService.ApplyProjectSelection(KarotModule.SelectedEntry, project);
+        _projectCatalogService.ApplyProjectSelection(KarotModule.SelectedEntry, project, ProjectCatalogEntries);
         KarotModule.MarkDirty();
         _notificationService.ShowToast("Proje karot satırına uygulandı.", ToastType.Success);
     }

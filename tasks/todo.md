@@ -1,11 +1,12 @@
 # Todo
 
-## Current Task: YİBF İş Takibi Satır Ekle crash
-- [x] Diagnose: Belediye/Muteahhit private setter + TextBox TwoWay binding
-- [x] Fix XAML Mode=OneWay
-- [x] Build + tests 203/203
-- [x] Commit `e1135b1`
-- [x] Canonical publish; Data hash korundu
+## Current Task: Karot İstinat Bağlama ve Müteahhit
+- [x] ProjectCatalogIdentityHelper: üst proje mirası + Muteahhit←YapiSahibi
+- [x] ProjectPickerControl: etkin kimlikle arama + satır özeti
+- [x] Karot ApplyProjectSelection + özet/incomplete etkin kimlik
+- [x] ProjectLinkingService ScoreCandidates üst kimlik kullanır
+- [x] İstinat dialogda üst seçilince boş kimlik kopyala
+- [x] Testler, build, commit, güvenli publish
 
 ## Review Update
-- Publish exe güncellendi (13:50). `tasks.db` / `last-save.json` SHA256/size/timestamp değişmedi.
+- Tests 211/211. İstinat kişi adıyla bulunur; Karot müteahhit üst/yapı sahibinden dolar.

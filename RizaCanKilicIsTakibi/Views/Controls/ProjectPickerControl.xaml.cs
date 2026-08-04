@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace RizaCanKilicIsTakibi.Views.Controls;
@@ -56,10 +55,10 @@ public partial class ProjectPickerControl : UserControl
     public ProjectPickerControl()
     {
         InitializeComponent();
-        FilteredEntries = new ObservableCollection<ProjectCatalogEntry>();
+        FilteredEntries = new ObservableCollection<ProjectPickerListItem>();
     }
 
-    public ObservableCollection<ProjectCatalogEntry> FilteredEntries { get; }
+    public ObservableCollection<ProjectPickerListItem> FilteredEntries { get; }
 
     public Guid? SelectedProjectId
     {
@@ -135,27 +134,26 @@ public partial class ProjectPickerControl : UserControl
         }
     }
 
-    private IEnumerable<ProjectCatalogEntry> EnumerateCatalog()
-        => Catalog?.OfType<ProjectCatalogEntry>() ?? [];
+    private IReadOnlyList<ProjectCatalogEntry> EnumerateCatalog()
+        => Catalog?.OfType<ProjectCatalogEntry>().ToList() ?? [];
 
     private void RefreshFilteredEntries()
     {
         FilteredEntries.Clear();
         var query = SearchText?.Trim() ?? string.Empty;
-        var source = EnumerateCatalog().Where(item => item.IsActive);
+        var catalog = EnumerateCatalog();
+        var source = catalog.Where(item => item.IsActive);
         IEnumerable<ProjectCatalogEntry> matches = string.IsNullOrWhiteSpace(query)
             ? source.OrderBy(item => item.DisplayOrder).ThenBy(item => item.DisplayName)
-            : source.Where(item =>
-                SearchTextNormalizer.Contains(item.DisplayName, query)
-                || SearchTextNormalizer.Contains(item.AdaParsel, query)
-                || SearchTextNormalizer.Contains(item.YapiSahibi, query)
-                || SearchTextNormalizer.Contains(item.YibfNo, query))
+            : source.Where(item => ProjectCatalogIdentityHelper.MatchesSearch(item, query, catalog))
                 .OrderBy(item => item.DisplayOrder)
                 .ThenBy(item => item.DisplayName);
 
         foreach (var item in matches.Take(40))
         {
-            FilteredEntries.Add(item);
+            FilteredEntries.Add(new ProjectPickerListItem(
+                item,
+                ProjectCatalogIdentityHelper.BuildPickerSubtitle(item, catalog)));
         }
     }
 
@@ -175,16 +173,16 @@ public partial class ProjectPickerControl : UserControl
 
         if (e.Key == Key.Enter && FilteredEntries.Count > 0)
         {
-            ApplySelection(FilteredEntries[0]);
+            ApplySelection(FilteredEntries[0].Entry);
             e.Handled = true;
         }
     }
 
     private void OnResultSelected(object sender, MouseButtonEventArgs e)
     {
-        if (sender is ListBox { SelectedItem: ProjectCatalogEntry entry })
+        if (sender is ListBox { SelectedItem: ProjectPickerListItem item })
         {
-            ApplySelection(entry);
+            ApplySelection(item.Entry);
         }
     }
 

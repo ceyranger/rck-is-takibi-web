@@ -430,6 +430,48 @@ public sealed class ProjectLinkingServiceTests
         Assert.Empty(after.Unresolved);
     }
 
+    [Fact]
+    public void DryRun_ScoresEmptyIstinatUsingParentIdentity_WhenPreferIstinat()
+    {
+        var normalId = Guid.NewGuid();
+        var istinatId = Guid.NewGuid();
+        var catalog = new List<ProjectCatalogEntry>
+        {
+            new()
+            {
+                Id = normalId,
+                DisplayName = "100-1 Fahrettin Gençgün",
+                AdaParsel = "100-1",
+                YapiSahibi = "Fahrettin Gençgün",
+                Kind = ProjectCatalogKind.Normal,
+                IsActive = true
+            },
+            new()
+            {
+                Id = istinatId,
+                DisplayName = "İstinat",
+                Kind = ProjectCatalogKind.Istinat,
+                ParentProjectId = normalId,
+                IsActive = true
+            }
+        };
+        var karot = new List<KarotEntry>
+        {
+            new()
+            {
+                Id = Guid.NewGuid(),
+                AdaParsel = "100-1",
+                YapiSahibi = "Fahrettin Gençgün",
+                KatBilgisi = "İstinat karotu"
+            }
+        };
+
+        var result = CreateService().DryRun(catalog, karot, [], [], [], [], []);
+
+        Assert.Equal(1, result.AutoLinkCount);
+        Assert.Equal(istinatId, result.AutoActions[0].ProjectId);
+    }
+
     private static ProjectLinkingService CreateService()
         => new(new ProjectCatalogService(new NoOpCatalogRepository()));
 

@@ -157,6 +157,67 @@ public sealed class ProjectCatalogServiceTests
 
         Assert.Equal(string.Empty, karot.AdaParsel);
         Assert.Equal("Ali Veli", karot.YapiSahibi);
+        Assert.Equal("Ali Veli", karot.Muteahhit);
+    }
+
+    [Fact]
+    public void ApplyProjectSelection_Karot_Istinat_UsesParentIdentityAndMuteahhitFallback()
+    {
+        var parentId = Guid.NewGuid();
+        var parent = new ProjectCatalogEntry
+        {
+            Id = parentId,
+            DisplayName = "100-1 Fahrettin Gençgün",
+            AdaParsel = "100-1",
+            YapiSahibi = "Fahrettin Gençgün",
+            YibfNo = "77",
+            Kind = ProjectCatalogKind.Normal
+        };
+        var istinat = new ProjectCatalogEntry
+        {
+            Id = Guid.NewGuid(),
+            DisplayName = "İstinat",
+            Kind = ProjectCatalogKind.Istinat,
+            ParentProjectId = parentId
+        };
+        var service = new ProjectCatalogService(new InMemoryProjectCatalogRepository());
+        var karot = new KarotEntry();
+
+        service.ApplyProjectSelection(karot, istinat, [parent, istinat]);
+
+        Assert.Equal(istinat.Id, karot.ProjectId);
+        Assert.Equal("100-1", karot.AdaParsel);
+        Assert.Equal("Fahrettin Gençgün", karot.YapiSahibi);
+        Assert.Equal("77", karot.YibfNo);
+        Assert.Equal("Fahrettin Gençgün", karot.Muteahhit);
+    }
+
+    [Fact]
+    public void Search_MatchesIstinatViaParentOwner()
+    {
+        var parentId = Guid.NewGuid();
+        var parent = new ProjectCatalogEntry
+        {
+            Id = parentId,
+            DisplayName = "Ana İş",
+            YapiSahibi = "Fahrettin Gençgün",
+            Kind = ProjectCatalogKind.Normal,
+            IsActive = true
+        };
+        var istinat = new ProjectCatalogEntry
+        {
+            Id = Guid.NewGuid(),
+            DisplayName = "İstinat",
+            Kind = ProjectCatalogKind.Istinat,
+            ParentProjectId = parentId,
+            IsActive = true
+        };
+        var service = new ProjectCatalogService(new InMemoryProjectCatalogRepository());
+
+        var results = service.Search([parent, istinat], "Fahrettin");
+
+        Assert.Contains(results, item => item.Id == parent.Id);
+        Assert.Contains(results, item => item.Id == istinat.Id);
     }
 
     [Fact]

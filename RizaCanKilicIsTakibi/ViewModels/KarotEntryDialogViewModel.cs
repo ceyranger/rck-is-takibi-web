@@ -201,7 +201,7 @@ public sealed class KarotEntryDialogViewModel : ViewModelBase
             if (project is not null)
             {
                 // Keep VM identity; FillIfEmpty only tops up blanks and sets ProjectId.
-                _catalogService.ApplyProjectSelection(entry, project);
+                _catalogService.ApplyProjectSelection(entry, project, CatalogEntries);
             }
             else
             {
@@ -237,14 +237,14 @@ public sealed class KarotEntryDialogViewModel : ViewModelBase
 
         // Project is source of truth on select: overwrite identity fields.
         var temp = new KarotEntry();
-        _catalogService.ApplyProjectSelection(temp, project);
+        _catalogService.ApplyProjectSelection(temp, project, CatalogEntries);
         AdaParsel = temp.AdaParsel;
         YapiSahibi = temp.YapiSahibi;
         YibfNo = temp.YibfNo;
         Muteahhit = temp.Muteahhit;
 
-        ProjectSummaryText = EntryDialogProjectHelper.BuildOwnerParcelSummary(project);
-        IsProjectIdentityIncomplete = EntryDialogProjectHelper.IsOwnerParcelIncomplete(project);
+        ProjectSummaryText = EntryDialogProjectHelper.BuildOwnerParcelSummary(project, CatalogEntries);
+        IsProjectIdentityIncomplete = EntryDialogProjectHelper.IsOwnerParcelIncomplete(project, CatalogEntries);
         IsIdentityManualEdit = IsProjectIdentityIncomplete;
         OnPropertyChanged(nameof(HasSelectedProject));
         OnPropertyChanged(nameof(ShowIdentityFields));
@@ -278,12 +278,12 @@ public sealed class KarotEntryDialogViewModel : ViewModelBase
             if (project is not null)
             {
                 var temp = new KarotEntry();
-                _catalogService.ApplyProjectSelection(temp, project);
+                _catalogService.ApplyProjectSelection(temp, project, CatalogEntries);
                 AdaParsel = temp.AdaParsel;
                 YapiSahibi = temp.YapiSahibi;
                 YibfNo = temp.YibfNo;
                 Muteahhit = temp.Muteahhit;
-                ProjectSummaryText = EntryDialogProjectHelper.BuildOwnerParcelSummary(project);
+                ProjectSummaryText = EntryDialogProjectHelper.BuildOwnerParcelSummary(project, CatalogEntries);
             }
         }
     }
