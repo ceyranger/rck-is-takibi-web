@@ -9,4 +9,4 @@
 - [x] Testler, build, commit, güvenli publish
 
 ## Review Update
-- Tests 211/211. İstinat kişi adıyla bulunur; Karot müteahhit üst/yapı sahibinden dolar.
+- Tests 211/211. Commit `4a41d01`. Canonical publish güncellendi; `tasks.db` / `last-save.json` SHA256/size/timestamp değişmedi.
