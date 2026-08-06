@@ -401,6 +401,51 @@ public class ModuleGuardTests
     }
 
     [Fact]
+    public void Tadilat_Merkez_Entries_Are_Grouped_Under_Sinop_Without_Merkez_Placeholder()
+    {
+        var module = new TadilatModuleViewModel(
+            new SqliteTadilatRepository(BuildDatabasePath()),
+            new TestTadilatImportService(),
+            new TestFileDialogService(),
+            new NotificationService(),
+            new CallbackConfirmationService(),
+            new TestTadilatCellNoteDialogService(),
+            new UndoRedoService());
+
+        var merkez = new TadilatEntry
+        {
+            Id = Guid.NewGuid(),
+            District = "MERKEZ",
+            JobName = "Merkez işi",
+            SubTab = TadilatSubTab.Aktif,
+            DisplayOrder = 0,
+            CreatedAt = DateTime.Now.AddMinutes(-2),
+            UpdatedAt = DateTime.Now.AddMinutes(-2)
+        };
+        var sinop = new TadilatEntry
+        {
+            Id = Guid.NewGuid(),
+            District = "SİNOP",
+            JobName = "Sinop işi",
+            SubTab = TadilatSubTab.Aktif,
+            DisplayOrder = 1,
+            CreatedAt = DateTime.Now.AddMinutes(-1),
+            UpdatedAt = DateTime.Now.AddMinutes(-1)
+        };
+
+        module.LoadFromBackup([merkez, sinop], Array.Empty<TadilatCellState>(), markDirty: false);
+
+        Assert.DoesNotContain("MERKEZ", module.Districts);
+        Assert.DoesNotContain(module.DisplayRows, row => row.District == "MERKEZ" && row.IsPlaceholder);
+        Assert.DoesNotContain(module.DistrictCounts, item => item.District == "MERKEZ");
+        Assert.Equal(2, module.DisplayRows.Count(row => !row.IsPlaceholder && row.District == "SİNOP"));
+        Assert.Equal(["Merkez işi", "Sinop işi"], module.DisplayRows
+            .Where(row => !row.IsPlaceholder && row.District == "SİNOP")
+            .Select(row => row.Entry!.JobName)
+            .ToArray());
+    }
+
+    [Fact]
     public async Task Yibf_Move_AnaBilgi_Entry_Uses_Visible_Order_And_Persists()
     {
         var databasePath = BuildDatabasePath();

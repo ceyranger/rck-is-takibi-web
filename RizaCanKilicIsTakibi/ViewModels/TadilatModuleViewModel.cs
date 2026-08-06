@@ -1034,6 +1034,7 @@ public sealed class TadilatModuleViewModel : ViewModelBase
     {
         var orderedDistricts = Districts
             .Concat(collection.Select(item => GetGroupingDistrictName(item.District)))
+            .Select(GetGroupingDistrictName)
             .Where(item => !string.IsNullOrWhiteSpace(item))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(item => item, TurkishDistrictComparer)
@@ -1320,7 +1321,7 @@ public sealed class TadilatModuleViewModel : ViewModelBase
                     continue;
                 }
 
-                var placeholder = TadilatEntryRow.CreatePlaceholder(district);
+                var placeholder = TadilatEntryRow.CreatePlaceholder(GetGroupingDistrictName(district));
                 placeholder.IsFirstInDistrict = true;
                 rows.Add(placeholder);
                 continue;
@@ -1458,7 +1459,7 @@ public sealed class TadilatModuleViewModel : ViewModelBase
     private void ReplaceDistricts(IEnumerable<string> source)
     {
         var normalized = source
-            .Select(NormalizeDistrictName)
+            .Select(GetGroupingDistrictName)
             .Where(item => !string.IsNullOrWhiteSpace(item))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(item => item, TurkishDistrictComparer)
@@ -1699,7 +1700,7 @@ public sealed class TadilatEntryRow : ViewModelBase
         TadilatCellViewModel description2Cell)
     {
         Entry = entry;
-        District = entry.District;
+        District = DistrictCatalog.GetDisplayDistrict(entry.District);
         JobNameCell = Attach(jobNameCell);
         ProjectTypeCell = Attach(projectTypeCell);
         DigitalReceivedCell = Attach(digitalReceivedCell);
@@ -1713,7 +1714,7 @@ public sealed class TadilatEntryRow : ViewModelBase
 
     private TadilatEntryRow(string district)
     {
-        District = district;
+        District = DistrictCatalog.GetDisplayDistrict(district);
         IsPlaceholder = true;
         JobNameCell = Attach(new TadilatCellViewModel(TadilatColumnKeys.JobName, string.Empty, string.Empty, string.Empty, false));
         ProjectTypeCell = Attach(new TadilatCellViewModel(TadilatColumnKeys.ProjectType, string.Empty, string.Empty, string.Empty, false));
