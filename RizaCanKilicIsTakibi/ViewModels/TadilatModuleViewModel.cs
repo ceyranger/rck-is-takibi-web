@@ -95,7 +95,7 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         DisplayRows = [];
         Districts = [];
         DistrictCounts = [];
-        ReplaceDistricts(DistrictCatalog.All);
+        ReplaceDistricts(DistrictCatalog.TadilatDistricts);
 
         DistrictColumnFilter = new ColumnFilterViewModel("İlçe", RefreshDistrictGroups, ApplyColumnSort);
         JobNameColumnFilter = new ColumnFilterViewModel("İşin İsmi", RefreshDistrictGroups, ApplyColumnSort);
@@ -994,7 +994,7 @@ public sealed class TadilatModuleViewModel : ViewModelBase
             }
 
             var items = GetSortedDistrictEntries(collection
-                .Where(item => item.District.Equals(district, StringComparison.OrdinalIgnoreCase))
+                .Where(item => DistrictCatalog.AreFilterAliases(item.District, district))
                 .Where(EntryMatchesViewFilter));
 
             SyncDistrictGroup(group, items);
@@ -1033,7 +1033,7 @@ public sealed class TadilatModuleViewModel : ViewModelBase
     private List<string> GetOrderedDistricts(IEnumerable<TadilatEntry> collection)
     {
         var orderedDistricts = Districts
-            .Concat(collection.Select(item => NormalizeDistrictName(item.District)))
+            .Concat(collection.Select(item => GetGroupingDistrictName(item.District)))
             .Where(item => !string.IsNullOrWhiteSpace(item))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(item => item, TurkishDistrictComparer)
@@ -1052,7 +1052,7 @@ public sealed class TadilatModuleViewModel : ViewModelBase
     private void RefreshColumnFilters()
     {
         var source = GetCurrentCollection();
-        DistrictColumnFilter.SetAvailableValues(source.Select(entry => entry.District));
+        DistrictColumnFilter.SetAvailableValues(source.Select(entry => GetGroupingDistrictName(entry.District)));
         JobNameColumnFilter.SetAvailableValues(source.Select(entry => entry.JobName));
         ProjectTypeColumnFilter.SetAvailableValues(source.Select(entry => entry.ProjectType));
         DigitalReceivedColumnFilter.SetAvailableValues(source.Select(entry => entry.DigitalReceived));
@@ -1452,6 +1452,9 @@ public sealed class TadilatModuleViewModel : ViewModelBase
     private static string NormalizeDistrictName(string? district)
         => DistrictCatalog.NormalizeStoredValue(district);
 
+    private static string GetGroupingDistrictName(string? district)
+        => DistrictCatalog.GetDisplayDistrict(district);
+
     private void ReplaceDistricts(IEnumerable<string> source)
     {
         var normalized = source
@@ -1467,7 +1470,7 @@ public sealed class TadilatModuleViewModel : ViewModelBase
     private void RefreshDistrictCounts(IEnumerable<TadilatEntry> source)
     {
         var counts = source
-            .GroupBy(item => NormalizeDistrictName(item.District), StringComparer.OrdinalIgnoreCase)
+            .GroupBy(item => GetGroupingDistrictName(item.District), StringComparer.OrdinalIgnoreCase)
             .Select(group => new TadilatDistrictCountItem(group.Key, group.Count()))
             .OrderBy(item => item.District, TurkishDistrictComparer)
             .ToList();
@@ -1501,7 +1504,7 @@ public sealed class TadilatModuleViewModel : ViewModelBase
 
     private void EnsureDistrictExists(string district)
     {
-        district = NormalizeDistrictName(district);
+        district = GetGroupingDistrictName(district);
         if (string.IsNullOrWhiteSpace(district))
         {
             return;
@@ -1562,20 +1565,20 @@ public sealed class TadilatModuleViewModel : ViewModelBase
         => entry is null ? null : GetCollection(entry.SubTab).FirstOrDefault(item => item.Id == entry.Id);
 
     private static List<TadilatEntry> GetOrderedDistrictEntries(IEnumerable<TadilatEntry> entries, string district)
-        => entries.Where(item => item.District.Equals(district, StringComparison.OrdinalIgnoreCase))
+        => entries.Where(item => DistrictCatalog.AreFilterAliases(item.District, district))
             .OrderBy(item => item.DisplayOrder)
             .ThenBy(item => item.UpdatedAt)
             .ToList();
 
     private static int NextDisplayOrder(IEnumerable<TadilatEntry> entries, string district)
-        => entries.Where(item => item.District.Equals(district, StringComparison.OrdinalIgnoreCase))
+        => entries.Where(item => DistrictCatalog.AreFilterAliases(item.District, district))
             .Select(item => item.DisplayOrder)
             .DefaultIfEmpty(-1)
             .Max() + 1;
 
     private static void NormalizeDistrictOrder(IEnumerable<TadilatEntry> entries, string district)
     {
-        var items = entries.Where(item => item.District.Equals(district, StringComparison.OrdinalIgnoreCase))
+        var items = entries.Where(item => DistrictCatalog.AreFilterAliases(item.District, district))
             .OrderBy(item => item.DisplayOrder)
             .ThenBy(item => item.UpdatedAt)
             .ToList();

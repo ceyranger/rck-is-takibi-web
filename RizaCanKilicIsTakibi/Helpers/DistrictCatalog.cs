@@ -23,6 +23,16 @@ public static class DistrictCatalog
         "TÜRKELİ"
     ];
 
+    /// <summary>Tadilat yüzeyinde MERKEZ ayrı ilçe olarak gösterilmez; SİNOP ile aynı grup.</summary>
+    public static IReadOnlyList<string> TadilatDistricts { get; } =
+        All.Where(item => !string.Equals(NormalizeStoredValue(item), Merkez, StringComparison.OrdinalIgnoreCase)).ToList();
+
+    public static string GetDisplayDistrict(string? district)
+    {
+        var normalized = NormalizeStoredValue(district);
+        return normalized == Merkez ? Sinop : normalized;
+    }
+
     public static string NormalizeStoredValue(string? district)
         => string.IsNullOrWhiteSpace(district)
             ? string.Empty
