@@ -225,6 +225,8 @@ public sealed partial class MainViewModel : ViewModelBase
         OpenQuickUrgentTaskDialogCommand = new AsyncRelayCommand(OpenQuickUrgentTaskDialogAsync, CanOpenQuickUrgentTaskDialog);
         DeleteGeneralTaskCommand = new RelayCommand(() => DeleteTask(GeneralBoard.SelectedTask), () => GeneralBoard.SelectedTask is not null);
         DeleteUrgentTaskCommand = new RelayCommand(() => DeleteTask(UrgentBoard.SelectedTask), () => UrgentBoard.SelectedTask is not null);
+        OpenSelectedUrgentTaskDetailCommand = new RelayCommand(() => OpenTaskDetail(TaskBoardType.Acil), () => UrgentBoard.SelectedTask is not null);
+        OpenSelectedGeneralTaskDetailCommand = new RelayCommand(() => OpenTaskDetail(TaskBoardType.Genel), () => GeneralBoard.SelectedTask is not null);
         DeleteSelectedTaskCommand = new RelayCommand(() => DeleteSelectedTask(), () => SelectedTask is not null);
         DeleteTaskCommand = new RelayCommand<TaskItem?>(DeleteTask, task => task is not null);
         CopyTaskFromContextCommand = new RelayCommand<TaskItem?>(CopyTaskFromContext, task => task is not null);
@@ -578,6 +580,8 @@ public sealed partial class MainViewModel : ViewModelBase
     public AsyncRelayCommand OpenQuickUrgentTaskDialogCommand { get; }
     public RelayCommand DeleteGeneralTaskCommand { get; }
     public RelayCommand DeleteUrgentTaskCommand { get; }
+    public RelayCommand OpenSelectedUrgentTaskDetailCommand { get; }
+    public RelayCommand OpenSelectedGeneralTaskDetailCommand { get; }
     public RelayCommand DeleteSelectedTaskCommand { get; }
     public RelayCommand<TaskItem?> DeleteTaskCommand { get; }
     public RelayCommand<TaskItem?> CopyTaskFromContextCommand { get; }
@@ -3951,7 +3955,6 @@ public sealed partial class MainViewModel : ViewModelBase
             _activeBoard = board;
         }
 
-        DetailPanel.CurrentTask = task;
         OnPropertyChanged(nameof(SelectedTask));
         NotifySelectionCommands();
     }
@@ -3980,6 +3983,8 @@ public sealed partial class MainViewModel : ViewModelBase
     {
         DeleteGeneralTaskCommand.NotifyCanExecuteChanged();
         DeleteUrgentTaskCommand.NotifyCanExecuteChanged();
+        OpenSelectedUrgentTaskDetailCommand.NotifyCanExecuteChanged();
+        OpenSelectedGeneralTaskDetailCommand.NotifyCanExecuteChanged();
         DeleteSelectedTaskCommand.NotifyCanExecuteChanged();
         DeleteTaskCommand.NotifyCanExecuteChanged();
         MoveTaskUpCommand.NotifyCanExecuteChanged();

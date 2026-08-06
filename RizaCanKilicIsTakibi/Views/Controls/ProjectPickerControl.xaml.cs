@@ -52,6 +52,8 @@ public partial class ProjectPickerControl : UserControl
             typeof(RoutedEventHandler),
             typeof(ProjectPickerControl));
 
+    private bool _isSyncingFromSelection;
+
     public ProjectPickerControl()
     {
         InitializeComponent();
@@ -117,23 +119,34 @@ public partial class ProjectPickerControl : UserControl
         if (d is ProjectPickerControl control)
         {
             control.RefreshFilteredEntries();
-            control.IsPopupOpen = true;
+            if (!control._isSyncingFromSelection && control.SearchBox.IsKeyboardFocused)
+            {
+                control.IsPopupOpen = true;
+            }
         }
     }
 
     private void UpdateSearchTextFromSelection()
     {
-        if (SelectedProjectId is Guid projectId)
+        _isSyncingFromSelection = true;
+        try
         {
-            var catalog = EnumerateCatalog();
-            var match = catalog.FirstOrDefault(item => item.Id == projectId);
-            SearchText = match is null
-                ? string.Empty
-                : ProjectCatalogIdentityHelper.BuildPickerTitle(match, catalog);
+            if (SelectedProjectId is Guid projectId)
+            {
+                var catalog = EnumerateCatalog();
+                var match = catalog.FirstOrDefault(item => item.Id == projectId);
+                SearchText = match is null
+                    ? string.Empty
+                    : ProjectCatalogIdentityHelper.BuildPickerTitle(match, catalog);
+            }
+            else if (AllowClear)
+            {
+                SearchText = string.Empty;
+            }
         }
-        else if (AllowClear)
+        finally
         {
-            SearchText = string.Empty;
+            _isSyncingFromSelection = false;
         }
     }
 

@@ -1,5 +1,7 @@
 using RizaCanKilicIsTakibi.Commands;
 using RizaCanKilicIsTakibi.Models;
+using RizaCanKilicIsTakibi.Views;
+using System.Windows;
 
 namespace RizaCanKilicIsTakibi.ViewModels;
 
@@ -359,6 +361,29 @@ public sealed partial class MainViewModel
     private void CommitGeneralEdit()
     {
         MarkTaskDirty();
+    }
+
+    private void OpenTaskDetail(TaskBoardType boardType)
+    {
+        var board = GetBoard(boardType);
+        var task = board.SelectedTask;
+        if (task is null)
+        {
+            return;
+        }
+
+        FocusBoard(boardType);
+        DetailPanel.CurrentTask = task;
+
+        var window = new TaskDetailWindow
+        {
+            Owner = Application.Current?.MainWindow,
+            DataContext = this
+        };
+
+        window.ShowDialog();
+        DetailPanel.Close();
+        NotifySelectionCommands();
     }
 
     private void MarkTaskDirty()

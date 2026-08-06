@@ -869,9 +869,8 @@
 
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
                         <Border Grid.Column="0" Style="{StaticResource CardBorderStyle}" CornerRadius="20">
@@ -880,6 +879,7 @@
                                 <DockPanel Margin="0,0,0,8">
                                     <TextBlock Text="Acil İşler" FontFamily="{StaticResource Font.Primary}" FontWeight="SemiBold" FontSize="16" DockPanel.Dock="Left"/>
                                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                        <Button Content="Detay" Command="{Binding OpenSelectedUrgentTaskDetailCommand}" Style="{StaticResource GhostButton}" ToolTip="Not, proje ve özel iş düzenle"/>
                                         <Button Content="Hızlı" Command="{Binding OpenQuickUrgentTaskDialogCommand}" Style="{StaticResource GhostButton}" ToolTip="Şablondan Hızlı İş Ekle"/>
                                         <Button Content="+" Command="{Binding AddUrgentTaskCommand}" Style="{StaticResource IconButton}" ToolTip="Yeni Görev Ekle"/>
                                         <Button Content="Sil" Command="{Binding DeleteUrgentTaskCommand}" Style="{StaticResource GhostButton}" ToolTip="Seçili Görevi Sil (Delete)"/>
@@ -953,6 +953,7 @@
                                 <DockPanel Margin="0,0,0,8">
                                     <TextBlock Text="Genel İşler" FontFamily="{StaticResource Font.Primary}" FontWeight="SemiBold" FontSize="16" DockPanel.Dock="Left"/>
                                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                        <Button Content="Detay" Command="{Binding OpenSelectedGeneralTaskDetailCommand}" Style="{StaticResource GhostButton}" ToolTip="Not, proje ve özel iş düzenle"/>
                                         <Button Content="+" Command="{Binding AddGeneralTaskCommand}" Style="{StaticResource IconButton}" ToolTip="Yeni Görev Ekle"/>
                                         <Button Content="Sil" Command="{Binding DeleteGeneralTaskCommand}" Style="{StaticResource GhostButton}" ToolTip="Seçili Görevi Sil (Delete)"/>
                                         <Button Content="↑" Command="{Binding MoveTaskUpCommand}" Style="{StaticResource IconButton}" ToolTip="Yukarı Taşı"/>
@@ -1015,81 +1016,6 @@
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </Grid>
-                        </Border>
-
-                        <Border Grid.Column="2" Style="{StaticResource CardBorderStyle}">
-                            <StackPanel>
-                                <TextBlock Text="Görev Detayı" FontFamily="{StaticResource Font.Primary}" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8"/>
-                                <TextBlock Text="Görev seçilmedi." Foreground="{StaticResource Brush.TextSecondary}" Visibility="{Binding DetailPanel.CurrentTask, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=Invert}"/>
-                                <StackPanel Visibility="{Binding DetailPanel.HasTask, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                    <TextBlock Text="Başlık" FontWeight="SemiBold"/>
-                                    <TextBox Text="{Binding DetailPanel.CurrentTask.Title, UpdateSourceTrigger=PropertyChanged}"
-                                             AcceptsReturn="True"
-                                             TextWrapping="Wrap"
-                                             VerticalScrollBarVisibility="Auto"
-                                             VerticalContentAlignment="Top"
-                                             MinHeight="42"
-                                             Padding="10,8"
-                                             behaviors:TextChangedCommandBehavior.Command="{Binding CommitGeneralEditCommand}"
-                                             behaviors:TextBoxEditCommitBehavior.CommitCommand="{Binding CommitGeneralEditCommand}"/>
-                                    <CheckBox Content="Özel iş"
-                                              Margin="0,10,0,0"
-                                              IsChecked="{Binding DetailPanel.CurrentTask.IsSpecialJob, Mode=TwoWay}"/>
-                                    <StackPanel Margin="0,8,0,0">
-                                        <TextBlock Text="Proje" FontWeight="SemiBold"/>
-                                        <viewControls:ProjectPickerControl Margin="0,4,0,0"
-                                                                           Catalog="{Binding ProjectCatalogEntries}"
-                                                                           SelectedProjectId="{Binding DetailPanel.CurrentTask.ProjectId, Mode=TwoWay}">
-                                            <viewControls:ProjectPickerControl.Style>
-                                                <Style TargetType="viewControls:ProjectPickerControl">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding DetailPanel.CurrentTask.IsSpecialJob}" Value="True">
-                                                            <Setter Property="IsEnabled" Value="False"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </viewControls:ProjectPickerControl.Style>
-                                        </viewControls:ProjectPickerControl>
-                                    </StackPanel>
-                                    <TextBlock Text="Notlar" FontWeight="SemiBold" Margin="0,10,0,2"/>
-                                    <DockPanel LastChildFill="True" Margin="0,0,0,4">
-                                        <Button Content="Not Ekle"
-                                                Command="{Binding DetailPanel.AddNoteCommand}"
-                                                DockPanel.Dock="Right"
-                                                Style="{StaticResource GhostButton}"/>
-                                        <TextBox Text="{Binding DetailPanel.NewNoteText, UpdateSourceTrigger=PropertyChanged}"
-                                                 AcceptsReturn="True"
-                                                 TextWrapping="Wrap"
-                                                 MinHeight="42"
-                                                 Margin="0,4,6,4"/>
-                                    </DockPanel>
-                                    <Border BorderBrush="{StaticResource Brush.Border}" BorderThickness="1" CornerRadius="8" Padding="6" Background="{StaticResource Brush.SurfaceAlt}">
-                                        <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="180">
-                                            <ItemsControl ItemsSource="{Binding DetailPanel.CurrentTask.Notes}">
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate DataType="{x:Type models:TaskNote}">
-                                                        <Border BorderBrush="{StaticResource Brush.Border}" BorderThickness="0,0,0,1" Padding="0,6">
-                                                            <DockPanel>
-                                                                <Button Content="Sil"
-                                                                        Command="{Binding DataContext.DetailPanel.RemoveNoteCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                                        CommandParameter="{Binding}"
-                                                                        DockPanel.Dock="Right"
-                                                                        Style="{StaticResource GhostButton}"/>
-                                                                <StackPanel>
-                                                                    <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
-                                                                    <TextBlock Text="{Binding CreatedAt, StringFormat={}{0:dd.MM.yyyy HH:mm}}"
-                                                                               Foreground="{StaticResource Brush.TextSecondary}"
-                                                                               FontSize="11"/>
-                                                                </StackPanel>
-                                                            </DockPanel>
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
-                                        </ScrollViewer>
-                                    </Border>
-                                </StackPanel>
-                            </StackPanel>
                         </Border>
                     </Grid>
                 </Grid>

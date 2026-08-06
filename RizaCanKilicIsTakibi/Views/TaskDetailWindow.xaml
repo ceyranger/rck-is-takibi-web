@@ -1,0 +1,128 @@
+<Window x:Class="RizaCanKilicIsTakibi.Views.TaskDetailWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:models="clr-namespace:RizaCanKilicIsTakibi.Models"
+        xmlns:behaviors="clr-namespace:RizaCanKilicIsTakibi.Behaviors"
+        xmlns:converters="clr-namespace:RizaCanKilicIsTakibi.Converters"
+        xmlns:viewControls="clr-namespace:RizaCanKilicIsTakibi.Views.Controls"
+        Title="Görev Detayı"
+        Width="560"
+        Height="640"
+        MinWidth="480"
+        MinHeight="520"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResizeWithGrip"
+        Background="{StaticResource Brush.EntryDialogBackground}">
+    <Window.Resources>
+        <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+    </Window.Resources>
+    <Grid Background="{StaticResource Brush.EntryDialogBackground}">
+        <Border Style="{StaticResource EntryDialogCardStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Border Style="{StaticResource EntryDialogHeaderStyle}">
+                    <StackPanel>
+                        <TextBlock Text="GENEL İŞ TAKİBİ" Style="{StaticResource EntryDialogEyebrowStyle}"/>
+                        <TextBlock Text="Görev detayı" Style="{StaticResource EntryDialogTitleStyle}"/>
+                    </StackPanel>
+                </Border>
+
+                <ScrollViewer Grid.Row="1"
+                              Margin="20,14,20,8"
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel>
+                        <TextBlock Text="BAŞLIK" Style="{StaticResource EntryFieldLabelStyle}"/>
+                        <Border Style="{StaticResource EntryFieldBoxStyle}">
+                            <TextBox AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     VerticalScrollBarVisibility="Auto"
+                                     MinHeight="42"
+                                     Padding="10,8"
+                                     Text="{Binding DetailPanel.CurrentTask.Title, UpdateSourceTrigger=PropertyChanged}"
+                                     behaviors:TextChangedCommandBehavior.Command="{Binding CommitGeneralEditCommand}"
+                                     behaviors:TextBoxEditCommitBehavior.CommitCommand="{Binding CommitGeneralEditCommand}"/>
+                        </Border>
+
+                        <CheckBox Content="Özel iş"
+                                  Margin="0,12,0,0"
+                                  IsChecked="{Binding DetailPanel.CurrentTask.IsSpecialJob, Mode=TwoWay}"/>
+
+                        <TextBlock Text="PROJE" Style="{StaticResource EntryFieldLabelStyle}" Margin="0,12,0,0"/>
+                        <Border Style="{StaticResource EntryFieldBoxStyle}" Padding="6">
+                            <viewControls:ProjectPickerControl
+                                Catalog="{Binding ProjectCatalogEntries}"
+                                SelectedProjectId="{Binding DetailPanel.CurrentTask.ProjectId, Mode=TwoWay}">
+                                <viewControls:ProjectPickerControl.Style>
+                                    <Style TargetType="viewControls:ProjectPickerControl">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DetailPanel.CurrentTask.IsSpecialJob}" Value="True">
+                                                <Setter Property="IsEnabled" Value="False"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </viewControls:ProjectPickerControl.Style>
+                            </viewControls:ProjectPickerControl>
+                        </Border>
+
+                        <TextBlock Text="NOTLAR" Style="{StaticResource EntryFieldLabelStyle}" Margin="0,12,0,0"/>
+                        <DockPanel LastChildFill="True" Margin="0,4,0,8">
+                            <Button Content="Not Ekle"
+                                    Command="{Binding DetailPanel.AddNoteCommand}"
+                                    DockPanel.Dock="Right"
+                                    Style="{StaticResource GhostButton}"/>
+                            <TextBox Text="{Binding DetailPanel.NewNoteText, UpdateSourceTrigger=PropertyChanged}"
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     MinHeight="42"
+                                     Margin="0,0,6,0"/>
+                        </DockPanel>
+                        <Border BorderBrush="{StaticResource Brush.Border}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="6"
+                                Background="{StaticResource Brush.SurfaceAlt}">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="220">
+                                <ItemsControl ItemsSource="{Binding DetailPanel.CurrentTask.Notes}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type models:TaskNote}">
+                                            <Border BorderBrush="{StaticResource Brush.Border}" BorderThickness="0,0,0,1" Padding="0,6">
+                                                <DockPanel>
+                                                    <Button Content="Sil"
+                                                            Command="{Binding DataContext.DetailPanel.RemoveNoteCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                            CommandParameter="{Binding}"
+                                                            DockPanel.Dock="Right"
+                                                            Style="{StaticResource GhostButton}"/>
+                                                    <StackPanel>
+                                                        <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
+                                                        <TextBlock Text="{Binding CreatedAt, StringFormat={}{0:dd.MM.yyyy HH:mm}}"
+                                                                   Foreground="{StaticResource Brush.TextSecondary}"
+                                                                   FontSize="11"/>
+                                                    </StackPanel>
+                                                </DockPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <Border Grid.Row="2" Style="{StaticResource EntryDialogFooterStyle}">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="Kapat"
+                                Width="100"
+                                Style="{StaticResource GhostButton}"
+                                Click="OnCloseClick"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
