@@ -178,24 +178,27 @@ public sealed class ProjectCatalogService : IProjectCatalogService
 
     public ProjectCatalogSyncResult PreviewLinkedIdentityOverwrite(
         ProjectCatalogEntry project,
+        IReadOnlyList<YibfAnaBilgiEntry> anaBilgi,
         IReadOnlyList<KarotEntry> karot,
         IReadOnlyList<MissingProjectEntry> missing,
         IReadOnlyList<ActionEntry> action,
         IReadOnlyList<TadilatEntry> tadilat,
         IReadOnlyList<YibfIsTakibiEntry> yibfIsTakibi)
-        => SynchronizeLinkedIdentityFields(project, karot, missing, action, tadilat, yibfIsTakibi, apply: false);
+        => SynchronizeLinkedIdentityFields(project, anaBilgi, karot, missing, action, tadilat, yibfIsTakibi, apply: false);
 
     public ProjectCatalogSyncResult OverwriteLinkedIdentityFields(
         ProjectCatalogEntry project,
+        IReadOnlyList<YibfAnaBilgiEntry> anaBilgi,
         IReadOnlyList<KarotEntry> karot,
         IReadOnlyList<MissingProjectEntry> missing,
         IReadOnlyList<ActionEntry> action,
         IReadOnlyList<TadilatEntry> tadilat,
         IReadOnlyList<YibfIsTakibiEntry> yibfIsTakibi)
-        => SynchronizeLinkedIdentityFields(project, karot, missing, action, tadilat, yibfIsTakibi, apply: true);
+        => SynchronizeLinkedIdentityFields(project, anaBilgi, karot, missing, action, tadilat, yibfIsTakibi, apply: true);
 
     private static ProjectCatalogSyncResult SynchronizeLinkedIdentityFields(
         ProjectCatalogEntry project,
+        IReadOnlyList<YibfAnaBilgiEntry> anaBilgi,
         IReadOnlyList<KarotEntry> karot,
         IReadOnlyList<MissingProjectEntry> missing,
         IReadOnlyList<ActionEntry> action,
@@ -206,10 +209,41 @@ public sealed class ProjectCatalogService : IProjectCatalogService
         var adaParsel = project.AdaParsel?.Trim() ?? string.Empty;
         var yapiSahibi = project.YapiSahibi?.Trim() ?? string.Empty;
         var yibfNo = project.YibfNo?.Trim() ?? string.Empty;
+        var belediye = project.Belediye?.Trim() ?? string.Empty;
         var muteahhit = project.Muteahhit?.Trim() ?? string.Empty;
         var ownerParcel = BuildOwnerParcelText(project);
         var jobName = ChooseRicherText(project.DisplayName, ownerParcel);
         var now = DateTime.Now;
+
+        var anaBilgiCount = 0;
+        if (project.Kind == ProjectCatalogKind.Normal)
+        {
+            foreach (var entry in anaBilgi.Where(item =>
+                         item.WorkGroupId == project.Id
+                         || item.WorkIdentityId == project.Id
+                         || item.Id == project.Id))
+            {
+                if (entry.AdaParsel == adaParsel
+                    && entry.YapiSahibi == yapiSahibi
+                    && entry.YibfNo == yibfNo
+                    && entry.Idare == belediye
+                    && entry.Muteahhit == muteahhit)
+                {
+                    continue;
+                }
+
+                anaBilgiCount++;
+                if (apply)
+                {
+                    entry.AdaParsel = adaParsel;
+                    entry.YapiSahibi = yapiSahibi;
+                    entry.YibfNo = yibfNo;
+                    entry.Idare = belediye;
+                    entry.Muteahhit = muteahhit;
+                    entry.UpdatedAt = now;
+                }
+            }
+        }
 
         var karotCount = 0;
         foreach (var entry in karot.Where(item => item.ProjectId == project.Id))
@@ -306,6 +340,7 @@ public sealed class ProjectCatalogService : IProjectCatalogService
             MissingProjectCount = missingCount,
             ActionCount = actionCount,
             TadilatCount = tadilatCount,
+            YibfAnaBilgiCount = anaBilgiCount,
             YibfIsTakibiCount = yibfCount
         };
     }

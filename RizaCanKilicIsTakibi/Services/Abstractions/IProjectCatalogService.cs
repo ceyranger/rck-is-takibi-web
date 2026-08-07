@@ -18,6 +18,7 @@ public interface IProjectCatalogService
     void ApplyProjectSelection(YibfAnaBilgiEntry entry, ProjectCatalogEntry project);
     ProjectCatalogSyncResult PreviewLinkedIdentityOverwrite(
         ProjectCatalogEntry project,
+        IReadOnlyList<YibfAnaBilgiEntry> anaBilgi,
         IReadOnlyList<KarotEntry> karot,
         IReadOnlyList<MissingProjectEntry> missing,
         IReadOnlyList<ActionEntry> action,
@@ -25,6 +26,7 @@ public interface IProjectCatalogService
         IReadOnlyList<YibfIsTakibiEntry> yibfIsTakibi);
     ProjectCatalogSyncResult OverwriteLinkedIdentityFields(
         ProjectCatalogEntry project,
+        IReadOnlyList<YibfAnaBilgiEntry> anaBilgi,
         IReadOnlyList<KarotEntry> karot,
         IReadOnlyList<MissingProjectEntry> missing,
         IReadOnlyList<ActionEntry> action,

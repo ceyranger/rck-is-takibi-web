@@ -301,6 +301,17 @@ public sealed partial class MainViewModel
 
         MarkCatalogDirty();
         RefreshFilteredProjectCatalogList();
+
+        var syncedCount = await SyncLinkedIdentityFromCatalogAsync(target, requireConfirmation: false);
+        if (syncedCount > 0)
+        {
+            _notificationService.ShowToast(
+                $"Proje kataloğu güncellendi; {syncedCount} bağlı kayıt senkronize edildi. Kalıcı olması için Kaydet'e basın.",
+                ToastType.Success,
+                TimeSpan.FromSeconds(4));
+            return;
+        }
+
         _notificationService.ShowToast("Proje kataloğu güncellendi.", ToastType.Success);
         await Task.CompletedTask;
     }
@@ -523,42 +534,61 @@ public sealed partial class MainViewModel
             return;
         }
 
+        await SyncLinkedIdentityFromCatalogAsync(SelectedProjectCatalogEntry, requireConfirmation: true);
+    }
+
+    private async Task<int> SyncLinkedIdentityFromCatalogAsync(ProjectCatalogEntry project, bool requireConfirmation)
+    {
+        if (_projectCatalogService is null)
+        {
+            return 0;
+        }
+
         await EnsureAllModulesInitializedAsync();
-        var project = SelectedProjectCatalogEntry;
+        var anaBilgi = YibfModule.AnaBilgiEntries.ToList();
         var karot = KarotModule.Entries.ToList();
         var missing = MissingProjectModule.Entries.ToList();
         var action = ActionModule.AksiyonEntries.Concat(ActionModule.AksiyonaEkleneceklerEntries).ToList();
         var tadilat = TadilatModule.AktifEntries.Concat(TadilatModule.BitenEntries).ToList();
         var yibf = YibfModule.IsTakibiEntries.ToList();
         var preview = _projectCatalogService.PreviewLinkedIdentityOverwrite(
-            project, karot, missing, action, tadilat, yibf);
+            project, anaBilgi, karot, missing, action, tadilat, yibf);
 
         if (preview.TotalCount == 0)
         {
-            _notificationService.ShowToast("Güncellenecek bağlı kayıt bulunamadı.", ToastType.Info);
-            return;
+            if (requireConfirmation)
+            {
+                _notificationService.ShowToast("Güncellenecek bağlı kayıt bulunamadı.", ToastType.Info);
+            }
+
+            return 0;
         }
 
-        var message =
-            $"Karot: {preview.KarotCount}\n" +
-            $"Eksik Proje: {preview.MissingProjectCount}\n" +
-            $"Aksiyon: {preview.ActionCount}\n" +
-            $"Tadilat: {preview.TadilatCount}\n" +
-            $"YİBF İş Takibi: {preview.YibfIsTakibiCount}\n\n" +
-            "UYARI: Bağlı kayıtlardaki elle girilmiş proje kimlik bilgileri katalog değerleriyle değiştirilecek. Devam edilsin mi?";
-        if (!_confirmationService.Confirm(new ConfirmationRequest
-            {
-                Kind = ConfirmationKind.Save,
-                Title = "Bağlı Kayıtları Güncelle",
-                Message = message,
-                IsDestructive = true
-            }))
+        if (requireConfirmation)
         {
-            return;
+            var message =
+                $"Proje Takibi: {preview.YibfAnaBilgiCount}\n" +
+                $"Karot: {preview.KarotCount}\n" +
+                $"Eksik Proje: {preview.MissingProjectCount}\n" +
+                $"Aksiyon: {preview.ActionCount}\n" +
+                $"Tadilat: {preview.TadilatCount}\n" +
+                $"YİBF İş Takibi: {preview.YibfIsTakibiCount}\n\n" +
+                "UYARI: Bağlı kayıtlardaki elle girilmiş proje kimlik bilgileri katalog değerleriyle değiştirilecek. Devam edilsin mi?";
+            if (!_confirmationService.Confirm(new ConfirmationRequest
+                {
+                    Kind = ConfirmationKind.Save,
+                    Title = "Bağlı Kayıtları Güncelle",
+                    Message = message,
+                    IsDestructive = true
+                }))
+            {
+                return 0;
+            }
         }
 
         var result = _projectCatalogService.OverwriteLinkedIdentityFields(
-            project, karot, missing, action, tadilat, yibf);
+            project, anaBilgi, karot, missing, action, tadilat, yibf);
+        if (result.YibfAnaBilgiCount > 0) YibfModule.MarkDirty();
         if (result.KarotCount > 0) KarotModule.MarkDirty();
         if (result.MissingProjectCount > 0) MissingProjectModule.MarkDirty();
         if (result.ActionCount > 0) ActionModule.MarkDirty();
@@ -566,10 +596,16 @@ public sealed partial class MainViewModel
         if (result.YibfIsTakibiCount > 0) YibfModule.MarkDirty();
         RefreshTumEksikler();
         InvalidateSearchCorpus();
-        _notificationService.ShowToast(
-            $"{result.TotalCount} bağlı kayıt güncellendi. Kalıcı olması için Kaydet'e basın.",
-            ToastType.Success,
-            TimeSpan.FromSeconds(4));
+
+        if (requireConfirmation)
+        {
+            _notificationService.ShowToast(
+                $"{result.TotalCount} bağlı kayıt güncellendi. Kalıcı olması için Kaydet'e basın.",
+                ToastType.Success,
+                TimeSpan.FromSeconds(4));
+        }
+
+        return result.TotalCount;
     }
 
     private ProjectCatalogEntry? FindActiveProject(Guid? projectId)

@@ -341,12 +341,28 @@ public sealed class ProjectCatalogServiceTests
         var action = new ActionEntry { ProjectId = project.Id, OwnerParcelText = "Eski", WorkText = "Korunacak" };
         var tadilat = new TadilatEntry { ProjectId = project.Id, JobName = "Eski", Description1 = "Korunacak" };
         var yibf = new YibfIsTakibiEntry { WorkGroupId = project.Id, WorkIdentityId = project.Id, JobName = "Eski" };
+        var anaBilgi = new YibfAnaBilgiEntry
+        {
+            Id = project.Id,
+            WorkGroupId = project.Id,
+            WorkIdentityId = project.Id,
+            AdaParsel = "Eski",
+            YapiSahibi = "Eski Sahip",
+            YibfNo = "1",
+            Idare = "Eski Belediye",
+            Muteahhit = "Eski Müteahhit"
+        };
 
-        var preview = service.PreviewLinkedIdentityOverwrite(project, [karot], [missing], [action], [tadilat], [yibf]);
-        var applied = service.OverwriteLinkedIdentityFields(project, [karot], [missing], [action], [tadilat], [yibf]);
+        var preview = service.PreviewLinkedIdentityOverwrite(project, [anaBilgi], [karot], [missing], [action], [tadilat], [yibf]);
+        var applied = service.OverwriteLinkedIdentityFields(project, [anaBilgi], [karot], [missing], [action], [tadilat], [yibf]);
 
-        Assert.Equal(5, preview.TotalCount);
-        Assert.Equal(5, applied.TotalCount);
+        Assert.Equal(6, preview.TotalCount);
+        Assert.Equal(6, applied.TotalCount);
+        Assert.Equal("10/2", anaBilgi.AdaParsel);
+        Assert.Equal("Yeni Sahip", anaBilgi.YapiSahibi);
+        Assert.Equal("99", anaBilgi.YibfNo);
+        Assert.Equal(string.Empty, anaBilgi.Idare);
+        Assert.Equal("Yeni Müteahhit", anaBilgi.Muteahhit);
         Assert.Equal("10/2", karot.AdaParsel);
         Assert.Equal("Yeni Sahip", karot.YapiSahibi);
         Assert.Equal("99", karot.YibfNo);

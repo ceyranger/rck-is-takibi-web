@@ -1,10 +1,10 @@
 # Todo
 
-## Current Task: Genel İş Takibi sağ panel kaldır + Detay diyaloğu
-- [x] Sağ Görev Detayı paneli kaldırıldı; Acil/Genel 2 sütun
-- [x] `TaskDetailWindow` modal (not, proje, özel iş)
-- [x] Detay butonları + seçimde otomatik DetailPanel bind kaldırıldı
-- [x] Build/test 214/214; canonical publish güncellendi; Data hash/size korundu
+## Current Task: Katalog düzenleme → bağlı kayıt senkronu
+- [x] Proje Takibi (YibfAnaBilgi) kimlik alanları senkrona eklendi
+- [x] Katalog düzenleme sonrası bağlı kayıtlar otomatik güncelleniyor
+- [x] Tests 217/217 geçti
 
 ## Review Update
-- Satır seçimi artık sağda panel/popup tetiklemiyor; Detay butonu modal açar.
+- Katalogda ada/parsel, sahip, YİBF no, belediye, müteahhit değişince Proje Takibi + bağlı modüller senkronize olur.
+- Ayarlar'daki "Bağlı Kayıtları Güncelle" artık Proje Takibi sayısını da gösterir.
