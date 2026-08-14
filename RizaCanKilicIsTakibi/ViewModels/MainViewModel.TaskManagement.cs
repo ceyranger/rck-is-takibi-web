@@ -128,7 +128,14 @@ public sealed partial class MainViewModel
 
         var action = new DelegateUndoableAction(
             "Görev sil",
-            () => board.RemoveTask(selected),
+            () =>
+            {
+                board.RemoveTask(selected);
+                var module = selected.BoardType == TaskBoardType.Acil
+                    ? PersonnelAssignmentSourceModule.AcilTask
+                    : PersonnelAssignmentSourceModule.GenelTask;
+                _ = NotifySourceDeletedAsync(module, selected.Id);
+            },
             () => board.InsertTask(index, snapshot));
 
         _undoRedoService.Execute(action);

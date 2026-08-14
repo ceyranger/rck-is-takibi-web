@@ -10,7 +10,7 @@ namespace RizaCanKilicIsTakibi.Services;
 
 public sealed class BackupService : IBackupService
 {
-    private const int CurrentBackupSchemaVersion = 3;
+    private const int CurrentBackupSchemaVersion = 4;
     private readonly string _backupRoot;
     private readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web)
     {
@@ -43,6 +43,8 @@ public sealed class BackupService : IBackupService
         IEnumerable<TadilatCellState>? tadilatCellStates = null,
         IEnumerable<QuickTaskTemplate>? quickTaskTemplates = null,
         IEnumerable<ProjectCatalogEntry>? projectCatalogEntries = null,
+        IEnumerable<Personnel>? personnel = null,
+        IEnumerable<PersonnelAssignment>? personnelAssignments = null,
         CancellationToken cancellationToken = default)
     {
         var payload = new BackupEnvelope
@@ -63,9 +65,11 @@ public sealed class BackupService : IBackupService
             YibfCellStates = (yibfCellStates ?? Array.Empty<YibfCellState>()).Select(MapYibfCellStateToDto).ToList(),
             TadilatCellStates = (tadilatCellStates ?? Array.Empty<TadilatCellState>()).Select(MapTadilatCellStateToDto).ToList(),
             ProjectCatalogEntries = (projectCatalogEntries ?? Array.Empty<ProjectCatalogEntry>()).Select(MapProjectCatalogToDto).ToList(),
+            Personnel = (personnel ?? Array.Empty<Personnel>()).Select(MapPersonnelToDto).ToList(),
+            PersonnelAssignments = (personnelAssignments ?? Array.Empty<PersonnelAssignment>()).Select(MapPersonnelAssignmentToDto).ToList(),
             CreatedAt = DateTime.Now
         };
-        payload.Checksum = ComputeChecksum(payload);
+        payload.Checksum = ComputeChecksumV4(payload);
 
         var finalPath = backupPath;
         if (string.IsNullOrWhiteSpace(finalPath))
@@ -117,12 +121,12 @@ public sealed class BackupService : IBackupService
             throw new InvalidDataException("Yedek dosyası okunamadı veya boş.");
         }
 
-        if (payload.SchemaVersion is not (0 or 1 or 2 or 3))
+        if (payload.SchemaVersion is not (0 or 1 or 2 or 3 or 4))
         {
             throw new InvalidDataException($"Desteklenmeyen yedek sürümü: {payload.SchemaVersion}");
         }
 
-        if (payload.SchemaVersion is 1 or 2 or 3)
+        if (payload.SchemaVersion is 1 or 2 or 3 or 4)
         {
             if (string.IsNullOrWhiteSpace(payload.Checksum))
             {
@@ -133,7 +137,8 @@ public sealed class BackupService : IBackupService
             {
                 1 => ComputeChecksumV1(payload),
                 2 => ComputeChecksumV2(payload),
-                _ => ComputeChecksum(payload)
+                3 => ComputeChecksumV3(payload),
+                _ => ComputeChecksumV4(payload)
             };
             var legacyV2WithoutTemplateGroups = payload.SchemaVersion == 2
                 ? ComputeChecksumV2WithoutTemplateGroups(payload)
@@ -164,11 +169,13 @@ public sealed class BackupService : IBackupService
             YibfIsTakibiEntries = payload.YibfIsTakibiEntries.Select(MapYibfIsTakibiToModel).ToList(),
             YibfCellStates = payload.YibfCellStates.Select(MapYibfCellStateToModel).ToList(),
             TadilatCellStates = payload.TadilatCellStates.Select(MapTadilatCellStateToModel).ToList(),
-            ProjectCatalogEntries = (payload.ProjectCatalogEntries ?? []).Select(MapProjectCatalogToModel).ToList()
+            ProjectCatalogEntries = (payload.ProjectCatalogEntries ?? []).Select(MapProjectCatalogToModel).ToList(),
+            Personnel = (payload.Personnel ?? []).Select(MapPersonnelToModel).ToList(),
+            PersonnelAssignments = (payload.PersonnelAssignments ?? []).Select(MapPersonnelAssignmentToModel).ToList()
         };
     }
 
-    private string ComputeChecksum(BackupEnvelope envelope)
+    private string ComputeChecksumV3(BackupEnvelope envelope)
     {
         var payloadBytes = JsonSerializer.SerializeToUtf8Bytes(new
         {
@@ -189,6 +196,34 @@ public sealed class BackupService : IBackupService
             envelope.YibfCellStates,
             envelope.TadilatCellStates,
             envelope.ProjectCatalogEntries
+        }, _jsonOptions);
+
+        return Convert.ToHexString(SHA256.HashData(payloadBytes));
+    }
+
+    private string ComputeChecksumV4(BackupEnvelope envelope)
+    {
+        var payloadBytes = JsonSerializer.SerializeToUtf8Bytes(new
+        {
+            envelope.SchemaVersion,
+            envelope.AppVersion,
+            envelope.CreatedAt,
+            envelope.Tasks,
+            envelope.QuickTaskTemplates,
+            envelope.ActionEntries,
+            envelope.MissingProjectEntries,
+            envelope.MissingProjectCellStates,
+            envelope.KarotEntries,
+            envelope.KarotCellStates,
+            envelope.TadilatEntries,
+            envelope.YibfAnaBilgiEntries,
+            envelope.YibfAnaBilgiEvents,
+            envelope.YibfIsTakibiEntries,
+            envelope.YibfCellStates,
+            envelope.TadilatCellStates,
+            envelope.ProjectCatalogEntries,
+            envelope.Personnel,
+            envelope.PersonnelAssignments
         }, _jsonOptions);
 
         return Convert.ToHexString(SHA256.HashData(payloadBytes));
@@ -426,7 +461,9 @@ public sealed class BackupService : IBackupService
            || envelope.YibfAnaBilgiEvents.Count > 0
            || envelope.YibfIsTakibiEntries.Count > 0
            || envelope.YibfCellStates.Count > 0
-           || (envelope.ProjectCatalogEntries?.Count ?? 0) > 0;
+           || (envelope.ProjectCatalogEntries?.Count ?? 0) > 0
+           || (envelope.Personnel?.Count ?? 0) > 0
+           || (envelope.PersonnelAssignments?.Count ?? 0) > 0;
 
     public void ScheduleAutoBackup(TimeSpan interval, Func<Task> callback)
     {
@@ -1023,6 +1060,62 @@ public sealed class BackupService : IBackupService
             UpdatedAt = dto.UpdatedAt
         };
 
+    private static BackupPersonnelDto MapPersonnelToDto(Personnel item)
+        => new()
+        {
+            Id = item.Id,
+            Name = item.Name,
+            SortOrder = item.SortOrder,
+            CreatedAt = item.CreatedAt,
+            UpdatedAt = item.UpdatedAt
+        };
+
+    private static Personnel MapPersonnelToModel(BackupPersonnelDto dto)
+        => new()
+        {
+            Id = dto.Id,
+            Name = dto.Name,
+            SortOrder = dto.SortOrder,
+            CreatedAt = dto.CreatedAt,
+            UpdatedAt = dto.UpdatedAt
+        };
+
+    private static BackupPersonnelAssignmentDto MapPersonnelAssignmentToDto(PersonnelAssignment item)
+        => new()
+        {
+            Id = item.Id,
+            PersonnelId = item.PersonnelId,
+            SourceModule = item.SourceModule,
+            SourceEntryId = item.SourceEntryId,
+            SourceColumnKey = item.SourceColumnKey,
+            Status = item.Status,
+            AssignedAt = item.AssignedAt,
+            CompletedAt = item.CompletedAt,
+            PrioritySnapshot = item.PrioritySnapshot,
+            FieldLabelSnapshot = item.FieldLabelSnapshot,
+            SummarySnapshot = item.SummarySnapshot,
+            ProjectIdentitySnapshot = item.ProjectIdentitySnapshot,
+            ModuleLabelSnapshot = item.ModuleLabelSnapshot
+        };
+
+    private static PersonnelAssignment MapPersonnelAssignmentToModel(BackupPersonnelAssignmentDto dto)
+        => new()
+        {
+            Id = dto.Id,
+            PersonnelId = dto.PersonnelId,
+            SourceModule = dto.SourceModule,
+            SourceEntryId = dto.SourceEntryId,
+            SourceColumnKey = dto.SourceColumnKey,
+            Status = dto.Status,
+            AssignedAt = dto.AssignedAt,
+            CompletedAt = dto.CompletedAt,
+            PrioritySnapshot = dto.PrioritySnapshot,
+            FieldLabelSnapshot = dto.FieldLabelSnapshot ?? string.Empty,
+            SummarySnapshot = dto.SummarySnapshot ?? string.Empty,
+            ProjectIdentitySnapshot = dto.ProjectIdentitySnapshot ?? string.Empty,
+            ModuleLabelSnapshot = dto.ModuleLabelSnapshot ?? string.Empty
+        };
+
     private sealed class BackupEnvelope
     {
         public int SchemaVersion { get; set; }
@@ -1043,6 +1136,34 @@ public sealed class BackupService : IBackupService
         public List<BackupYibfCellStateDto> YibfCellStates { get; set; } = new();
         public List<BackupTadilatCellStateDto> TadilatCellStates { get; set; } = new();
         public List<BackupProjectCatalogEntryDto> ProjectCatalogEntries { get; set; } = new();
+        public List<BackupPersonnelDto> Personnel { get; set; } = new();
+        public List<BackupPersonnelAssignmentDto> PersonnelAssignments { get; set; } = new();
+    }
+
+    private sealed class BackupPersonnelDto
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public int SortOrder { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+    }
+
+    private sealed class BackupPersonnelAssignmentDto
+    {
+        public Guid Id { get; set; }
+        public Guid? PersonnelId { get; set; }
+        public PersonnelAssignmentSourceModule SourceModule { get; set; }
+        public Guid SourceEntryId { get; set; }
+        public string? SourceColumnKey { get; set; }
+        public PersonnelAssignmentStatus Status { get; set; }
+        public DateTime AssignedAt { get; set; }
+        public DateTime? CompletedAt { get; set; }
+        public PersonnelAssignmentPriority PrioritySnapshot { get; set; }
+        public string FieldLabelSnapshot { get; set; } = string.Empty;
+        public string SummarySnapshot { get; set; } = string.Empty;
+        public string ProjectIdentitySnapshot { get; set; } = string.Empty;
+        public string ModuleLabelSnapshot { get; set; } = string.Empty;
     }
 
     private sealed class BackupProjectCatalogEntryDto

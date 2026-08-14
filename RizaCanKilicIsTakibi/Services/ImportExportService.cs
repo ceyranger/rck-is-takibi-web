@@ -341,6 +341,80 @@ public sealed class ImportExportService : IImportExportService
         return Task.CompletedTask;
     }
 
+    public Task ExportWorkbookAsPdfAsync(ExcelWorkbookExportModel workbook, string filePath, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(workbook);
+
+        var sheet = workbook.Sheets.FirstOrDefault()
+            ?? throw new InvalidOperationException("PDF dışa aktarma için geçerli sheet bulunamadı.");
+
+        const string headerColor = "#1F3147";
+        const string zebraColor = "#F5F8FB";
+        const string borderColor = "#D0D7E2";
+        var columnCount = Math.Max(1, sheet.Headers.Count);
+        var title = string.IsNullOrWhiteSpace(sheet.Name) ? "Rapor" : sheet.Name;
+
+        Document.Create(container =>
+        {
+            container.Page(page =>
+            {
+                page.Size(QuestPDF.Helpers.PageSizes.A4);
+                page.Margin(18);
+                page.DefaultTextStyle(x => x.FontSize(9));
+
+                page.Header().Column(column =>
+                {
+                    column.Item().Text(title).FontSize(14).Bold();
+                    column.Item().Text($"Tarih: {DateTime.Now:dd.MM.yyyy HH:mm}").FontColor(QuestPDF.Helpers.Colors.Grey.Darken2);
+                    column.Item().PaddingTop(4).LineHorizontal(1).LineColor(headerColor);
+                });
+
+                page.Footer().AlignCenter().Text(text =>
+                {
+                    text.Span("sayfa ");
+                    text.CurrentPageNumber();
+                    text.Span(" / ");
+                    text.TotalPages();
+                });
+
+                page.Content().PaddingVertical(10).Table(table =>
+                {
+                    table.ColumnsDefinition(columns =>
+                    {
+                        for (var i = 0; i < columnCount; i++)
+                        {
+                            columns.RelativeColumn();
+                        }
+                    });
+
+                    table.Header(header =>
+                    {
+                        for (var i = 0; i < columnCount; i++)
+                        {
+                            var headerText = i < sheet.Headers.Count ? sheet.Headers[i] : string.Empty;
+                            header.Cell().Element(c => HeaderCellStyle(c, headerColor))
+                                .Text(headerText).Bold().FontColor(QuestPDF.Helpers.Colors.White);
+                        }
+                    });
+
+                    for (var rowIndex = 0; rowIndex < sheet.Rows.Count; rowIndex++)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                        var row = sheet.Rows[rowIndex];
+                        var background = rowIndex % 2 == 1 ? zebraColor : null;
+                        for (var i = 0; i < columnCount; i++)
+                        {
+                            var value = i < row.Cells.Count ? row.Cells[i].Value ?? string.Empty : string.Empty;
+                            table.Cell().Element(c => BodyCellStyle(c, borderColor, background)).Text(value);
+                        }
+                    }
+                });
+            });
+        }).GeneratePdf(filePath);
+
+        return Task.CompletedTask;
+    }
+
     private static IContainer HeaderCellStyle(IContainer container, string headerColor)
         => container
             .Background(headerColor)

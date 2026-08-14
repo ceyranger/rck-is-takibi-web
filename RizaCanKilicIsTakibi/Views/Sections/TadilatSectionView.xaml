@@ -44,7 +44,7 @@
                     <Setter.Value>
                         <ContextMenu>
                             <MenuItem Header="Yeni Satır Ekle"
-                                      Command="{Binding PlacementTarget.Tag.AddEntryCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.TadilatModule.AddEntryCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext.District, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                         </ContextMenu>
                     </Setter.Value>
@@ -104,17 +104,17 @@
 
             <DataTemplate x:Key="TadilatCellTemplate" DataType="{x:Type viewModels:TadilatCellViewModel}">
                 <Border Style="{StaticResource TadilatCellBorderStyle}"
-                        Tag="{Binding DataContext.TadilatModule, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}"
                         Background="{Binding BackgroundBrush}"
                         behaviors:InlineEditActivatorBehavior.BeginEditCommand="{Binding DataContext.TadilatModule.BeginCellEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                         behaviors:InlineEditActivatorBehavior.CommandParameter="{Binding}">
                     <Border.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Kopyala"
-                                      Command="{Binding PlacementTarget.Tag.CopyCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.TadilatModule.CopyCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                             <MenuItem Header="Yapıştır"
-                                      Command="{Binding PlacementTarget.Tag.PasteCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.TadilatModule.PasteCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
                                 <MenuItem.Style>
                                     <Style TargetType="MenuItem">
@@ -129,20 +129,20 @@
                             </MenuItem>
                             <Separator/>
                             <MenuItem Header="Üste Satır Ekle"
-                                      Command="{Binding PlacementTarget.Tag.InsertEntryAboveCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.TadilatModule.InsertEntryAboveCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                             <MenuItem Header="Alta Satır Ekle"
-                                      Command="{Binding PlacementTarget.Tag.InsertEntryBelowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.TadilatModule.InsertEntryBelowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                             <MenuItem Header="Yukarı Taşı"
-                                      Command="{Binding PlacementTarget.Tag.MoveEntryUpCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.TadilatModule.MoveEntryUpCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                             <MenuItem Header="Aşağı Taşı"
-                                      Command="{Binding PlacementTarget.Tag.MoveEntryDownCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.TadilatModule.MoveEntryDownCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                             <Separator/>
                             <MenuItem Header="BİTEN'E TAŞI"
-                                      Command="{Binding PlacementTarget.Tag.MoveToBitenCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.TadilatModule.MoveToBitenCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
                                 <MenuItem.Style>
                                     <Style TargetType="MenuItem">
@@ -156,7 +156,7 @@
                                 </MenuItem.Style>
                             </MenuItem>
                             <MenuItem Header="AKTİF'E AL"
-                                      Command="{Binding PlacementTarget.Tag.MoveToAktifCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.TadilatModule.MoveToAktifCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
                                 <MenuItem.Style>
                                     <Style TargetType="MenuItem">
@@ -181,23 +181,23 @@
                                     </Style>
                                 </MenuItem.Style>
                                 <MenuItem Header="Kırmızı"
-                                          Command="{Binding PlacementTarget.Tag.SetRowColorRedCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                          Command="{Binding PlacementTarget.Tag.TadilatModule.SetRowColorRedCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                           CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                 <MenuItem Header="Sarı"
-                                          Command="{Binding PlacementTarget.Tag.SetRowColorYellowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                          Command="{Binding PlacementTarget.Tag.TadilatModule.SetRowColorYellowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                           CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                 <MenuItem Header="Yeşil"
-                                          Command="{Binding PlacementTarget.Tag.SetRowColorGreenCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                          Command="{Binding PlacementTarget.Tag.TadilatModule.SetRowColorGreenCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                           CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                 <MenuItem Header="Mavi"
-                                          Command="{Binding PlacementTarget.Tag.SetRowColorBlueCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                          Command="{Binding PlacementTarget.Tag.TadilatModule.SetRowColorBlueCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                           CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                 <MenuItem Header="Gri"
-                                          Command="{Binding PlacementTarget.Tag.SetRowColorGrayCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                          Command="{Binding PlacementTarget.Tag.TadilatModule.SetRowColorGrayCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                           CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                 <Separator/>
                                 <MenuItem Header="Rengi Temizle"
-                                          Command="{Binding PlacementTarget.Tag.ClearRowColorCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                          Command="{Binding PlacementTarget.Tag.TadilatModule.ClearRowColorCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                           CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                             </MenuItem>
                             <Separator>
@@ -213,7 +213,7 @@
                                 </Separator.Style>
                             </Separator>
                             <MenuItem Header="Not Düzenle"
-                                      Command="{Binding PlacementTarget.Tag.EditCellNoteCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.TadilatModule.EditCellNoteCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
                                 <MenuItem.Style>
                                     <Style TargetType="MenuItem">
@@ -239,7 +239,7 @@
                                 </Separator.Style>
                             </Separator>
                             <MenuItem Header="Kırmızı"
-                                      Command="{Binding PlacementTarget.Tag.SetCellColorRedCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.TadilatModule.SetCellColorRedCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
                                 <MenuItem.Style>
                                     <Style TargetType="MenuItem">
@@ -253,7 +253,7 @@
                                 </MenuItem.Style>
                             </MenuItem>
                             <MenuItem Header="Sarı"
-                                      Command="{Binding PlacementTarget.Tag.SetCellColorYellowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.TadilatModule.SetCellColorYellowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
                                 <MenuItem.Style>
                                     <Style TargetType="MenuItem">
@@ -267,7 +267,7 @@
                                 </MenuItem.Style>
                             </MenuItem>
                             <MenuItem Header="Yeşil"
-                                      Command="{Binding PlacementTarget.Tag.SetCellColorGreenCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.TadilatModule.SetCellColorGreenCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
                                 <MenuItem.Style>
                                     <Style TargetType="MenuItem">
@@ -281,7 +281,7 @@
                                 </MenuItem.Style>
                             </MenuItem>
                             <MenuItem Header="Mavi"
-                                      Command="{Binding PlacementTarget.Tag.SetCellColorBlueCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.TadilatModule.SetCellColorBlueCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
                                 <MenuItem.Style>
                                     <Style TargetType="MenuItem">
@@ -295,7 +295,7 @@
                                 </MenuItem.Style>
                             </MenuItem>
                             <MenuItem Header="Gri"
-                                      Command="{Binding PlacementTarget.Tag.SetCellColorGrayCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.TadilatModule.SetCellColorGrayCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
                                 <MenuItem.Style>
                                     <Style TargetType="MenuItem">
@@ -309,8 +309,62 @@
                                 </MenuItem.Style>
                             </MenuItem>
                             <MenuItem Header="Rengi Temizle"
-                                      Command="{Binding PlacementTarget.Tag.ClearCellColorCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.TadilatModule.ClearCellColorCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                <MenuItem.Style>
+                                    <Style TargetType="MenuItem">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding PlacementTarget.DataContext.IsInteractive, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="False">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </MenuItem.Style>
+                            </MenuItem>
+                            <Separator>
+                                <Separator.Style>
+                                    <Style TargetType="Separator">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding PlacementTarget.DataContext.IsInteractive, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="False">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Separator.Style>
+                            </Separator>
+                            <MenuItem Header="Personel ata (hücre)"
+                                      Command="{Binding PlacementTarget.Tag.AssignPersonnelToTadilatCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                <MenuItem.Style>
+                                    <Style TargetType="MenuItem">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding PlacementTarget.DataContext.IsInteractive, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="False">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </MenuItem.Style>
+                            </MenuItem>
+                            <MenuItem Header="Personel ata (satır)"
+                                      Command="{Binding PlacementTarget.Tag.AssignPersonnelToTadilatRowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                <MenuItem.Style>
+                                    <Style TargetType="MenuItem">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding PlacementTarget.DataContext.IsInteractive, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="False">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </MenuItem.Style>
+                            </MenuItem>
+                            <MenuItem Header="Atamayı kaldır"
+                                      Command="{Binding PlacementTarget.Tag.RemovePersonnelFromTadilatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
                                 <MenuItem.Style>
                                     <Style TargetType="MenuItem">
                                         <Setter Property="Visibility" Value="Visible"/>
@@ -627,7 +681,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Button Grid.Column="0"
-                        Tag="{Binding DataContext.TadilatModule, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}"
                         Content="{Binding District}"
                         MinHeight="44"
                         Style="{StaticResource TadilatDistrictButtonStyle}"/>

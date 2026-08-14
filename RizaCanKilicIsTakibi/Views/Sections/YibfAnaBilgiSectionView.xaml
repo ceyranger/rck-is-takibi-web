@@ -180,8 +180,19 @@
                             <Border Style="{StaticResource YibfSelectableSurfaceStyle}"
                                     Padding="0"
                                     Margin="0,0,0,8"
+                                    Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}"
                                     behaviors:ClickCommandBehavior.Command="{Binding DataContext.YibfModule.SelectAnaBilgiEventCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                     behaviors:ClickCommandBehavior.CommandParameter="{Binding Model}">
+                                <Border.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Personel ata"
+                                                  Command="{Binding PlacementTarget.Tag.AssignPersonnelToYibfEventCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                  CommandParameter="{Binding PlacementTarget.DataContext.Model, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                        <MenuItem Header="Atamayı kaldır"
+                                                  Command="{Binding PlacementTarget.Tag.RemovePersonnelFromYibfEventCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                  CommandParameter="{Binding PlacementTarget.DataContext.Model, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                    </ContextMenu>
+                                </Border.ContextMenu>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="110"/>
@@ -191,7 +202,28 @@
                             <TextBlock Text="{Binding DateText}" Foreground="{Binding AccentForegroundBrush}" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                                     <StackPanel Grid.Column="1" Margin="12,12,12,12">
-                                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" TextAlignment="Left" HorizontalAlignment="Left" FontWeight="SemiBold"/>
+                                        <DockPanel LastChildFill="True">
+                                            <TextBlock Text="{Binding Model.AssignedPersonnelBadge}"
+                                                       DockPanel.Dock="Right"
+                                                       FontSize="11"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="{StaticResource Brush.Primary}"
+                                                       Margin="8,0,0,0"
+                                                       VerticalAlignment="Top"
+                                                       ToolTip="{Binding Model.AssignedPersonnelBadge}">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Model.HasAssignedPersonnel}" Value="True">
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                            <TextBlock Text="{Binding Description}" TextWrapping="Wrap" TextAlignment="Left" HorizontalAlignment="Left" FontWeight="SemiBold"/>
+                                        </DockPanel>
                                         <TextBlock Text="{Binding NoteText}" Margin="0,6,0,0" Foreground="{StaticResource Brush.TextSecondary}" TextWrapping="Wrap" TextAlignment="Left" HorizontalAlignment="Left" Visibility="{Binding HasNote, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                                     </StackPanel>
                                 </Grid>

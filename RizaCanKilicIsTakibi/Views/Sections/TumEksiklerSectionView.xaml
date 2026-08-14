@@ -79,8 +79,9 @@
                 <Grid Grid.Row="1" Margin="0,12,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="1.2*"/>
-                        <ColumnDefinition Width="1.2*"/>
+                        <ColumnDefinition Width="1.1*"/>
+                        <ColumnDefinition Width="1.1*"/>
+                        <ColumnDefinition Width="1.1*"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
@@ -100,12 +101,18 @@
                               Margin="0,0,8,0"
                               ItemsSource="{Binding TumEksikler.SeverityFilters}"
                               SelectedItem="{Binding TumEksikler.SelectedSeverityFilter}"/>
-                    <CheckBox Grid.Column="3"
+                    <ComboBox Grid.Column="3"
+                              Height="38"
+                              Margin="0,0,8,0"
+                              ToolTip="Personel filtresi"
+                              ItemsSource="{Binding TumEksikler.PersonnelFilters}"
+                              SelectedItem="{Binding TumEksikler.SelectedPersonnelFilter}"/>
+                    <CheckBox Grid.Column="4"
                               Margin="0,0,12,0"
                               VerticalAlignment="Center"
                               Content="Eşleşmeyenler"
                               IsChecked="{Binding TumEksikler.ShowUnmatched}"/>
-                    <CheckBox Grid.Column="4"
+                    <CheckBox Grid.Column="5"
                               VerticalAlignment="Center"
                               Content="Boş zorunlu"
                               IsChecked="{Binding TumEksikler.ShowBlankRequired}"/>

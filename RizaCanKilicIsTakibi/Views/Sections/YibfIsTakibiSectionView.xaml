@@ -47,7 +47,7 @@
 
             <DataTemplate x:Key="YibfCellTemplate" DataType="{x:Type viewModels:YibfCellViewModel}">
                 <Border Style="{StaticResource TadilatCellBorderStyle}"
-                        Tag="{Binding DataContext.YibfModule, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}"
                         Background="{Binding BackgroundBrush}"
                         IsEnabled="{Binding IsInteractive}"
                         behaviors:InlineEditActivatorBehavior.BeginEditCommand="{Binding DataContext.YibfModule.BeginCellEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
@@ -55,40 +55,50 @@
                     <Border.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Kopyala"
-                                      Command="{Binding PlacementTarget.Tag.CopyCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.YibfModule.CopyCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                             <MenuItem Header="Yapıştır"
-                                      Command="{Binding PlacementTarget.Tag.PasteCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.YibfModule.PasteCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                             <Separator/>
                             <MenuItem Header="Yukarı Taşı"
-                                      Command="{Binding PlacementTarget.Tag.MoveIsTakibiEntryUpCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.YibfModule.MoveIsTakibiEntryUpCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                             <MenuItem Header="Aşağı Taşı"
-                                      Command="{Binding PlacementTarget.Tag.MoveIsTakibiEntryDownCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.YibfModule.MoveIsTakibiEntryDownCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                             <Separator/>
                             <MenuItem Header="Not Düzenle"
-                                      Command="{Binding PlacementTarget.Tag.EditCellNoteCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.YibfModule.EditCellNoteCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                             <Separator/>
+                            <MenuItem Header="Personel ata (hücre)"
+                                      Command="{Binding PlacementTarget.Tag.AssignPersonnelToYibfCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                            <MenuItem Header="Personel ata (satır)"
+                                      Command="{Binding PlacementTarget.Tag.AssignPersonnelToYibfRowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                            <MenuItem Header="Atamayı kaldır"
+                                      Command="{Binding PlacementTarget.Tag.RemovePersonnelFromYibfCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                            <Separator/>
                             <MenuItem Header="Kırmızı"
-                                      Command="{Binding PlacementTarget.Tag.SetCellColorRedCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.YibfModule.SetCellColorRedCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                             <MenuItem Header="Sarı"
-                                      Command="{Binding PlacementTarget.Tag.SetCellColorYellowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.YibfModule.SetCellColorYellowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                             <MenuItem Header="Yeşil"
-                                      Command="{Binding PlacementTarget.Tag.SetCellColorGreenCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.YibfModule.SetCellColorGreenCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                             <MenuItem Header="Mavi"
-                                      Command="{Binding PlacementTarget.Tag.SetCellColorBlueCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.YibfModule.SetCellColorBlueCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                             <MenuItem Header="Gri"
-                                      Command="{Binding PlacementTarget.Tag.SetCellColorGrayCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.YibfModule.SetCellColorGrayCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                             <MenuItem Header="Rengi Temizle"
-                                      Command="{Binding PlacementTarget.Tag.ClearCellColorCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.YibfModule.ClearCellColorCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                         </ContextMenu>
                     </Border.ContextMenu>
@@ -107,6 +117,26 @@
                         </ContentControl>
 
                         <Border Style="{StaticResource CellNoteBadgeStyle}"/>
+                        <TextBlock Text="{Binding Row.Entry.AssignedPersonnelBadge}"
+                                   FontSize="9"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource Brush.Primary}"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Bottom"
+                                   Margin="4,0,0,2"
+                                   IsHitTestVisible="False"
+                                   ToolTip="{Binding Row.Entry.AssignedPersonnelBadge}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Row.Entry.HasAssignedPersonnel}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                     </Grid>
                 </Border>
             </DataTemplate>

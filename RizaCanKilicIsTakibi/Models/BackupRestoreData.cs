@@ -16,4 +16,6 @@ public sealed class BackupRestoreData
     public IReadOnlyList<YibfIsTakibiEntry> YibfIsTakibiEntries { get; init; } = Array.Empty<YibfIsTakibiEntry>();
     public IReadOnlyList<YibfCellState> YibfCellStates { get; init; } = Array.Empty<YibfCellState>();
     public IReadOnlyList<ProjectCatalogEntry> ProjectCatalogEntries { get; init; } = Array.Empty<ProjectCatalogEntry>();
+    public IReadOnlyList<Personnel> Personnel { get; init; } = Array.Empty<Personnel>();
+    public IReadOnlyList<PersonnelAssignment> PersonnelAssignments { get; init; } = Array.Empty<PersonnelAssignment>();
 }

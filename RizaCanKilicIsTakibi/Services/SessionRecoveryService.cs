@@ -82,6 +82,8 @@ public sealed class SessionRecoveryService : ISessionRecoveryService
         IEnumerable<TadilatCellState>? tadilatCellStates = null,
         IEnumerable<QuickTaskTemplate>? quickTaskTemplates = null,
         IEnumerable<ProjectCatalogEntry>? projectCatalogEntries = null,
+        IEnumerable<Personnel>? personnel = null,
+        IEnumerable<PersonnelAssignment>? personnelAssignments = null,
         CancellationToken cancellationToken = default)
     {
         MarkDirtySession();
@@ -101,6 +103,8 @@ public sealed class SessionRecoveryService : ISessionRecoveryService
             tadilatCellStates: tadilatCellStates,
             quickTaskTemplates: quickTaskTemplates,
             projectCatalogEntries: projectCatalogEntries,
+            personnel: personnel,
+            personnelAssignments: personnelAssignments,
             cancellationToken: cancellationToken);
     }
 

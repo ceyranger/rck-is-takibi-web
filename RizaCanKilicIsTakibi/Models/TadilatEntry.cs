@@ -20,6 +20,7 @@ public sealed class TadilatEntry : ObservableObject
     private int _displayOrder;
     private DateTime _createdAt = DateTime.Now;
     private DateTime _updatedAt = DateTime.Now;
+    private string _assignedPersonnelBadge = string.Empty;
 
     public Guid Id
     {
@@ -116,4 +117,13 @@ public sealed class TadilatEntry : ObservableObject
         get => _updatedAt;
         set => SetProperty(ref _updatedAt, value);
     }
+
+    /// <summary>UI-only badge; not persisted.</summary>
+    public string AssignedPersonnelBadge
+    {
+        get => _assignedPersonnelBadge;
+        set => SetProperty(ref _assignedPersonnelBadge, value ?? string.Empty);
+    }
+
+    public bool HasAssignedPersonnel => !string.IsNullOrWhiteSpace(AssignedPersonnelBadge);
 }

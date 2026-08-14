@@ -417,6 +417,39 @@ public sealed class YibfModuleViewModel : ViewModelBase
     public IReadOnlyList<YibfCellState> GetCellStatesSnapshot()
         => CellStates.OrderBy(item => item.EntryId).ThenBy(item => item.ColumnKey, StringComparer.OrdinalIgnoreCase).Select(CloneCellState).ToList();
 
+    public void RefreshPersonnelBadges(IPersonnelAssignmentService service)
+    {
+        foreach (var entry in IsTakibiEntries)
+        {
+            entry.AssignedPersonnelBadge = service.GetBadgeText(PersonnelAssignmentSourceModule.YibfIsTakibi, entry.Id);
+        }
+
+        foreach (var evt in AnaBilgiEvents)
+        {
+            evt.AssignedPersonnelBadge = service.GetBadgeText(PersonnelAssignmentSourceModule.YibfAnaBilgiEvent, evt.Id);
+        }
+    }
+
+    public string? GetCellBackgroundColor(Guid entryId, string columnKey)
+    {
+        var color = NormalizeCellColor(GetCellState(entryId, columnKey)?.BackgroundColor);
+        return string.IsNullOrWhiteSpace(color) ? null : color;
+    }
+
+    public IReadOnlyList<string> GetRedYellowColumnKeys(Guid entryId)
+    {
+        return CellStates
+            .Where(state => state.EntryId == entryId)
+            .Where(state =>
+            {
+                var color = NormalizeCellColor(state.BackgroundColor);
+                return string.Equals(color, StrongRedColor, StringComparison.OrdinalIgnoreCase)
+                       || string.Equals(color, StrongYellowColor, StringComparison.OrdinalIgnoreCase);
+            })
+            .Select(state => state.ColumnKey)
+            .ToList();
+    }
+
     public void LoadFromBackup(
         IEnumerable<YibfAnaBilgiEntry> anaBilgiEntries,
         IEnumerable<YibfAnaBilgiEvent> anaBilgiEvents,

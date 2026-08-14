@@ -50,4 +50,5 @@
 - 2026-08-06: Genel İş Takibi sağ **Görev Detayı** paneli kaldırıldı; Acil/Genel 2 sütun. Not/proje/özel iş `TaskDetailWindow` modal (liste üstü **Detay** butonu). Seçimde `DetailPanel` otomatik bind yok. Tests 214/214. Canonical publish exe güncellendi; `Data\tasks.db` (1208320) / `Data\last-save.json` (67) size/timestamp değişmedi; `Backup` ve `Logs` korundu.
 - 2026-08-06: Tadilat Takibi ilçe listesinde MERKEZ ayrı grup olarak gösterilmiyor; `DistrictCatalog.GetDisplayDistrict` MERKEZ→SİNOP gruplama, `TadilatDistricts` MERKEZ hariç. Saklanan `District` değeri değiştirilmez. Tests 216/216. Canonical publish güncellendi; canlı Data korundu.
 - 2026-08-06: Tadilat MERKEZ boş placeholder bug: `ReplaceDistricts` ve satır etiketleri `GetDisplayDistrict` kullanır; MERKEZ kayıtları SİNOP altında, boş MERKEZ satırı yok. Tests 217/217. Canonical publish güncellendi.
-- 2026-08-07: Katalog düzenleme bağlı kayıt senkronu: Proje Takibi (YibfAnaBilgi) kimlik alanları `OverwriteLinkedIdentityFields` kapsamına alındı; katalog düzenleme sonrası bağlı kayıtlar otomatik senkronize edilir. Tests 217/217; publish bekliyor.
+- 2026-08-15: Personel Görev Takibi completed: SQLite Personnel/PersonnelAssignments, backup schema v4, Personel Görev sekmesi, hibrit satır/hücre ataması, rozetler, otomatik tamamlanma, TÜM EKSİKLER personel filtresi, Excel/PDF. Tests 219/219.
+

@@ -12,5 +12,6 @@ public enum MainNavigationTab
     YibfIsTakibi = 7,
     Ayarlar = 8,
     TumEksikler = 9,
-    Arama = 10
+    Arama = 10,
+    PersonelGorevTakibi = 11
 }

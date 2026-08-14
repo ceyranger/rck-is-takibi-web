@@ -299,17 +299,24 @@
                                                                             Background="{Binding RowBackground}"
                                                                             BorderBrush="{Binding RowBorderBrush}"
                                                                             IsEnabled="{Binding IsInteractive}"
-                                                                            Tag="{Binding DataContext.ActionModule, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                            Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}"
                                                                             MinHeight="42"
                                                                             behaviors:ClickCommandBehavior.Command="{Binding DataContext.ActionModule.SelectEntryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                                             behaviors:ClickCommandBehavior.CommandParameter="{Binding Entry}">
                                                                         <Border.ContextMenu>
                                                                             <ContextMenu>
                                                                                 <MenuItem Header="Üste Satır Ekle"
-                                                                                          Command="{Binding PlacementTarget.Tag.InsertActionEntryAboveCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                                                          Command="{Binding PlacementTarget.Tag.ActionModule.InsertActionEntryAboveCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                                                           CommandParameter="{Binding PlacementTarget.DataContext.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                                                                 <MenuItem Header="Alta Satır Ekle"
-                                                                                          Command="{Binding PlacementTarget.Tag.InsertActionEntryBelowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                                                          Command="{Binding PlacementTarget.Tag.ActionModule.InsertActionEntryBelowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                                                          CommandParameter="{Binding PlacementTarget.DataContext.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                                                                <Separator/>
+                                                                                <MenuItem Header="Personel ata"
+                                                                                          Command="{Binding PlacementTarget.Tag.AssignPersonnelToActionEntryCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                                                          CommandParameter="{Binding PlacementTarget.DataContext.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                                                                <MenuItem Header="Atamayı kaldır"
+                                                                                          Command="{Binding PlacementTarget.Tag.RemovePersonnelFromActionEntryCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                                                           CommandParameter="{Binding PlacementTarget.DataContext.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                                                             </ContextMenu>
                                                                         </Border.ContextMenu>
@@ -344,18 +351,39 @@
                                                                                     BorderBrush="{Binding RowBorderBrush}"
                                                                                     behaviors:InlineEditActivatorBehavior.BeginEditCommand="{Binding DataContext.ActionModule.BeginWorkEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                                                     behaviors:InlineEditActivatorBehavior.CommandParameter="{Binding}">
-                                                                                <ContentControl Content="{Binding}">
-                                                                                    <ContentControl.Style>
-                                                                                        <Style TargetType="ContentControl">
-                                                                                            <Setter Property="ContentTemplate" Value="{StaticResource ActionWorkDisplayTemplate}"/>
-                                                                                            <Style.Triggers>
-                                                                                                <DataTrigger Binding="{Binding IsEditingWork}" Value="True">
-                                                                                                    <Setter Property="ContentTemplate" Value="{StaticResource ActionWorkEditorTemplate}"/>
-                                                                                                </DataTrigger>
-                                                                                            </Style.Triggers>
-                                                                                        </Style>
-                                                                                    </ContentControl.Style>
-                                                                                </ContentControl>
+                                                                                <Grid>
+                                                                                    <ContentControl Content="{Binding}">
+                                                                                        <ContentControl.Style>
+                                                                                            <Style TargetType="ContentControl">
+                                                                                                <Setter Property="ContentTemplate" Value="{StaticResource ActionWorkDisplayTemplate}"/>
+                                                                                                <Style.Triggers>
+                                                                                                    <DataTrigger Binding="{Binding IsEditingWork}" Value="True">
+                                                                                                        <Setter Property="ContentTemplate" Value="{StaticResource ActionWorkEditorTemplate}"/>
+                                                                                                    </DataTrigger>
+                                                                                                </Style.Triggers>
+                                                                                            </Style>
+                                                                                        </ContentControl.Style>
+                                                                                    </ContentControl>
+                                                                                    <TextBlock Text="{Binding Entry.AssignedPersonnelBadge}"
+                                                                                               FontSize="10"
+                                                                                               FontWeight="SemiBold"
+                                                                                               Foreground="{StaticResource Brush.Primary}"
+                                                                                               HorizontalAlignment="Right"
+                                                                                               VerticalAlignment="Top"
+                                                                                               Margin="0,2,4,0"
+                                                                                               ToolTip="{Binding Entry.AssignedPersonnelBadge}">
+                                                                                        <TextBlock.Style>
+                                                                                            <Style TargetType="TextBlock">
+                                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                                <Style.Triggers>
+                                                                                                    <DataTrigger Binding="{Binding Entry.HasAssignedPersonnel}" Value="True">
+                                                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                                                    </DataTrigger>
+                                                                                                </Style.Triggers>
+                                                                                            </Style>
+                                                                                        </TextBlock.Style>
+                                                                                    </TextBlock>
+                                                                                </Grid>
                                                                             </Border>
                                                                         </Grid>
                                                                     </Border>

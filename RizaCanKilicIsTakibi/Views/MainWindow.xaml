@@ -275,32 +275,39 @@
 
         <DataTemplate x:Key="MissingProjectCellTemplate">
             <Border Background="{Binding BackgroundBrush}"
-                    Tag="{Binding DataContext.MissingProjectModule, RelativeSource={RelativeSource AncestorType=Window}}"
+                    Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}"
                     SnapsToDevicePixels="True"
                     behaviors:InlineEditActivatorBehavior.BeginEditCommand="{Binding DataContext.MissingProjectModule.BeginCellEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                     behaviors:InlineEditActivatorBehavior.CommandParameter="{Binding}">
                 <Border.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Üste Satır Ekle"
-                                  Command="{Binding PlacementTarget.Tag.InsertEntryAboveCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  Command="{Binding PlacementTarget.Tag.MissingProjectModule.InsertEntryAboveCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                   CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                         <MenuItem Header="Alta Satır Ekle"
-                                  Command="{Binding PlacementTarget.Tag.InsertEntryBelowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  Command="{Binding PlacementTarget.Tag.MissingProjectModule.InsertEntryBelowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                   CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                         <Separator/>
                         <MenuItem Header="Yukarı Taşı"
-                                  Command="{Binding PlacementTarget.Tag.MoveEntryUpCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  Command="{Binding PlacementTarget.Tag.MissingProjectModule.MoveEntryUpCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                   CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                         <MenuItem Header="Aşağı Taşı"
-                                  Command="{Binding PlacementTarget.Tag.MoveEntryDownCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  Command="{Binding PlacementTarget.Tag.MissingProjectModule.MoveEntryDownCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                   CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                         <Separator/>
                         <MenuItem Header="Kopyala"
-                                  Command="{Binding PlacementTarget.Tag.CopyCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  Command="{Binding PlacementTarget.Tag.MissingProjectModule.CopyCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                   CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                         <MenuItem Header="Yapıştır"
-                                  Command="{Binding PlacementTarget.Tag.PasteCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  Command="{Binding PlacementTarget.Tag.MissingProjectModule.PasteCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                   CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                        <Separator/>
+                        <MenuItem Header="Personel ata"
+                                  Command="{Binding PlacementTarget.Tag.AssignPersonnelToMissingProjectCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                        <MenuItem Header="Atamayı kaldır"
+                                  Command="{Binding PlacementTarget.Tag.RemovePersonnelFromMissingProjectCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                     </ContextMenu>
                 </Border.ContextMenu>
                 <Grid>
@@ -623,6 +630,22 @@
                                        Foreground="{StaticResource Brush.TextSecondary}"/>
                         </StackPanel>
                     </Border>
+                    <Button Content="PERSONEL GÖREV"
+                            Command="{Binding SelectMainTabCommand}"
+                            CommandParameter="{x:Static models:MainNavigationTab.PersonelGorevTakibi}"
+                            Margin="0,0,0,8">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SelectedMainTab}" Value="{x:Static models:MainNavigationTab.PersonelGorevTakibi}">
+                                        <Setter Property="Background" Value="{StaticResource Brush.Primary}"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
                     <Button Content="AYARLAR"
                             Command="{Binding SelectMainTabCommand}"
                             CommandParameter="{x:Static models:MainNavigationTab.Ayarlar}"
@@ -880,6 +903,8 @@
                                     <TextBlock Text="Acil İşler" FontFamily="{StaticResource Font.Primary}" FontWeight="SemiBold" FontSize="16" DockPanel.Dock="Left"/>
                                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
                                         <Button Content="Detay" Command="{Binding OpenSelectedUrgentTaskDetailCommand}" Style="{StaticResource GhostButton}" ToolTip="Not, proje ve özel iş düzenle"/>
+                                        <Button Content="Personel ata" Command="{Binding AssignPersonnelToUrgentTaskCommand}" Style="{StaticResource GhostButton}" ToolTip="Seçili göreve personel ata"/>
+                                        <Button Content="Atamayı kaldır" Command="{Binding RemovePersonnelFromUrgentTaskCommand}" Style="{StaticResource GhostButton}" ToolTip="Seçili görevden personel atamasını kaldır"/>
                                         <Button Content="Hızlı" Command="{Binding OpenQuickUrgentTaskDialogCommand}" Style="{StaticResource GhostButton}" ToolTip="Şablondan Hızlı İş Ekle"/>
                                         <Button Content="+" Command="{Binding AddUrgentTaskCommand}" Style="{StaticResource IconButton}" ToolTip="Yeni Görev Ekle"/>
                                         <Button Content="Sil" Command="{Binding DeleteUrgentTaskCommand}" Style="{StaticResource GhostButton}" ToolTip="Seçili Görevi Sil (Delete)"/>
@@ -903,7 +928,21 @@
                                           behaviors:DataGridDragDropBehavior.TargetBoardType="{x:Static models:TaskBoardType.Acil}"
                                          behaviors:DataGridEditActivationBehavior.IsEnabled="True">
                                     <DataGrid.RowStyle>
-                                        <Style TargetType="DataGridRow" BasedOn="{StaticResource TaskBoardRowStyle}"/>
+                                        <Style TargetType="DataGridRow" BasedOn="{StaticResource TaskBoardRowStyle}">
+                                            <Setter Property="Tag" Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=DataGrid}}"/>
+                                            <Setter Property="ContextMenu">
+                                                <Setter.Value>
+                                                    <ContextMenu>
+                                                        <MenuItem Header="Personel ata"
+                                                                  Command="{Binding PlacementTarget.Tag.AssignPersonnelToTaskCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                                  CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                                        <MenuItem Header="Atamayı kaldır"
+                                                                  Command="{Binding PlacementTarget.Tag.RemovePersonnelFromTaskCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                                  CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                                    </ContextMenu>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
                                     </DataGrid.RowStyle>
                                     <DataGrid.Columns>
                                         <DataGridTemplateColumn Header="" Width="28" CanUserResize="False" CanUserSort="False">
@@ -916,6 +955,28 @@
                                                             ToolTip="Sürükleyerek diğer listeye taşı">
                                                         <TextBlock Style="{StaticResource TaskBoardDragHandleStyle}"/>
                                                     </Border>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="" Width="56" CanUserResize="False" CanUserSort="False">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding AssignedPersonnelBadge}"
+                                                               FontSize="11"
+                                                               VerticalAlignment="Center"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               ToolTip="{Binding AssignedPersonnelBadge}">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding HasAssignedPersonnel}" Value="True">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
@@ -954,6 +1015,8 @@
                                     <TextBlock Text="Genel İşler" FontFamily="{StaticResource Font.Primary}" FontWeight="SemiBold" FontSize="16" DockPanel.Dock="Left"/>
                                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
                                         <Button Content="Detay" Command="{Binding OpenSelectedGeneralTaskDetailCommand}" Style="{StaticResource GhostButton}" ToolTip="Not, proje ve özel iş düzenle"/>
+                                        <Button Content="Personel ata" Command="{Binding AssignPersonnelToGeneralTaskCommand}" Style="{StaticResource GhostButton}" ToolTip="Seçili göreve personel ata"/>
+                                        <Button Content="Atamayı kaldır" Command="{Binding RemovePersonnelFromGeneralTaskCommand}" Style="{StaticResource GhostButton}" ToolTip="Seçili görevden personel atamasını kaldır"/>
                                         <Button Content="+" Command="{Binding AddGeneralTaskCommand}" Style="{StaticResource IconButton}" ToolTip="Yeni Görev Ekle"/>
                                         <Button Content="Sil" Command="{Binding DeleteGeneralTaskCommand}" Style="{StaticResource GhostButton}" ToolTip="Seçili Görevi Sil (Delete)"/>
                                         <Button Content="↑" Command="{Binding MoveTaskUpCommand}" Style="{StaticResource IconButton}" ToolTip="Yukarı Taşı"/>
@@ -981,7 +1044,21 @@
                                            behaviors:DataGridDragDropBehavior.MoveTaskCommand="{Binding MoveTaskToBoardCommand}"
                                            behaviors:DataGridDragDropBehavior.TargetBoardType="{x:Static models:TaskBoardType.Genel}">
                                     <DataGrid.RowStyle>
-                                        <Style TargetType="DataGridRow" BasedOn="{StaticResource TaskBoardRowStyle}"/>
+                                        <Style TargetType="DataGridRow" BasedOn="{StaticResource TaskBoardRowStyle}">
+                                            <Setter Property="Tag" Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=DataGrid}}"/>
+                                            <Setter Property="ContextMenu">
+                                                <Setter.Value>
+                                                    <ContextMenu>
+                                                        <MenuItem Header="Personel ata"
+                                                                  Command="{Binding PlacementTarget.Tag.AssignPersonnelToTaskCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                                  CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                                        <MenuItem Header="Atamayı kaldır"
+                                                                  Command="{Binding PlacementTarget.Tag.RemovePersonnelFromTaskCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                                  CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                                    </ContextMenu>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
                                     </DataGrid.RowStyle>
                                     <DataGrid.Columns>
                                         <DataGridTemplateColumn Header="" Width="28" CanUserResize="False" CanUserSort="False">
@@ -994,6 +1071,28 @@
                                                             ToolTip="Sürükleyerek diğer listeye taşı">
                                                         <TextBlock Style="{StaticResource TaskBoardDragHandleStyle}"/>
                                                     </Border>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="" Width="56" CanUserResize="False" CanUserSort="False">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding AssignedPersonnelBadge}"
+                                                               FontSize="11"
+                                                               VerticalAlignment="Center"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               ToolTip="{Binding AssignedPersonnelBadge}">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding HasAssignedPersonnel}" Value="True">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
@@ -1081,6 +1180,8 @@
                                 </StackPanel>
                                 <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
                                     <Button Content="Kayıt Ekle" Command="{Binding MissingProjectModule.AddEntryCommand}" ToolTip="Yeni Kayıt Ekle"/>
+                                    <Button Content="Personel ata" Command="{Binding AssignPersonnelToMissingProjectCommand}" CommandParameter="{Binding MissingProjectModule.SelectedEntry}" Style="{StaticResource GhostButton}" ToolTip="Seçili kayda personel ata"/>
+                                    <Button Content="Atamayı kaldır" Command="{Binding RemovePersonnelFromMissingProjectCommand}" CommandParameter="{Binding MissingProjectModule.SelectedEntry}" Style="{StaticResource GhostButton}" ToolTip="Seçili kayıttan personel atamasını kaldır"/>
                                     <Button Content="↑" Command="{Binding MissingProjectModule.MoveEntryUpCommand}" CommandParameter="{Binding MissingProjectModule.SelectedEntry}" Style="{StaticResource IconButton}" ToolTip="Yukarı Taşı"/>
                                     <Button Content="↓" Command="{Binding MissingProjectModule.MoveEntryDownCommand}" CommandParameter="{Binding MissingProjectModule.SelectedEntry}" Style="{StaticResource IconButton}" ToolTip="Aşağı Taşı"/>
                                     <Button Content="Excel Dışa" Command="{Binding ExportExcelCommand}" Style="{StaticResource GhostButton}" ToolTip="Excel'e Aktar"/>
@@ -1356,6 +1457,27 @@
                     <controls:DeferredContentControl.DeferredTemplate>
                         <DataTemplate>
                             <sections:YibfIsTakibiSectionView/>
+                        </DataTemplate>
+                    </controls:DeferredContentControl.DeferredTemplate>
+                </controls:DeferredContentControl>
+            </Grid>
+
+            <Grid x:Name="PersonnelGorevTabHost">
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedMainTab}" Value="{x:Static models:MainNavigationTab.PersonelGorevTakibi}">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <controls:DeferredContentControl IsActive="{Binding IsPersonnelGorevViewActivated}"
+                                                 UnloadWhenInactive="True">
+                    <controls:DeferredContentControl.DeferredTemplate>
+                        <DataTemplate>
+                            <sections:PersonnelGorevSectionView/>
                         </DataTemplate>
                     </controls:DeferredContentControl.DeferredTemplate>
                 </controls:DeferredContentControl>

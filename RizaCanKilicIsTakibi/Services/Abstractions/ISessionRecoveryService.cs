@@ -23,6 +23,8 @@ public interface ISessionRecoveryService
         IEnumerable<TadilatCellState>? tadilatCellStates = null,
         IEnumerable<QuickTaskTemplate>? quickTaskTemplates = null,
         IEnumerable<ProjectCatalogEntry>? projectCatalogEntries = null,
+        IEnumerable<Personnel>? personnel = null,
+        IEnumerable<PersonnelAssignment>? personnelAssignments = null,
         CancellationToken cancellationToken = default);
     Task<BackupRestoreData?> LoadPendingRecoveryAsync(CancellationToken cancellationToken = default);
     void RegisterFlushCallback(Func<Task>? callback);

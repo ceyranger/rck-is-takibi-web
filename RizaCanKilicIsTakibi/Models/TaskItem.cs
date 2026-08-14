@@ -15,6 +15,7 @@ public sealed class TaskItem : ObservableObject
     private DateTime _updatedAt = DateTime.Now;
     private TaskBoardType _boardType = TaskBoardType.Genel;
     private int _sortOrder;
+    private string _assignedPersonnelBadge = string.Empty;
 
     public Guid Id
     {
@@ -81,6 +82,15 @@ public sealed class TaskItem : ObservableObject
         get => _sortOrder;
         set => SetProperty(ref _sortOrder, value);
     }
+
+    /// <summary>UI-only badge; not persisted.</summary>
+    public string AssignedPersonnelBadge
+    {
+        get => _assignedPersonnelBadge;
+        set => SetProperty(ref _assignedPersonnelBadge, value ?? string.Empty);
+    }
+
+    public bool HasAssignedPersonnel => !string.IsNullOrWhiteSpace(AssignedPersonnelBadge);
 
     public ObservableCollection<TaskNote> Notes { get; } = new();
 

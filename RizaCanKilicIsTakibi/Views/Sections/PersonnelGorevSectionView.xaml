@@ -1,0 +1,99 @@
+<UserControl x:Class="RizaCanKilicIsTakibi.Views.Sections.PersonnelGorevSectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignHeight="720"
+             d:DesignWidth="1180">
+    <Grid Margin="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0"
+                Background="White"
+                BorderBrush="{StaticResource Brush.Border}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="12"
+                Margin="0,0,0,8">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Left">
+                    <TextBlock Text="PERSONEL GÖREV TAKİBİ"
+                               FontSize="22"
+                               FontWeight="SemiBold" />
+                    <TextBlock Text="Personele atanmış işler"
+                               Foreground="{StaticResource Brush.TextSecondary}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <CheckBox Content="Tamamlananları göster"
+                              IsChecked="{Binding PersonnelGorev.ShowCompleted}"
+                              VerticalAlignment="Center"
+                              Margin="0,0,12,0" />
+                    <Button Content="Durum değiştir"
+                            Command="{Binding PersonnelGorev.ToggleStatusCommand}"
+                            Margin="0,0,8,0"
+                            Padding="12,6" />
+                    <Button Content="Excel"
+                            Command="{Binding ExportPersonnelExcelCommand}"
+                            Margin="0,0,8,0"
+                            Padding="12,6" />
+                    <Button Content="PDF"
+                            Command="{Binding ExportPersonnelPdfCommand}"
+                            Margin="0,0,8,0"
+                            Padding="12,6" />
+                    <Button Content="Personel Ayarları"
+                            Command="{Binding PersonnelGorev.OpenPersonnelSettingsCommand}"
+                            Padding="12,6" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <ItemsControl Grid.Row="1"
+                      ItemsSource="{Binding PersonnelGorev.FilterChips}"
+                      Margin="0,0,0,8">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button Content="{Binding Label}"
+                            Command="{Binding DataContext.PersonnelGorev.SelectFilterCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            CommandParameter="{Binding Key}"
+                            Margin="0,0,8,8"
+                            Padding="10,4" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <DataGrid Grid.Row="2"
+                  ItemsSource="{Binding PersonnelGorev.Rows}"
+                  SelectedItem="{Binding PersonnelGorev.SelectedRow, Mode=TwoWay}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  SelectionMode="Single"
+                  HeadersVisibility="Column"
+                  GridLinesVisibility="Horizontal"
+                  Background="White"
+                  BorderBrush="{StaticResource Brush.Border}"
+                  BorderThickness="1">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Personel" Binding="{Binding PersonnelName}" Width="140" />
+                <DataGridTextColumn Header="Sekme" Binding="{Binding ModuleLabel}" Width="140" />
+                <DataGridTextColumn Header="İş özeti" Binding="{Binding Summary}" Width="*" MinWidth="160" />
+                <DataGridTextColumn Header="Öncelik" Binding="{Binding PriorityLabel}" Width="80" />
+                <DataGridTextColumn Header="Alan" Binding="{Binding FieldLabel}" Width="160" />
+                <DataGridTextColumn Header="Proje" Binding="{Binding ProjectIdentity}" Width="140" />
+                <DataGridTextColumn Header="Durum" Binding="{Binding StatusLabel}" Width="90" />
+                <DataGridTextColumn Header="Atama" Binding="{Binding AssignedAtText}" Width="120" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

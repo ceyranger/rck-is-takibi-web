@@ -86,6 +86,7 @@ public partial class App : Application
         var yibfRepository = new SqliteYibfRepository(_dbPath);
         var quickTaskTemplateRepository = new SqliteQuickTaskTemplateRepository(_dbPath);
         var projectCatalogRepository = new SqliteProjectCatalogRepository(_dbPath);
+        var personnelRepository = new SqlitePersonnelRepository(_dbPath);
 
         services.AddSingleton(pathService);
         services.AddSingleton<IAppSettingsService>(settingsService);
@@ -101,6 +102,8 @@ public partial class App : Application
         services.AddSingleton<IYibfRepository>(yibfRepository);
         services.AddSingleton<IQuickTaskTemplateRepository>(quickTaskTemplateRepository);
         services.AddSingleton<IProjectCatalogRepository>(projectCatalogRepository);
+        services.AddSingleton<IPersonnelRepository>(personnelRepository);
+        services.AddSingleton<IPersonnelAssignmentService, PersonnelAssignmentService>();
         services.AddSingleton<IProjectCatalogService, ProjectCatalogService>();
         services.AddSingleton<IProjectCatalogUiState, ProjectCatalogUiState>();
         services.AddSingleton<IProjectLinkingService, ProjectLinkingService>();
@@ -130,6 +133,9 @@ public partial class App : Application
         services.AddSingleton<IQuickTaskTemplateDialogService, QuickTaskTemplateDialogService>();
         services.AddSingleton<IProjectCatalogEntryDialogService, ProjectCatalogEntryDialogService>();
         services.AddSingleton<IProjectLinkResolveDialogService, ProjectLinkResolveDialogService>();
+        services.AddSingleton<IPersonnelSettingsDialogService, PersonnelSettingsDialogService>();
+        services.AddSingleton<IPersonnelPickDialogService, PersonnelPickDialogService>();
+        services.AddSingleton<IPersonnelCellScopeDialogService, PersonnelCellScopeDialogService>();
 
         services.AddSingleton<DashboardViewModel>();
         services.AddSingleton<SearchOverlayViewModel>();
@@ -140,6 +146,7 @@ public partial class App : Application
         services.AddSingleton<KarotModuleViewModel>();
         services.AddSingleton<TadilatModuleViewModel>();
         services.AddSingleton<YibfModuleViewModel>();
+        services.AddSingleton<PersonnelGorevViewModel>();
         services.AddSingleton<MainViewModel>();
 
         services.AddSingleton<MainWindow>();

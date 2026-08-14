@@ -7,6 +7,7 @@ public interface IImportExportService
 {
     Task ExportExcelAsync(IEnumerable<TaskItem> tasks, string filePath, CancellationToken cancellationToken = default);
     Task ExportWorkbookAsync(ExcelWorkbookExportModel workbook, string filePath, CancellationToken cancellationToken = default);
+    Task ExportWorkbookAsPdfAsync(ExcelWorkbookExportModel workbook, string filePath, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<TaskItem>> ImportExcelAsync(string filePath, CancellationToken cancellationToken = default);
     Task ExportPdfAsync(IEnumerable<TaskItem> tasks, string filePath, CancellationToken cancellationToken = default);
     Task ExportReportPackAsync(ReportPackExportModel pack, string filePath, CancellationToken cancellationToken = default);

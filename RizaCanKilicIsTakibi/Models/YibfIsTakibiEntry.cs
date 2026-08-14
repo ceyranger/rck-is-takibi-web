@@ -24,6 +24,7 @@ public sealed class YibfIsTakibiEntry : ObservableObject
     private int _displayOrder;
     private DateTime _createdAt = DateTime.Now;
     private DateTime _updatedAt = DateTime.Now;
+    private string _assignedPersonnelBadge = string.Empty;
 
     public Guid Id { get => _id; set => SetProperty(ref _id, value); }
     public Guid WorkGroupId { get => _workGroupId; set => SetProperty(ref _workGroupId, value); }
@@ -45,4 +46,13 @@ public sealed class YibfIsTakibiEntry : ObservableObject
     public int DisplayOrder { get => _displayOrder; set => SetProperty(ref _displayOrder, value); }
     public DateTime CreatedAt { get => _createdAt; set => SetProperty(ref _createdAt, value); }
     public DateTime UpdatedAt { get => _updatedAt; set => SetProperty(ref _updatedAt, value); }
+
+    /// <summary>UI-only badge; not persisted.</summary>
+    public string AssignedPersonnelBadge
+    {
+        get => _assignedPersonnelBadge;
+        set => SetProperty(ref _assignedPersonnelBadge, value ?? string.Empty);
+    }
+
+    public bool HasAssignedPersonnel => !string.IsNullOrWhiteSpace(AssignedPersonnelBadge);
 }

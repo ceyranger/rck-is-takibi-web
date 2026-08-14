@@ -19,6 +19,7 @@ public sealed class TumEksiklerViewModel : ViewModelBase
     private const string CriticalFilter = "Kritik";
     private const string WarningFilter = "Uyarı";
     private const string BlankRequiredFilter = "Boş Zorunlu";
+    private const string UnassignedPersonnelFilter = "Atanmamış";
     private const string UnmatchedGroupTitle = "Eşleşmeyen Eksikler";
     private static readonly CultureInfo TurkishCulture = CultureInfo.GetCultureInfo("tr-TR");
 
@@ -51,6 +52,7 @@ public sealed class TumEksiklerViewModel : ViewModelBase
     private string _searchQuery = string.Empty;
     private string _selectedSourceFilter = AllFilter;
     private string _selectedSeverityFilter = AllFilter;
+    private string _selectedPersonnelFilter = AllFilter;
     private bool _showUnmatched = true;
     private bool _showBlankRequired = true;
 
@@ -58,6 +60,7 @@ public sealed class TumEksiklerViewModel : ViewModelBase
     {
         SourceFilters = [AllFilter, "Proje Takibi", "YİBF İş Takibi", "Tadilat", "Eksik Proje", "Karot"];
         SeverityFilters = [AllFilter, CriticalFilter, WarningFilter, BlankRequiredFilter];
+        PersonnelFilters = [AllFilter, UnassignedPersonnelFilter];
         Groups = [];
         RefreshFiltersCommand = new RelayCommand(ApplyFilters);
     }
@@ -65,6 +68,7 @@ public sealed class TumEksiklerViewModel : ViewModelBase
     public ObservableRangeCollection<EksikIsGroupViewModel> Groups { get; }
     public ObservableCollection<string> SourceFilters { get; }
     public ObservableCollection<string> SeverityFilters { get; }
+    public ObservableCollection<string> PersonnelFilters { get; }
     public RelayCommand RefreshFiltersCommand { get; }
 
     public string SearchQuery
@@ -103,6 +107,18 @@ public sealed class TumEksiklerViewModel : ViewModelBase
         }
     }
 
+    public string SelectedPersonnelFilter
+    {
+        get => _selectedPersonnelFilter;
+        set
+        {
+            if (SetProperty(ref _selectedPersonnelFilter, string.IsNullOrWhiteSpace(value) ? AllFilter : value))
+            {
+                ApplyFilters();
+            }
+        }
+    }
+
     public bool ShowUnmatched
     {
         get => _showUnmatched;
@@ -132,6 +148,38 @@ public sealed class TumEksiklerViewModel : ViewModelBase
     public int CriticalItemCount => Groups.Sum(group => group.CriticalCount);
     public int UnmatchedItemCount => Groups.Where(group => group.MatchStatus == EksikMatchStatus.Unmatched).Sum(group => group.EksikCount);
     public bool HasItems => TotalItemCount > 0;
+
+    /// <summary>
+    /// Rebuilds personnel filter options as Tümü | Atanmamış | {person names}.
+    /// Called from MainViewModel when refreshing TumEksikler.
+    /// </summary>
+    public void SetPersonnelFilterOptions(IEnumerable<string> personnelNames)
+    {
+        var selected = SelectedPersonnelFilter;
+        var names = personnelNames
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Select(name => name.Trim())
+            .Distinct(StringComparer.Create(TurkishCulture, ignoreCase: true))
+            .OrderBy(name => name, StringComparer.Create(TurkishCulture, ignoreCase: true))
+            .ToList();
+
+        PersonnelFilters.Clear();
+        PersonnelFilters.Add(AllFilter);
+        PersonnelFilters.Add(UnassignedPersonnelFilter);
+        foreach (var name in names)
+        {
+            PersonnelFilters.Add(name);
+        }
+
+        if (!PersonnelFilters.Contains(selected))
+        {
+            SelectedPersonnelFilter = AllFilter;
+        }
+        else
+        {
+            ApplyFilters();
+        }
+    }
 
     public void RefreshFrom(
         IEnumerable<YibfAnaBilgiEntry> anaBilgiEntries,
@@ -234,7 +282,8 @@ public sealed class TumEksiklerViewModel : ViewModelBase
                 MainNavigationTab.YibfAnaBilgi,
                 item.Id,
                 SearchResultKind.YibfAnaBilgiEvent,
-                item.EntryId));
+                item.EntryId,
+                assignedPersonnelBadge: item.AssignedPersonnelBadge));
         }
     }
 
@@ -265,7 +314,8 @@ public sealed class TumEksiklerViewModel : ViewModelBase
                     MainNavigationTab.YibfIsTakibi,
                     entry.Id,
                     SearchResultKind.YibfIsTakibiEntry,
-                    sourceContext);
+                    sourceContext,
+                    entry.AssignedPersonnelBadge);
             }
         }
     }
@@ -307,7 +357,8 @@ public sealed class TumEksiklerViewModel : ViewModelBase
                     MainNavigationTab.TadilatTakibi,
                     entry.Id,
                     SearchResultKind.TadilatEntry,
-                    sourceContext);
+                    sourceContext,
+                    entry.AssignedPersonnelBadge);
             }
         }
     }
@@ -337,7 +388,8 @@ public sealed class TumEksiklerViewModel : ViewModelBase
                     ("Ada Parsel", entry.AdaParsel),
                     ("Yapı Sahibi", entry.YapiSahibi),
                     ("Ortam", entry.RecordMediumText),
-                    ("Açıklama", entry.Description))));
+                    ("Açıklama", entry.Description)),
+                assignedPersonnelBadge: entry.AssignedPersonnelBadge));
         }
     }
 
@@ -387,7 +439,8 @@ public sealed class TumEksiklerViewModel : ViewModelBase
                 MainNavigationTab.KarotTakibi,
                 entry.Id,
                 SearchResultKind.KarotEntry,
-                sourceContext: sourceContext));
+                sourceContext: sourceContext,
+                assignedPersonnelBadge: entry.AssignedPersonnelBadge));
         }
     }
 
@@ -403,7 +456,8 @@ public sealed class TumEksiklerViewModel : ViewModelBase
         MainNavigationTab targetTab,
         Guid targetId,
         SearchResultKind targetKind,
-        string sourceContext = "")
+        string sourceContext = "",
+        string assignedPersonnelBadge = "")
     {
         var normalizedColor = NormalizeColor(backgroundColor);
         var hasPendingColor = IsPendingColor(normalizedColor);
@@ -428,7 +482,8 @@ public sealed class TumEksiklerViewModel : ViewModelBase
             targetTab,
             targetId,
             targetKind,
-            sourceContext: sourceContext));
+            sourceContext: sourceContext,
+            assignedPersonnelBadge: assignedPersonnelBadge));
     }
 
     private static EksikIsGroupViewModel ResolveGroup(
@@ -530,6 +585,11 @@ public sealed class TumEksiklerViewModel : ViewModelBase
             return false;
         }
 
+        if (!MatchesPersonnelFilter(item))
+        {
+            return false;
+        }
+
         return SelectedSeverityFilter switch
         {
             CriticalFilter => item.Severity == EksikSeverity.Critical,
@@ -537,6 +597,21 @@ public sealed class TumEksiklerViewModel : ViewModelBase
             BlankRequiredFilter => item.Severity == EksikSeverity.BlankRequired,
             _ => true
         };
+    }
+
+    private bool MatchesPersonnelFilter(EksikItemViewModel item)
+    {
+        if (string.Equals(SelectedPersonnelFilter, AllFilter, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (string.Equals(SelectedPersonnelFilter, UnassignedPersonnelFilter, StringComparison.OrdinalIgnoreCase))
+        {
+            return string.IsNullOrWhiteSpace(item.AssignedPersonnelBadge);
+        }
+
+        return Contains(item.AssignedPersonnelBadge, SelectedPersonnelFilter);
     }
 
     private static bool MatchesSearch(EksikIsGroupViewModel group, EksikItemViewModel item, string query)
@@ -755,7 +830,8 @@ public sealed class EksikItemViewModel
         Guid targetId,
         SearchResultKind targetKind,
         Guid? parentTargetId = null,
-        string sourceContext = "")
+        string sourceContext = "",
+        string assignedPersonnelBadge = "")
     {
         SourceModule = sourceModule;
         FieldLabel = fieldLabel;
@@ -763,6 +839,7 @@ public sealed class EksikItemViewModel
         CurrentValue = currentValue;
         NoteText = noteText;
         SourceContext = sourceContext;
+        AssignedPersonnelBadge = assignedPersonnelBadge?.Trim() ?? string.Empty;
         Severity = severity;
         UpdatedAt = updatedAt;
         TargetTab = targetTab;
@@ -778,8 +855,8 @@ public sealed class EksikItemViewModel
             BoardLabel = sourceModule,
             Title = fieldLabel,
             Summary = reason,
-            SearchText = $"{sourceModule} {fieldLabel} {reason} {currentValue} {noteText} {sourceContext}",
-            RawSearchText = $"{sourceModule} {fieldLabel} {reason} {currentValue} {noteText} {sourceContext}"
+            SearchText = $"{sourceModule} {fieldLabel} {reason} {currentValue} {noteText} {sourceContext} {AssignedPersonnelBadge}",
+            RawSearchText = $"{sourceModule} {fieldLabel} {reason} {currentValue} {noteText} {sourceContext} {AssignedPersonnelBadge}"
         };
     }
 
@@ -789,6 +866,7 @@ public sealed class EksikItemViewModel
     public string CurrentValue { get; }
     public string NoteText { get; }
     public string SourceContext { get; }
+    public string AssignedPersonnelBadge { get; }
     public EksikSeverity Severity { get; }
     public DateTime UpdatedAt { get; }
     public MainNavigationTab TargetTab { get; }

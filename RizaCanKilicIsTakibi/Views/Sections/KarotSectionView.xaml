@@ -360,7 +360,7 @@
                     <DataTemplate DataType="{x:Type viewModels:KarotEntryRowViewModel}">
                         <Border Background="White"
                                 SnapsToDevicePixels="True"
-                                Tag="{Binding DataContext.KarotModule, RelativeSource={RelativeSource AncestorType=Window}}"
+                                Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}"
                                 behaviors:ClickCommandBehavior.Command="{Binding DataContext.KarotModule.SelectKarotEntryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                 behaviors:ClickCommandBehavior.CommandParameter="{Binding Entry}">
                             <Border.Style>
@@ -377,21 +377,28 @@
                             <Border.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem Header="Üste Satır Ekle"
-                                              Command="{Binding PlacementTarget.Tag.InsertKarotEntryAboveCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                              Command="{Binding PlacementTarget.Tag.KarotModule.InsertKarotEntryAboveCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                               CommandParameter="{Binding PlacementTarget.DataContext.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                     <MenuItem Header="Alta Satır Ekle"
-                                              Command="{Binding PlacementTarget.Tag.InsertKarotEntryBelowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                              Command="{Binding PlacementTarget.Tag.KarotModule.InsertKarotEntryBelowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                               CommandParameter="{Binding PlacementTarget.DataContext.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                     <Separator/>
                                     <MenuItem Header="Yukarı Taşı"
-                                              Command="{Binding PlacementTarget.Tag.MoveKarotEntryUpFromContextCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                              Command="{Binding PlacementTarget.Tag.KarotModule.MoveKarotEntryUpFromContextCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                               CommandParameter="{Binding PlacementTarget.DataContext.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                     <MenuItem Header="Aşağı Taşı"
-                                              Command="{Binding PlacementTarget.Tag.MoveKarotEntryDownFromContextCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                              Command="{Binding PlacementTarget.Tag.KarotModule.MoveKarotEntryDownFromContextCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                              CommandParameter="{Binding PlacementTarget.DataContext.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                    <Separator/>
+                                    <MenuItem Header="Personel ata"
+                                              Command="{Binding PlacementTarget.Tag.AssignPersonnelToKarotCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                              CommandParameter="{Binding PlacementTarget.DataContext.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                    <MenuItem Header="Atamayı kaldır"
+                                              Command="{Binding PlacementTarget.Tag.RemovePersonnelFromKarotCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                               CommandParameter="{Binding PlacementTarget.DataContext.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                     <Separator/>
                                     <MenuItem Header="Sil"
-                                              Command="{Binding PlacementTarget.Tag.DeleteKarotEntryFromContextCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                              Command="{Binding PlacementTarget.Tag.KarotModule.DeleteKarotEntryFromContextCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                               CommandParameter="{Binding PlacementTarget.DataContext.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                 </ContextMenu>
                             </Border.ContextMenu>
@@ -412,14 +419,36 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Border Grid.Column="0" Style="{StaticResource TadilatCellBorderStyle}" Background="{Binding RowBackgroundBrush}">
-                                    <Button Style="{StaticResource KarotRowActionButtonStyle}"
-                                            Command="{Binding DataContext.KarotModule.OpenKarotStatusDialogCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                            CommandParameter="{Binding Entry}">
-                                        <TextBlock Text="KAYIT DURUMU"
-                                                   TextWrapping="Wrap"
-                                                   TextAlignment="Center"
-                                                   VerticalAlignment="Center"/>
-                                    </Button>
+                                    <Grid>
+                                        <Button Style="{StaticResource KarotRowActionButtonStyle}"
+                                                Command="{Binding DataContext.KarotModule.OpenKarotStatusDialogCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding Entry}">
+                                            <TextBlock Text="KAYIT DURUMU"
+                                                       TextWrapping="Wrap"
+                                                       TextAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Button>
+                                        <TextBlock Text="{Binding Entry.AssignedPersonnelBadge}"
+                                                   FontSize="10"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{StaticResource Brush.Primary}"
+                                                   HorizontalAlignment="Right"
+                                                   VerticalAlignment="Top"
+                                                   Margin="0,2,4,0"
+                                                   IsHitTestVisible="False"
+                                                   ToolTip="{Binding Entry.AssignedPersonnelBadge}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Entry.HasAssignedPersonnel}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Grid>
                                 </Border>
                                 <ContentPresenter Grid.Column="1" Content="{Binding SampleReceivedDateCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>
                                 <ContentPresenter Grid.Column="2" Content="{Binding YibfNoCell}" ContentTemplate="{StaticResource KarotCellTemplate}"/>

@@ -170,7 +170,12 @@ public sealed partial class MainViewModel : ViewModelBase
         IProjectLinkResolveDialogService? projectLinkResolveDialogService = null,
         IProjectCatalogUiState? projectCatalogUiState = null,
         ISessionRecoveryService? sessionRecoveryService = null,
-        ICrashRecoveryWizardService? crashRecoveryWizardService = null)
+        ICrashRecoveryWizardService? crashRecoveryWizardService = null,
+        IPersonnelAssignmentService? personnelAssignmentService = null,
+        IPersonnelSettingsDialogService? personnelSettingsDialogService = null,
+        IPersonnelPickDialogService? personnelPickDialogService = null,
+        IPersonnelCellScopeDialogService? personnelCellScopeDialogService = null,
+        PersonnelGorevViewModel? personnelGorevViewModel = null)
     {
         _taskRepository = taskRepository;
         _backupService = backupService;
@@ -210,6 +215,13 @@ public sealed partial class MainViewModel : ViewModelBase
         ProjectCatalogEntries = new ObservableCollection<ProjectCatalogEntry>();
         ClearableTabs = BuildClearableTabs();
         _selectedClearTab = ClearableTabs.FirstOrDefault();
+
+        InitializePersonnelFeature(
+            personnelAssignmentService,
+            personnelSettingsDialogService,
+            personnelPickDialogService,
+            personnelCellScopeDialogService,
+            personnelGorevViewModel);
 
         UrgentBoard = new TaskBoardViewModel("Acil İşler", TaskBoardType.Acil);
         GeneralBoard = new TaskBoardViewModel("Genel İşler", TaskBoardType.Genel);
@@ -719,6 +731,8 @@ public sealed partial class MainViewModel : ViewModelBase
             var allSaved = generalSaved && !HasUnsavedSettings && !HasUnsavedCatalogChanges && !ActionModule.HasUnsavedChanges && !MissingProjectModule.HasUnsavedChanges && !KarotModule.HasUnsavedChanges && !TadilatModule.HasUnsavedChanges && !YibfModule.HasUnsavedChanges;
             if (allSaved)
             {
+                SyncPersonnelAssignmentCompletion();
+                RefreshPersonnelBadges();
                 await MarkGlobalSaveSucceededAsync();
                 ClearSessionRecoveryArtifacts();
             }
@@ -898,6 +912,10 @@ public sealed partial class MainViewModel : ViewModelBase
             case MainNavigationTab.Ayarlar:
                 IsSettingsViewActivated = true;
                 break;
+            case MainNavigationTab.PersonelGorevTakibi:
+                IsPersonnelGorevViewActivated = true;
+                PersonnelGorev?.Refresh();
+                break;
         }
     }
 
@@ -921,7 +939,9 @@ public sealed partial class MainViewModel : ViewModelBase
                     yibfCellStates: YibfModule.GetCellStatesSnapshot(),
                     tadilatCellStates: TadilatModule.GetCellStatesSnapshot(),
                     quickTaskTemplates: _quickTaskTemplateRepository?.GetAll(),
-                    projectCatalogEntries: GetProjectCatalogSnapshot());
+                    projectCatalogEntries: GetProjectCatalogSnapshot(),
+                    personnel: _personnelAssignmentService?.GetPersonnel(),
+                    personnelAssignments: _personnelAssignmentService?.GetAssignments());
                 
                 await _backupService.CleanOldBackupsAsync(30);
                 
@@ -951,7 +971,9 @@ public sealed partial class MainViewModel : ViewModelBase
             YibfAnaBilgiEvents = YibfModule.GetAnaBilgiEventsSnapshot(),
             YibfIsTakibiEntries = YibfModule.GetIsTakibiEntriesSnapshot(),
             YibfCellStates = YibfModule.GetCellStatesSnapshot(),
-            ProjectCatalogEntries = GetProjectCatalogSnapshot()
+            ProjectCatalogEntries = GetProjectCatalogSnapshot(),
+            Personnel = _personnelAssignmentService?.GetPersonnel().Select(p => p.Clone()).ToList() ?? [],
+            PersonnelAssignments = _personnelAssignmentService?.GetAssignments().Select(a => a.Clone()).ToList() ?? []
         };
 
     private ApplicationStateSnapshot CaptureApplicationStateSnapshot()
@@ -1034,6 +1056,11 @@ public sealed partial class MainViewModel : ViewModelBase
         YibfModule.LoadFromBackup(restored.YibfAnaBilgiEntries, restored.YibfAnaBilgiEvents, restored.YibfIsTakibiEntries, restored.YibfCellStates, markModulesDirty);
         _quickTaskTemplateRepository?.ReplaceAll(restored.QuickTaskTemplates.Select(template => template.Clone()));
         ReplaceProjectCatalogEntries(restored.ProjectCatalogEntries.Select(entry => entry.Clone()));
+        _personnelAssignmentService?.ReplaceAll(
+            restored.Personnel ?? Array.Empty<Personnel>(),
+            restored.PersonnelAssignments ?? Array.Empty<PersonnelAssignment>());
+        PersonnelGorev?.Refresh();
+        RefreshPersonnelBadges();
         if (markModulesDirty)
         {
             MarkCatalogDirty();
@@ -1075,6 +1102,11 @@ public sealed partial class MainViewModel : ViewModelBase
         YibfModule.LoadFromBackup(snapshot.Data.YibfAnaBilgiEntries, snapshot.Data.YibfAnaBilgiEvents, snapshot.Data.YibfIsTakibiEntries, snapshot.Data.YibfCellStates, snapshot.HasUnsavedYibfChanges);
         _quickTaskTemplateRepository?.ReplaceAll(snapshot.Data.QuickTaskTemplates.Select(template => template.Clone()));
         ReplaceProjectCatalogEntries(snapshot.Data.ProjectCatalogEntries.Select(entry => entry.Clone()));
+        _personnelAssignmentService?.ReplaceAll(
+            snapshot.Data.Personnel ?? Array.Empty<Personnel>(),
+            snapshot.Data.PersonnelAssignments ?? Array.Empty<PersonnelAssignment>());
+        PersonnelGorev?.Refresh();
+        RefreshPersonnelBadges();
         HasUnsavedCatalogChanges = snapshot.HasUnsavedCatalogChanges;
         MarkAllModulesStateLoadedFromSnapshot();
         InvalidateSearchCorpus();
@@ -1449,6 +1481,7 @@ public sealed partial class MainViewModel : ViewModelBase
 
     private void RefreshTumEksikler()
     {
+        RefreshPersonnelBadges();
         TumEksikler.RefreshFrom(
             YibfModule.AnaBilgiEntries,
             YibfModule.AnaBilgiEvents,
@@ -1458,6 +1491,12 @@ public sealed partial class MainViewModel : ViewModelBase
             TadilatModule.CellStates,
             MissingProjectModule.Entries,
             KarotModule.Entries);
+
+        if (_personnelAssignmentService is not null)
+        {
+            TumEksikler.SetPersonnelFilterOptions(
+                _personnelAssignmentService.GetPersonnel().Select(p => p.Name));
+        }
     }
 
     private Task EnsureAllModulesInitializedAsync()
@@ -2084,7 +2123,9 @@ public sealed partial class MainViewModel : ViewModelBase
             yibfCellStates: YibfModule.GetCellStatesSnapshot(),
             tadilatCellStates: TadilatModule.GetCellStatesSnapshot(),
             quickTaskTemplates: _quickTaskTemplateRepository?.GetAll(),
-            projectCatalogEntries: GetProjectCatalogSnapshot());
+            projectCatalogEntries: GetProjectCatalogSnapshot(),
+            personnel: _personnelAssignmentService?.GetPersonnel(),
+            personnelAssignments: _personnelAssignmentService?.GetAssignments());
     }
 
     private async Task PromptCrashRecoveryIfNeededAsync()
@@ -2926,7 +2967,9 @@ public sealed partial class MainViewModel : ViewModelBase
                     YibfModule.GetCellStatesSnapshot(),
                     TadilatModule.GetCellStatesSnapshot(),
                     _quickTaskTemplateRepository?.GetAll(),
-                    GetProjectCatalogSnapshot());
+                    GetProjectCatalogSnapshot(),
+                    _personnelAssignmentService?.GetPersonnel(),
+                    _personnelAssignmentService?.GetAssignments());
                 _notificationService.ShowToast($"Yedek alındı ({metadata.TaskCount} kayıt).", ToastType.Success);
             }
             catch (Exception ex)
@@ -3530,7 +3573,9 @@ public sealed partial class MainViewModel : ViewModelBase
                     YibfModule.GetCellStatesSnapshot(),
                     TadilatModule.GetCellStatesSnapshot(),
                     _quickTaskTemplateRepository?.GetAll(),
-                    GetProjectCatalogSnapshot());
+                    GetProjectCatalogSnapshot(),
+                    _personnelAssignmentService?.GetPersonnel(),
+                    _personnelAssignmentService?.GetAssignments());
 
                 var beforeUrgent = UrgentBoard.Tasks.Select(task => task.Clone()).ToList();
                 var beforeGeneral = GeneralBoard.Tasks.Select(task => task.Clone()).ToList();
