@@ -133,7 +133,7 @@ public sealed partial class MainViewModel
 
     private void RefreshPersonnelBadges()
     {
-        if (_personnelAssignmentService is null)
+        if (_personnelAssignmentService is null || UrgentBoard is null || GeneralBoard is null)
         {
             return;
         }

@@ -216,19 +216,19 @@ public sealed partial class MainViewModel : ViewModelBase
         ClearableTabs = BuildClearableTabs();
         _selectedClearTab = ClearableTabs.FirstOrDefault();
 
-        InitializePersonnelFeature(
-            personnelAssignmentService,
-            personnelSettingsDialogService,
-            personnelPickDialogService,
-            personnelCellScopeDialogService,
-            personnelGorevViewModel);
-
         UrgentBoard = new TaskBoardViewModel("Acil İşler", TaskBoardType.Acil);
         GeneralBoard = new TaskBoardViewModel("Genel İşler", TaskBoardType.Genel);
         _activeBoard = GeneralBoard;
         AcilIsOzetItemsView = CollectionViewSource.GetDefaultView(AcilIsOzetItems);
         AcilIsOzetItemsView.Filter = FilterAcilIsOzetItem;
         AcilIsOzetItemsView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(AcilIsOzetItemViewModel.Category)));
+
+        InitializePersonnelFeature(
+            personnelAssignmentService,
+            personnelSettingsDialogService,
+            personnelPickDialogService,
+            personnelCellScopeDialogService,
+            personnelGorevViewModel);
 
         SelectMainTabCommand = new RelayCommand<MainNavigationTab>(SelectMainTab);
 
