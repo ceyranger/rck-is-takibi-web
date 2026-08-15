@@ -117,26 +117,13 @@
                         </ContentControl>
 
                         <Border Style="{StaticResource CellNoteBadgeStyle}"/>
-                        <TextBlock Text="{Binding Row.Entry.AssignedPersonnelBadge}"
-                                   FontSize="9"
-                                   FontWeight="SemiBold"
-                                   Foreground="{StaticResource Brush.Primary}"
-                                   HorizontalAlignment="Left"
-                                   VerticalAlignment="Bottom"
-                                   Margin="4,0,0,2"
-                                   IsHitTestVisible="False"
-                                   ToolTip="{Binding Row.Entry.AssignedPersonnelBadge}">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Row.Entry.HasAssignedPersonnel}" Value="True">
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
+                        <viewControls:PersonnelAssignedBadge BadgeText="{Binding Row.Entry.AssignedPersonnelBadge}"
+                                                            IconVariant="CirclePerson"
+                                                            ShowLabel="False"
+                                                            HorizontalAlignment="Left"
+                                                            VerticalAlignment="Bottom"
+                                                            Margin="4,0,0,2"
+                                                            IsHitTestVisible="False"/>
                     </Grid>
                 </Border>
             </DataTemplate>

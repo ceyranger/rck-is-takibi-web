@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="Themes/DataGridStyles.xaml" />
                 <ResourceDictionary Source="Themes/ToastStyles.xaml" />
                 <ResourceDictionary Source="Themes/SectionHostStyles.xaml" />
+                <ResourceDictionary Source="Themes/PersonnelBadgeStyles.xaml" />
                 <ResourceDictionary Source="Views/Sections/Shared/SearchResultResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
 

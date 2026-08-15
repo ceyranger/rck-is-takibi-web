@@ -393,6 +393,13 @@
                         </ContentControl>
 
                         <Border Style="{StaticResource CellNoteBadgeStyle}"/>
+                        <viewControls:PersonnelAssignedBadge BadgeText="{Binding Row.Entry.AssignedPersonnelBadge}"
+                                                            IconVariant="TwoPeople"
+                                                            ShowLabel="False"
+                                                            HorizontalAlignment="Left"
+                                                            VerticalAlignment="Bottom"
+                                                            Margin="4,0,0,2"
+                                                            IsHitTestVisible="False"/>
                     </Grid>
                 </Border>
             </DataTemplate>

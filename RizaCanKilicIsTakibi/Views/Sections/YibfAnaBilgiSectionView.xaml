@@ -6,6 +6,7 @@
              xmlns:models="clr-namespace:RizaCanKilicIsTakibi.Models"
              xmlns:viewModels="clr-namespace:RizaCanKilicIsTakibi.ViewModels"
              xmlns:behaviors="clr-namespace:RizaCanKilicIsTakibi.Behaviors"
+             xmlns:viewControls="clr-namespace:RizaCanKilicIsTakibi.Views.Controls"
              mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -203,25 +204,11 @@
                         </Border>
                                     <StackPanel Grid.Column="1" Margin="12,12,12,12">
                                         <DockPanel LastChildFill="True">
-                                            <TextBlock Text="{Binding Model.AssignedPersonnelBadge}"
-                                                       DockPanel.Dock="Right"
-                                                       FontSize="11"
-                                                       FontWeight="SemiBold"
-                                                       Foreground="{StaticResource Brush.Primary}"
-                                                       Margin="8,0,0,0"
-                                                       VerticalAlignment="Top"
-                                                       ToolTip="{Binding Model.AssignedPersonnelBadge}">
-                                                <TextBlock.Style>
-                                                    <Style TargetType="TextBlock">
-                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding Model.HasAssignedPersonnel}" Value="True">
-                                                                <Setter Property="Visibility" Value="Visible"/>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </TextBlock.Style>
-                                            </TextBlock>
+                                            <viewControls:PersonnelAssignedBadge BadgeText="{Binding Model.AssignedPersonnelBadge}"
+                                                                                IconVariant="TwoPeople"
+                                                                                DockPanel.Dock="Right"
+                                                                                Margin="8,0,0,0"
+                                                                                VerticalAlignment="Top"/>
                                             <TextBlock Text="{Binding Description}" TextWrapping="Wrap" TextAlignment="Left" HorizontalAlignment="Left" FontWeight="SemiBold"/>
                                         </DockPanel>
                                         <TextBlock Text="{Binding NoteText}" Margin="0,6,0,0" Foreground="{StaticResource Brush.TextSecondary}" TextWrapping="Wrap" TextAlignment="Left" HorizontalAlignment="Left" Visibility="{Binding HasNote, Converter={StaticResource BooleanToVisibilityConverter}}"/>

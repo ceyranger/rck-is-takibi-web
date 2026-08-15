@@ -54,4 +54,5 @@
 - 2026-08-15: Personel Görev listesi modernize (ortalı başlıklar, chip/kart, durum rozetleri); Karot hücre sağ tık + toolbar Personel ata. Tests 221/221. Commit `55e2912`; canonical publish exe güncellendi; `Data\tasks.db` / `Data\last-save.json` hash/size/timestamp değişmedi.
 - 2026-08-15: Personel görev çift tık düzenleme penceresi + tablo kenarlıklı UI. Tests 223/223. Commit `d768643`; canonical publish exe güncellendi; `Data\tasks.db` / `Data\last-save.json` hash/size/timestamp değişmedi.
 - 2026-08-15: Manuel Yeni Atama + kaynak düzelince görev silme (Geri Al toast). Tests 225/225. Commit `bb268c4`; canonical publish exe güncellendi; `Data\tasks.db` / `Data\last-save.json` hash/size/timestamp değişmedi.
+- 2026-08-15: Personel atama ikonları (3 varyant) + kaynak korumalı düzenleme notu + otomatik kayıt toast netliği. Tests 225/225.
 

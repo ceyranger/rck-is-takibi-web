@@ -76,6 +76,10 @@ public sealed class PersonnelAssignmentEditDialogViewModel : ViewModelBase
         ModuleLabel = string.IsNullOrWhiteSpace(assignment.ModuleLabelSnapshot)
             ? IPersonnelAssignmentService.ModuleLabel(assignment.SourceModule)
             : assignment.ModuleLabelSnapshot;
+        IsSourceLinked = assignment.SourceModule != PersonnelAssignmentSourceModule.Manual;
+        SourceLinkHint = IsSourceLinked
+            ? "Kaynak bağlantısı korunur. Yazısal alanları (özet, alan, proje) değiştirebilirsiniz; kaynak satır/hücre bozulmaz."
+            : "Manuel atama — kaynak satıra bağlı değildir.";
         AssignedAtText = assignment.AssignedAt.ToString("g");
         _summary = assignment.SummarySnapshot ?? string.Empty;
         _fieldLabel = assignment.FieldLabelSnapshot ?? string.Empty;
@@ -96,6 +100,8 @@ public sealed class PersonnelAssignmentEditDialogViewModel : ViewModelBase
     public IReadOnlyList<PersonnelPriorityOption> PriorityOptions { get; }
 
     public string ModuleLabel { get; }
+    public bool IsSourceLinked { get; }
+    public string SourceLinkHint { get; }
     public string AssignedAtText { get; }
 
     public PersonnelPickOption SelectedPersonnel

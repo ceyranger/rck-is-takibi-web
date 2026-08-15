@@ -1,0 +1,38 @@
+<UserControl x:Class="RizaCanKilicIsTakibi.Views.Controls.PersonnelAssignedBadge"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:RizaCanKilicIsTakibi.Views.Controls"
+             x:Name="Root">
+    <Border Background="#FFE7F0FE"
+            BorderBrush="#FFB6D0F7"
+            BorderThickness="1"
+            CornerRadius="10"
+            Padding="6,2"
+            VerticalAlignment="Center"
+            ToolTip="{Binding BadgeText, ElementName=Root}">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <Path x:Name="IconPath"
+                  Style="{StaticResource PersonnelAssignedIconStyleB}"
+                  VerticalAlignment="Center"
+                  Margin="0,0,4,0"/>
+            <TextBlock Text="{Binding BadgeText, ElementName=Root}"
+                       FontSize="11"
+                       FontWeight="SemiBold"
+                       Foreground="#FF0B5ED7"
+                       VerticalAlignment="Center"
+                       TextTrimming="CharacterEllipsis"
+                       MaxWidth="90">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ShowLabel, ElementName=Root}" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </StackPanel>
+    </Border>
+</UserControl>

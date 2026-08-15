@@ -269,7 +269,7 @@ public sealed partial class MainViewModel
             ProjectIdentitySnapshot = string.Empty,
             ModuleLabelSnapshot = IPersonnelAssignmentService.ModuleLabel(module)
         });
-        _notificationService.ShowToast("Personel atandı.", ToastType.Success);
+        _notificationService.ShowToast("Personel atandı (otomatik kaydedildi).", ToastType.Success);
     }
 
     private async Task RemovePersonnelFromTaskAsync(TaskItem? task)
@@ -283,7 +283,7 @@ public sealed partial class MainViewModel
             ? PersonnelAssignmentSourceModule.AcilTask
             : PersonnelAssignmentSourceModule.GenelTask;
         await _personnelAssignmentService.RemoveAssignmentsForSourceAsync(module, task.Id);
-        _notificationService.ShowToast("Personel ataması kaldırıldı.", ToastType.Info);
+        _notificationService.ShowToast("Personel ataması kaldırıldı (otomatik kaydedildi).", ToastType.Info);
     }
 
     private async Task AssignPersonnelToActionAsync(ActionEntry? entry)
@@ -315,7 +315,7 @@ public sealed partial class MainViewModel
             FieldLabelSnapshot = category,
             ModuleLabelSnapshot = IPersonnelAssignmentService.ModuleLabel(PersonnelAssignmentSourceModule.Action)
         });
-        _notificationService.ShowToast("Personel atandı.", ToastType.Success);
+        _notificationService.ShowToast("Personel atandı (otomatik kaydedildi).", ToastType.Success);
     }
 
     private async Task RemovePersonnelFromActionAsync(ActionEntry? entry)
@@ -326,7 +326,7 @@ public sealed partial class MainViewModel
         }
 
         await _personnelAssignmentService.RemoveAssignmentsForSourceAsync(PersonnelAssignmentSourceModule.Action, entry.Id);
-        _notificationService.ShowToast("Personel ataması kaldırıldı.", ToastType.Info);
+        _notificationService.ShowToast("Personel ataması kaldırıldı (otomatik kaydedildi).", ToastType.Info);
     }
 
     private async Task AssignPersonnelToMissingProjectAsync(MissingProjectEntry? entry)
@@ -354,7 +354,7 @@ public sealed partial class MainViewModel
             ProjectIdentitySnapshot = entry.AdaParsel,
             ModuleLabelSnapshot = IPersonnelAssignmentService.ModuleLabel(PersonnelAssignmentSourceModule.MissingProject)
         });
-        _notificationService.ShowToast("Personel atandı.", ToastType.Success);
+        _notificationService.ShowToast("Personel atandı (otomatik kaydedildi).", ToastType.Success);
     }
 
     private async Task RemovePersonnelFromMissingProjectAsync(MissingProjectEntry? entry)
@@ -365,7 +365,7 @@ public sealed partial class MainViewModel
         }
 
         await _personnelAssignmentService.RemoveAssignmentsForSourceAsync(PersonnelAssignmentSourceModule.MissingProject, entry.Id);
-        _notificationService.ShowToast("Personel ataması kaldırıldı.", ToastType.Info);
+        _notificationService.ShowToast("Personel ataması kaldırıldı (otomatik kaydedildi).", ToastType.Info);
     }
 
     private async Task AssignPersonnelToKarotAsync(KarotEntry? entry)
@@ -403,7 +403,7 @@ public sealed partial class MainViewModel
             ProjectIdentitySnapshot = FirstNonEmptyLocal(entry.AdaParsel, entry.YibfNo),
             ModuleLabelSnapshot = IPersonnelAssignmentService.ModuleLabel(PersonnelAssignmentSourceModule.Karot)
         });
-        _notificationService.ShowToast("Personel atandı.", ToastType.Success);
+        _notificationService.ShowToast("Personel atandı (otomatik kaydedildi).", ToastType.Success);
     }
 
     private async Task RemovePersonnelFromKarotAsync(KarotEntry? entry)
@@ -414,7 +414,7 @@ public sealed partial class MainViewModel
         }
 
         await _personnelAssignmentService.RemoveAssignmentsForSourceAsync(PersonnelAssignmentSourceModule.Karot, entry.Id);
-        _notificationService.ShowToast("Personel ataması kaldırıldı.", ToastType.Info);
+        _notificationService.ShowToast("Personel ataması kaldırıldı (otomatik kaydedildi).", ToastType.Info);
     }
 
     private async Task AssignPersonnelToTadilatRowAsync(TadilatEntry? entry)
@@ -431,7 +431,7 @@ public sealed partial class MainViewModel
         }
 
         await _personnelAssignmentService.AssignAsync(BuildTadilatAssignment(entry, personnelId.Value, columnKey: null));
-        _notificationService.ShowToast("Personel atandı.", ToastType.Success);
+        _notificationService.ShowToast("Personel atandı (otomatik kaydedildi).", ToastType.Success);
     }
 
     private async Task AssignPersonnelToTadilatCellAsync(object? parameter)
@@ -481,7 +481,7 @@ public sealed partial class MainViewModel
             await _personnelAssignmentService.AssignManyAsync(drafts);
         }
 
-        _notificationService.ShowToast("Personel atandı.", ToastType.Success);
+        _notificationService.ShowToast("Personel atandı (otomatik kaydedildi).", ToastType.Success);
     }
 
     private async Task RemovePersonnelFromTadilatAsync(TadilatEntry? entry)
@@ -492,7 +492,7 @@ public sealed partial class MainViewModel
         }
 
         await _personnelAssignmentService.RemoveAssignmentsForSourceAsync(PersonnelAssignmentSourceModule.Tadilat, entry.Id);
-        _notificationService.ShowToast("Personel ataması kaldırıldı.", ToastType.Info);
+        _notificationService.ShowToast("Personel ataması kaldırıldı (otomatik kaydedildi).", ToastType.Info);
     }
 
     private async Task AssignPersonnelToYibfRowAsync(YibfIsTakibiEntry? entry)
@@ -509,7 +509,7 @@ public sealed partial class MainViewModel
         }
 
         await _personnelAssignmentService.AssignAsync(BuildYibfAssignment(entry, personnelId.Value, null));
-        _notificationService.ShowToast("Personel atandı.", ToastType.Success);
+        _notificationService.ShowToast("Personel atandı (otomatik kaydedildi).", ToastType.Success);
     }
 
     private async Task AssignPersonnelToYibfCellAsync(object? parameter)
@@ -554,7 +554,7 @@ public sealed partial class MainViewModel
             await _personnelAssignmentService.AssignManyAsync(drafts);
         }
 
-        _notificationService.ShowToast("Personel atandı.", ToastType.Success);
+        _notificationService.ShowToast("Personel atandı (otomatik kaydedildi).", ToastType.Success);
     }
 
     private async Task RemovePersonnelFromYibfAsync(YibfIsTakibiEntry? entry)
@@ -565,7 +565,7 @@ public sealed partial class MainViewModel
         }
 
         await _personnelAssignmentService.RemoveAssignmentsForSourceAsync(PersonnelAssignmentSourceModule.YibfIsTakibi, entry.Id);
-        _notificationService.ShowToast("Personel ataması kaldırıldı.", ToastType.Info);
+        _notificationService.ShowToast("Personel ataması kaldırıldı (otomatik kaydedildi).", ToastType.Info);
     }
 
     private async Task AssignPersonnelToYibfEventAsync(YibfAnaBilgiEvent? evt)
@@ -599,7 +599,7 @@ public sealed partial class MainViewModel
             FieldLabelSnapshot = evt.ApprovalStatus,
             ModuleLabelSnapshot = IPersonnelAssignmentService.ModuleLabel(PersonnelAssignmentSourceModule.YibfAnaBilgiEvent)
         });
-        _notificationService.ShowToast("Personel atandı.", ToastType.Success);
+        _notificationService.ShowToast("Personel atandı (otomatik kaydedildi).", ToastType.Success);
     }
 
     private async Task RemovePersonnelFromYibfEventAsync(YibfAnaBilgiEvent? evt)
@@ -610,7 +610,7 @@ public sealed partial class MainViewModel
         }
 
         await _personnelAssignmentService.RemoveAssignmentsForSourceAsync(PersonnelAssignmentSourceModule.YibfAnaBilgiEvent, evt.Id);
-        _notificationService.ShowToast("Personel ataması kaldırıldı.", ToastType.Info);
+        _notificationService.ShowToast("Personel ataması kaldırıldı (otomatik kaydedildi).", ToastType.Info);
     }
 
     private PersonnelAssignment BuildTadilatAssignment(TadilatEntry entry, Guid personnelId, string? columnKey)

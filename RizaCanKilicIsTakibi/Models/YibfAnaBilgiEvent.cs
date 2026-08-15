@@ -27,7 +27,13 @@ public sealed class YibfAnaBilgiEvent : ObservableObject
     public string AssignedPersonnelBadge
     {
         get => _assignedPersonnelBadge;
-        set => SetProperty(ref _assignedPersonnelBadge, value ?? string.Empty);
+        set
+        {
+            if (SetProperty(ref _assignedPersonnelBadge, value ?? string.Empty))
+            {
+                OnPropertyChanged(nameof(HasAssignedPersonnel));
+            }
+        }
     }
 
     public bool HasAssignedPersonnel => !string.IsNullOrWhiteSpace(AssignedPersonnelBadge);

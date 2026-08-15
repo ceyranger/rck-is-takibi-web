@@ -364,25 +364,12 @@
                                                                                             </Style>
                                                                                         </ContentControl.Style>
                                                                                     </ContentControl>
-                                                                                    <TextBlock Text="{Binding Entry.AssignedPersonnelBadge}"
-                                                                                               FontSize="10"
-                                                                                               FontWeight="SemiBold"
-                                                                                               Foreground="{StaticResource Brush.Primary}"
-                                                                                               HorizontalAlignment="Right"
-                                                                                               VerticalAlignment="Top"
-                                                                                               Margin="0,2,4,0"
-                                                                                               ToolTip="{Binding Entry.AssignedPersonnelBadge}">
-                                                                                        <TextBlock.Style>
-                                                                                            <Style TargetType="TextBlock">
-                                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                                                <Style.Triggers>
-                                                                                                    <DataTrigger Binding="{Binding Entry.HasAssignedPersonnel}" Value="True">
-                                                                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                                                                    </DataTrigger>
-                                                                                                </Style.Triggers>
-                                                                                            </Style>
-                                                                                        </TextBlock.Style>
-                                                                                    </TextBlock>
+                                                                                    <viewControls:PersonnelAssignedBadge BadgeText="{Binding Entry.AssignedPersonnelBadge}"
+                                                                                                                        IconVariant="TwoPeople"
+                                                                                                                        ShowLabel="True"
+                                                                                                                        HorizontalAlignment="Right"
+                                                                                                                        VerticalAlignment="Top"
+                                                                                                                        Margin="0,2,4,0"/>
                                                                                 </Grid>
                                                                             </Border>
                                                                         </Grid>

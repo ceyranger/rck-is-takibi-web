@@ -1,12 +1,12 @@
 # Todo
 
-## Current Task: Manuel atama + kaynak düzelince kaldırma (Undo toast)
-- [x] Toast API: ActionLabel + Undo callback
-- [x] Manual source module + yeni atama penceresi/butonu
-- [x] Sync: eksik düzelince sil + toast Geri Al
+## Current Task: Kaynak korumalı düzenleme + otomatik kayıt + atama ikonları
+- [x] Kaynak bağlantısı korunur (edit dialog notu)
+- [x] Personel ata otomatik SQLite kayıt — toast netleştirildi
+- [x] 3 personel ikon varyantı + tüm satır/hücrelerde rozet
 - [x] Build/test + commit + publish
 
 ## Review Update
-- Personel sekmesinde **Yeni Atama** (manuel, kaynaksız).
-- Sağ tık atamaları kaynakla bağlı; eksik düzelince listeden silinir, toast’ta **Geri Al**.
-- Tests 225/225.
+- Personel atamaları SQLite’a anında yazılır; “kaydedilmedi” uyarısı çıkmaz (bilinçli).
+- Kaynaklı görevlerde yazısal düzenleme kaynağı bozmaz.
+- Atama ikonları: SinglePerson / TwoPeople / CirclePerson.

@@ -32,10 +32,16 @@
                     <StackPanel>
                         <TextBlock Text="KAYNAK SEKME" Style="{StaticResource EntryFieldLabelStyle}"/>
                         <Border Style="{StaticResource EntryFieldBoxStyle}" Background="#FFF1F5F9">
-                            <TextBlock Text="{Binding ModuleLabel}"
-                                       Padding="10,10"
-                                       VerticalAlignment="Center"
-                                       FontWeight="SemiBold"/>
+                            <StackPanel Margin="10,8">
+                                <TextBlock Text="{Binding ModuleLabel}"
+                                           VerticalAlignment="Center"
+                                           FontWeight="SemiBold"/>
+                                <TextBlock Text="{Binding SourceLinkHint}"
+                                           Margin="0,4,0,0"
+                                           FontSize="11"
+                                           Foreground="{StaticResource Brush.TextSecondary}"
+                                           TextWrapping="Wrap"/>
+                            </StackPanel>
                         </Border>
 
                         <TextBlock Text="PERSONEL" Style="{StaticResource EntryFieldLabelStyle}" Margin="0,12,0,0"/>

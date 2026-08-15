@@ -317,6 +317,13 @@
                              behaviors:TextBoxEditCommitBehavior.CancelCommand="{Binding DataContext.MissingProjectModule.CancelCellEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                              behaviors:TextBoxEditCommitBehavior.CommandParameter="{Binding}"/>
                     <Border Style="{StaticResource MissingProjectNoteBadgeStyle}"/>
+                    <viewControls:PersonnelAssignedBadge BadgeText="{Binding Row.Entry.AssignedPersonnelBadge}"
+                                                        IconVariant="CirclePerson"
+                                                        ShowLabel="False"
+                                                        HorizontalAlignment="Left"
+                                                        VerticalAlignment="Bottom"
+                                                        Margin="4,0,0,2"
+                                                        IsHitTestVisible="False"/>
                 </Grid>
             </Border>
         </DataTemplate>
@@ -958,25 +965,14 @@
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
-                                        <DataGridTemplateColumn Header="" Width="56" CanUserResize="False" CanUserSort="False">
+                                        <DataGridTemplateColumn Header="" Width="72" CanUserResize="False" CanUserSort="False">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <TextBlock Text="{Binding AssignedPersonnelBadge}"
-                                                               FontSize="11"
-                                                               VerticalAlignment="Center"
-                                                               TextTrimming="CharacterEllipsis"
-                                                               ToolTip="{Binding AssignedPersonnelBadge}">
-                                                        <TextBlock.Style>
-                                                            <Style TargetType="TextBlock">
-                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding HasAssignedPersonnel}" Value="True">
-                                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </TextBlock.Style>
-                                                    </TextBlock>
+                                                    <viewControls:PersonnelAssignedBadge BadgeText="{Binding AssignedPersonnelBadge}"
+                                                                                        IconVariant="TwoPeople"
+                                                                                        HorizontalAlignment="Center"
+                                                                                        VerticalAlignment="Center"
+                                                                                        Margin="2,0"/>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
@@ -1074,25 +1070,14 @@
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
-                                        <DataGridTemplateColumn Header="" Width="56" CanUserResize="False" CanUserSort="False">
+                                        <DataGridTemplateColumn Header="" Width="72" CanUserResize="False" CanUserSort="False">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <TextBlock Text="{Binding AssignedPersonnelBadge}"
-                                                               FontSize="11"
-                                                               VerticalAlignment="Center"
-                                                               TextTrimming="CharacterEllipsis"
-                                                               ToolTip="{Binding AssignedPersonnelBadge}">
-                                                        <TextBlock.Style>
-                                                            <Style TargetType="TextBlock">
-                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding HasAssignedPersonnel}" Value="True">
-                                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </TextBlock.Style>
-                                                    </TextBlock>
+                                                    <viewControls:PersonnelAssignedBadge BadgeText="{Binding AssignedPersonnelBadge}"
+                                                                                        IconVariant="TwoPeople"
+                                                                                        HorizontalAlignment="Center"
+                                                                                        VerticalAlignment="Center"
+                                                                                        Margin="2,0"/>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
