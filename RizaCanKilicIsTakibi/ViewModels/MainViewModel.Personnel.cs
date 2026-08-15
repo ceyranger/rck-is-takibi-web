@@ -97,9 +97,9 @@ public sealed partial class MainViewModel
 
         _personnelAssignmentService.Changed += (_, _) =>
         {
+            // Badge refresh also purges orphan assignments when sources disappeared.
             RefreshPersonnelBadges();
             PersonnelGorev?.Refresh();
-            SyncPersonnelAssignmentCompletion();
         };
 
         RefreshPersonnelBadges();
@@ -146,11 +146,6 @@ public sealed partial class MainViewModel
             task.AssignedPersonnelBadge = _personnelAssignmentService.GetBadgeText(module, task.Id);
         }
 
-        foreach (var entry in ActionModule.GetAllEntriesSnapshot())
-        {
-            // Action entries from snapshot are clones; refresh live collections instead.
-        }
-
         RefreshLiveModuleBadges();
     }
 
@@ -161,17 +156,9 @@ public sealed partial class MainViewModel
             return;
         }
 
-        foreach (var group in ActionModule.DistrictGroups)
+        foreach (var entry in ActionModule.AksiyonEntries.Concat(ActionModule.AksiyonaEkleneceklerEntries))
         {
-            foreach (var row in group.Rows)
-            {
-                if (row.Entry is null)
-                {
-                    continue;
-                }
-
-                row.Entry.AssignedPersonnelBadge = _personnelAssignmentService.GetBadgeText(PersonnelAssignmentSourceModule.Action, row.Entry.Id);
-            }
+            entry.AssignedPersonnelBadge = _personnelAssignmentService.GetBadgeText(PersonnelAssignmentSourceModule.Action, entry.Id);
         }
 
         foreach (var entry in MissingProjectModule.Entries)

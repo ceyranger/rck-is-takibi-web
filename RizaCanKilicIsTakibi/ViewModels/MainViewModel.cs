@@ -914,9 +914,17 @@ public sealed partial class MainViewModel : ViewModelBase
                 break;
             case MainNavigationTab.PersonelGorevTakibi:
                 IsPersonnelGorevViewActivated = true;
-                PersonnelGorev?.Refresh();
+                RunSafeBackgroundTask(ActivatePersonnelGorevTabAsync(), "Personel görevleri yüklenemedi.");
                 break;
         }
+    }
+
+    private async Task ActivatePersonnelGorevTabAsync()
+    {
+        await EnsureAllModulesInitializedAsync();
+        SyncPersonnelAssignmentCompletion();
+        RefreshPersonnelBadges();
+        PersonnelGorev?.Refresh();
     }
 
     private async Task AutoBackupAsync()
@@ -1517,6 +1525,8 @@ public sealed partial class MainViewModel : ViewModelBase
         await EnsureTadilatModuleInitializedAsync();
         await EnsureYibfModuleInitializedAsync();
         await TryAutoSeedProjectCatalogAsync();
+        SyncPersonnelAssignmentCompletion();
+        RefreshPersonnelBadges();
     }
 
     private static Task EnsureModuleInitializedAsync(ref Task? initializationTask, Func<Task> initializeAsync)

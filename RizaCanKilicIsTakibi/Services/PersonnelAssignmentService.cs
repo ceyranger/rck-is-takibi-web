@@ -282,6 +282,9 @@ public sealed class PersonnelAssignmentService : IPersonnelAssignmentService
         IEnumerable<YibfIsTakibiEntry> yibfEntries,
         IEnumerable<YibfCellState> yibfCellStates)
     {
+        var taskIds = tasks.Select(t => t.Id).ToHashSet();
+        var actionIds = actions.Select(a => a.Id).ToHashSet();
+        var missingIds = missingProjects.Select(m => m.Id).ToHashSet();
         var karotById = karotEntries.ToDictionary(e => e.Id);
         var tadilatById = tadilatEntries.ToDictionary(e => e.Id);
         var tadilatCells = tadilatCellStates.ToLookup(c => c.EntryId);
@@ -290,10 +293,23 @@ public sealed class PersonnelAssignmentService : IPersonnelAssignmentService
         var eventsById = yibfEvents.ToDictionary(e => e.Id);
 
         List<PersonnelAssignment> toUpdate = [];
+        List<Guid> toDelete = [];
         lock (_sync)
         {
-            foreach (var assignment in _assignments.Where(a => a.Status == PersonnelAssignmentStatus.Open))
+            foreach (var assignment in _assignments.ToList())
             {
+                if (IsSourceMissing(assignment, taskIds, actionIds, missingIds, karotById, tadilatById, yibfById, eventsById))
+                {
+                    toDelete.Add(assignment.Id);
+                    _assignments.RemoveAll(a => a.Id == assignment.Id);
+                    continue;
+                }
+
+                if (assignment.Status != PersonnelAssignmentStatus.Open)
+                {
+                    continue;
+                }
+
                 if (!ShouldAutoComplete(assignment, karotById, tadilatById, tadilatCells, yibfById, yibfCells, eventsById))
                 {
                     continue;
@@ -305,9 +321,14 @@ public sealed class PersonnelAssignmentService : IPersonnelAssignmentService
             }
         }
 
-        if (toUpdate.Count == 0)
+        if (toDelete.Count == 0 && toUpdate.Count == 0)
         {
             return;
+        }
+
+        foreach (var id in toDelete)
+        {
+            _repository.DeleteAssignmentAsync(id).GetAwaiter().GetResult();
         }
 
         foreach (var item in toUpdate)
@@ -317,6 +338,34 @@ public sealed class PersonnelAssignmentService : IPersonnelAssignmentService
 
         RaiseChanged();
     }
+
+    private static bool IsSourceMissing(
+        PersonnelAssignment assignment,
+        IReadOnlySet<Guid> taskIds,
+        IReadOnlySet<Guid> actionIds,
+        IReadOnlySet<Guid> missingIds,
+        IReadOnlyDictionary<Guid, KarotEntry> karotById,
+        IReadOnlyDictionary<Guid, TadilatEntry> tadilatById,
+        IReadOnlyDictionary<Guid, YibfIsTakibiEntry> yibfById,
+        IReadOnlyDictionary<Guid, YibfAnaBilgiEvent> eventsById)
+        => assignment.SourceModule switch
+        {
+            PersonnelAssignmentSourceModule.GenelTask or PersonnelAssignmentSourceModule.AcilTask
+                => !taskIds.Contains(assignment.SourceEntryId),
+            PersonnelAssignmentSourceModule.Action
+                => !actionIds.Contains(assignment.SourceEntryId),
+            PersonnelAssignmentSourceModule.MissingProject
+                => !missingIds.Contains(assignment.SourceEntryId),
+            PersonnelAssignmentSourceModule.Karot
+                => !karotById.ContainsKey(assignment.SourceEntryId),
+            PersonnelAssignmentSourceModule.Tadilat
+                => !tadilatById.ContainsKey(assignment.SourceEntryId),
+            PersonnelAssignmentSourceModule.YibfIsTakibi
+                => !yibfById.ContainsKey(assignment.SourceEntryId),
+            PersonnelAssignmentSourceModule.YibfAnaBilgiEvent
+                => !eventsById.ContainsKey(assignment.SourceEntryId),
+            _ => false
+        };
 
     private static bool ShouldAutoComplete(
         PersonnelAssignment assignment,

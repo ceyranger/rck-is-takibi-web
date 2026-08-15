@@ -73,4 +73,44 @@ public sealed class PersonnelRepositoryTests
             try { File.Delete(path); } catch { }
         }
     }
+
+    [Fact]
+    public async Task SyncCompletion_RemovesAssignmentsWhenSourceMissing()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"personnel-test-{Guid.NewGuid():N}.db");
+        try
+        {
+            var repo = new SqlitePersonnelRepository(path);
+            var service = new PersonnelAssignmentService(repo);
+            var person = await service.AddPersonnelAsync("Ali");
+            var missingSourceId = Guid.NewGuid();
+            await service.AssignAsync(new PersonnelAssignment
+            {
+                PersonnelId = person.Id,
+                SourceModule = PersonnelAssignmentSourceModule.Karot,
+                SourceEntryId = missingSourceId,
+                Status = PersonnelAssignmentStatus.Open
+            });
+
+            Assert.Single(service.GetAssignments());
+
+            service.SyncCompletionFromSources(
+                tasks: [],
+                actions: [],
+                missingProjects: [],
+                karotEntries: [],
+                tadilatEntries: [],
+                tadilatCellStates: [],
+                yibfEvents: [],
+                yibfEntries: [],
+                yibfCellStates: []);
+
+            Assert.Empty(service.GetAssignments());
+            Assert.Empty(repo.GetAllAssignments());
+        }
+        finally
+        {
+            try { File.Delete(path); } catch { }
+        }
+    }
 }
