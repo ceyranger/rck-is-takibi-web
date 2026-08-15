@@ -393,13 +393,6 @@
                         </ContentControl>
 
                         <Border Style="{StaticResource CellNoteBadgeStyle}"/>
-                        <viewControls:PersonnelAssignedBadge BadgeText="{Binding Row.Entry.AssignedPersonnelBadge}"
-                                                            IconVariant="TwoPeople"
-                                                            ShowLabel="False"
-                                                            HorizontalAlignment="Left"
-                                                            VerticalAlignment="Bottom"
-                                                            Margin="4,0,0,2"
-                                                            IsHitTestVisible="False"/>
                     </Grid>
                 </Border>
             </DataTemplate>
@@ -721,6 +714,14 @@
                             <ColumnDefinition Width="0.80*"/>
                         </Grid.ColumnDefinitions>
                         <ContentPresenter Grid.Column="0" Content="{Binding JobNameCell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>
+                        <viewControls:PersonnelAssignedBadge Grid.Column="0"
+                                                            BadgeText="{Binding Entry.AssignedPersonnelBadge}"
+                                                            IconVariant="TwoPeople"
+                                                            ShowLabel="False"
+                                                            HorizontalAlignment="Left"
+                                                            VerticalAlignment="Bottom"
+                                                            Margin="6,0,0,4"
+                                                            IsHitTestVisible="False"/>
                         <ContentPresenter Grid.Column="1" Content="{Binding ProjectTypeCell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>
                         <ContentPresenter Grid.Column="2" Content="{Binding DigitalReceivedCell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>
                         <ContentPresenter Grid.Column="3" Content="{Binding InspectorApprovedCell}" ContentTemplate="{StaticResource TadilatCellTemplate}"/>

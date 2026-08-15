@@ -117,13 +117,6 @@
                         </ContentControl>
 
                         <Border Style="{StaticResource CellNoteBadgeStyle}"/>
-                        <viewControls:PersonnelAssignedBadge BadgeText="{Binding Row.Entry.AssignedPersonnelBadge}"
-                                                            IconVariant="CirclePerson"
-                                                            ShowLabel="False"
-                                                            HorizontalAlignment="Left"
-                                                            VerticalAlignment="Bottom"
-                                                            Margin="4,0,0,2"
-                                                            IsHitTestVisible="False"/>
                     </Grid>
                 </Border>
             </DataTemplate>
@@ -310,6 +303,14 @@
                                         <ColumnDefinition Width="0.76*"/>
                                     </Grid.ColumnDefinitions>
                                     <ContentPresenter Grid.Column="0" Content="{Binding JobNameCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
+                                    <viewControls:PersonnelAssignedBadge Grid.Column="0"
+                                                                        BadgeText="{Binding Entry.AssignedPersonnelBadge}"
+                                                                        IconVariant="CirclePerson"
+                                                                        ShowLabel="False"
+                                                                        HorizontalAlignment="Left"
+                                                                        VerticalAlignment="Bottom"
+                                                                        Margin="6,0,0,4"
+                                                                        IsHitTestVisible="False"/>
                                     <ContentPresenter Grid.Column="1" Content="{Binding MuellifCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
                                     <ContentPresenter Grid.Column="2" Content="{Binding DenetciCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>
                                     <ContentPresenter Grid.Column="3" Content="{Binding TumDijitalCell}" ContentTemplate="{StaticResource YibfCellTemplate}"/>

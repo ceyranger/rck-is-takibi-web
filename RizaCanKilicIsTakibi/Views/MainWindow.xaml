@@ -317,6 +317,54 @@
                              behaviors:TextBoxEditCommitBehavior.CancelCommand="{Binding DataContext.MissingProjectModule.CancelCellEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                              behaviors:TextBoxEditCommitBehavior.CommandParameter="{Binding}"/>
                     <Border Style="{StaticResource MissingProjectNoteBadgeStyle}"/>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="MissingProjectFirstCellTemplate">
+            <Border Background="{Binding BackgroundBrush}"
+                    Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}"
+                    SnapsToDevicePixels="True"
+                    behaviors:InlineEditActivatorBehavior.BeginEditCommand="{Binding DataContext.MissingProjectModule.BeginCellEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                    behaviors:InlineEditActivatorBehavior.CommandParameter="{Binding}">
+                <Border.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Üste Satır Ekle"
+                                  Command="{Binding PlacementTarget.Tag.MissingProjectModule.InsertEntryAboveCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                        <MenuItem Header="Alta Satır Ekle"
+                                  Command="{Binding PlacementTarget.Tag.MissingProjectModule.InsertEntryBelowCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                        <Separator/>
+                        <MenuItem Header="Yukarı Taşı"
+                                  Command="{Binding PlacementTarget.Tag.MissingProjectModule.MoveEntryUpCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                        <MenuItem Header="Aşağı Taşı"
+                                  Command="{Binding PlacementTarget.Tag.MissingProjectModule.MoveEntryDownCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                        <Separator/>
+                        <MenuItem Header="Kopyala"
+                                  Command="{Binding PlacementTarget.Tag.MissingProjectModule.CopyCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                        <MenuItem Header="Yapıştır"
+                                  Command="{Binding PlacementTarget.Tag.MissingProjectModule.PasteCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                        <Separator/>
+                        <MenuItem Header="Personel ata"
+                                  Command="{Binding PlacementTarget.Tag.AssignPersonnelToMissingProjectCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                        <MenuItem Header="Atamayı kaldır"
+                                  Command="{Binding PlacementTarget.Tag.RemovePersonnelFromMissingProjectCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                    </ContextMenu>
+                </Border.ContextMenu>
+                <Grid>
+                    <TextBox Text="{Binding DraftText, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource MissingProjectInlineCellTextBoxStyle}"
+                             behaviors:TextBoxEditCommitBehavior.CommitCommand="{Binding DataContext.MissingProjectModule.CommitCellEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                             behaviors:TextBoxEditCommitBehavior.CancelCommand="{Binding DataContext.MissingProjectModule.CancelCellEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                             behaviors:TextBoxEditCommitBehavior.CommandParameter="{Binding}"/>
+                    <Border Style="{StaticResource MissingProjectNoteBadgeStyle}"/>
                     <viewControls:PersonnelAssignedBadge BadgeText="{Binding Row.Entry.AssignedPersonnelBadge}"
                                                         IconVariant="CirclePerson"
                                                         ShowLabel="False"
@@ -1261,7 +1309,7 @@
                                     <DataGridTemplateColumn Header="ADA PARSEL" Width="1.2*">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <ContentPresenter Content="{Binding AdaParselCell}" ContentTemplate="{StaticResource MissingProjectCellTemplate}"/>
+                                                <ContentPresenter Content="{Binding AdaParselCell}" ContentTemplate="{StaticResource MissingProjectFirstCellTemplate}"/>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
