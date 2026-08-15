@@ -13,9 +13,9 @@ public sealed class PersonnelPickDialogViewModel : ViewModelBase
     public PersonnelPickDialogViewModel(IEnumerable<Personnel> personnel)
     {
         Personnel = new ObservableCollection<Personnel>(personnel);
-        Selected = Personnel.FirstOrDefault();
         OkCommand = new RelayCommand(() => RequestClose?.Invoke(this, true), () => Selected is not null);
         CancelCommand = new RelayCommand(() => RequestClose?.Invoke(this, false));
+        Selected = Personnel.FirstOrDefault();
     }
 
     public event EventHandler<bool>? RequestClose;
@@ -29,7 +29,7 @@ public sealed class PersonnelPickDialogViewModel : ViewModelBase
         {
             if (SetProperty(ref _selected, value))
             {
-                OkCommand.NotifyCanExecuteChanged();
+                OkCommand?.NotifyCanExecuteChanged();
             }
         }
     }

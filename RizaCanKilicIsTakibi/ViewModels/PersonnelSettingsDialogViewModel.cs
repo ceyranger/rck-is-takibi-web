@@ -59,8 +59,8 @@ public sealed class PersonnelSettingsDialogViewModel : ViewModelBase
             if (SetProperty(ref _selected, value))
             {
                 RenameText = value?.Name ?? string.Empty;
-                RenameCommand.NotifyCanExecuteChanged();
-                DeleteCommand.NotifyCanExecuteChanged();
+                RenameCommand?.NotifyCanExecuteChanged();
+                DeleteCommand?.NotifyCanExecuteChanged();
             }
         }
     }
