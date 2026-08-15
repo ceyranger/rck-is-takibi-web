@@ -51,5 +51,5 @@
 - 2026-08-06: Tadilat Takibi ilçe listesinde MERKEZ ayrı grup olarak gösterilmiyor; `DistrictCatalog.GetDisplayDistrict` MERKEZ→SİNOP gruplama, `TadilatDistricts` MERKEZ hariç. Saklanan `District` değeri değiştirilmez. Tests 216/216. Canonical publish güncellendi; canlı Data korundu.
 - 2026-08-06: Tadilat MERKEZ boş placeholder bug: `ReplaceDistricts` ve satır etiketleri `GetDisplayDistrict` kullanır; MERKEZ kayıtları SİNOP altında, boş MERKEZ satırı yok. Tests 217/217. Canonical publish güncellendi.
 - 2026-08-15: Personel Görev Takibi completed: SQLite Personnel/PersonnelAssignments, backup schema v4, Personel Görev sekmesi, hibrit satır/hücre ataması, rozetler, otomatik tamamlanma, TÜM EKSİKLER personel filtresi, Excel/PDF. Tests 219/219. Commit `1339c60`; canonical publish exe güncellendi; `Data\tasks.db` / `Data\last-save.json` hash/size/timestamp değişmedi; `Backup` ve `Logs` korundu.
-- 2026-08-15: Personel Görev listesi modernize (ortalı başlıklar, chip/kart, durum rozetleri); Karot hücre sağ tık + toolbar Personel ata. Tests 221/221.
+- 2026-08-15: Personel Görev listesi modernize (ortalı başlıklar, chip/kart, durum rozetleri); Karot hücre sağ tık + toolbar Personel ata. Tests 221/221. Commit `55e2912`; canonical publish exe güncellendi; `Data\tasks.db` / `Data\last-save.json` hash/size/timestamp değişmedi.
 
