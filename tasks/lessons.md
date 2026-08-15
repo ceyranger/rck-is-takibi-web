@@ -21,3 +21,4 @@
 - Modül `CloneEntry` / `GetEntriesSnapshot` proje bağlantısı (`ProjectId`) alanını kopyalamazsa DryRun “çözülmemiş” sayar ve Persist bağlantıyı DB’ye yazmaz; Apply + Kaydet sonrası sayaç düşmez.
 - Genel İş Takibi gibi WPF `DataGrid` ve detay paneli birlikte kullanılan yüzeylerde dirty-state'i sadece commit/lost-focus anına bırakma; `TextChanged` seviyesinde dirty işaretlemek, butona basarken focus geçişinden doğan yanlış "Kaydedilecek değişiklik yok" durumlarını kapatır.
 - ViewModel'de `private set` olan string özellikler `TextBox.Text` varsayılan TwoWay bağlama ile çöker (`InvalidOperationException`); salt okunur gösterimde `Mode=OneWay` kullan.
+- Personel ataması SQLite’a anında yazılır ama sol paneldeki “Son kayıt” yalnız genel Kaydet (`last-save.json`) ile güncellenir. Toast’ta “kaydedildi” demek bu iki kavramı karıştırır; personel toast’ında Kaydet dili kullanma.

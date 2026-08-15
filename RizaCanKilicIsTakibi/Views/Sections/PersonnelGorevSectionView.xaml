@@ -110,7 +110,7 @@
                                FontFamily="{StaticResource Font.Primary}"
                                FontSize="24"
                                FontWeight="SemiBold"/>
-                    <TextBlock Text="Çift tık düzenle · kaynak bağlantısı korunur · Personel ata otomatik kaydedilir"
+                    <TextBlock Text="Çift tık düzenle · kaynak bağlantısı korunur · atama Kaydet’ten bağımsız saklanır"
                                Foreground="{StaticResource Brush.TextSecondary}"
                                Margin="0,2,0,0"/>
                 </StackPanel>
