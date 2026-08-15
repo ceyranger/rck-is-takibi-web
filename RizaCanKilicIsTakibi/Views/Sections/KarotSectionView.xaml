@@ -62,21 +62,28 @@
             <DataTemplate x:Key="KarotCellTemplate" DataType="{x:Type viewModels:KarotCellViewModel}">
                 <Border Style="{StaticResource TadilatCellBorderStyle}"
                         Background="{Binding Row.RowBackgroundBrush}"
-                        Tag="{Binding DataContext.KarotModule, RelativeSource={RelativeSource AncestorType=Window}}"
+                        Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}"
                         behaviors:InlineEditActivatorBehavior.BeginEditCommand="{Binding DataContext.KarotModule.BeginCellEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                         behaviors:InlineEditActivatorBehavior.CommandParameter="{Binding}">
                     <Border.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Kopyala"
-                                      Command="{Binding PlacementTarget.Tag.CopyCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.KarotModule.CopyCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                             <MenuItem Header="Yapıştır"
-                                      Command="{Binding PlacementTarget.Tag.PasteCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.KarotModule.PasteCellCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                             <Separator/>
                             <MenuItem Header="Not Düzenle"
-                                      Command="{Binding PlacementTarget.Tag.EditCellNoteCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      Command="{Binding PlacementTarget.Tag.KarotModule.EditCellNoteCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                            <Separator/>
+                            <MenuItem Header="Personel ata"
+                                      Command="{Binding PlacementTarget.Tag.AssignPersonnelToKarotCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                            <MenuItem Header="Atamayı kaldır"
+                                      Command="{Binding PlacementTarget.Tag.RemovePersonnelFromKarotCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      CommandParameter="{Binding PlacementTarget.DataContext.Row.Entry, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                         </ContextMenu>
                     </Border.ContextMenu>
                     <Grid>
@@ -123,6 +130,14 @@
                     <Button Content="↓" Command="{Binding KarotModule.MoveKarotEntryDownCommand}" Style="{StaticResource IconButton}"/>
                     <Button Content="Excel Dışa" Command="{Binding ExportExcelCommand}" Style="{StaticResource GhostButton}"/>
                     <Button Content="PNG Aktar" Command="{Binding ExportKarotPngCommand}" CommandParameter="{Binding ElementName=KarotExportHost}" Style="{StaticResource GhostButton}"/>
+                    <Button Content="Personel ata"
+                            Command="{Binding AssignPersonnelToKarotCommand}"
+                            CommandParameter="{Binding KarotModule.SelectedEntry}"
+                            Style="{StaticResource GhostButton}"/>
+                    <Button Content="Atamayı kaldır"
+                            Command="{Binding RemovePersonnelFromKarotCommand}"
+                            CommandParameter="{Binding KarotModule.SelectedEntry}"
+                            Style="{StaticResource GhostButton}"/>
                     <Button Content="Sil" Command="{Binding KarotModule.DeleteKarotEntryCommand}" Style="{StaticResource GhostButton}"/>
                 </WrapPanel>
             </DockPanel>

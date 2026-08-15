@@ -6,94 +6,264 @@
              mc:Ignorable="d"
              d:DesignHeight="720"
              d:DesignWidth="1180">
+    <UserControl.Resources>
+        <Style x:Key="PersonnelFilterChipStyle" TargetType="Button" BasedOn="{StaticResource GhostButton}">
+            <Setter Property="Padding" Value="14,7"/>
+            <Setter Property="Margin" Value="0,0,8,8"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="MinHeight" Value="32"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                    <Setter Property="Background" Value="{StaticResource Brush.Primary}"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="PersonnelCenteredHeaderStyle" TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="#FF1F3147"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="10,10"/>
+            <Setter Property="BorderThickness" Value="0,0,1,0"/>
+            <Setter Property="BorderBrush" Value="#FF334960"/>
+        </Style>
+
+        <Style x:Key="PersonnelCenteredCellTextStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Padding" Value="6,4"/>
+        </Style>
+
+        <Style x:Key="PersonnelLeftCellTextStyle" TargetType="TextBlock" BasedOn="{StaticResource PersonnelCenteredCellTextStyle}">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="TextAlignment" Value="Left"/>
+        </Style>
+    </UserControl.Resources>
+
     <Grid Margin="0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0"
-                Background="White"
-                BorderBrush="{StaticResource Brush.Border}"
-                BorderThickness="1"
-                CornerRadius="8"
-                Padding="12"
-                Margin="0,0,0,8">
-            <DockPanel>
+        <Border Grid.Row="0" Style="{StaticResource CardBorderStyle}">
+            <DockPanel LastChildFill="True">
                 <StackPanel DockPanel.Dock="Left">
                     <TextBlock Text="PERSONEL GÖREV TAKİBİ"
-                               FontSize="22"
-                               FontWeight="SemiBold" />
-                    <TextBlock Text="Personele atanmış işler"
-                               Foreground="{StaticResource Brush.TextSecondary}" />
+                               FontFamily="{StaticResource Font.Primary}"
+                               FontSize="24"
+                               FontWeight="SemiBold"/>
+                    <TextBlock Text="Personele atanmış işler · durum ve çıktılar"
+                               Foreground="{StaticResource Brush.TextSecondary}"
+                               Margin="0,2,0,0"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <WrapPanel Orientation="Horizontal"
+                           HorizontalAlignment="Right"
+                           DockPanel.Dock="Right"
+                           VerticalAlignment="Center">
                     <CheckBox Content="Tamamlananları göster"
                               IsChecked="{Binding PersonnelGorev.ShowCompleted}"
                               VerticalAlignment="Center"
-                              Margin="0,0,12,0" />
+                              Margin="0,0,12,0"/>
                     <Button Content="Durum değiştir"
                             Command="{Binding PersonnelGorev.ToggleStatusCommand}"
-                            Margin="0,0,8,0"
-                            Padding="12,6" />
+                            Style="{StaticResource GhostButton}"
+                            Margin="0,0,8,0"/>
                     <Button Content="Excel"
                             Command="{Binding ExportPersonnelExcelCommand}"
-                            Margin="0,0,8,0"
-                            Padding="12,6" />
+                            Style="{StaticResource GhostButton}"
+                            Margin="0,0,8,0"/>
                     <Button Content="PDF"
                             Command="{Binding ExportPersonnelPdfCommand}"
-                            Margin="0,0,8,0"
-                            Padding="12,6" />
+                            Style="{StaticResource GhostButton}"
+                            Margin="0,0,8,0"/>
                     <Button Content="Personel Ayarları"
-                            Command="{Binding PersonnelGorev.OpenPersonnelSettingsCommand}"
-                            Padding="12,6" />
-                </StackPanel>
+                            Command="{Binding PersonnelGorev.OpenPersonnelSettingsCommand}"/>
+                </WrapPanel>
             </DockPanel>
         </Border>
 
-        <ItemsControl Grid.Row="1"
-                      ItemsSource="{Binding PersonnelGorev.FilterChips}"
-                      Margin="0,0,0,8">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Button Content="{Binding Label}"
-                            Command="{Binding DataContext.PersonnelGorev.SelectFilterCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                            CommandParameter="{Binding Key}"
-                            Margin="0,0,8,8"
-                            Padding="10,4" />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <Border Grid.Row="1"
+                Style="{StaticResource CardBorderStyle}"
+                Margin="0,8,0,8"
+                Padding="12,10">
+            <ItemsControl ItemsSource="{Binding PersonnelGorev.FilterChips}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding Label}"
+                                Style="{StaticResource PersonnelFilterChipStyle}"
+                                Command="{Binding DataContext.PersonnelGorev.SelectFilterCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding Key}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Border>
 
-        <DataGrid Grid.Row="2"
-                  ItemsSource="{Binding PersonnelGorev.Rows}"
-                  SelectedItem="{Binding PersonnelGorev.SelectedRow, Mode=TwoWay}"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False"
-                  SelectionMode="Single"
-                  HeadersVisibility="Column"
-                  GridLinesVisibility="Horizontal"
-                  Background="White"
-                  BorderBrush="{StaticResource Brush.Border}"
-                  BorderThickness="1">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Personel" Binding="{Binding PersonnelName}" Width="140" />
-                <DataGridTextColumn Header="Sekme" Binding="{Binding ModuleLabel}" Width="140" />
-                <DataGridTextColumn Header="İş özeti" Binding="{Binding Summary}" Width="*" MinWidth="160" />
-                <DataGridTextColumn Header="Öncelik" Binding="{Binding PriorityLabel}" Width="80" />
-                <DataGridTextColumn Header="Alan" Binding="{Binding FieldLabel}" Width="160" />
-                <DataGridTextColumn Header="Proje" Binding="{Binding ProjectIdentity}" Width="140" />
-                <DataGridTextColumn Header="Durum" Binding="{Binding StatusLabel}" Width="90" />
-                <DataGridTextColumn Header="Atama" Binding="{Binding AssignedAtText}" Width="120" />
-            </DataGrid.Columns>
-        </DataGrid>
+        <Border Grid.Row="2"
+                Style="{StaticResource CardBorderStyle}"
+                Padding="0"
+                ClipToBounds="True">
+            <DataGrid ItemsSource="{Binding PersonnelGorev.Rows}"
+                      SelectedItem="{Binding PersonnelGorev.SelectedRow, Mode=TwoWay}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      CanUserResizeRows="False"
+                      SelectionMode="Single"
+                      SelectionUnit="FullRow"
+                      HeadersVisibility="Column"
+                      GridLinesVisibility="Horizontal"
+                      HorizontalGridLinesBrush="#FFE2E8F0"
+                      AlternationCount="2"
+                      RowBackground="White"
+                      AlternatingRowBackground="#FFF7FAFC"
+                      Background="Transparent"
+                      BorderThickness="0"
+                      RowHeaderWidth="0"
+                      Margin="0"
+                      MinRowHeight="44"
+                      ColumnHeaderStyle="{StaticResource PersonnelCenteredHeaderStyle}"
+                      RowStyle="{StaticResource ModernDataGridRowStyle}">
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Padding" Value="4"/>
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#FFE8F1FB"/>
+                                <Setter Property="Foreground" Value="{StaticResource Brush.TextPrimary}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.CellStyle>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Personel" Width="140">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding PersonnelName}" Style="{StaticResource PersonnelCenteredCellTextStyle}" FontWeight="SemiBold"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Sekme" Width="130">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding ModuleLabel}" Style="{StaticResource PersonnelCenteredCellTextStyle}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="İş özeti" Width="*" MinWidth="180">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Summary}" Style="{StaticResource PersonnelLeftCellTextStyle}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Öncelik" Width="90">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border CornerRadius="10"
+                                        Padding="10,3"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Background="#FFF1F5F9">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding PriorityLabel}" Value="Kritik">
+                                                    <Setter Property="Background" Value="#FFFEE2E2"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding PriorityLabel}" Value="Uyarı">
+                                                    <Setter Property="Background" Value="#FFFEF9C3"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding PriorityLabel}" Value="Acil">
+                                                    <Setter Property="Background" Value="#FFFECACA"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock Text="{Binding PriorityLabel}"
+                                               FontSize="11"
+                                               FontWeight="SemiBold"
+                                               HorizontalAlignment="Center"/>
+                                </Border>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Alan" Width="150">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding FieldLabel}" Style="{StaticResource PersonnelCenteredCellTextStyle}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Proje" Width="130">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding ProjectIdentity}" Style="{StaticResource PersonnelCenteredCellTextStyle}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Durum" Width="110">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border CornerRadius="10"
+                                        Padding="12,4"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="#FFDCFCE7"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsOpen}" Value="True">
+                                                    <Setter Property="Background" Value="#FFDBEAFE"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock Text="{Binding StatusLabel}"
+                                               FontSize="11"
+                                               FontWeight="SemiBold"
+                                               HorizontalAlignment="Center">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="#FF166534"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsOpen}" Value="True">
+                                                        <Setter Property="Foreground" Value="#FF1D4ED8"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </Border>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Atama" Width="120">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding AssignedAtText}" Style="{StaticResource PersonnelCenteredCellTextStyle}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
     </Grid>
 </UserControl>
