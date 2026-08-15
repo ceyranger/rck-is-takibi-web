@@ -172,6 +172,49 @@ public sealed class PersonnelAssignmentService : IPersonnelAssignmentService
         }
     }
 
+    public async Task UpdateAssignmentAsync(PersonnelAssignment updated, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(updated);
+
+        PersonnelAssignment? existing;
+        lock (_sync)
+        {
+            existing = _assignments.FirstOrDefault(a => a.Id == updated.Id);
+            if (existing is null)
+            {
+                return;
+            }
+        }
+
+        var next = existing.Clone();
+        next.PersonnelId = updated.PersonnelId;
+        next.Status = updated.Status;
+        next.CompletedAt = updated.Status == PersonnelAssignmentStatus.Completed
+            ? (updated.CompletedAt ?? existing.CompletedAt ?? DateTime.Now)
+            : null;
+        next.PrioritySnapshot = updated.PrioritySnapshot;
+        next.FieldLabelSnapshot = updated.FieldLabelSnapshot?.Trim() ?? string.Empty;
+        next.SummarySnapshot = updated.SummarySnapshot?.Trim() ?? string.Empty;
+        next.ProjectIdentitySnapshot = updated.ProjectIdentitySnapshot?.Trim() ?? string.Empty;
+        next.ModuleLabelSnapshot = string.IsNullOrWhiteSpace(updated.ModuleLabelSnapshot)
+            ? IPersonnelAssignmentService.ModuleLabel(next.SourceModule)
+            : updated.ModuleLabelSnapshot.Trim();
+        next.AssignedAt = existing.AssignedAt;
+
+        await _repository.UpsertAssignmentAsync(next, cancellationToken);
+
+        lock (_sync)
+        {
+            var index = _assignments.FindIndex(a => a.Id == next.Id);
+            if (index >= 0)
+            {
+                _assignments[index] = next.Clone();
+            }
+        }
+
+        RaiseChanged();
+    }
+
     public async Task RemoveAssignmentAsync(PersonnelAssignmentSourceModule module, Guid sourceEntryId, string? columnKey = null, CancellationToken cancellationToken = default)
     {
         PersonnelAssignment? existing;

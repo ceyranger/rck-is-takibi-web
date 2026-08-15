@@ -136,6 +136,7 @@ public partial class App : Application
         services.AddSingleton<IPersonnelSettingsDialogService, PersonnelSettingsDialogService>();
         services.AddSingleton<IPersonnelPickDialogService, PersonnelPickDialogService>();
         services.AddSingleton<IPersonnelCellScopeDialogService, PersonnelCellScopeDialogService>();
+        services.AddSingleton<IPersonnelAssignmentEditDialogService, PersonnelAssignmentEditDialogService>();
 
         services.AddSingleton<DashboardViewModel>();
         services.AddSingleton<SearchOverlayViewModel>();

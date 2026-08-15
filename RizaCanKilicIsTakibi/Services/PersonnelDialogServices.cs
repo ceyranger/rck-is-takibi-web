@@ -1,3 +1,4 @@
+using RizaCanKilicIsTakibi.Models;
 using RizaCanKilicIsTakibi.Services.Abstractions;
 using RizaCanKilicIsTakibi.ViewModels;
 using RizaCanKilicIsTakibi.Views;
@@ -72,5 +73,36 @@ public sealed class PersonnelCellScopeDialogService : IPersonnelCellScopeDialogS
         };
         var result = window.ShowDialog();
         return result == true ? vm.Choice : PersonnelCellScopeChoice.Cancel;
+    }
+}
+
+public sealed class PersonnelAssignmentEditDialogService : IPersonnelAssignmentEditDialogService
+{
+    private readonly IPersonnelAssignmentService _service;
+
+    public PersonnelAssignmentEditDialogService(IPersonnelAssignmentService service)
+    {
+        _service = service;
+    }
+
+    public async Task<bool> ShowDialogAsync(PersonnelAssignment assignment, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(assignment);
+
+        var vm = new PersonnelAssignmentEditDialogViewModel(assignment, _service.GetPersonnel());
+        var window = new PersonnelAssignmentEditWindow(vm)
+        {
+            Owner = Application.Current?.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive)
+                    ?? Application.Current?.MainWindow
+        };
+
+        var result = window.ShowDialog();
+        if (result != true)
+        {
+            return false;
+        }
+
+        await _service.UpdateAssignmentAsync(vm.BuildUpdatedAssignment(), cancellationToken);
+        return true;
     }
 }

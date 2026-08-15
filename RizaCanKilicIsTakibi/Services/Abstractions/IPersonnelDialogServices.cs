@@ -16,3 +16,8 @@ public interface IPersonnelCellScopeDialogService
 {
     PersonnelCellScopeChoice ShowDialog(string columnLabel);
 }
+
+public interface IPersonnelAssignmentEditDialogService
+{
+    Task<bool> ShowDialogAsync(PersonnelAssignment assignment, CancellationToken cancellationToken = default);
+}

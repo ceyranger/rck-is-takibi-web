@@ -113,4 +113,51 @@ public sealed class PersonnelRepositoryTests
             try { File.Delete(path); } catch { }
         }
     }
+
+    [Fact]
+    public async Task UpdateAssignment_UpdatesEditableFieldsById()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"personnel-test-{Guid.NewGuid():N}.db");
+        try
+        {
+            var repo = new SqlitePersonnelRepository(path);
+            var service = new PersonnelAssignmentService(repo);
+            var ali = await service.AddPersonnelAsync("Ali");
+            var veli = await service.AddPersonnelAsync("Veli");
+            var sourceId = Guid.NewGuid();
+            await service.AssignAsync(new PersonnelAssignment
+            {
+                PersonnelId = ali.Id,
+                SourceModule = PersonnelAssignmentSourceModule.GenelTask,
+                SourceEntryId = sourceId,
+                SummarySnapshot = "eski",
+                PrioritySnapshot = PersonnelAssignmentPriority.None,
+                Status = PersonnelAssignmentStatus.Open
+            });
+
+            var existing = Assert.Single(service.GetAssignments());
+            existing.PersonnelId = veli.Id;
+            existing.SummarySnapshot = "yeni özet";
+            existing.PrioritySnapshot = PersonnelAssignmentPriority.Critical;
+            existing.Status = PersonnelAssignmentStatus.Completed;
+            existing.FieldLabelSnapshot = "Alan";
+            existing.ProjectIdentitySnapshot = "1/2";
+
+            await service.UpdateAssignmentAsync(existing);
+
+            var updated = Assert.Single(service.GetAssignments());
+            Assert.Equal(veli.Id, updated.PersonnelId);
+            Assert.Equal("yeni özet", updated.SummarySnapshot);
+            Assert.Equal(PersonnelAssignmentPriority.Critical, updated.PrioritySnapshot);
+            Assert.Equal(PersonnelAssignmentStatus.Completed, updated.Status);
+            Assert.Equal("Alan", updated.FieldLabelSnapshot);
+            Assert.Equal("1/2", updated.ProjectIdentitySnapshot);
+            Assert.NotNull(updated.CompletedAt);
+            Assert.Equal(sourceId, updated.SourceEntryId);
+        }
+        finally
+        {
+            try { File.Delete(path); } catch { }
+        }
+    }
 }

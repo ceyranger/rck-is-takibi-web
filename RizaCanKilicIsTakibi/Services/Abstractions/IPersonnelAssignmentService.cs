@@ -24,6 +24,7 @@ public interface IPersonnelAssignmentService
 
     Task AssignAsync(PersonnelAssignment draft, CancellationToken cancellationToken = default);
     Task AssignManyAsync(IEnumerable<PersonnelAssignment> drafts, CancellationToken cancellationToken = default);
+    Task UpdateAssignmentAsync(PersonnelAssignment updated, CancellationToken cancellationToken = default);
     Task RemoveAssignmentAsync(PersonnelAssignmentSourceModule module, Guid sourceEntryId, string? columnKey = null, CancellationToken cancellationToken = default);
     Task RemoveAssignmentsForSourceAsync(PersonnelAssignmentSourceModule module, Guid sourceEntryId, CancellationToken cancellationToken = default);
     Task SetStatusAsync(Guid assignmentId, PersonnelAssignmentStatus status, CancellationToken cancellationToken = default);

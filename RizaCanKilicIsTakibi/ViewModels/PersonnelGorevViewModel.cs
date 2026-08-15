@@ -3,7 +3,6 @@ using RizaCanKilicIsTakibi.Helpers;
 using RizaCanKilicIsTakibi.Models;
 using RizaCanKilicIsTakibi.Services.Abstractions;
 using System.Collections.ObjectModel;
-using System.Windows.Data;
 
 namespace RizaCanKilicIsTakibi.ViewModels;
 
@@ -63,20 +62,24 @@ public sealed class PersonnelGorevViewModel : ViewModelBase
 
     private readonly IPersonnelAssignmentService _service;
     private readonly IPersonnelSettingsDialogService? _settingsDialog;
+    private readonly IPersonnelAssignmentEditDialogService? _editDialog;
     private string _selectedFilterKey = FilterAll;
     private bool _showCompleted;
     private PersonnelGorevRowViewModel? _selectedRow;
 
     public PersonnelGorevViewModel(
         IPersonnelAssignmentService service,
-        IPersonnelSettingsDialogService? settingsDialog = null)
+        IPersonnelSettingsDialogService? settingsDialog = null,
+        IPersonnelAssignmentEditDialogService? editDialog = null)
     {
         _service = service;
         _settingsDialog = settingsDialog;
+        _editDialog = editDialog;
         Rows = new ObservableCollection<PersonnelGorevRowViewModel>();
         FilterChips = new ObservableCollection<PersonnelFilterChipViewModel>();
         OpenPersonnelSettingsCommand = new AsyncRelayCommand(OpenSettingsAsync);
         ToggleStatusCommand = new AsyncRelayCommand(ToggleStatusAsync, () => SelectedRow is not null);
+        EditAssignmentCommand = new AsyncRelayCommand<PersonnelGorevRowViewModel?>(EditAssignmentAsync, row => row is not null || SelectedRow is not null);
         SelectFilterCommand = new RelayCommand<string>(SelectFilter);
         RefreshCommand = new RelayCommand(Refresh);
         _service.Changed += (_, _) => Refresh();
@@ -87,6 +90,7 @@ public sealed class PersonnelGorevViewModel : ViewModelBase
     public ObservableCollection<PersonnelFilterChipViewModel> FilterChips { get; }
     public IRelayCommand OpenPersonnelSettingsCommand { get; }
     public IAsyncRelayCommand ToggleStatusCommand { get; }
+    public IAsyncRelayCommand EditAssignmentCommand { get; }
     public IRelayCommand SelectFilterCommand { get; }
     public IRelayCommand RefreshCommand { get; }
 
@@ -122,6 +126,7 @@ public sealed class PersonnelGorevViewModel : ViewModelBase
             if (SetProperty(ref _selectedRow, value))
             {
                 ToggleStatusCommand.NotifyCanExecuteChanged();
+                EditAssignmentCommand.NotifyCanExecuteChanged();
             }
         }
     }
@@ -203,5 +208,21 @@ public sealed class PersonnelGorevViewModel : ViewModelBase
             : PersonnelAssignmentStatus.Open;
         await _service.SetStatusAsync(SelectedRow.Assignment.Id, next);
         Refresh();
+    }
+
+    private async Task EditAssignmentAsync(PersonnelGorevRowViewModel? row)
+    {
+        var target = row ?? SelectedRow;
+        if (target is null || _editDialog is null)
+        {
+            return;
+        }
+
+        SelectedRow = target;
+        var saved = await _editDialog.ShowDialogAsync(target.Assignment);
+        if (saved)
+        {
+            Refresh();
+        }
     }
 }
