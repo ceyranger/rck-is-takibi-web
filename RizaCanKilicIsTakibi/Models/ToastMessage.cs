@@ -1,3 +1,5 @@
+using System.Windows.Input;
+
 namespace RizaCanKilicIsTakibi.Models;
 
 public sealed class ToastMessage
@@ -7,4 +9,7 @@ public sealed class ToastMessage
     public ToastType Type { get; set; } = ToastType.Info;
     public DateTime Timestamp { get; set; } = DateTime.Now;
     public TimeSpan Duration { get; set; } = TimeSpan.FromSeconds(3);
+    public string? ActionLabel { get; set; }
+    public ICommand? ActionCommand { get; set; }
+    public bool HasAction => !string.IsNullOrWhiteSpace(ActionLabel) && ActionCommand is not null;
 }

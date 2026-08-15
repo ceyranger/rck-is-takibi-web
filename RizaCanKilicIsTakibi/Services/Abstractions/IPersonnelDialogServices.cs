@@ -21,3 +21,8 @@ public interface IPersonnelAssignmentEditDialogService
 {
     Task<bool> ShowDialogAsync(PersonnelAssignment assignment, CancellationToken cancellationToken = default);
 }
+
+public interface IPersonnelManualAssignmentDialogService
+{
+    Task<bool> ShowCreateDialogAsync(CancellationToken cancellationToken = default);
+}

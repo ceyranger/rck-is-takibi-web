@@ -114,7 +114,7 @@ public sealed partial class MainViewModel
 
         try
         {
-            _personnelAssignmentService.SyncCompletionFromSources(
+            var removed = _personnelAssignmentService.SyncCompletionFromSources(
                 AllTasks(),
                 ActionModule.GetAllEntriesSnapshot(),
                 MissingProjectModule.GetEntriesSnapshot(),
@@ -124,10 +124,50 @@ public sealed partial class MainViewModel
                 YibfModule.GetAnaBilgiEventsSnapshot(),
                 YibfModule.GetIsTakibiEntriesSnapshot(),
                 YibfModule.GetCellStatesSnapshot());
+
+            if (removed.Count == 0)
+            {
+                return;
+            }
+
+            var snapshot = removed.Select(a => a.Clone()).ToList();
+            var message = snapshot.Count == 1
+                ? "Kaynak eksikliği düzeldiği için personel görevi listeden kaldırıldı."
+                : $"{snapshot.Count} personel görevi kaynak düzeldiği için listeden kaldırıldı.";
+
+            _notificationService.ShowToast(
+                message,
+                ToastType.Info,
+                TimeSpan.FromSeconds(12),
+                "Geri Al",
+                () =>
+                {
+                    _ = RestoreRemovedPersonnelAssignmentsAsync(snapshot);
+                });
         }
         catch
         {
             // Sync best-effort; do not break UI.
+        }
+    }
+
+    private async Task RestoreRemovedPersonnelAssignmentsAsync(IReadOnlyList<PersonnelAssignment> snapshot)
+    {
+        if (_personnelAssignmentService is null || snapshot.Count == 0)
+        {
+            return;
+        }
+
+        try
+        {
+            await _personnelAssignmentService.RestoreAssignmentsAsync(snapshot);
+            RefreshPersonnelBadges();
+            PersonnelGorev?.Refresh();
+            _notificationService.ShowToast("Personel görevi geri alındı.", ToastType.Success);
+        }
+        catch (Exception ex)
+        {
+            _notificationService.ShowToast($"Geri alma başarısız: {ex.Message}", ToastType.Error);
         }
     }
 

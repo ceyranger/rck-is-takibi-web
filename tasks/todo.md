@@ -1,12 +1,12 @@
 # Todo
 
-## Current Task: Personel görev düzenleme + tablo UI
-- [x] UpdateAssignment API
-- [x] Çift tık düzenleme penceresi
-- [x] Tablo kenarlıkları + modern tasarım
+## Current Task: Manuel atama + kaynak düzelince kaldırma (Undo toast)
+- [x] Toast API: ActionLabel + Undo callback
+- [x] Manual source module + yeni atama penceresi/butonu
+- [x] Sync: eksik düzelince sil + toast Geri Al
 - [x] Build/test + commit + publish
 
 ## Review Update
-- Personel görevleri çift tık / Düzenle ile pencereden düzenlenir (personel, durum, öncelik, özet, alan, proje).
-- Personel Görev tablosu belirgin hücre/grid kenarlıkları + ortalı başlıklarla yenilendi.
-- Tests 223/223.
+- Personel sekmesinde **Yeni Atama** (manuel, kaynaksız).
+- Sağ tık atamaları kaynakla bağlı; eksik düzelince listeden silinir, toast’ta **Geri Al**.
+- Tests 225/225.

@@ -9,5 +9,6 @@ public enum PersonnelAssignmentSourceModule
     Karot = 4,
     Tadilat = 5,
     YibfAnaBilgiEvent = 6,
-    YibfIsTakibi = 7
+    YibfIsTakibi = 7,
+    Manual = 8
 }

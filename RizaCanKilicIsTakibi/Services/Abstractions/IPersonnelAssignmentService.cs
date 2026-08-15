@@ -25,6 +25,7 @@ public interface IPersonnelAssignmentService
     Task AssignAsync(PersonnelAssignment draft, CancellationToken cancellationToken = default);
     Task AssignManyAsync(IEnumerable<PersonnelAssignment> drafts, CancellationToken cancellationToken = default);
     Task UpdateAssignmentAsync(PersonnelAssignment updated, CancellationToken cancellationToken = default);
+    Task RestoreAssignmentsAsync(IEnumerable<PersonnelAssignment> assignments, CancellationToken cancellationToken = default);
     Task RemoveAssignmentAsync(PersonnelAssignmentSourceModule module, Guid sourceEntryId, string? columnKey = null, CancellationToken cancellationToken = default);
     Task RemoveAssignmentsForSourceAsync(PersonnelAssignmentSourceModule module, Guid sourceEntryId, CancellationToken cancellationToken = default);
     Task SetStatusAsync(Guid assignmentId, PersonnelAssignmentStatus status, CancellationToken cancellationToken = default);
@@ -33,7 +34,11 @@ public interface IPersonnelAssignmentService
     string GetBadgeText(PersonnelAssignmentSourceModule module, Guid sourceEntryId);
     string? GetPersonnelName(Guid? personnelId);
 
-    void SyncCompletionFromSources(
+    /// <summary>
+    /// Deletes assignments whose source is missing, and removes open assignments whose deficiency is resolved.
+    /// Returns clones of deficiency-resolved removals (for undo toast); source-missing deletions are not included.
+    /// </summary>
+    IReadOnlyList<PersonnelAssignment> SyncCompletionFromSources(
         IEnumerable<TaskItem> tasks,
         IEnumerable<ActionEntry> actions,
         IEnumerable<MissingProjectEntry> missingProjects,
@@ -54,6 +59,7 @@ public interface IPersonnelAssignmentService
         PersonnelAssignmentSourceModule.Tadilat => "Tadilat Takibi",
         PersonnelAssignmentSourceModule.YibfAnaBilgiEvent => "Proje Takibi",
         PersonnelAssignmentSourceModule.YibfIsTakibi => "YİBF İş Takibi",
+        PersonnelAssignmentSourceModule.Manual => "Manuel",
         _ => module.ToString()
     };
 

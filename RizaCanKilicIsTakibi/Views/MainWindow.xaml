@@ -1747,7 +1747,7 @@
                 <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type models:ToastMessage}">
-                        <Border Width="300">
+                        <Border Width="340">
                             <Border.Style>
                                 <Style TargetType="Border" BasedOn="{StaticResource ToastBorderStyle}">
                                     <Setter Property="Background" Value="White"/>
@@ -1761,7 +1761,27 @@
                             </Border.Style>
                             <StackPanel>
                                 <TextBlock Text="{Binding Message}" TextWrapping="Wrap" FontWeight="SemiBold"/>
-                                <TextBlock Text="{Binding Timestamp, StringFormat={}{0:HH:mm:ss}}" Foreground="{StaticResource Brush.TextSecondary}" FontSize="11"/>
+                                <DockPanel Margin="0,8,0,0" LastChildFill="False">
+                                    <TextBlock Text="{Binding Timestamp, StringFormat={}{0:HH:mm:ss}}"
+                                               Foreground="{StaticResource Brush.TextSecondary}"
+                                               FontSize="11"
+                                               VerticalAlignment="Center"
+                                               DockPanel.Dock="Left"/>
+                                    <Button Content="{Binding ActionLabel}"
+                                            Command="{Binding ActionCommand}"
+                                            DockPanel.Dock="Right"
+                                            Padding="10,4"
+                                            FontWeight="SemiBold"
+                                            Cursor="Hand"
+                                            Visibility="{Binding HasAction, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <Button.Style>
+                                            <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
+                                                <Setter Property="MinHeight" Value="28"/>
+                                                <Setter Property="MinWidth" Value="72"/>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </DockPanel>
                             </StackPanel>
                         </Border>
                     </DataTemplate>

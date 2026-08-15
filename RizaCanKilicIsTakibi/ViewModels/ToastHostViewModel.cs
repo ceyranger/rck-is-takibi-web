@@ -15,6 +15,7 @@ public sealed class ToastHostViewModel : ViewModelBase
         _dispatcher = Dispatcher.CurrentDispatcher;
         Toasts = new ObservableCollection<ToastMessage>();
         notificationService.ToastRequested += OnToastRequested;
+        notificationService.ToastActionInvoked += OnToastActionInvoked;
     }
 
     public ObservableCollection<ToastMessage> Toasts { get; }
@@ -41,5 +42,16 @@ public sealed class ToastHostViewModel : ViewModelBase
         };
 
         timer.Start();
+    }
+
+    private void OnToastActionInvoked(object? sender, ToastMessage toast)
+    {
+        if (!_dispatcher.CheckAccess())
+        {
+            _ = _dispatcher.BeginInvoke(new Action(() => OnToastActionInvoked(sender, toast)));
+            return;
+        }
+
+        Toasts.Remove(toast);
     }
 }

@@ -215,6 +215,39 @@ public sealed class PersonnelAssignmentService : IPersonnelAssignmentService
         RaiseChanged();
     }
 
+    public async Task RestoreAssignmentsAsync(IEnumerable<PersonnelAssignment> assignments, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(assignments);
+        var list = assignments.Select(a => a.Clone()).ToList();
+        if (list.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var item in list)
+        {
+            await _repository.UpsertAssignmentAsync(item, cancellationToken);
+        }
+
+        lock (_sync)
+        {
+            foreach (var item in list)
+            {
+                var index = _assignments.FindIndex(a => a.Id == item.Id);
+                if (index >= 0)
+                {
+                    _assignments[index] = item.Clone();
+                }
+                else
+                {
+                    _assignments.Add(item.Clone());
+                }
+            }
+        }
+
+        RaiseChanged();
+    }
+
     public async Task RemoveAssignmentAsync(PersonnelAssignmentSourceModule module, Guid sourceEntryId, string? columnKey = null, CancellationToken cancellationToken = default)
     {
         PersonnelAssignment? existing;
@@ -314,7 +347,7 @@ public sealed class PersonnelAssignmentService : IPersonnelAssignmentService
         }
     }
 
-    public void SyncCompletionFromSources(
+    public IReadOnlyList<PersonnelAssignment> SyncCompletionFromSources(
         IEnumerable<TaskItem> tasks,
         IEnumerable<ActionEntry> actions,
         IEnumerable<MissingProjectEntry> missingProjects,
@@ -335,15 +368,20 @@ public sealed class PersonnelAssignmentService : IPersonnelAssignmentService
         var yibfCells = yibfCellStates.ToLookup(c => c.EntryId);
         var eventsById = yibfEvents.ToDictionary(e => e.Id);
 
-        List<PersonnelAssignment> toUpdate = [];
-        List<Guid> toDelete = [];
+        List<Guid> toDeleteQuiet = [];
+        List<PersonnelAssignment> toDeleteResolved = [];
         lock (_sync)
         {
             foreach (var assignment in _assignments.ToList())
             {
+                if (assignment.SourceModule == PersonnelAssignmentSourceModule.Manual)
+                {
+                    continue;
+                }
+
                 if (IsSourceMissing(assignment, taskIds, actionIds, missingIds, karotById, tadilatById, yibfById, eventsById))
                 {
-                    toDelete.Add(assignment.Id);
+                    toDeleteQuiet.Add(assignment.Id);
                     _assignments.RemoveAll(a => a.Id == assignment.Id);
                     continue;
                 }
@@ -358,28 +396,23 @@ public sealed class PersonnelAssignmentService : IPersonnelAssignmentService
                     continue;
                 }
 
-                assignment.Status = PersonnelAssignmentStatus.Completed;
-                assignment.CompletedAt = DateTime.Now;
-                toUpdate.Add(assignment.Clone());
+                toDeleteResolved.Add(assignment.Clone());
+                _assignments.RemoveAll(a => a.Id == assignment.Id);
             }
         }
 
-        if (toDelete.Count == 0 && toUpdate.Count == 0)
+        if (toDeleteQuiet.Count == 0 && toDeleteResolved.Count == 0)
         {
-            return;
+            return Array.Empty<PersonnelAssignment>();
         }
 
-        foreach (var id in toDelete)
+        foreach (var id in toDeleteQuiet.Concat(toDeleteResolved.Select(a => a.Id)))
         {
             _repository.DeleteAssignmentAsync(id).GetAwaiter().GetResult();
         }
 
-        foreach (var item in toUpdate)
-        {
-            _repository.UpsertAssignmentAsync(item).GetAwaiter().GetResult();
-        }
-
         RaiseChanged();
+        return toDeleteResolved;
     }
 
     private static bool IsSourceMissing(
@@ -407,6 +440,8 @@ public sealed class PersonnelAssignmentService : IPersonnelAssignmentService
                 => !yibfById.ContainsKey(assignment.SourceEntryId),
             PersonnelAssignmentSourceModule.YibfAnaBilgiEvent
                 => !eventsById.ContainsKey(assignment.SourceEntryId),
+            PersonnelAssignmentSourceModule.Manual
+                => false,
             _ => false
         };
 

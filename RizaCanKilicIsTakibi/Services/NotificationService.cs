@@ -1,3 +1,4 @@
+using CommunityToolkit.Mvvm.Input;
 using RizaCanKilicIsTakibi.Models;
 using RizaCanKilicIsTakibi.Services.Abstractions;
 
@@ -24,4 +25,33 @@ public sealed class NotificationService : INotificationService
             Duration = duration ?? defaultDuration
         });
     }
+
+    public void ShowToast(
+        string message,
+        ToastType type,
+        TimeSpan duration,
+        string actionLabel,
+        Action action)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(actionLabel);
+        ArgumentNullException.ThrowIfNull(action);
+
+        var toast = new ToastMessage
+        {
+            Message = message,
+            Type = type,
+            Duration = duration,
+            ActionLabel = actionLabel
+        };
+
+        toast.ActionCommand = new RelayCommand(() =>
+        {
+            action();
+            ToastActionInvoked?.Invoke(this, toast);
+        });
+
+        ToastRequested?.Invoke(this, toast);
+    }
+
+    public event EventHandler<ToastMessage>? ToastActionInvoked;
 }

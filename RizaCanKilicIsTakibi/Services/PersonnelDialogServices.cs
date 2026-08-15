@@ -106,3 +106,43 @@ public sealed class PersonnelAssignmentEditDialogService : IPersonnelAssignmentE
         return true;
     }
 }
+
+public sealed class PersonnelManualAssignmentDialogService : IPersonnelManualAssignmentDialogService
+{
+    private readonly IPersonnelAssignmentService _service;
+
+    public PersonnelManualAssignmentDialogService(IPersonnelAssignmentService service)
+    {
+        _service = service;
+    }
+
+    public async Task<bool> ShowCreateDialogAsync(CancellationToken cancellationToken = default)
+    {
+        var people = _service.GetPersonnel();
+        if (people.Count == 0)
+        {
+            MessageBox.Show(
+                "Önce Personel Ayarları ile personel ekleyin.",
+                "Personel yok",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+            return false;
+        }
+
+        var vm = new PersonnelManualAssignmentDialogViewModel(people);
+        var window = new PersonnelManualAssignmentWindow(vm)
+        {
+            Owner = Application.Current?.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive)
+                    ?? Application.Current?.MainWindow
+        };
+
+        var result = window.ShowDialog();
+        if (result != true)
+        {
+            return false;
+        }
+
+        await _service.AssignAsync(vm.BuildAssignment(), cancellationToken);
+        return true;
+    }
+}

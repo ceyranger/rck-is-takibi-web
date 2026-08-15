@@ -63,6 +63,7 @@ public sealed class PersonnelGorevViewModel : ViewModelBase
     private readonly IPersonnelAssignmentService _service;
     private readonly IPersonnelSettingsDialogService? _settingsDialog;
     private readonly IPersonnelAssignmentEditDialogService? _editDialog;
+    private readonly IPersonnelManualAssignmentDialogService? _manualDialog;
     private string _selectedFilterKey = FilterAll;
     private bool _showCompleted;
     private PersonnelGorevRowViewModel? _selectedRow;
@@ -70,14 +71,17 @@ public sealed class PersonnelGorevViewModel : ViewModelBase
     public PersonnelGorevViewModel(
         IPersonnelAssignmentService service,
         IPersonnelSettingsDialogService? settingsDialog = null,
-        IPersonnelAssignmentEditDialogService? editDialog = null)
+        IPersonnelAssignmentEditDialogService? editDialog = null,
+        IPersonnelManualAssignmentDialogService? manualDialog = null)
     {
         _service = service;
         _settingsDialog = settingsDialog;
         _editDialog = editDialog;
+        _manualDialog = manualDialog;
         Rows = new ObservableCollection<PersonnelGorevRowViewModel>();
         FilterChips = new ObservableCollection<PersonnelFilterChipViewModel>();
         OpenPersonnelSettingsCommand = new AsyncRelayCommand(OpenSettingsAsync);
+        CreateManualAssignmentCommand = new AsyncRelayCommand(CreateManualAssignmentAsync);
         ToggleStatusCommand = new AsyncRelayCommand(ToggleStatusAsync, () => SelectedRow is not null);
         EditAssignmentCommand = new AsyncRelayCommand<PersonnelGorevRowViewModel?>(EditAssignmentAsync, row => row is not null || SelectedRow is not null);
         SelectFilterCommand = new RelayCommand<string>(SelectFilter);
@@ -89,6 +93,7 @@ public sealed class PersonnelGorevViewModel : ViewModelBase
     public ObservableCollection<PersonnelGorevRowViewModel> Rows { get; }
     public ObservableCollection<PersonnelFilterChipViewModel> FilterChips { get; }
     public IRelayCommand OpenPersonnelSettingsCommand { get; }
+    public IAsyncRelayCommand CreateManualAssignmentCommand { get; }
     public IAsyncRelayCommand ToggleStatusCommand { get; }
     public IAsyncRelayCommand EditAssignmentCommand { get; }
     public IRelayCommand SelectFilterCommand { get; }
@@ -194,6 +199,20 @@ public sealed class PersonnelGorevViewModel : ViewModelBase
 
         await _settingsDialog.ShowDialogAsync();
         Refresh();
+    }
+
+    private async Task CreateManualAssignmentAsync()
+    {
+        if (_manualDialog is null)
+        {
+            return;
+        }
+
+        var created = await _manualDialog.ShowCreateDialogAsync();
+        if (created)
+        {
+            Refresh();
+        }
     }
 
     private async Task ToggleStatusAsync()

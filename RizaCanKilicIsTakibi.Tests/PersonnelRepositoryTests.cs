@@ -160,4 +160,92 @@ public sealed class PersonnelRepositoryTests
             try { File.Delete(path); } catch { }
         }
     }
+
+    [Fact]
+    public async Task SyncCompletion_RemovesWhenKarotResolved_AndRestoreWorks()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"personnel-test-{Guid.NewGuid():N}.db");
+        try
+        {
+            var repo = new SqlitePersonnelRepository(path);
+            var service = new PersonnelAssignmentService(repo);
+            var person = await service.AddPersonnelAsync("Ali");
+            var karotId = Guid.NewGuid();
+            await service.AssignAsync(new PersonnelAssignment
+            {
+                PersonnelId = person.Id,
+                SourceModule = PersonnelAssignmentSourceModule.Karot,
+                SourceEntryId = karotId,
+                Status = PersonnelAssignmentStatus.Open,
+                SummarySnapshot = "karot işi"
+            });
+
+            var karot = new KarotEntry
+            {
+                Id = karotId,
+                Status = KarotStatus.KarotAlindiOlumlu
+            };
+
+            var removed = service.SyncCompletionFromSources(
+                tasks: [],
+                actions: [],
+                missingProjects: [],
+                karotEntries: [karot],
+                tadilatEntries: [],
+                tadilatCellStates: [],
+                yibfEvents: [],
+                yibfEntries: [],
+                yibfCellStates: []);
+
+            Assert.Single(removed);
+            Assert.Empty(service.GetAssignments());
+
+            await service.RestoreAssignmentsAsync(removed);
+            var restored = Assert.Single(service.GetAssignments());
+            Assert.Equal(karotId, restored.SourceEntryId);
+            Assert.Equal(PersonnelAssignmentStatus.Open, restored.Status);
+        }
+        finally
+        {
+            try { File.Delete(path); } catch { }
+        }
+    }
+
+    [Fact]
+    public async Task ManualAssignment_IsNotRemovedBySync()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"personnel-test-{Guid.NewGuid():N}.db");
+        try
+        {
+            var repo = new SqlitePersonnelRepository(path);
+            var service = new PersonnelAssignmentService(repo);
+            var person = await service.AddPersonnelAsync("Ali");
+            await service.AssignAsync(new PersonnelAssignment
+            {
+                PersonnelId = person.Id,
+                SourceModule = PersonnelAssignmentSourceModule.Manual,
+                SourceEntryId = Guid.NewGuid(),
+                Status = PersonnelAssignmentStatus.Open,
+                SummarySnapshot = "manuel iş"
+            });
+
+            var removed = service.SyncCompletionFromSources(
+                tasks: [],
+                actions: [],
+                missingProjects: [],
+                karotEntries: [],
+                tadilatEntries: [],
+                tadilatCellStates: [],
+                yibfEvents: [],
+                yibfEntries: [],
+                yibfCellStates: []);
+
+            Assert.Empty(removed);
+            Assert.Single(service.GetAssignments());
+        }
+        finally
+        {
+            try { File.Delete(path); } catch { }
+        }
+    }
 }

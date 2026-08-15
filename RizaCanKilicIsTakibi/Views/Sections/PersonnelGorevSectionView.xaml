@@ -122,6 +122,9 @@
                               IsChecked="{Binding PersonnelGorev.ShowCompleted}"
                               VerticalAlignment="Center"
                               Margin="0,0,12,0"/>
+                    <Button Content="Yeni Atama"
+                            Command="{Binding PersonnelGorev.CreateManualAssignmentCommand}"
+                            Margin="0,0,8,0"/>
                     <Button Content="Düzenle"
                             Command="{Binding PersonnelGorev.EditAssignmentCommand}"
                             CommandParameter="{Binding PersonnelGorev.SelectedRow}"
