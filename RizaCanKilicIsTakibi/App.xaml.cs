@@ -41,7 +41,7 @@ public partial class App : Application
             EnsureWindowVisibleOnCurrentScreen(mainWindow);
             MainWindow = mainWindow;
             mainWindow.Show();
-            mainWindow.WindowState = WindowState.Normal;
+            mainWindow.WindowState = WindowState.Maximized;
             mainWindow.Topmost = true;
             mainWindow.Topmost = false;
             mainWindow.Activate();
