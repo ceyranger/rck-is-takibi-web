@@ -54,6 +54,7 @@ public sealed class WebViewSnapshotServiceTests
             var derived = WebViewSnapshotDerivedBuilder.Build(
                 WebViewSnapshotDerivedBuilder.GetAllTumEksiklerGroups(tumEksikler),
                 [pendingGroup],
+                [],
                 []);
 
             var result = await service.TryExportLatestAsync(

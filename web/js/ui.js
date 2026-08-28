@@ -100,6 +100,141 @@ window.WebUI = (function () {
     return '<section class="module-section">' + moduleHeader(title, count, subtitle) + innerHtml + "</section>";
   }
 
+  function renderSubTabs(moduleKey, tabs, activeId) {
+    return '<div class="sub-tab-bar">' + tabs.map(function (tab) {
+      var active = tab.id === activeId ? " active" : "";
+      return '<button type="button" class="sub-tab-btn' + active + '" data-module="' + escapeHtml(moduleKey) + '" data-subtab="' + escapeHtml(tab.id) + '">' + escapeHtml(tab.label) + "</button>";
+    }).join("") + "</div>";
+  }
+
+  function renderFilterChips(moduleKey, chips, activeId) {
+    return '<div class="filter-chip-bar">' + chips.map(function (chip) {
+      var active = chip.id === activeId ? " active" : "";
+      return '<button type="button" class="filter-chip' + active + '" data-filter-module="' + escapeHtml(moduleKey) + '" data-filter="' + escapeHtml(chip.id) + '">' + escapeHtml(chip.label) + " (" + chip.count + ")</button>";
+    }).join("") + "</div>";
+  }
+
+  function splitColumns(leftTitle, leftHtml, rightTitle, rightHtml) {
+    return '<div class="split-layout">' +
+      '<section class="split-panel"><div class="split-panel-title">' + escapeHtml(leftTitle) + "</div>" + leftHtml + "</section>" +
+      '<section class="split-panel"><div class="split-panel-title">' + escapeHtml(rightTitle) + "</div>" + rightHtml + "</section>" +
+      "</div>";
+  }
+
+  function renderTaskTable(tasks) {
+    if (!tasks.length) {
+      return emptyState("Kayıt bulunamadı.");
+    }
+    return renderTable([
+      { key: "title", label: "Başlık", sticky: true, className: "text-wrap" },
+      { key: "description", label: "Açıklama", className: "text-wrap" },
+      {
+        label: "Notlar",
+        className: "text-wrap",
+        render: function (row) {
+          return cell((row.notes || []).map(function (n) { return n.text; }).filter(Boolean).join(" · "));
+        }
+      },
+      { label: "Son Tarih", render: function (row) { return formatDate(row.dueDate); } }
+    ], tasks);
+  }
+
+  function renderActionTable(entries) {
+    if (!entries.length) {
+      return emptyState("Kayıt bulunamadı.");
+    }
+    var groups = {};
+    entries.forEach(function (entry) {
+      var district = String(entry.district || "—").trim() || "—";
+      if (!groups[district]) groups[district] = [];
+      groups[district].push(entry);
+    });
+    var districts = Object.keys(groups).sort(function (a, b) { return a.localeCompare(b, "tr"); });
+    var rows = [];
+    districts.forEach(function (district) {
+      groups[district].forEach(function (entry, index) {
+        rows.push({
+          district: index === 0 ? district : "",
+          ownerParcelText: entry.ownerParcelText,
+          workText: entry.workText
+        });
+      });
+    });
+    return renderTable([
+      { key: "district", label: "İlçe", className: "district-cell" },
+      { key: "ownerParcelText", label: "Ada Parsel Yapı Sahibi", className: "text-wrap" },
+      { key: "workText", label: "Yapılacak İş", className: "text-wrap" }
+    ], rows);
+  }
+
+  function priorityBadge(label, rank) {
+    var cls = rank === 0 ? "priority-acil" : "priority-dikkat";
+    return '<span class="priority-badge ' + cls + '">' + escapeHtml(label) + "</span>";
+  }
+
+  function renderAcilOzetList(items) {
+    if (!items.length) {
+      return emptyState("Acil iş özeti bulunamadı.");
+    }
+    var groups = {};
+    items.forEach(function (item) {
+      var cat = item.category || "Diğer";
+      if (!groups[cat]) groups[cat] = [];
+      groups[cat].push(item);
+    });
+    return Object.keys(groups).sort().map(function (category) {
+      var cards = groups[category].map(function (item) {
+        return '<article class="ozet-card">' +
+          priorityBadge(item.priorityLabel, item.priorityRank) +
+          '<p class="text-wrap">' + escapeHtml(item.summary) + "</p>" +
+          "</article>";
+      }).join("");
+      return '<details class="ozet-group" open><summary>' + escapeHtml(category) + " (" + groups[category].length + ")</summary>" + cards + "</details>";
+    }).join("");
+  }
+
+  function renderProjeOnayGroups(groups, filterKey) {
+    var UI = {
+      escapeHtml: escapeHtml,
+      emptyState: emptyState
+    };
+    var filteredGroups = groups.map(function (group) {
+      var events = (group.events || []).filter(function (ev) {
+        if (!filterKey || filterKey === "all") return true;
+        return ev.filterKey === filterKey;
+      });
+      return { group: group, events: events };
+    }).filter(function (item) { return item.events.length > 0; });
+
+    if (!filteredGroups.length) {
+      return emptyState("Proje onay kaydı bulunamadı.");
+    }
+
+    return filteredGroups.map(function (item) {
+      var g = item.group;
+      var eventsHtml = item.events.map(function (ev) {
+        return '<div class="pending-event">' +
+          '<div class="pending-event-stripe" style="background:' + escapeHtml(ev.categoryColor || "#94a3b8") + '"></div>' +
+          '<div class="pending-event-body">' +
+          '<div class="pending-event-top">' +
+          '<strong class="text-wrap">' + escapeHtml(ev.statusLabel) + "</strong>" +
+          '<span class="pending-date">' + escapeHtml(ev.eventDateText) + "</span>" +
+          '<span class="pending-days' + (ev.isOverdue ? " overdue" : "") + '">' + escapeHtml(ev.daysElapsedText) + "</span>" +
+          "</div>" +
+          '<p class="text-wrap pending-summary">' + escapeHtml(ev.summary) + "</p>" +
+          "</div></div>";
+      }).join("");
+
+      return '<article class="proje-card' + (g.isOverdue ? " overdue" : "") + '">' +
+        '<div class="proje-card-head">' +
+        '<h3 class="text-wrap">' + escapeHtml(g.titleText) + "</h3>" +
+        '<span class="module-count">' + item.events.length + " olay</span>" +
+        "</div>" +
+        eventsHtml +
+        "</article>";
+    }).join("");
+  }
+
   return {
     escapeHtml: escapeHtml,
     cell: cell,
@@ -110,7 +245,14 @@ window.WebUI = (function () {
     moduleHeader: moduleHeader,
     emptyState: emptyState,
     renderTable: renderTable,
-    wrapModule: wrapModule
+    wrapModule: wrapModule,
+    renderSubTabs: renderSubTabs,
+    renderFilterChips: renderFilterChips,
+    splitColumns: splitColumns,
+    renderTaskTable: renderTaskTable,
+    renderActionTable: renderActionTable,
+    renderAcilOzetList: renderAcilOzetList,
+    renderProjeOnayGroups: renderProjeOnayGroups
   };
 })();
 

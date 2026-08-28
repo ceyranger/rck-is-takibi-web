@@ -120,12 +120,14 @@ public sealed partial class MainViewModel
         {
             await EnsureAllModulesInitializedAsync();
             RefreshTumEksikler();
+            RefreshAcilIsOzet();
             PersonnelGorev?.Refresh();
 
             var derived = WebViewSnapshotDerivedBuilder.Build(
                 WebViewSnapshotDerivedBuilder.GetAllTumEksiklerGroups(TumEksikler),
                 YibfModule.BekleyenGruplar,
-                PersonnelGorev?.Rows ?? []);
+                PersonnelGorev?.Rows ?? [],
+                AcilIsOzetItems);
 
             var exportDirectory = WebViewExportDirectory;
             var result = await _webViewSnapshotService.TryExportLatestAsync(

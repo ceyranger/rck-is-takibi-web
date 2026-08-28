@@ -1,13 +1,15 @@
 (function () {
   var TABS = [
-    { id: "acil", label: "Acil İşler", render: WebModules.acil },
-    { id: "proje-onay", label: "Proje Onay", render: WebModules.projeOnay },
-    { id: "personel", label: "Personel", render: WebModules.personel },
-    { id: "karot", label: "Karot", render: WebModules.karot },
-    { id: "tadilat", label: "Tadilat", render: WebModules.tadilat },
-    { id: "yibf", label: "YİBF İş", render: WebModules.yibfIsTakibi },
-    { id: "eksikler", label: "Tüm Eksikler", render: WebModules.tumEksikler },
-    { id: "arama", label: "Arama", render: WebModules.arama }
+    { id: "genel-is-takibi", label: "GENEL İŞ TAKİBİ", render: WebModules.genelIsTakibi },
+    { id: "acil-is-ozet", label: "ACİL İŞ ÖZET", render: WebModules.acilIsOzet },
+    { id: "tum-eksikler", label: "TÜM EKSİKLER", render: WebModules.tumEksikler },
+    { id: "aksiyon", label: "AKSİYON", render: WebModules.aksiyon },
+    { id: "eksik-proje", label: "EKSİK PROJE", render: WebModules.eksikProje },
+    { id: "karot", label: "KAROT TAKİBİ", render: WebModules.karot },
+    { id: "tadilat", label: "TADİLAT TAKİBİ", render: WebModules.tadilat },
+    { id: "yibf", label: "YİBF İŞ TAKİBİ", render: WebModules.yibfIsTakibi },
+    { id: "personel", label: "PERSONEL GÖREV", render: WebModules.personel },
+    { id: "arama", label: "ARAMA", render: WebModules.arama }
   ];
 
   var SESSION_KEY = "rck-web-auth";
@@ -31,7 +33,14 @@
     activeTab: TABS[0].id,
     query: "",
     envelope: null,
-    loading: false
+    loading: false,
+    subTabs: {
+      karot: "bekleyen",
+      aksiyon: "aksiyon"
+    },
+    filters: {
+      projeOnay: "all"
+    }
   };
 
   function getConfig() {
@@ -150,8 +159,36 @@
     }
 
     var tab = TABS.find(function (t) { return t.id === state.activeTab; }) || TABS[0];
-    var viewState = { envelope: state.envelope, query: state.query };
+    var viewState = {
+      envelope: state.envelope,
+      query: state.query,
+      subTabs: state.subTabs,
+      filters: state.filters
+    };
     content.innerHTML = tab.render(viewState);
+  }
+
+  function handleContentClick(event) {
+    var subBtn = event.target.closest("[data-subtab]");
+    if (subBtn) {
+      var moduleKey = subBtn.getAttribute("data-module");
+      var subTab = subBtn.getAttribute("data-subtab");
+      if (moduleKey && subTab) {
+        state.subTabs[moduleKey] = subTab;
+        renderContent();
+      }
+      return;
+    }
+
+    var filterBtn = event.target.closest("[data-filter]");
+    if (filterBtn) {
+      var filterModule = filterBtn.getAttribute("data-filter-module");
+      var filterValue = filterBtn.getAttribute("data-filter");
+      if (filterModule === "projeOnay" && filterValue) {
+        state.filters.projeOnay = filterValue;
+        renderContent();
+      }
+    }
   }
 
   function fetchEnvelopeXHR(dataUrl) {
@@ -286,6 +323,7 @@
 
   pinForm.addEventListener("submit", handlePinSubmit);
   refreshBtn.addEventListener("click", refreshData);
+  content.addEventListener("click", handleContentClick);
 
   globalSearch.addEventListener("input", function () {
     state.query = globalSearch.value.trim();

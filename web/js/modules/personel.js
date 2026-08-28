@@ -13,10 +13,10 @@ WebModules.personel = function renderPersonel(state) {
   });
 
   if (!filtered.length) {
-    return UI.emptyState("Personel görevi bulunamadı.");
+    return UI.wrapModule("PERSONEL GÖREV", 0, UI.emptyState("Personel görevi bulunamadı."));
   }
 
-  return UI.wrapModule("Personel Görevleri", filtered.length, UI.renderTable([
+  return UI.wrapModule("PERSONEL GÖREV", filtered.length, UI.renderTable([
     { key: "personnelName", label: "Personel", sticky: true },
     { key: "moduleLabel", label: "Modül" },
     { key: "projectIdentity", label: "Proje", className: "text-wrap" },

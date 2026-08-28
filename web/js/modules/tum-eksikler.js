@@ -45,7 +45,7 @@ WebModules.tumEksikler = function renderTumEksikler(state) {
   }).filter(Boolean);
 
   if (!sections.length) {
-    return UI.emptyState("Eksik kaydı bulunamadı.");
+    return UI.wrapModule("TÜM EKSİKLER", 0, UI.emptyState("Eksik kaydı bulunamadı."));
   }
 
   return '<div class="content">' + sections.join("") + "</div>";

@@ -15,11 +15,11 @@ WebModules.yibfIsTakibi = function renderYibfIsTakibi(state) {
   });
 
   if (!filtered.length) {
-    return UI.emptyState("YİBF İş Takibi kaydı bulunamadı.");
+    return UI.wrapModule("YİBF İŞ TAKİBİ", 0, UI.emptyState("YİBF İş Takibi kaydı bulunamadı."));
   }
 
   return UI.wrapModule(
-    "YİBF İş Takibi",
+    "YİBF İŞ TAKİBİ",
     filtered.length,
     UI.renderTable([
       { key: "jobName", label: "İşin İsmi", sticky: true, className: "text-wrap" },
@@ -35,7 +35,6 @@ WebModules.yibfIsTakibi = function renderYibfIsTakibi(state) {
       { label: "İSG Yazısı", render: function (row) { return UI.statusPill(row.isgYazisiHazirlandiMi); } },
       { label: "SG Planı", render: function (row) { return UI.statusPill(row.saglikGuvenlikPlaniGeldiMi); } },
       { label: "Topraklama", render: function (row) { return UI.statusPill(row.temelTopraklamaTutanagiHazirlandiMi); } }
-    ], filtered, { compact: true }),
-    "Masaüstü uygulamadaki sütunlarla aynı"
+    ], filtered, { compact: true })
   );
 };

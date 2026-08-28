@@ -16,10 +16,10 @@ WebModules.tadilat = function renderTadilat(state) {
   });
 
   if (!filtered.length) {
-    return UI.emptyState("Tadilat kaydı bulunamadı.");
+    return UI.wrapModule("TADİLAT TAKİBİ", 0, UI.emptyState("Tadilat kaydı bulunamadı."));
   }
 
-  return UI.wrapModule("Tadilat Takibi", filtered.length, UI.renderTable([
+  return UI.wrapModule("TADİLAT TAKİBİ", filtered.length, UI.renderTable([
     { key: "district", label: "İlçe" },
     { key: "jobName", label: "İşin İsmi", sticky: true, className: "text-wrap" },
     { key: "projectType", label: "Proje Türü" },

@@ -459,3 +459,175 @@ body {
   .search-shell, .tabs-shell, .content-shell { padding-left: 1.25rem; padding-right: 1.25rem; }
   .top-bar h1 { font-size: 1.45rem; }
 }
+
+.split-layout {
+  display: grid;
+  gap: 0.85rem;
+  padding: 0.85rem;
+}
+
+@media (min-width: 960px) {
+  .split-layout {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.split-panel {
+  min-width: 0;
+}
+
+.split-panel-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 0.65rem;
+}
+
+.sub-tab-bar,
+.filter-chip-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  padding: 0.85rem 0.85rem 0;
+}
+
+.sub-tab-btn,
+.filter-chip {
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: inherit;
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sub-tab-btn.active,
+.filter-chip.active {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+  color: #fff;
+}
+
+.panel-stack {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.ozet-group {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.55rem 0.7rem;
+  margin-bottom: 0.55rem;
+  background: var(--surface-2);
+}
+
+.ozet-group summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.ozet-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.65rem;
+  align-items: start;
+  padding: 0.65rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.priority-badge {
+  display: inline-block;
+  padding: 0.28rem 0.5rem;
+  border-radius: 8px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.priority-acil {
+  background: #ffe1e1;
+  color: #b42318;
+}
+
+.priority-dikkat {
+  background: #fff6cc;
+  color: #9a6700;
+}
+
+.proje-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.85rem;
+  background: var(--surface);
+}
+
+.proje-card.overdue {
+  border-color: #d64545;
+  background: rgba(214, 69, 69, 0.06);
+}
+
+.proje-card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.65rem;
+  align-items: flex-start;
+  margin-bottom: 0.55rem;
+}
+
+.proje-card h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--primary-dark);
+}
+
+.pending-event {
+  display: grid;
+  grid-template-columns: 6px 1fr;
+  gap: 0;
+  margin-bottom: 0.45rem;
+}
+
+.pending-event-stripe {
+  border-radius: 4px 0 0 4px;
+}
+
+.pending-event-body {
+  background: var(--surface-2);
+  border-radius: 0 10px 10px 0;
+  padding: 0.65rem 0.75rem;
+}
+
+.pending-event-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.pending-date,
+.pending-days {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.pending-days.overdue {
+  background: #ffcdd2;
+  color: #7f1d1d;
+  border-radius: 999px;
+  padding: 0.12rem 0.45rem;
+  font-weight: 700;
+}
+
+.pending-summary {
+  margin: 0.45rem 0 0;
+  font-weight: 600;
+}
+
+.district-cell {
+  font-weight: 700;
+  color: var(--primary-dark);
+  white-space: nowrap;
+}

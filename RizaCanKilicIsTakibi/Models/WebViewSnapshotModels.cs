@@ -39,6 +39,24 @@ public sealed class WebViewSnapshotDerived
 
     [JsonPropertyName("personnelGorevItems")]
     public List<WebViewPersonnelGorevRowDto> PersonnelGorevItems { get; set; } = [];
+
+    [JsonPropertyName("acilIsOzetItems")]
+    public List<WebViewAcilIsOzetItemDto> AcilIsOzetItems { get; set; } = [];
+}
+
+public sealed class WebViewAcilIsOzetItemDto
+{
+    [JsonPropertyName("category")]
+    public string Category { get; set; } = string.Empty;
+
+    [JsonPropertyName("priorityLabel")]
+    public string PriorityLabel { get; set; } = string.Empty;
+
+    [JsonPropertyName("priorityRank")]
+    public int PriorityRank { get; set; }
+
+    [JsonPropertyName("summary")]
+    public string Summary { get; set; } = string.Empty;
 }
 
 public sealed class WebViewTumEksiklerGroupDto

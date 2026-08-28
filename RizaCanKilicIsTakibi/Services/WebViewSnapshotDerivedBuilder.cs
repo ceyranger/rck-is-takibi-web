@@ -8,12 +8,14 @@ public static class WebViewSnapshotDerivedBuilder
     public static WebViewSnapshotDerived Build(
         IEnumerable<EksikIsGroupViewModel> tumEksiklerGroups,
         IEnumerable<YibfPendingGroupViewModel> projeOnayGroups,
-        IEnumerable<PersonnelGorevRowViewModel> personnelRows)
+        IEnumerable<PersonnelGorevRowViewModel> personnelRows,
+        IEnumerable<AcilIsOzetItemViewModel> acilIsOzetItems)
         => new()
         {
             TumEksikler = tumEksiklerGroups.Select(MapTumEksiklerGroup).ToList(),
             ProjeOnayItems = projeOnayGroups.Select(MapProjeOnayGroup).ToList(),
-            PersonnelGorevItems = personnelRows.Select(MapPersonnelRow).ToList()
+            PersonnelGorevItems = personnelRows.Select(MapPersonnelRow).ToList(),
+            AcilIsOzetItems = acilIsOzetItems.Select(MapAcilIsOzetItem).ToList()
         };
 
     public static IReadOnlyList<EksikIsGroupViewModel> GetAllTumEksiklerGroups(TumEksiklerViewModel viewModel)
@@ -81,5 +83,14 @@ public static class WebViewSnapshotDerivedBuilder
             StatusLabel = row.StatusLabel,
             AssignedAtText = row.AssignedAtText,
             IsOpen = row.IsOpen
+        };
+
+    private static WebViewAcilIsOzetItemDto MapAcilIsOzetItem(AcilIsOzetItemViewModel item)
+        => new()
+        {
+            Category = item.Category,
+            PriorityLabel = item.PriorityLabel,
+            PriorityRank = item.PriorityRank,
+            Summary = item.Summary
         };
 }

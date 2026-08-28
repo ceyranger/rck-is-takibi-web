@@ -7,14 +7,23 @@ WebModules.arama = function renderArama(state) {
     return UI.emptyState("Arama kutusuna metin yazın.");
   }
 
+  var viewState = {
+    envelope: state.envelope,
+    query: state.query,
+    subTabs: state.subTabs,
+    filters: state.filters
+  };
+
   var sections = [
-    WebModules.acil(state),
-    WebModules.projeOnay(state),
-    WebModules.personel(state),
-    WebModules.karot(state),
-    WebModules.tadilat(state),
-    WebModules.yibfIsTakibi(state),
-    WebModules.tumEksikler(state)
+    WebModules.genelIsTakibi(viewState),
+    WebModules.acilIsOzet(viewState),
+    WebModules.tumEksikler(viewState),
+    WebModules.aksiyon(viewState),
+    WebModules.eksikProje(viewState),
+    WebModules.karot(viewState),
+    WebModules.tadilat(viewState),
+    WebModules.yibfIsTakibi(viewState),
+    WebModules.personel(viewState)
   ];
 
   var parts = sections.filter(function (html) {
