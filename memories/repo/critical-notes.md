@@ -55,5 +55,6 @@
 - 2026-08-15: Personel görev çift tık düzenleme penceresi + tablo kenarlıklı UI. Tests 223/223. Commit `d768643`; canonical publish exe güncellendi; `Data\tasks.db` / `Data\last-save.json` hash/size/timestamp değişmedi.
 - 2026-08-15: Manuel Yeni Atama + kaynak düzelince görev silme (Geri Al toast). Tests 225/225. Commit `bb268c4`; canonical publish exe güncellendi; `Data\tasks.db` / `Data\last-save.json` hash/size/timestamp değişmedi.
 - 2026-08-15: Personel atama ikonları (3 varyant) + kaynak korumalı düzenleme notu + otomatik kayıt toast netliği. Tests 225/225. Commit `9612100`; canonical publish exe güncellendi; Data hash değişmedi.
-- 2026-08-28: Repo içi web export + git sync tamamlandı. JSON `web/export/web-view-latest.json`; kayıt sonrası git commit/push (API fallback). Ayarlarda repo kökü; Drive yedek klasörü kaldırıldı. Tests 236/236; canonical publish güncellendi; `Data\tasks.db` (1282048) / `Data\last-save.json` (67) size/timestamp değişmedi.
+- 2026-08-28: Personel Görev web görünümü düzeltildi: `personnelAssignments` fallback, kart UI, export servisten tüm açık atamalar. Tests 236/236; publish güncellendi; Data hash korundu. Commit `1be8eb2` push edildi.
+- 2026-08-28: Web viewer (GitHub Pages) güncellendi: hücre dolgu renkleri/notları (YİBF, Tadilat, Karot, Eksik Proje), simsiyah yazı, not ikonu tıklanınca açılma, Proje Takibi ters sıra, aydınlık/karanlık tema seçici. Push `f247ad1` (`rck-is-takibi-web`).
 

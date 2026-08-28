@@ -1,13 +1,13 @@
 # Todo
 
-## Current Task: Repo içi web export + git push
-- [x] AppSettings: WebViewRepoRoot + WebViewGitSyncEnabled
-- [x] WebViewGitSyncService + WebViewRepoPaths
-- [x] MainViewModel.WebView + Settings UI (repo yolu, klasör seç kaldırıldı)
-- [x] WebViewGitSyncServiceTests
-- [x] Build/test 236/236 + Release publish (Data korundu)
+## Current Task: Web viewer iyileştirmeleri (GitHub Pages)
+- [x] YİBF/Tadilat/Karot/Eksik Proje hücre renkleri + notları (`yibfCellStates`, `tadilatCellStates`, vb.)
+- [x] Renkli hücrelerde simsiyah yazı (WPF uyumu)
+- [x] Hücre notları ikona tıklayınca açılsın
+- [x] Proje Takibi listesi son işten ilk işe sıralansın
+- [x] Aydınlık/karanlık tema seçici + karanlık mod okunabilirliği
+- [x] Commit + push (`f247ad1`)
 
-## Review Update
-- Kaydet sonrası JSON `web/export/web-view-latest.json` dosyasına yazılır; git add/commit/push ile site güncellenir.
-- Yedek Drive klasörü artık kullanılmıyor; repo kökü Ayarlarda (varsayılan masaüstü repo).
-- Git push başarısız olursa GitHub Contents API yedek devreye girer.
+## Review
+- Web kodu `rck-is-takibi-web` reposuna push edildi; site cache bust `?v=20260828r`.
+- Karot hücre notları export'ta boşsa sitede görünmez; canlı veri için yeniden dışa aktarım gerekir.
