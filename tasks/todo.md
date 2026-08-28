@@ -1,12 +1,12 @@
 # Todo
 
-## Current Task: Kaynak korumalı düzenleme + otomatik kayıt + atama ikonları
-- [x] Kaynak bağlantısı korunur (edit dialog notu)
-- [x] Personel ata otomatik SQLite kayıt — toast netleştirildi
-- [x] 3 personel ikon varyantı + tüm satır/hücrelerde rozet
-- [x] Build/test + commit + publish
+## Current Task: Drive salt okunur web görüntüleme
+- [x] WebViewSnapshotService + derived export (tumEksikler, projeOnay, personel)
+- [x] Ayarlar UI + SaveAll sonrası otomatik export
+- [x] WebViewSnapshotServiceTests
+- [x] web/ statik viewer + Apps Script + README
+- [x] Build/test 227/227
 
 ## Review Update
-- Personel atamaları SQLite’a anında yazılır; “kaydedilmedi” uyarısı çıkmaz (bilinçli).
-- Kaynaklı görevlerde yazısal düzenleme kaynağı bozmaz.
-- Atama ikonları: SinglePerson / TwoPeople / CirclePerson.
+- Kaydet sonrası (SaveAllTabs) Google Drive sync klasörüne `web-view-latest.json` yazılır; `tasks.db` etkilenmez.
+- web/ GitHub Pages + Apps Script PIN proxy ile salt okunur mobil görüntüleme.

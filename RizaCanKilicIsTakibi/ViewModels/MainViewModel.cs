@@ -37,6 +37,7 @@ public sealed partial class MainViewModel : ViewModelBase
     private readonly IContextInsightBuilder _contextInsightBuilder;
     private readonly IUndoRedoService _undoRedoService;
     private readonly IFileDialogService _fileDialogService;
+    private readonly IWebViewSnapshotService? _webViewSnapshotService;
     private readonly IQuickTaskTemplateRepository? _quickTaskTemplateRepository;
     private readonly IQuickTaskTemplateDialogService? _quickTaskTemplateDialogService;
     private readonly IProjectCatalogService? _projectCatalogService;
@@ -175,7 +176,8 @@ public sealed partial class MainViewModel : ViewModelBase
         IPersonnelSettingsDialogService? personnelSettingsDialogService = null,
         IPersonnelPickDialogService? personnelPickDialogService = null,
         IPersonnelCellScopeDialogService? personnelCellScopeDialogService = null,
-        PersonnelGorevViewModel? personnelGorevViewModel = null)
+        PersonnelGorevViewModel? personnelGorevViewModel = null,
+        IWebViewSnapshotService? webViewSnapshotService = null)
     {
         _taskRepository = taskRepository;
         _backupService = backupService;
@@ -192,6 +194,7 @@ public sealed partial class MainViewModel : ViewModelBase
         _contextInsightBuilder = contextInsightBuilder;
         _undoRedoService = undoRedoService;
         _fileDialogService = fileDialogService;
+        _webViewSnapshotService = webViewSnapshotService;
         _quickTaskTemplateRepository = quickTaskTemplateRepository;
         _quickTaskTemplateDialogService = quickTaskTemplateDialogService;
         _projectCatalogService = projectCatalogService;
@@ -335,6 +338,7 @@ public sealed partial class MainViewModel : ViewModelBase
         };
 
         InitializeProjectCatalogCommands();
+        InitializeWebViewExportFeature();
     }
 
     public DashboardViewModel Dashboard { get; }
@@ -735,6 +739,7 @@ public sealed partial class MainViewModel : ViewModelBase
                 RefreshPersonnelBadges();
                 await MarkGlobalSaveSucceededAsync();
                 ClearSessionRecoveryArtifacts();
+                TryExportWebViewSnapshotFireAndForget();
             }
 
             return allSaved;
@@ -1008,7 +1013,9 @@ public sealed partial class MainViewModel : ViewModelBase
         {
             AutoBackupEnabled = _settings.AutoBackupEnabled,
             AutoBackupMinutes = _settings.AutoBackupMinutes,
-            SeedSampleDataOnEmpty = _settings.SeedSampleDataOnEmpty
+            SeedSampleDataOnEmpty = _settings.SeedSampleDataOnEmpty,
+            WebViewExportEnabled = _settings.WebViewExportEnabled,
+            WebViewExportDirectory = _settings.WebViewExportDirectory
         };
 
     private async Task<T> RunExclusiveOperationAsync<T>(Func<Task<T>> operation)
@@ -1125,9 +1132,16 @@ public sealed partial class MainViewModel : ViewModelBase
         _settings.AutoBackupEnabled = snapshot.Settings.AutoBackupEnabled;
         _settings.AutoBackupMinutes = snapshot.Settings.AutoBackupMinutes;
         _settings.SeedSampleDataOnEmpty = snapshot.Settings.SeedSampleDataOnEmpty;
+        _settings.WebViewExportEnabled = snapshot.Settings.WebViewExportEnabled;
+        _settings.WebViewExportDirectory = snapshot.Settings.WebViewExportDirectory;
         OnPropertyChanged(nameof(AutoBackupEnabled));
         OnPropertyChanged(nameof(AutoBackupMinutes));
         OnPropertyChanged(nameof(SeedSampleDataOnEmpty));
+        OnPropertyChanged(nameof(WebViewExportEnabled));
+        OnPropertyChanged(nameof(WebViewExportDirectory));
+        OnPropertyChanged(nameof(WebViewExportDirectoryDisplay));
+        RefreshWebViewExportStatusFromDisk();
+        ExportWebViewNowCommand.NotifyCanExecuteChanged();
 
         HasUnsavedChanges = snapshot.HasUnsavedTaskChanges;
         HasUnsavedSettings = snapshot.HasUnsavedSettings;

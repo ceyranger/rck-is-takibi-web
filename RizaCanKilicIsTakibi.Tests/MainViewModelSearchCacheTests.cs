@@ -375,12 +375,14 @@ public class MainViewModelSearchCacheTests
     {
         public string? ShowSaveDialog(string title, string filter, string defaultExtension) => null;
         public string? ShowOpenDialog(string title, string filter, bool multiselect = false) => null;
+        public string? ShowFolderDialog(string title) => null;
     }
 
     private sealed class FixedFileDialogService(string openPath) : IFileDialogService
     {
         public string? ShowSaveDialog(string title, string filter, string defaultExtension) => null;
         public string? ShowOpenDialog(string title, string filter, bool multiselect = false) => openPath;
+        public string? ShowFolderDialog(string title) => null;
     }
 
     private sealed class TestAddActionEntryDialogService : IAddActionEntryDialogService

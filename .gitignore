@@ -3,6 +3,7 @@ bin/
 obj/
 **/bin/
 **/obj/
+_publish-temp/
 
 # User/runtime data
 **/Data/

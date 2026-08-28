@@ -55,4 +55,5 @@
 - 2026-08-15: Personel görev çift tık düzenleme penceresi + tablo kenarlıklı UI. Tests 223/223. Commit `d768643`; canonical publish exe güncellendi; `Data\tasks.db` / `Data\last-save.json` hash/size/timestamp değişmedi.
 - 2026-08-15: Manuel Yeni Atama + kaynak düzelince görev silme (Geri Al toast). Tests 225/225. Commit `bb268c4`; canonical publish exe güncellendi; `Data\tasks.db` / `Data\last-save.json` hash/size/timestamp değişmedi.
 - 2026-08-15: Personel atama ikonları (3 varyant) + kaynak korumalı düzenleme notu + otomatik kayıt toast netliği. Tests 225/225. Commit `9612100`; canonical publish exe güncellendi; Data hash değişmedi.
+- 2026-08-28: Drive salt okunur web görüntüleme: WebViewSnapshotService, Ayarlar export UI, web/ GitHub Pages viewer + Apps Script PIN proxy. Tests 227/227. `tasks.db` export akışına dahil değil; yalnız `web-view-latest.json` tek yönlü.
 

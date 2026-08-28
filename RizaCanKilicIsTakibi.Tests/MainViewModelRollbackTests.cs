@@ -756,6 +756,7 @@ public class MainViewModelRollbackTests
         public string? ShowSaveDialog(string title, string filter, string defaultExtension) => _savePath;
 
         public string? ShowOpenDialog(string title, string filter, bool multiselect = false) => _openPath;
+        public string? ShowFolderDialog(string title) => null;
     }
 
     private sealed class TestAddActionEntryDialogService : IAddActionEntryDialogService

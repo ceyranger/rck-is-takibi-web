@@ -1,0 +1,135 @@
+(function () {
+  var TABS = [
+    { id: "acil", label: "Acil İşler", render: WebModules.acil },
+    { id: "proje-onay", label: "Proje Onay", render: WebModules.projeOnay },
+    { id: "personel", label: "Personel", render: WebModules.personel },
+    { id: "karot", label: "Karot", render: WebModules.karot },
+    { id: "tadilat", label: "Tadilat", render: WebModules.tadilat },
+    { id: "yibf", label: "YİBF İş", render: WebModules.yibfIsTakibi },
+    { id: "eksikler", label: "Tüm Eksikler", render: WebModules.tumEksikler },
+    { id: "arama", label: "Arama", render: WebModules.arama }
+  ];
+
+  var pinScreen = document.getElementById("pin-screen");
+  var mainScreen = document.getElementById("main-screen");
+  var pinInput = document.getElementById("pin-input");
+  var pinSubmit = document.getElementById("pin-submit");
+  var pinError = document.getElementById("pin-error");
+  var lastUpdated = document.getElementById("last-updated");
+  var refreshBtn = document.getElementById("refresh-btn");
+  var globalSearch = document.getElementById("global-search");
+  var tabBar = document.getElementById("tab-bar");
+  var content = document.getElementById("content");
+
+  var state = {
+    pin: "",
+    activeTab: TABS[0].id,
+    query: "",
+    envelope: null
+  };
+
+  function getConfig() {
+    return window.WEB_VIEWER_CONFIG || {};
+  }
+
+  function buildTabs() {
+    tabBar.innerHTML = TABS.map(function (tab) {
+      var active = tab.id === state.activeTab ? " active" : "";
+      return '<button type="button" class="tab-btn' + active + '" data-tab="' + tab.id + '">' + tab.label + '</button>';
+    }).join("");
+
+    tabBar.querySelectorAll(".tab-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        state.activeTab = btn.getAttribute("data-tab");
+        buildTabs();
+        renderContent();
+      });
+    });
+  }
+
+  function renderContent() {
+    if (!state.envelope) {
+      content.innerHTML = '<div class="empty">Veri yüklenmedi.</div>';
+      return;
+    }
+
+    var tab = TABS.find(function (t) { return t.id === state.activeTab; }) || TABS[0];
+    var viewState = { envelope: state.envelope, query: state.query };
+    content.innerHTML = tab.render(viewState);
+  }
+
+  function showError(message) {
+    pinError.hidden = false;
+    pinError.textContent = message;
+  }
+
+  function clearError() {
+    pinError.hidden = true;
+    pinError.textContent = "";
+  }
+
+  async function fetchEnvelope(pin) {
+    var config = getConfig();
+    var url = (config.appsScriptUrl || "").trim();
+    if (!url) {
+      throw new Error("config.js içinde appsScriptUrl tanımlı değil.");
+    }
+
+    var requestUrl = url + (url.indexOf("?") >= 0 ? "&" : "?") + "pin=" + encodeURIComponent(pin);
+    var response = await fetch(requestUrl, { method: "GET", cache: "no-store" });
+    var raw = await response.json();
+    return WebViewParser.normalizeEnvelope(raw);
+  }
+
+  async function loadData(pin, keepScreen) {
+    clearError();
+    pinSubmit.disabled = true;
+    pinSubmit.textContent = "Yükleniyor…";
+    try {
+      var envelope = await fetchEnvelope(pin);
+      state.pin = pin;
+      state.envelope = envelope;
+      lastUpdated.textContent = "Son güncelleme: " + WebViewParser.formatDateTime(envelope.exportedAt);
+      pinScreen.hidden = true;
+      mainScreen.hidden = false;
+      buildTabs();
+      renderContent();
+    } catch (err) {
+      if (!keepScreen) {
+        showError(err.message || "Veri alınamadı.");
+      } else {
+        content.innerHTML = '<div class="empty">' + WebModules.escapeHtml(err.message || "Yenileme başarısız.") + '</div>';
+      }
+    } finally {
+      pinSubmit.disabled = false;
+      pinSubmit.textContent = "Giriş";
+    }
+  }
+
+  pinSubmit.addEventListener("click", function () {
+    var pin = (pinInput.value || "").trim();
+    if (!pin) {
+      showError("PIN girin.");
+      return;
+    }
+    loadData(pin, false);
+  });
+
+  pinInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      pinSubmit.click();
+    }
+  });
+
+  refreshBtn.addEventListener("click", function () {
+    if (!state.pin) return;
+    loadData(state.pin, true);
+  });
+
+  globalSearch.addEventListener("input", function () {
+    state.query = globalSearch.value.trim();
+    renderContent();
+  });
+
+  buildTabs();
+})();

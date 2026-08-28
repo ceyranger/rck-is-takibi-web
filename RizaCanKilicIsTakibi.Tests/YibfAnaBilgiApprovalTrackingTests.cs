@@ -422,6 +422,7 @@ public class YibfAnaBilgiApprovalTrackingTests
     {
         public string? ShowSaveDialog(string title, string filter, string defaultExtension) => null;
         public string? ShowOpenDialog(string title, string filter, bool multiselect = false) => null;
+        public string? ShowFolderDialog(string title) => null;
     }
 
     private sealed class StubConfirmationService : IConfirmationService

@@ -61,6 +61,35 @@
                         <TextBlock Text="Bu ayar yeni veya sıfırlanmış veritabanı için geçerlidir."
                                    Margin="0,8,0,0"
                                    Foreground="{StaticResource Brush.TextSecondary}"/>
+
+                        <Separator Margin="0,16,0,12"/>
+                        <TextBlock Text="Web Görüntüleme (Salt Okunur)"
+                                   FontFamily="{StaticResource Font.Primary}"
+                                   FontSize="16"
+                                   FontWeight="SemiBold"/>
+                        <TextBlock Text="Kaydet sonrası Google Drive sync klasörüne web-view-latest.json üretir. Canlı veritabanına dokunmaz."
+                                   Margin="0,4,0,0"
+                                   TextWrapping="Wrap"
+                                   Foreground="{StaticResource Brush.TextSecondary}"/>
+                        <CheckBox Content="Kaydet sonrası web dosyası üret"
+                                  Margin="0,12,0,0"
+                                  IsChecked="{Binding WebViewExportEnabled, Mode=TwoWay}"/>
+                        <TextBlock Text="{Binding WebViewExportDirectoryDisplay}"
+                                   Margin="0,10,0,0"
+                                   TextWrapping="Wrap"/>
+                        <WrapPanel Margin="0,12,0,0">
+                            <Button Content="KLASÖR SEÇ"
+                                    Command="{Binding PickWebViewExportDirectoryCommand}"
+                                    Margin="0,0,8,8"/>
+                            <Button Content="ŞİMDİ DIŞA AKTAR"
+                                    Command="{Binding ExportWebViewNowCommand}"
+                                    Style="{StaticResource GhostButton}"
+                                    Margin="0,0,8,8"/>
+                        </WrapPanel>
+                        <TextBlock Text="{Binding LastWebViewExportStatus}"
+                                   Margin="0,4,0,0"
+                                   TextWrapping="Wrap"
+                                   Foreground="{StaticResource Brush.TextSecondary}"/>
                     </StackPanel>
                 </Border>
 

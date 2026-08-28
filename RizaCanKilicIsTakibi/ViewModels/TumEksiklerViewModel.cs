@@ -181,6 +181,9 @@ public sealed class TumEksiklerViewModel : ViewModelBase
         }
     }
 
+    public IReadOnlyList<EksikIsGroupViewModel> GetAllGroupsSnapshot()
+        => _allGroups.ToList();
+
     public void RefreshFrom(
         IEnumerable<YibfAnaBilgiEntry> anaBilgiEntries,
         IEnumerable<YibfAnaBilgiEvent> anaBilgiEvents,

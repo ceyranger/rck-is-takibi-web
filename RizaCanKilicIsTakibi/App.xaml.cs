@@ -108,6 +108,7 @@ public partial class App : Application
         services.AddSingleton<IProjectCatalogUiState, ProjectCatalogUiState>();
         services.AddSingleton<IProjectLinkingService, ProjectLinkingService>();
         services.AddSingleton<IBackupService>(_ => new BackupService(pathService.BackupDirectory));
+        services.AddSingleton<IWebViewSnapshotService, WebViewSnapshotService>();
         services.AddSingleton<ISessionRecoveryService, SessionRecoveryService>();
         services.AddSingleton<ICrashRecoveryWizardService, CrashRecoveryWizardService>();
         services.AddSingleton<IImportExportService, ImportExportService>();
