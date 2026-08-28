@@ -1,25 +1,34 @@
 window.WebModules = window.WebModules || {};
-var escapeHtml = WebModules.escapeHtml;
 
 WebModules.tadilat = function renderTadilat(state) {
-  var entries = state.envelope.data.tadilatEntries || [];
+  var UI = WebUI;
+  var entries = (state.envelope.data.tadilatEntries || []).filter(function (e) {
+    return e.subTab === 0 || e.subTab === "Aktif" || e.subTab === undefined;
+  });
   var q = state.query;
 
   var filtered = entries.filter(function (e) {
     return WebViewParser.includesQuery(WebViewParser.joinSearchable(
-      e.adaParsel, e.yapiSahibi, e.district, e.muteahhit, e.aciklama
+      e.district, e.jobName, e.projectType, e.digitalReceived, e.inspectorApproved,
+      e.outputAndReportArrived, e.officialLetterSubmitted, e.archivedFromMunicipality,
+      e.description1, e.description2
     ), q);
   });
 
   if (!filtered.length) {
-    return '<div class="empty">Tadilat kaydı bulunamadı.</div>';
+    return UI.emptyState("Tadilat kaydı bulunamadı.");
   }
 
-  return filtered.map(function (e) {
-    return '<article class="card">' +
-      '<h2>' + escapeHtml(e.adaParsel) + ' · ' + escapeHtml(e.yapiSahibi) + '</h2>' +
-      '<div class="meta">' + escapeHtml(e.district) + '</div>' +
-      (e.aciklama ? '<p>' + escapeHtml(e.aciklama) + '</p>' : '') +
-      '</article>';
-  }).join("");
+  return UI.wrapModule("Tadilat Takibi", filtered.length, UI.renderTable([
+    { key: "district", label: "İlçe" },
+    { key: "jobName", label: "İşin İsmi", sticky: true, className: "text-wrap" },
+    { key: "projectType", label: "Proje Türü" },
+    { label: "Dijital", render: function (row) { return UI.statusPill(row.digitalReceived); } },
+    { label: "Denetçi Onayı", render: function (row) { return UI.statusPill(row.inspectorApproved); } },
+    { label: "Çıktı/Rapor", render: function (row) { return UI.statusPill(row.outputAndReportArrived); } },
+    { label: "Üst Yazı", render: function (row) { return UI.statusPill(row.officialLetterSubmitted); } },
+    { label: "Arşiv", render: function (row) { return UI.statusPill(row.archivedFromMunicipality); } },
+    { key: "description1", label: "Açıklama 1", className: "text-wrap" },
+    { key: "description2", label: "Açıklama 2", className: "text-wrap" }
+  ], filtered, { compact: true }));
 };

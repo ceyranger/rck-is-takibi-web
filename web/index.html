@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#1e3a5f" />
+  <meta name="theme-color" content="#16355c" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>RCK İş Takibi — Görüntüleme</title>
-  <link rel="stylesheet" href="css/viewer.css?v=20260828e" />
+  <link rel="stylesheet" href="css/viewer.css?v=20260828f" />
   <script>
     window.WEB_VIEWER_CONFIG = {
       webPin: "271179",
@@ -36,32 +36,42 @@
     </section>
 
     <section id="main-screen" class="main-screen" hidden style="display:none">
-      <header class="top-bar">
-        <div>
-          <h1>RCK İş Takibi</h1>
-          <p id="last-updated" class="muted">Son güncelleme: —</p>
+      <header class="app-header">
+        <div class="app-header-inner top-bar">
+          <div>
+            <h1>RCK İş Takibi</h1>
+            <p id="last-updated" class="muted">Son güncelleme: —</p>
+          </div>
+          <button id="refresh-btn" type="button" class="btn ghost">Yenile</button>
         </div>
-        <button id="refresh-btn" type="button" class="btn ghost">Yenile</button>
       </header>
 
-      <div class="search-bar">
-        <input id="global-search" type="search" placeholder="Ara (ada/parsel, metin…)" />
+      <div class="search-shell">
+        <div class="search-bar">
+          <input id="global-search" type="search" placeholder="Ara (ada/parsel, iş adı, metin…)" />
+        </div>
       </div>
 
-      <nav class="tab-bar" id="tab-bar" aria-label="Modüller"></nav>
-      <main id="content" class="content" aria-live="polite"></main>
+      <div class="tabs-shell">
+        <nav class="tab-bar" id="tab-bar" aria-label="Modüller"></nav>
+      </div>
+
+      <div class="content-shell">
+        <main id="content" class="content" aria-live="polite"></main>
+      </div>
     </section>
   </div>
 
-  <script src="js/parser.js?v=20260828e"></script>
-  <script src="js/modules/acil.js?v=20260828e"></script>
-  <script src="js/modules/proje-onay.js?v=20260828e"></script>
-  <script src="js/modules/personel.js?v=20260828e"></script>
-  <script src="js/modules/karot.js?v=20260828e"></script>
-  <script src="js/modules/tadilat.js?v=20260828e"></script>
-  <script src="js/modules/yibf-is-takibi.js?v=20260828e"></script>
-  <script src="js/modules/tum-eksikler.js?v=20260828e"></script>
-  <script src="js/modules/arama.js?v=20260828e"></script>
-  <script src="js/app.js?v=20260828e"></script>
+  <script src="js/parser.js?v=20260828f"></script>
+  <script src="js/ui.js?v=20260828f"></script>
+  <script src="js/modules/acil.js?v=20260828f"></script>
+  <script src="js/modules/proje-onay.js?v=20260828f"></script>
+  <script src="js/modules/personel.js?v=20260828f"></script>
+  <script src="js/modules/karot.js?v=20260828f"></script>
+  <script src="js/modules/tadilat.js?v=20260828f"></script>
+  <script src="js/modules/yibf-is-takibi.js?v=20260828f"></script>
+  <script src="js/modules/tum-eksikler.js?v=20260828f"></script>
+  <script src="js/modules/arama.js?v=20260828f"></script>
+  <script src="js/app.js?v=20260828f"></script>
 </body>
 </html>

@@ -1,30 +1,33 @@
 window.WebModules = window.WebModules || {};
-var escapeHtml = WebModules.escapeHtml;
 
 WebModules.karot = function renderKarot(state) {
+  var UI = WebUI;
   var entries = state.envelope.data.karotEntries || [];
   var q = state.query;
 
   var filtered = entries.filter(function (e) {
     return WebViewParser.includesQuery(WebViewParser.joinSearchable(
-      e.adaParsel, e.yapiSahibi, e.aciklama, e.muteahhit, e.betonFirmasi, e.laboratuvar
+      e.yibfNo, e.adaParsel, e.yapiSahibi, e.muteahhit, e.katBilgisi,
+      e.betonSinifi, e.twentyEightDayResult, e.betonFirmasi, e.laboratuvar, e.aciklama
     ), q);
   });
 
   if (!filtered.length) {
-    return '<div class="empty">Karot kaydı bulunamadı.</div>';
+    return UI.emptyState("Karot kaydı bulunamadı.");
   }
 
-  return '<div class="table-wrap"><table><thead><tr>' +
-    '<th>Ada/Parsel</th><th>Yapı Sahibi</th><th>Durum</th><th>Açıklama</th>' +
-    '</tr></thead><tbody>' +
-    filtered.map(function (e) {
-      return '<tr>' +
-        '<td>' + escapeHtml(e.adaParsel) + '</td>' +
-        '<td>' + escapeHtml(e.yapiSahibi) + '</td>' +
-        '<td>' + escapeHtml(String(e.status ?? "")) + '</td>' +
-        '<td>' + escapeHtml(e.aciklama) + '</td>' +
-        '</tr>';
-    }).join("") +
-    '</tbody></table></div>';
+  return UI.wrapModule("Karot Takibi", filtered.length, UI.renderTable([
+    { label: "Kayıt Durumu", render: function (row) { return UI.karotStatusLabel(row.status); } },
+    { label: "Numune Tarihi", render: function (row) { return UI.formatDate(row.sampleReceivedDate); } },
+    { key: "yibfNo", label: "YİBF No" },
+    { key: "adaParsel", label: "Ada/Parsel", sticky: true },
+    { key: "yapiSahibi", label: "Yapı Sahibi", className: "text-wrap" },
+    { key: "muteahhit", label: "Müteahhit", className: "text-wrap" },
+    { key: "katBilgisi", label: "Kat Bilgisi", className: "text-wrap" },
+    { key: "betonSinifi", label: "Beton Sınıfı" },
+    { key: "twentyEightDayResult", label: "28 Gün Sonuç" },
+    { key: "betonFirmasi", label: "Beton Firması", className: "text-wrap" },
+    { key: "laboratuvar", label: "Laboratuvar", className: "text-wrap" },
+    { key: "aciklama", label: "Açıklama", className: "text-wrap" }
+  ], filtered, { rowClass: UI.karotRowClass, compact: true }));
 };

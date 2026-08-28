@@ -1,31 +1,41 @@
 window.WebModules = window.WebModules || {};
-var escapeHtml = WebModules.escapeHtml;
 
 WebModules.yibfIsTakibi = function renderYibfIsTakibi(state) {
+  var UI = WebUI;
   var entries = state.envelope.data.yibfIsTakibiEntries || [];
   var q = state.query;
 
   var filtered = entries.filter(function (e) {
     return WebViewParser.includesQuery(WebViewParser.joinSearchable(
-      e.adaParsel, e.yapiSahibi, e.yibfNo, e.belediye, e.muteahhit, e.muellif
+      e.jobName, e.workVariantLabel, e.muellifBilgileriGeldiMi, e.denetciAtamalariYapildiMi,
+      e.tumProjelerinDijitaliVarMi, e.evraklarTamMi, e.yibfSozlesmeHazirlandiMi, e.dekontAlindiMi,
+      e.ruhsatBasvurusuYapildiMi, e.ruhsatNushasiAlindiMi, e.isyeriTeslimTutangiHazirlandiMi,
+      e.isgYazisiHazirlandiMi, e.saglikGuvenlikPlaniGeldiMi, e.temelTopraklamaTutanagiHazirlandiMi
     ), q);
   });
 
   if (!filtered.length) {
-    return '<div class="empty">YİBF İş Takibi kaydı bulunamadı.</div>';
+    return UI.emptyState("YİBF İş Takibi kaydı bulunamadı.");
   }
 
-  return '<div class="table-wrap"><table><thead><tr>' +
-    '<th>Ada/Parsel</th><th>Yapı Sahibi</th><th>YİBF No</th><th>Belediye</th><th>Müteahhit</th>' +
-    '</tr></thead><tbody>' +
-    filtered.map(function (e) {
-      return '<tr>' +
-        '<td>' + escapeHtml(e.adaParsel) + '</td>' +
-        '<td>' + escapeHtml(e.yapiSahibi) + '</td>' +
-        '<td>' + escapeHtml(e.yibfNo) + '</td>' +
-        '<td>' + escapeHtml(e.belediye) + '</td>' +
-        '<td>' + escapeHtml(e.muteahhit) + '</td>' +
-        '</tr>';
-    }).join("") +
-    '</tbody></table></div>';
+  return UI.wrapModule(
+    "YİBF İş Takibi",
+    filtered.length,
+    UI.renderTable([
+      { key: "jobName", label: "İşin İsmi", sticky: true, className: "text-wrap" },
+      { label: "Müellif Bilgileri", render: function (row) { return UI.statusPill(row.muellifBilgileriGeldiMi); } },
+      { label: "Denetçi Atamaları", render: function (row) { return UI.statusPill(row.denetciAtamalariYapildiMi); } },
+      { label: "Dijital", render: function (row) { return UI.statusPill(row.tumProjelerinDijitaliVarMi); } },
+      { label: "Evraklar", render: function (row) { return UI.statusPill(row.evraklarTamMi); } },
+      { label: "YİBF Sözleşme", render: function (row) { return UI.statusPill(row.yibfSozlesmeHazirlandiMi); } },
+      { label: "Dekont", render: function (row) { return UI.statusPill(row.dekontAlindiMi); } },
+      { label: "Ruhsat Başvurusu", render: function (row) { return UI.statusPill(row.ruhsatBasvurusuYapildiMi); } },
+      { label: "Ruhsat Nüshası", render: function (row) { return UI.statusPill(row.ruhsatNushasiAlindiMi); } },
+      { label: "İşyeri Teslim", render: function (row) { return UI.statusPill(row.isyeriTeslimTutangiHazirlandiMi); } },
+      { label: "İSG Yazısı", render: function (row) { return UI.statusPill(row.isgYazisiHazirlandiMi); } },
+      { label: "SG Planı", render: function (row) { return UI.statusPill(row.saglikGuvenlikPlaniGeldiMi); } },
+      { label: "Topraklama", render: function (row) { return UI.statusPill(row.temelTopraklamaTutanagiHazirlandiMi); } }
+    ], filtered, { compact: true }),
+    "Masaüstü uygulamadaki sütunlarla aynı"
+  );
 };
