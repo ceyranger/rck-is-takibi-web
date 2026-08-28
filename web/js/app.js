@@ -16,6 +16,7 @@
   var SESSION_KEY = "rck-web-auth";
   var SESSION_ROLE_KEY = "rck-web-auth-role";
   var SESSION_EXP_KEY = "rck-web-auth-exp";
+  var THEME_KEY = "rck-web-theme";
   var SESSION_TTL_MS = 12 * 60 * 60 * 1000;
   var DEFAULT_USER_TAB = "acil-is-ozet";
   var DEFAULT_ADMIN_TAB = "genel-is-takibi";
@@ -36,6 +37,8 @@
   var sidebar = document.getElementById("sidebar");
   var sidebarToggle = document.getElementById("sidebar-toggle");
   var sidebarBackdrop = document.getElementById("sidebar-backdrop");
+  var themeToggle = document.getElementById("theme-toggle");
+  var themeTogglePin = document.getElementById("theme-toggle-pin");
 
   var TAB_RENDERERS = {
     "genel-is-takibi": WebModules.genelIsTakibi,
@@ -69,6 +72,60 @@
       projeTakibiEntryId: null
     }
   };
+
+  function getTheme() {
+    var theme = document.documentElement.getAttribute("data-theme");
+    return theme === "dark" ? "dark" : "light";
+  }
+
+  function resolveInitialTheme() {
+    try {
+      var stored = localStorage.getItem(THEME_KEY);
+      if (stored === "light" || stored === "dark") {
+        return stored;
+      }
+    } catch (err) {
+      /* ignore */
+    }
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+
+  function updateThemeToggleButtons(theme) {
+    var label = theme === "dark" ? "Aydınlık temaya geç" : "Karanlık temaya geç";
+    var icon = theme === "dark" ? "☀️" : "🌙";
+    [themeToggle, themeTogglePin].forEach(function (button) {
+      if (!button) return;
+      button.textContent = icon;
+      button.setAttribute("aria-label", label);
+      button.setAttribute("title", label);
+    });
+  }
+
+  function applyTheme(theme, persist) {
+    var nextTheme = theme === "dark" ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", nextTheme);
+    if (persist !== false) {
+      try {
+        localStorage.setItem(THEME_KEY, nextTheme);
+      } catch (err) {
+        /* ignore */
+      }
+    }
+    var metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) {
+      metaTheme.setAttribute("content", nextTheme === "dark" ? "#0b1220" : "#16355c");
+    }
+    updateThemeToggleButtons(nextTheme);
+    return nextTheme;
+  }
+
+  function toggleTheme() {
+    applyTheme(getTheme() === "dark" ? "light" : "dark", true);
+  }
+
+  function initTheme() {
+    applyTheme(resolveInitialTheme(), false);
+  }
 
   function getConfig() {
     return window.WEB_VIEWER_CONFIG || {};
@@ -488,6 +545,12 @@
   if (sidebarBackdrop) {
     sidebarBackdrop.addEventListener("click", closeSidebar);
   }
+  if (themeToggle) {
+    themeToggle.addEventListener("click", toggleTheme);
+  }
+  if (themeTogglePin) {
+    themeTogglePin.addEventListener("click", toggleTheme);
+  }
 
   globalSearch.addEventListener("input", function () {
     state.query = globalSearch.value.trim();
@@ -495,11 +558,15 @@
   });
 
   buildTabs();
+  initTheme();
   tryRestoreSession();
 
   window.RckApp = {
     openWithEnvelope: openWithEnvelope,
     refreshData: refreshData,
-    resolveDataUrl: resolveDataUrl
+    resolveDataUrl: resolveDataUrl,
+    applyTheme: applyTheme,
+    toggleTheme: toggleTheme,
+    getTheme: getTheme
   };
 })();
