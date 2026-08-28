@@ -50,6 +50,13 @@
   }
 
   function refreshSourceLabels() {
+    if (usesSiteJsonPrimary()) {
+      var siteLabel = "Kaynak: Site (GitHub)";
+      pinSourceLabel.textContent = siteLabel;
+      mainSourceLabel.textContent = siteLabel;
+      return;
+    }
+
     var fileId = resolveDriveFileId();
     state.driveFileId = fileId;
     var label = "Kaynak: " + RckDriveSource.formatSourceLabel(fileId, RckDriveSource.getStoredLabel());
@@ -207,11 +214,7 @@
         var localRaw = await readJsonResponse(localResponse);
         return WebViewParser.normalizeEnvelope(localRaw);
       } catch (localErr) {
-        fetchError = localErr;
-        var appsScriptUrl = String(config.appsScriptUrl || "").trim();
-        if (!appsScriptUrl || !fileId) {
-          throw localErr;
-        }
+        throw localErr;
       }
     }
 
