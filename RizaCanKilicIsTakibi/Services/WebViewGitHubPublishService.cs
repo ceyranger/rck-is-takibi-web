@@ -10,7 +10,7 @@ namespace RizaCanKilicIsTakibi.Services;
 public sealed class WebViewGitHubPublishService
 {
     public const string DefaultRepo = "ceyranger/rck-is-takibi-web";
-    public const string DefaultRepoPath = "web/data/web-view-latest.json";
+    public const string DefaultRepoPath = "web/export/web-view-latest.json";
 
     private static readonly HttpClient Http = new()
     {

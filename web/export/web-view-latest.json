@@ -1,0 +1,21 @@
+{
+  "kind": "web-view",
+  "exportedAt": "2026-08-28T00:00:00.000Z",
+  "checksum": "placeholder",
+  "data": {
+    "tasks": [],
+    "actionEntries": [],
+    "missingProjectEntries": [],
+    "karotEntries": [],
+    "tadilatEntries": [],
+    "yibfAnaBilgiEntries": [],
+    "yibfIsTakibiEntries": [],
+    "personnel": [],
+    "personnelAssignments": []
+  },
+  "derived": {
+    "tumEksiklerGroups": [],
+    "projeOnayItems": [],
+    "personnelGorevItems": []
+  }
+}
