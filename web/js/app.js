@@ -7,6 +7,7 @@
     { id: "eksik-proje", label: "EKSİK PROJE" },
     { id: "karot", label: "KAROT TAKİBİ" },
     { id: "tadilat", label: "TADİLAT TAKİBİ" },
+    { id: "proje-takibi", label: "PROJE TAKİBİ" },
     { id: "yibf", label: "YİBF İŞ TAKİBİ" },
     { id: "personel", label: "PERSONEL GÖREV" },
     { id: "arama", label: "ARAMA" }
@@ -40,6 +41,7 @@
     "eksik-proje": WebModules.eksikProje,
     karot: WebModules.karot,
     tadilat: WebModules.tadilat,
+    "proje-takibi": WebModules.projeTakibi,
     yibf: WebModules.yibfIsTakibi,
     personel: WebModules.personel,
     arama: WebModules.arama
@@ -57,6 +59,9 @@
     filters: {
       projeOnay: "all",
       personel: "all"
+    },
+    selections: {
+      projeTakibiEntryId: null
     }
   };
 
@@ -195,12 +200,20 @@
       envelope: state.envelope,
       query: state.query,
       subTabs: state.subTabs,
-      filters: state.filters
+      filters: state.filters,
+      selections: state.selections
     };
     content.innerHTML = render(viewState);
   }
 
   function handleContentClick(event) {
+    var entryBtn = event.target.closest("[data-proje-entry]");
+    if (entryBtn) {
+      state.selections.projeTakibiEntryId = entryBtn.getAttribute("data-proje-entry");
+      renderContent();
+      return;
+    }
+
     var subBtn = event.target.closest("[data-subtab]");
     if (subBtn) {
       var moduleKey = subBtn.getAttribute("data-module");

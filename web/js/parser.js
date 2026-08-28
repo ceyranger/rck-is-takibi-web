@@ -128,11 +128,100 @@ window.WebViewParser = (function () {
       .map(function (assignment) { return mapPersonnelAssignment(assignment, nameMap); });
   }
 
+  var APPROVAL_STATUS_LABELS = {
+    Incelenecek: "İncelenecek",
+    DenetcidenDonus: "Denetçiden dönüş bekleniyor",
+    MuelliftenRevize: "Müelliften revize bekleniyor",
+    Beklenen: "Beklenen",
+    Onaylanan: "Onaylanan",
+    Pasif: "Pasif"
+  };
+
+  var APPROVAL_STATUS_COLORS = {
+    Incelenecek: "#FF0000",
+    DenetcidenDonus: "#FFA500",
+    MuelliftenRevize: "#FFFF00",
+    Beklenen: "#E8E0A8",
+    Onaylanan: "#92D050",
+    Pasif: "#9E9E9E",
+    Kategorisiz: "#D9D9D9"
+  };
+
+  function normalizeApprovalStatus(status) {
+    var value = String(status || "").trim();
+    if (!value) return "";
+    var keys = Object.keys(APPROVAL_STATUS_LABELS);
+    for (var i = 0; i < keys.length; i++) {
+      if (keys[i].toLocaleLowerCase("tr-TR") === value.toLocaleLowerCase("tr-TR")) {
+        return keys[i];
+      }
+    }
+    return "";
+  }
+
+  function approvalStatusLabel(status) {
+    var normalized = normalizeApprovalStatus(status);
+    return APPROVAL_STATUS_LABELS[normalized] || "Kategorisiz";
+  }
+
+  function approvalStatusColor(status) {
+    var normalized = normalizeApprovalStatus(status);
+    return APPROVAL_STATUS_COLORS[normalized] || APPROVAL_STATUS_COLORS.Kategorisiz;
+  }
+
+  function wpfColorToCss(color) {
+    var value = String(color || "").trim();
+    if (!value) return "";
+    if (value.length === 9 && value.charAt(0) === "#") {
+      return "#" + value.slice(3);
+    }
+    return value;
+  }
+
+  function formatShortDate(value) {
+    if (!value) return "—";
+    try {
+      var date = new Date(value);
+      if (isNaN(date.getTime())) return String(value);
+      return new Intl.DateTimeFormat("tr-TR", { dateStyle: "short" }).format(date);
+    } catch (err) {
+      return String(value);
+    }
+  }
+
+  function groupYibfEventsByEntry(events) {
+    var map = {};
+    (events || []).forEach(function (event) {
+      if (!event || !event.entryId) return;
+      if (!map[event.entryId]) map[event.entryId] = [];
+      map[event.entryId].push(event);
+    });
+    Object.keys(map).forEach(function (entryId) {
+      map[entryId].sort(function (a, b) {
+        var orderDiff = (a.displayOrder || 0) - (b.displayOrder || 0);
+        if (orderDiff !== 0) return orderDiff;
+        return new Date(a.eventDate || 0) - new Date(b.eventDate || 0);
+      });
+    });
+    return map;
+  }
+
+  function getLatestYibfEvent(events) {
+    if (!events || !events.length) return null;
+    return events[events.length - 1];
+  }
+
   return {
     normalizeEnvelope,
     formatDateTime,
     includesQuery,
     joinSearchable,
-    buildPersonnelGorevRows
+    buildPersonnelGorevRows,
+    approvalStatusLabel,
+    approvalStatusColor,
+    wpfColorToCss,
+    formatShortDate,
+    groupYibfEventsByEntry,
+    getLatestYibfEvent
   };
 })();

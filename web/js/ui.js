@@ -292,6 +292,68 @@ window.WebUI = (function () {
     }).join("") + "</div>";
   }
 
+  function renderProjeTakibiLayout(entries, selected, selectedEvents, eventsByEntry, pendingCount) {
+    var listHtml = entries.map(function (entry) {
+      var latest = WebViewParser.getLatestYibfEvent(eventsByEntry[entry.id] || []);
+      var statusColor = latest
+        ? WebViewParser.wpfColorToCss(latest.backgroundColor || WebViewParser.approvalStatusColor(latest.approvalStatus))
+        : "#D9D9D9";
+      var active = entry.id === selected.id ? " active" : "";
+      return '<button type="button" class="proje-entry-card' + active + '" data-proje-entry="' + escapeHtml(entry.id) + '">' +
+        '<span class="proje-entry-dot" style="background:' + escapeHtml(statusColor) + '"></span>' +
+        '<span class="proje-entry-text">' +
+        '<strong class="text-wrap">' + escapeHtml(entry.adaParsel || "—") + "</strong>" +
+        '<span class="text-wrap">' + escapeHtml(entry.yapiSahibi || "—") + "</span>" +
+        '<em class="text-wrap">' + escapeHtml(latest ? latest.description : "Olay yok") + "</em>" +
+        "</span></button>";
+    }).join("");
+
+    var eventsHtml = selectedEvents.length
+      ? selectedEvents.map(function (event) {
+        var accent = WebViewParser.wpfColorToCss(event.backgroundColor || WebViewParser.approvalStatusColor(event.approvalStatus));
+        var statusLabel = WebViewParser.approvalStatusLabel(event.approvalStatus);
+        return '<article class="proje-event-card">' +
+          '<div class="proje-event-date" style="background:' + escapeHtml(accent) + '">' +
+          escapeHtml(WebViewParser.formatShortDate(event.eventDate)) +
+          "</div>" +
+          '<div class="proje-event-body">' +
+          '<div class="proje-event-top">' +
+          '<span class="proje-event-status">' + escapeHtml(statusLabel) + "</span>" +
+          "</div>" +
+          '<p class="text-wrap proje-event-desc">' + escapeHtml(event.description || "—") + "</p>" +
+          (event.noteText
+            ? '<p class="text-wrap proje-event-note">' + escapeHtml(event.noteText) + "</p>"
+            : "") +
+          "</div></article>";
+      }).join("")
+      : emptyState("Bu iş için olay kaydı yok.");
+
+    return '<div class="proje-takibi-layout">' +
+      '<section class="proje-list-panel">' +
+      '<div class="split-panel-title">Tüm İşler <span class="module-count">' + entries.length + "</span></div>" +
+      '<div class="proje-entry-list">' + listHtml + "</div>" +
+      "</section>" +
+      '<section class="proje-detail-panel">' +
+      '<div class="proje-detail-head">' +
+      '<h3 class="text-wrap">' + escapeHtml(selected.adaParsel || "—") + "</h3>" +
+      '<span class="module-count">' + selectedEvents.length + " olay</span>" +
+      "</div>" +
+      '<dl class="proje-meta-grid">' +
+      detailField("Ada Parsel", selected.adaParsel) +
+      detailField("YİBF No", selected.yibfNo) +
+      detailField("Belediye", selected.idare) +
+      detailField("Yapı Sahibi", selected.yapiSahibi) +
+      detailField("Müteahhit", selected.muteahhit) +
+      "</dl>" +
+      '<div class="split-panel-title">Olay Akışı</div>' +
+      '<div class="proje-event-list">' + eventsHtml + "</div>" +
+      "</section></div>";
+  }
+
+  function detailField(label, value) {
+    return "<div><dt>" + escapeHtml(label) + "</dt><dd class=\"text-wrap\">" + cell(value) + "</dd></div>";
+  }
+
   function renderProjeOnayGroups(groups, filterKey) {
     var UI = {
       escapeHtml: escapeHtml,
@@ -352,6 +414,7 @@ window.WebUI = (function () {
     renderActionTable: renderActionTable,
     renderAcilOzetList: renderAcilOzetList,
     renderPersonnelGorevBoard: renderPersonnelGorevBoard,
+    renderProjeTakibiLayout: renderProjeTakibiLayout,
     renderProjeOnayGroups: renderProjeOnayGroups
   };
 })();

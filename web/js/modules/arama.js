@@ -22,6 +22,7 @@ WebModules.arama = function renderArama(state) {
     WebModules.eksikProje(viewState),
     WebModules.karot(viewState),
     WebModules.tadilat(viewState),
+    WebModules.projeTakibi(viewState),
     WebModules.yibfIsTakibi(viewState),
     WebModules.personel(viewState)
   ];
