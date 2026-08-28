@@ -555,6 +555,10 @@ body {
   background: var(--surface);
 }
 
+[data-theme="light"] .data-table tbody td {
+  color: #000;
+}
+
 .data-table tbody tr:nth-child(even) td {
   background: var(--surface-2);
 }
@@ -565,6 +569,49 @@ body {
 
 .data-table tbody td.td-tracked-color {
   background: var(--tracked-bg) !important;
+  color: #000;
+}
+
+.data-table tbody td.td-tracked-color .tracked-cell,
+.data-table tbody td.td-tracked-color .tracked-cell-text,
+.data-table tbody td.td-tracked-color .tracked-cell-status,
+.data-table tbody td.td-tracked-color .pill {
+  color: #000 !important;
+}
+
+.data-table tbody td.td-tracked-color .pill,
+.data-table tbody td.td-tracked-color .tracked-cell-status {
+  background: transparent;
+  border-color: transparent;
+  min-width: 0;
+  padding: 0;
+  border-radius: 0;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.data-table .pill {
+  font-weight: 800;
+}
+
+[data-theme="light"] .data-table .pill {
+  color: #000;
+  background: rgba(255, 255, 255, 0.45);
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="light"] .data-table .pill-yes,
+[data-theme="light"] .data-table .pill-no,
+[data-theme="light"] .data-table .pill-muaf {
+  color: #000;
+  background: rgba(255, 255, 255, 0.45);
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+.data-table tbody td.td-tracked-color .tracked-cell-note {
+  color: #000;
+  background: rgba(255, 255, 255, 0.62);
+  border-left-color: #000;
 }
 
 .data-table tbody td.td-has-note {
@@ -609,7 +656,7 @@ body {
 }
 
 .data-table tbody td.td-tracked-color .tracked-cell-note {
-  background: var(--note-bg-colored);
+  background: rgba(255, 255, 255, 0.62);
 }
 
 .col-sticky {

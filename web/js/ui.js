@@ -65,9 +65,18 @@ window.WebUI = (function () {
       ? WebViewParser.wpfColorToCss(cellState.backgroundColor)
       : "";
     var hasNote = !!note;
-    var valueHtml = options.textMode
-      ? (value ? escapeHtml(String(value)) : '<span class="cell-empty">—</span>')
-      : statusPill(value);
+    var valueHtml;
+    if (options.textMode) {
+      valueHtml = value
+        ? '<span class="tracked-cell-text">' + escapeHtml(String(value)) + "</span>"
+        : '<span class="cell-empty">—</span>';
+    } else if (bg) {
+      valueHtml = value
+        ? '<span class="tracked-cell-text tracked-cell-status">' + escapeHtml(String(value)) + "</span>"
+        : '<span class="cell-empty">—</span>';
+    } else {
+      valueHtml = statusPill(value);
+    }
     var tdClass = [];
     var tdStyle = "";
 
@@ -247,7 +256,7 @@ window.WebUI = (function () {
       groups[district].forEach(function (entry) {
         rowsHtml.push(
           '<tr class="action-row" style="--action-row-bg:' + style.rowBg + ";--action-border:" + style.border + '">' +
-          '<td class="action-district-cell col-sticky" style="background:' + style.districtBg + ";color:" + style.fg + ";border-color:" + style.border + '">' +
+          '<td class="action-district-cell col-sticky" style="background:' + style.districtBg + ";color:#000;border-color:" + style.border + '">' +
           '<span class="action-district-name">' + escapeHtml(district) + "</span></td>" +
           '<td class="text-wrap" style="background:' + style.rowBg + '">' + cell(entry.ownerParcelText) + "</td>" +
           '<td class="text-wrap" style="background:' + style.rowBg + '">' + cell(entry.workText) + "</td>" +
