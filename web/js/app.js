@@ -1,15 +1,15 @@
 (function () {
   var TABS = [
-    { id: "genel-is-takibi", label: "GENEL İŞ TAKİBİ", render: WebModules.genelIsTakibi },
-    { id: "acil-is-ozet", label: "ACİL İŞ ÖZET", render: WebModules.acilIsOzet },
-    { id: "tum-eksikler", label: "TÜM EKSİKLER", render: WebModules.tumEksikler },
-    { id: "aksiyon", label: "AKSİYON", render: WebModules.aksiyon },
-    { id: "eksik-proje", label: "EKSİK PROJE", render: WebModules.eksikProje },
-    { id: "karot", label: "KAROT TAKİBİ", render: WebModules.karot },
-    { id: "tadilat", label: "TADİLAT TAKİBİ", render: WebModules.tadilat },
-    { id: "yibf", label: "YİBF İŞ TAKİBİ", render: WebModules.yibfIsTakibi },
-    { id: "personel", label: "PERSONEL GÖREV", render: WebModules.personel },
-    { id: "arama", label: "ARAMA", render: WebModules.arama }
+    { id: "genel-is-takibi", label: "GENEL İŞ TAKİBİ" },
+    { id: "acil-is-ozet", label: "ACİL İŞ ÖZET" },
+    { id: "tum-eksikler", label: "TÜM EKSİKLER" },
+    { id: "aksiyon", label: "AKSİYON" },
+    { id: "eksik-proje", label: "EKSİK PROJE" },
+    { id: "karot", label: "KAROT TAKİBİ" },
+    { id: "tadilat", label: "TADİLAT TAKİBİ" },
+    { id: "yibf", label: "YİBF İŞ TAKİBİ" },
+    { id: "personel", label: "PERSONEL GÖREV" },
+    { id: "arama", label: "ARAMA" }
   ];
 
   var SESSION_KEY = "rck-web-auth";
@@ -28,6 +28,22 @@
   var globalSearch = document.getElementById("global-search");
   var tabBar = document.getElementById("tab-bar");
   var content = document.getElementById("content");
+  var sidebar = document.getElementById("sidebar");
+  var sidebarToggle = document.getElementById("sidebar-toggle");
+  var sidebarBackdrop = document.getElementById("sidebar-backdrop");
+
+  var TAB_RENDERERS = {
+    "genel-is-takibi": WebModules.genelIsTakibi,
+    "acil-is-ozet": WebModules.acilIsOzet,
+    "tum-eksikler": WebModules.tumEksikler,
+    aksiyon: WebModules.aksiyon,
+    "eksik-proje": WebModules.eksikProje,
+    karot: WebModules.karot,
+    tadilat: WebModules.tadilat,
+    yibf: WebModules.yibfIsTakibi,
+    personel: WebModules.personel,
+    arama: WebModules.arama
+  };
 
   var state = {
     activeTab: TABS[0].id,
@@ -138,17 +154,31 @@
     refreshBtn.disabled = isLoading;
   }
 
+  function setSidebarOpen(isOpen) {
+    document.body.classList.toggle("sidebar-open", isOpen);
+    if (sidebarBackdrop) {
+      sidebarBackdrop.hidden = !isOpen;
+    }
+  }
+
+  function closeSidebar() {
+    setSidebarOpen(false);
+  }
+
   function buildTabs() {
     tabBar.innerHTML = TABS.map(function (tab) {
       var active = tab.id === state.activeTab ? " active" : "";
-      return '<button type="button" class="tab-btn' + active + '" data-tab="' + tab.id + '">' + tab.label + '</button>';
+      return '<button type="button" class="sidebar-link' + active + '" data-tab="' + tab.id + '">' +
+        WebModules.escapeHtml(tab.label) +
+        "</button>";
     }).join("");
 
-    tabBar.querySelectorAll(".tab-btn").forEach(function (btn) {
+    tabBar.querySelectorAll(".sidebar-link").forEach(function (btn) {
       btn.addEventListener("click", function () {
         state.activeTab = btn.getAttribute("data-tab");
         buildTabs();
         renderContent();
+        closeSidebar();
       });
     });
   }
@@ -160,13 +190,14 @@
     }
 
     var tab = TABS.find(function (t) { return t.id === state.activeTab; }) || TABS[0];
+    var render = TAB_RENDERERS[tab.id];
     var viewState = {
       envelope: state.envelope,
       query: state.query,
       subTabs: state.subTabs,
       filters: state.filters
     };
-    content.innerHTML = tab.render(viewState);
+    content.innerHTML = render(viewState);
   }
 
   function handleContentClick(event) {
@@ -330,6 +361,14 @@
   pinForm.addEventListener("submit", handlePinSubmit);
   refreshBtn.addEventListener("click", refreshData);
   content.addEventListener("click", handleContentClick);
+  if (sidebarToggle) {
+    sidebarToggle.addEventListener("click", function () {
+      setSidebarOpen(!document.body.classList.contains("sidebar-open"));
+    });
+  }
+  if (sidebarBackdrop) {
+    sidebarBackdrop.addEventListener("click", closeSidebar);
+  }
 
   globalSearch.addEventListener("input", function () {
     state.query = globalSearch.value.trim();

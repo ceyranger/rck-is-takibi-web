@@ -139,32 +139,67 @@ window.WebUI = (function () {
     ], tasks);
   }
 
+  var ACTION_DISTRICT_PALETTE = {
+    GERZE: { districtBg: "#D7E8D0", rowBg: "#EEF7EA", border: "#96B286", fg: "#1E3B1A" },
+    BOYABAT: { districtBg: "#D2E1F0", rowBg: "#EBF3FA", border: "#90AFCE", fg: "#18324F" },
+    "BOYABAT OSB": { districtBg: "#C8D9EA", rowBg: "#E5EFF9", border: "#7E9DBD", fg: "#17304A" },
+    SARAYDÜZÜ: { districtBg: "#CDD8F0", rowBg: "#EAF0FB", border: "#8FA4CC", fg: "#222E49" },
+    DURAĞAN: { districtBg: "#D4E7C4", rowBg: "#EDF6E5", border: "#98B778", fg: "#263A1B" },
+    AYANCIK: { districtBg: "#C8E2B8", rowBg: "#E7F4DE", border: "#8FB272", fg: "#1F3414" },
+    TÜRKELİ: { districtBg: "#F1E0A7", rowBg: "#FAF1D4", border: "#D1B45F", fg: "#4D3A08" },
+    MERKEZ: { districtBg: "#F9C83A", rowBg: "#FEF4C7", border: "#D8A820", fg: "#4E3900" },
+    "SİNOP OSB": { districtBg: "#F0C24E", rowBg: "#FBEBC5", border: "#D4A439", fg: "#4B3500" },
+    ERFELEK: { districtBg: "#F0BE9A", rowBg: "#FBE9DE", border: "#D69A72", fg: "#4A2A16" }
+  };
+
+  var ACTION_DISTRICT_DEFAULT = {
+    districtBg: "#E7ECF3",
+    rowBg: "#F8FAFD",
+    border: "#C8D3E2",
+    fg: "#223142"
+  };
+
+  function resolveActionDistrictStyle(district) {
+    var key = String(district || "").trim().toLocaleUpperCase("tr-TR");
+    return ACTION_DISTRICT_PALETTE[key] || ACTION_DISTRICT_DEFAULT;
+  }
+
   function renderActionTable(entries) {
     if (!entries.length) {
       return emptyState("Kayıt bulunamadı.");
     }
+
     var groups = {};
     entries.forEach(function (entry) {
       var district = String(entry.district || "—").trim() || "—";
       if (!groups[district]) groups[district] = [];
       groups[district].push(entry);
     });
+
     var districts = Object.keys(groups).sort(function (a, b) { return a.localeCompare(b, "tr"); });
-    var rows = [];
+    var rowsHtml = [];
+
     districts.forEach(function (district) {
-      groups[district].forEach(function (entry, index) {
-        rows.push({
-          district: index === 0 ? district : "",
-          ownerParcelText: entry.ownerParcelText,
-          workText: entry.workText
-        });
+      var style = resolveActionDistrictStyle(district);
+      groups[district].forEach(function (entry) {
+        rowsHtml.push(
+          '<tr class="action-row" style="--action-row-bg:' + style.rowBg + ";--action-border:" + style.border + '">' +
+          '<td class="action-district-cell col-sticky" style="background:' + style.districtBg + ";color:" + style.fg + ";border-color:" + style.border + '">' +
+          '<span class="action-district-name">' + escapeHtml(district) + "</span></td>" +
+          '<td class="text-wrap" style="background:' + style.rowBg + '">' + cell(entry.ownerParcelText) + "</td>" +
+          '<td class="text-wrap" style="background:' + style.rowBg + '">' + cell(entry.workText) + "</td>" +
+          "</tr>"
+        );
       });
     });
-    return renderTable([
-      { key: "district", label: "İlçe", className: "district-cell" },
-      { key: "ownerParcelText", label: "Ada Parsel Yapı Sahibi", className: "text-wrap" },
-      { key: "workText", label: "Yapılacak İş", className: "text-wrap" }
-    ], rows);
+
+    return '<div class="data-panel action-panel"><div class="table-scroll">' +
+      '<table class="data-table action-table">' +
+      "<thead><tr>" +
+      '<th class="col-sticky">İlçe</th>' +
+      "<th>Ada Parsel Yapı Sahibi</th>" +
+      "<th>Yapılacak İş</th>" +
+      "</tr></thead><tbody>" + rowsHtml.join("") + "</tbody></table></div></div>";
   }
 
   function priorityBadge(label, rank) {

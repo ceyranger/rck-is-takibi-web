@@ -9,7 +9,7 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>RCK İş Takibi — Görüntüleme</title>
-  <link rel="stylesheet" href="css/viewer.css?v=20260828h" />
+  <link rel="stylesheet" href="css/viewer.css?v=20260828i" />
   <script>
     window.WEB_VIEWER_CONFIG = {
       webPin: "271179",
@@ -35,45 +35,45 @@
       </div>
     </section>
 
-    <section id="main-screen" class="main-screen" hidden style="display:none">
-      <header class="app-header">
-        <div class="app-header-inner top-bar">
-          <div>
-            <h1>RCK İş Takibi</h1>
+    <section id="main-screen" class="app-shell" hidden style="display:none">
+      <div id="sidebar-backdrop" class="sidebar-backdrop" hidden></div>
+
+      <aside class="sidebar" id="sidebar" aria-label="Modül menüsü">
+        <div class="sidebar-brand">
+          <span class="brand-mark" aria-hidden="true">RCK</span>
+          <div class="brand-text">
+            <strong>RCK İş Takibi</strong>
             <p id="last-updated" class="muted">Son güncelleme: —</p>
           </div>
-          <button id="refresh-btn" type="button" class="btn ghost">Yenile</button>
         </div>
-      </header>
+        <nav class="sidebar-nav" id="tab-bar"></nav>
+      </aside>
 
-      <div class="search-shell">
-        <div class="search-bar">
-          <input id="global-search" type="search" placeholder="Ara (ada/parsel, iş adı, metin…)" />
-        </div>
-      </div>
-
-      <div class="tabs-shell">
-        <nav class="tab-bar" id="tab-bar" aria-label="Modüller"></nav>
-      </div>
-
-      <div class="content-shell">
+      <div class="app-main">
+        <header class="main-topbar">
+          <button id="sidebar-toggle" type="button" class="btn icon-btn" aria-label="Menüyü aç/kapat">☰</button>
+          <div class="search-bar">
+            <input id="global-search" type="search" placeholder="Ara (ada/parsel, iş adı, metin…)" />
+          </div>
+          <button id="refresh-btn" type="button" class="btn ghost refresh-btn">Yenile</button>
+        </header>
         <main id="content" class="content" aria-live="polite"></main>
       </div>
     </section>
   </div>
 
-  <script src="js/parser.js?v=20260828h"></script>
-  <script src="js/ui.js?v=20260828h"></script>
-  <script src="js/modules/genel-is-takibi.js?v=20260828h"></script>
-  <script src="js/modules/acil-is-ozet.js?v=20260828h"></script>
-  <script src="js/modules/tum-eksikler.js?v=20260828h"></script>
-  <script src="js/modules/aksiyon.js?v=20260828h"></script>
-  <script src="js/modules/eksik-proje.js?v=20260828h"></script>
-  <script src="js/modules/karot.js?v=20260828h"></script>
-  <script src="js/modules/tadilat.js?v=20260828h"></script>
-  <script src="js/modules/yibf-is-takibi.js?v=20260828h"></script>
-  <script src="js/modules/personel.js?v=20260828h"></script>
-  <script src="js/modules/arama.js?v=20260828h"></script>
-  <script src="js/app.js?v=20260828h"></script>
+  <script src="js/parser.js?v=20260828i"></script>
+  <script src="js/ui.js?v=20260828i"></script>
+  <script src="js/modules/genel-is-takibi.js?v=20260828i"></script>
+  <script src="js/modules/acil-is-ozet.js?v=20260828i"></script>
+  <script src="js/modules/tum-eksikler.js?v=20260828i"></script>
+  <script src="js/modules/aksiyon.js?v=20260828i"></script>
+  <script src="js/modules/eksik-proje.js?v=20260828i"></script>
+  <script src="js/modules/karot.js?v=20260828i"></script>
+  <script src="js/modules/tadilat.js?v=20260828i"></script>
+  <script src="js/modules/yibf-is-takibi.js?v=20260828i"></script>
+  <script src="js/modules/personel.js?v=20260828i"></script>
+  <script src="js/modules/arama.js?v=20260828i"></script>
+  <script src="js/app.js?v=20260828i"></script>
 </body>
 </html>
