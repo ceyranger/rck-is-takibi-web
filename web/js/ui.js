@@ -58,6 +58,55 @@ window.WebUI = (function () {
     return '<span class="' + cls + '">' + escapeHtml(text) + "</span>";
   }
 
+  function renderColoredCell(value, cellState, options) {
+    options = options || {};
+    var note = cellState && cellState.noteText ? String(cellState.noteText).trim() : "";
+    var bg = cellState && cellState.backgroundColor
+      ? WebViewParser.wpfColorToCss(cellState.backgroundColor)
+      : "";
+    var hasNote = !!note;
+    var valueHtml = options.textMode
+      ? (value ? escapeHtml(String(value)) : '<span class="cell-empty">—</span>')
+      : statusPill(value);
+    var tdClass = [];
+    var tdStyle = "";
+
+    if (bg) {
+      tdClass.push("td-tracked-color");
+      tdStyle = "--tracked-bg:" + bg + ";";
+    }
+    if (hasNote) {
+      tdClass.push("td-has-note");
+    }
+
+    var html = '<div class="tracked-cell' + (hasNote ? " has-note" : "") + '">';
+    html += '<div class="tracked-cell-value">' + valueHtml;
+    if (hasNote) {
+      html += '<span class="tracked-cell-note-badge" aria-hidden="true" title="Hücre notu"></span>';
+    }
+    html += "</div>";
+    if (hasNote) {
+      html += '<div class="tracked-cell-note">' + escapeHtml(note) + "</div>";
+    }
+    html += "</div>";
+
+    return {
+      html: html,
+      tdClass: tdClass.join(" "),
+      tdStyle: tdStyle,
+      tdTitle: note
+    };
+  }
+
+  function createTrackedCellRenderer(cellStateMap, columnKey, getValue, options) {
+    options = options || {};
+    return function (row) {
+      var cellState = WebViewParser.getCellState(cellStateMap, row.id, columnKey);
+      var value = typeof getValue === "function" ? getValue(row) : row[getValue];
+      return renderColoredCell(value, cellState, { textMode: options.textMode });
+    };
+  }
+
   function moduleHeader(title, count, subtitle) {
     return '<div class="module-header">' +
       '<div class="module-header-text">' +
@@ -85,9 +134,23 @@ window.WebUI = (function () {
     var tbody = rows.map(function (row) {
       var rowClass = rowClassFn ? rowClassFn(row) : "";
       var cells = columns.map(function (column) {
-        var content = column.render ? column.render(row) : cell(row[column.key]);
-        var classes = [column.className || "", column.sticky ? "col-sticky" : ""].filter(Boolean).join(" ");
-        return '<td class="' + classes + '">' + content + "</td>";
+        var rendered = column.render ? column.render(row) : cell(row[column.key]);
+        var content = rendered;
+        var tdClass = "";
+        var tdStyle = "";
+        var tdTitle = "";
+
+        if (rendered && typeof rendered === "object" && rendered.html !== undefined) {
+          content = rendered.html;
+          tdClass = rendered.tdClass || "";
+          tdStyle = rendered.tdStyle || "";
+          tdTitle = rendered.tdTitle || "";
+        }
+
+        var classes = [column.className || "", column.sticky ? "col-sticky" : "", tdClass].filter(Boolean).join(" ");
+        var styleAttr = tdStyle ? ' style="' + escapeHtml(tdStyle) + '"' : "";
+        var titleAttr = tdTitle ? ' title="' + escapeHtml(tdTitle) + '"' : "";
+        return '<td class="' + classes + '"' + styleAttr + titleAttr + ">" + content + "</td>";
       }).join("");
       return '<tr class="' + rowClass + '">' + cells + "</tr>";
     }).join("");
@@ -403,6 +466,8 @@ window.WebUI = (function () {
     karotStatusLabel: karotStatusLabel,
     karotRowClass: karotRowClass,
     statusPill: statusPill,
+    renderColoredCell: renderColoredCell,
+    createTrackedCellRenderer: createTrackedCellRenderer,
     moduleHeader: moduleHeader,
     emptyState: emptyState,
     renderTable: renderTable,

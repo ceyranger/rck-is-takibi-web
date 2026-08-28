@@ -211,6 +211,31 @@ window.WebViewParser = (function () {
     return events[events.length - 1];
   }
 
+  function buildCellStateMap(cellStates) {
+    var map = {};
+    (cellStates || []).forEach(function (state) {
+      if (!state || !state.entryId || !state.columnKey) return;
+      map[state.entryId + "\0" + state.columnKey] = state;
+    });
+    return map;
+  }
+
+  function getCellState(map, entryId, columnKey) {
+    if (!map || !entryId || !columnKey) return null;
+    return map[entryId + "\0" + columnKey] || null;
+  }
+
+  function collectEntryCellNotes(map, entryId) {
+    if (!map || !entryId) return "";
+    var notes = [];
+    Object.keys(map).forEach(function (key) {
+      if (key.indexOf(entryId + "\0") !== 0) return;
+      var note = map[key].noteText;
+      if (note && String(note).trim()) notes.push(String(note).trim());
+    });
+    return notes.join(" ");
+  }
+
   return {
     normalizeEnvelope,
     formatDateTime,
@@ -222,6 +247,9 @@ window.WebViewParser = (function () {
     wpfColorToCss,
     formatShortDate,
     groupYibfEventsByEntry,
-    getLatestYibfEvent
+    getLatestYibfEvent,
+    buildCellStateMap,
+    getCellState,
+    collectEntryCellNotes
   };
 })();

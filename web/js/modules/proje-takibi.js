@@ -9,7 +9,7 @@ WebModules.projeTakibi = function renderProjeTakibi(state) {
   var pendingCount = (state.envelope.derived.projeOnayItems || []).length;
 
   entries.sort(function (a, b) {
-    return (a.displayOrder || 0) - (b.displayOrder || 0);
+    return (b.displayOrder || 0) - (a.displayOrder || 0);
   });
 
   var filtered = entries.filter(function (entry) {
