@@ -9,17 +9,17 @@ namespace RizaCanKilicIsTakibi.ViewModels;
 public sealed partial class MainViewModel
 {
     private const string DefaultWebPin = "271179";
-    private readonly WebViewGitHubPublishService _webViewGitHubPublishService = new();
+    private const string WebViewSiteUrl = "https://ceyranger.github.io/rck-is-takibi-web/";
+    private readonly WebViewGitSyncService _webViewGitSyncService = new();
     private string _lastWebViewExportStatus = "Henüz dışa aktarılmadı.";
 
     private void InitializeWebViewExportFeature()
     {
-        PickWebViewExportDirectoryCommand = new RelayCommand(PickWebViewExportDirectory);
+        _settings.WebViewRepoRoot = WebViewRepoPaths.NormalizeRepoRoot(_settings.WebViewRepoRoot);
         ExportWebViewNowCommand = new AsyncRelayCommand(ExportWebViewNowAsync, CanExportWebViewNow);
         RefreshWebViewExportStatusFromDisk();
     }
 
-    public RelayCommand PickWebViewExportDirectoryCommand { get; private set; } = null!;
     public AsyncRelayCommand ExportWebViewNowCommand { get; private set; } = null!;
 
     public bool WebViewExportEnabled
@@ -39,18 +39,34 @@ public sealed partial class MainViewModel
         }
     }
 
-    public string WebViewExportDirectory
+    public bool WebViewGitSyncEnabled
     {
-        get => _settings.WebViewExportDirectory;
-        private set
+        get => _settings.WebViewGitSyncEnabled;
+        set
         {
-            var normalized = value?.Trim() ?? string.Empty;
-            if (string.Equals(_settings.WebViewExportDirectory, normalized, StringComparison.Ordinal))
+            if (_settings.WebViewGitSyncEnabled == value)
             {
                 return;
             }
 
-            _settings.WebViewExportDirectory = normalized;
+            _settings.WebViewGitSyncEnabled = value;
+            OnPropertyChanged();
+            HasUnsavedSettings = true;
+        }
+    }
+
+    public string WebViewRepoRoot
+    {
+        get => _settings.WebViewRepoRoot;
+        set
+        {
+            var normalized = WebViewRepoPaths.NormalizeRepoRoot(value);
+            if (string.Equals(_settings.WebViewRepoRoot, normalized, StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            _settings.WebViewRepoRoot = normalized;
             OnPropertyChanged();
             OnPropertyChanged(nameof(WebViewExportDirectoryDisplay));
             HasUnsavedSettings = true;
@@ -60,9 +76,7 @@ public sealed partial class MainViewModel
     }
 
     public string WebViewExportDirectoryDisplay
-        => string.IsNullOrWhiteSpace(WebViewExportDirectory)
-            ? "(Klasör seçilmedi)"
-            : WebViewExportDirectory;
+        => WebViewRepoPaths.GetExportFilePath(WebViewRepoRoot);
 
     public string LastWebViewExportStatus
     {
@@ -70,21 +84,11 @@ public sealed partial class MainViewModel
         private set => SetProperty(ref _lastWebViewExportStatus, value);
     }
 
+    private string WebViewExportDirectory => WebViewRepoPaths.GetExportDirectory(WebViewRepoRoot);
+
     private bool CanExportWebViewNow()
         => _webViewSnapshotService is not null
-           && !string.IsNullOrWhiteSpace(WebViewExportDirectory);
-
-    private void PickWebViewExportDirectory()
-    {
-        var selected = _fileDialogService.ShowFolderDialog(
-            "Web JSON klasörü seç (web-view-latest.json buraya yazılır)");
-        if (string.IsNullOrWhiteSpace(selected))
-        {
-            return;
-        }
-
-        WebViewExportDirectory = selected;
-    }
+           && WebViewRepoPaths.ValidateRepoRoot(WebViewRepoRoot).IsValid;
 
     private async Task ExportWebViewNowAsync()
     {
@@ -97,7 +101,7 @@ public sealed partial class MainViewModel
 
     private void TryExportWebViewSnapshotFireAndForget()
     {
-        if (_webViewSnapshotService is null || !WebViewExportEnabled || string.IsNullOrWhiteSpace(WebViewExportDirectory))
+        if (_webViewSnapshotService is null || !WebViewExportEnabled || !CanExportWebViewNow())
         {
             return;
         }
@@ -107,7 +111,7 @@ public sealed partial class MainViewModel
 
     private async Task<WebViewSnapshotExportResult?> TryExportWebViewSnapshotAsync(bool showSuccessToast)
     {
-        if (_webViewSnapshotService is null || string.IsNullOrWhiteSpace(WebViewExportDirectory))
+        if (_webViewSnapshotService is null || !WebViewRepoPaths.ValidateRepoRoot(WebViewRepoRoot).IsValid)
         {
             return null;
         }
@@ -123,6 +127,7 @@ public sealed partial class MainViewModel
                 YibfModule.BekleyenGruplar,
                 PersonnelGorev?.Rows ?? []);
 
+            var exportDirectory = WebViewExportDirectory;
             var result = await _webViewSnapshotService.TryExportLatestAsync(
                 new WebViewSnapshotExportRequest
                 {
@@ -144,25 +149,22 @@ public sealed partial class MainViewModel
                     PersonnelAssignments = _personnelAssignmentService?.GetAssignments(),
                     Derived = derived
                 },
-                WebViewExportDirectory);
+                exportDirectory);
 
             if (result is null)
             {
                 return null;
             }
 
-            var jsonPath = Path.Combine(WebViewExportDirectory, IWebViewSnapshotService.LatestFileName);
+            var jsonPath = result.FilePath;
             var publishNote = string.Empty;
-            if (_settings.WebViewGitHubPublishEnabled)
+            if (WebViewGitSyncEnabled)
             {
-                var repo = string.IsNullOrWhiteSpace(_settings.WebViewGitHubRepository)
-                    ? WebViewGitHubPublishService.DefaultRepo
-                    : _settings.WebViewGitHubRepository.Trim();
-                var publishResult = await _webViewGitHubPublishService.TryPublishAsync(jsonPath, repo);
-                publishNote = publishResult switch
+                var syncResult = await _webViewGitSyncService.TrySyncAsync(WebViewRepoRoot, jsonPath);
+                publishNote = syncResult switch
                 {
-                    { Success: true } => " Site güncellendi.",
-                    { Success: false } => $" Site yüklenemedi: {publishResult.Message}",
+                    { Success: true } => $" {syncResult.Message}",
+                    { Success: false } => $" Site güncellenemedi: {syncResult.Message}",
                     _ => string.Empty
                 };
             }
@@ -171,11 +173,13 @@ public sealed partial class MainViewModel
 
             if (showSuccessToast)
             {
+                var siteUpdated = publishNote.Contains("güncellendi", StringComparison.OrdinalIgnoreCase)
+                                  || publishNote.Contains("güncel", StringComparison.OrdinalIgnoreCase);
                 _notificationService.ShowToast(
-                    publishNote.StartsWith(" Site güncellendi", StringComparison.Ordinal)
+                    siteUpdated
                         ? $"Web sitesi güncellendi ({FormatBytes(result.FileSizeBytes)}). 1-2 dk sonra yenileyin."
                         : $"JSON yazıldı ({FormatBytes(result.FileSizeBytes)}).{publishNote}",
-                    publishNote.StartsWith(" Site güncellendi", StringComparison.Ordinal) ? ToastType.Success : ToastType.Warning,
+                    siteUpdated ? ToastType.Success : ToastType.Warning,
                     TimeSpan.FromSeconds(5));
             }
 
@@ -195,21 +199,18 @@ public sealed partial class MainViewModel
 
     private void RefreshWebViewExportStatusFromDisk()
     {
-        if (string.IsNullOrWhiteSpace(WebViewExportDirectory))
-        {
-            LastWebViewExportStatus = "Henüz dışa aktarılmadı.";
-            return;
-        }
-
-        var path = Path.Combine(WebViewExportDirectory, IWebViewSnapshotService.LatestFileName);
+        var path = WebViewRepoPaths.GetExportFilePath(WebViewRepoRoot);
         if (!File.Exists(path))
         {
-            LastWebViewExportStatus = "Klasör seçildi; dosya henüz oluşturulmadı.";
+            var validation = WebViewRepoPaths.ValidateRepoRoot(WebViewRepoRoot);
+            LastWebViewExportStatus = validation.IsValid
+                ? "Repo hazır; dosya henüz oluşturulmadı."
+                : validation.ErrorMessage ?? "Henüz dışa aktarılmadı.";
             return;
         }
 
         var info = new FileInfo(path);
-        UpdateLastWebViewExportStatus(info.LastWriteTime, info.Length);
+        UpdateLastWebViewExportStatus(info.LastWriteTime, info.Length, $" · {WebViewSiteUrl}");
     }
 
     private void UpdateLastWebViewExportStatus(DateTime exportedAt, long bytes, string publishNote = "")

@@ -1015,7 +1015,8 @@ public sealed partial class MainViewModel : ViewModelBase
             AutoBackupMinutes = _settings.AutoBackupMinutes,
             SeedSampleDataOnEmpty = _settings.SeedSampleDataOnEmpty,
             WebViewExportEnabled = _settings.WebViewExportEnabled,
-            WebViewExportDirectory = _settings.WebViewExportDirectory
+            WebViewRepoRoot = _settings.WebViewRepoRoot,
+            WebViewGitSyncEnabled = _settings.WebViewGitSyncEnabled
         };
 
     private async Task<T> RunExclusiveOperationAsync<T>(Func<Task<T>> operation)
@@ -1133,12 +1134,14 @@ public sealed partial class MainViewModel : ViewModelBase
         _settings.AutoBackupMinutes = snapshot.Settings.AutoBackupMinutes;
         _settings.SeedSampleDataOnEmpty = snapshot.Settings.SeedSampleDataOnEmpty;
         _settings.WebViewExportEnabled = snapshot.Settings.WebViewExportEnabled;
-        _settings.WebViewExportDirectory = snapshot.Settings.WebViewExportDirectory;
+        _settings.WebViewRepoRoot = WebViewRepoPaths.NormalizeRepoRoot(snapshot.Settings.WebViewRepoRoot);
+        _settings.WebViewGitSyncEnabled = snapshot.Settings.WebViewGitSyncEnabled;
         OnPropertyChanged(nameof(AutoBackupEnabled));
         OnPropertyChanged(nameof(AutoBackupMinutes));
         OnPropertyChanged(nameof(SeedSampleDataOnEmpty));
         OnPropertyChanged(nameof(WebViewExportEnabled));
-        OnPropertyChanged(nameof(WebViewExportDirectory));
+        OnPropertyChanged(nameof(WebViewRepoRoot));
+        OnPropertyChanged(nameof(WebViewGitSyncEnabled));
         OnPropertyChanged(nameof(WebViewExportDirectoryDisplay));
         RefreshWebViewExportStatusFromDisk();
         ExportWebViewNowCommand.NotifyCanExecuteChanged();

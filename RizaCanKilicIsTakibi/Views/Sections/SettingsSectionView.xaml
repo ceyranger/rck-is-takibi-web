@@ -67,20 +67,25 @@
                                    FontFamily="{StaticResource Font.Primary}"
                                    FontSize="16"
                                    FontWeight="SemiBold"/>
-                        <TextBlock Text="JSON dosyası seçtiğiniz klasöre yazılır ve otomatik olarak web sitesine yüklenir (https://ceyranger.github.io/rck-is-takibi-web/). Personel yalnızca site linki + PIN kullanır."
+                        <TextBlock Text="JSON repodaki web/export klasörüne yazılır ve git push ile site güncellenir (https://ceyranger.github.io/rck-is-takibi-web/). Personel yalnızca site linki + PIN kullanır."
                                    Margin="0,4,0,0"
                                    TextWrapping="Wrap"
                                    Foreground="{StaticResource Brush.TextSecondary}"/>
-                        <CheckBox Content="Kaydet sonrası web dosyası üret"
+                        <CheckBox Content="Kaydet sonrası web sitesini güncelle"
                                   Margin="0,12,0,0"
                                   IsChecked="{Binding WebViewExportEnabled, Mode=TwoWay}"/>
+                        <StackPanel Margin="0,10,0,0">
+                            <TextBlock Text="Git repo klasörü:"
+                                       Foreground="{StaticResource Brush.TextSecondary}"/>
+                            <TextBox Text="{Binding WebViewRepoRoot, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="0,4,0,0"
+                                     TextWrapping="Wrap"/>
+                        </StackPanel>
                         <TextBlock Text="{Binding WebViewExportDirectoryDisplay}"
-                                   Margin="0,10,0,0"
-                                   TextWrapping="Wrap"/>
+                                   Margin="0,8,0,0"
+                                   TextWrapping="Wrap"
+                                   Foreground="{StaticResource Brush.TextSecondary}"/>
                         <WrapPanel Margin="0,12,0,0">
-                            <Button Content="KLASÖR SEÇ"
-                                    Command="{Binding PickWebViewExportDirectoryCommand}"
-                                    Margin="0,0,8,8"/>
                             <Button Content="ŞİMDİ DIŞA AKTAR"
                                     Command="{Binding ExportWebViewNowCommand}"
                                     Style="{StaticResource GhostButton}"
