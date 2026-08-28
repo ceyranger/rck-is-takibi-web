@@ -146,6 +146,11 @@ body {
   border: 1px solid rgba(198, 40, 40, 0.25);
 }
 
+.status-line {
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
 .main-screen {
   max-width: 960px;
   margin: 0 auto;

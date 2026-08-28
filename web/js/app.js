@@ -13,8 +13,6 @@
   var pinScreen = document.getElementById("pin-screen");
   var mainScreen = document.getElementById("main-screen");
   var pinInput = document.getElementById("pin-input");
-  var pinSubmit = document.getElementById("pin-submit");
-  var pinError = document.getElementById("pin-error");
   var lastUpdated = document.getElementById("last-updated");
   var refreshBtn = document.getElementById("refresh-btn");
   var globalSearch = document.getElementById("global-search");
@@ -30,11 +28,6 @@
 
   function getConfig() {
     return window.WEB_VIEWER_CONFIG || {};
-  }
-
-  function showScreen(name) {
-    pinScreen.hidden = name !== "pin";
-    mainScreen.hidden = name !== "main";
   }
 
   function buildTabs() {
@@ -63,97 +56,51 @@
     content.innerHTML = tab.render(viewState);
   }
 
-  function showInlineError(message) {
-    pinError.hidden = false;
-    pinError.textContent = message;
+  function fetchEnvelopeXHR(dataUrl) {
+    return new Promise(function (resolve, reject) {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", dataUrl + (dataUrl.indexOf("?") >= 0 ? "&" : "?") + "t=" + Date.now(), true);
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState !== 4) return;
+        if (xhr.status !== 200) {
+          reject(new Error("Veri alınamadı."));
+          return;
+        }
+        try {
+          resolve(WebViewParser.normalizeEnvelope(JSON.parse(xhr.responseText)));
+        } catch (err) {
+          reject(err);
+        }
+      };
+      xhr.onerror = function () {
+        reject(new Error("Bağlantı hatası."));
+      };
+      xhr.send();
+    });
   }
 
-  function clearInlineError() {
-    pinError.hidden = true;
-    pinError.textContent = "";
+  function openWithEnvelope(envelope, pin) {
+    state.pin = pin || state.pin;
+    state.envelope = envelope;
+    lastUpdated.textContent = "Son güncelleme: " + WebViewParser.formatDateTime(envelope.exportedAt);
+    buildTabs();
+    renderContent();
   }
 
-  function validatePin(pin) {
-    var expected = String(getConfig().webPin || "").trim();
-    if (expected && pin !== expected) {
-      throw new Error("Geçersiz PIN.");
-    }
-  }
-
-  async function fetchEnvelope(pin) {
-    validatePin(pin);
-    var dataUrl = String(getConfig().dataUrl || "").trim();
-    if (!dataUrl) {
-      throw new Error("Site yapılandırması eksik.");
-    }
-
-    var response;
-    try {
-      response = await fetch(dataUrl, { method: "GET", cache: "no-store" });
-    } catch (networkErr) {
-      throw new Error("İnternet bağlantısı yok veya siteye ulaşılamıyor.");
-    }
-
-    if (!response.ok) {
-      throw new Error("Veri henüz yüklenmemiş. Uygulamada Şimdi Dışa Aktar yapın, 2 dk bekleyip tekrar deneyin.");
-    }
-
-    var raw;
-    try {
-      raw = await response.json();
-    } catch (parseErr) {
-      throw new Error("Veri dosyası okunamadı. Birkaç dakika sonra Yenile deneyin.");
-    }
-
-    if (raw && raw.error) {
-      throw new Error(raw.error);
-    }
-    return WebViewParser.normalizeEnvelope(raw);
-  }
-
-  async function loadData(pin, keepScreen) {
-    clearInlineError();
-    pinSubmit.disabled = true;
-    pinSubmit.textContent = "Yükleniyor…";
-    try {
-      var envelope = await fetchEnvelope(pin);
-      state.pin = pin;
-      state.envelope = envelope;
-      lastUpdated.textContent = "Son güncelleme: " + WebViewParser.formatDateTime(envelope.exportedAt);
-      showScreen("main");
-      buildTabs();
-      renderContent();
-    } catch (err) {
-      if (!keepScreen) {
-        showInlineError(err.message || "Veri alınamadı.");
-      } else {
-        content.innerHTML = '<div class="empty">' + WebModules.escapeHtml(err.message || "Yenileme başarısız.") + '</div>';
-      }
-    } finally {
-      pinSubmit.disabled = false;
-      pinSubmit.textContent = "Giriş";
-    }
-  }
-
-  pinSubmit.addEventListener("click", function () {
-    var pin = (pinInput.value || "").trim();
-    if (!pin) {
-      showInlineError("PIN girin.");
-      return;
-    }
-    loadData(pin, false);
-  });
-
-  pinInput.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
-      pinSubmit.click();
-    }
-  });
-
-  refreshBtn.addEventListener("click", function () {
+  async function refreshData() {
     if (!state.pin) return;
-    loadData(state.pin, true);
-  });
+    var dataUrl = String(getConfig().dataUrl || "").trim();
+    if (!dataUrl) return;
+    content.innerHTML = '<div class="empty">Yenileniyor…</div>';
+    try {
+      var envelope = await fetchEnvelopeXHR(dataUrl);
+      openWithEnvelope(envelope, state.pin);
+    } catch (err) {
+      content.innerHTML = '<div class="empty">' + WebModules.escapeHtml(err.message || "Yenileme başarısız.") + '</div>';
+    }
+  }
+
+  refreshBtn.addEventListener("click", refreshData);
 
   globalSearch.addEventListener("input", function () {
     state.query = globalSearch.value.trim();
@@ -161,5 +108,8 @@
   });
 
   buildTabs();
-  showScreen("pin");
+  window.RckApp = {
+    openWithEnvelope: openWithEnvelope,
+    refreshData: refreshData
+  };
 })();
