@@ -135,7 +135,9 @@
     if (!adminBadge) {
       return;
     }
-    adminBadge.hidden = !isAdminRole(state.role);
+    var show = isAdminRole(state.role);
+    adminBadge.hidden = !show;
+    adminBadge.classList.toggle("is-visible", show);
   }
 
   function resolveDataUrl() {
