@@ -8,6 +8,7 @@ namespace RizaCanKilicIsTakibi.ViewModels;
 
 public sealed partial class MainViewModel
 {
+    private const string DefaultWebPin = "271179";
     private string _lastWebViewExportStatus = "Henüz dışa aktarılmadı.";
 
     private void InitializeWebViewExportFeature()
@@ -74,7 +75,8 @@ public sealed partial class MainViewModel
 
     private void PickWebViewExportDirectory()
     {
-        var selected = _fileDialogService.ShowFolderDialog("Web görüntüleme klasörü seç (Google Drive sync)");
+        var selected = _fileDialogService.ShowFolderDialog(
+            "Web JSON klasörü seç (web-view-latest.json buraya yazılır)");
         if (string.IsNullOrWhiteSpace(selected))
         {
             return;
@@ -153,9 +155,9 @@ public sealed partial class MainViewModel
             if (showSuccessToast)
             {
                 _notificationService.ShowToast(
-                    $"Web görüntüleme dosyası güncellendi ({FormatBytes(result.FileSizeBytes)}).",
+                    $"Web dosyası güncellendi ({FormatBytes(result.FileSizeBytes)}). Drive sync sonrası siteden yenileyin.",
                     ToastType.Success,
-                    TimeSpan.FromSeconds(3));
+                    TimeSpan.FromSeconds(4));
             }
 
             return result;
@@ -192,5 +194,5 @@ public sealed partial class MainViewModel
     }
 
     private void UpdateLastWebViewExportStatus(DateTime exportedAt, long bytes)
-        => LastWebViewExportStatus = $"Son dışa aktarma: {exportedAt:g} · {FormatBytes(bytes)} · {IWebViewSnapshotService.LatestFileName}";
+        => LastWebViewExportStatus = $"Son dışa aktarma: {exportedAt:g} · {FormatBytes(bytes)} · PIN {DefaultWebPin}";
 }

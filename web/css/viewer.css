@@ -79,7 +79,60 @@ body {
 }
 
 .btn.primary { background: var(--primary); color: #fff; width: 100%; }
+.btn.primary.inline { width: auto; }
 .btn.ghost { background: transparent; border: 1px solid var(--border); color: inherit; }
+.btn.link {
+  background: transparent;
+  border: none;
+  color: var(--primary);
+  width: 100%;
+  margin-top: 0.5rem;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.source-chip {
+  font-size: 0.82rem;
+  margin: 0.35rem 0 0;
+  word-break: break-all;
+}
+
+.top-actions {
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.settings-dialog {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 0;
+  max-width: min(420px, calc(100vw - 2rem));
+  background: var(--card);
+  color: inherit;
+  box-shadow: var(--shadow);
+}
+
+.settings-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.settings-form {
+  padding: 1.1rem;
+}
+
+.settings-form h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.15rem;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
 
 .muted { color: var(--muted); font-size: 0.9rem; margin: 0; }
 .error { color: var(--danger); font-size: 0.9rem; }

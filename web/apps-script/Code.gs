@@ -1,64 +1,97 @@
 /**
- * Google Apps Script Web App proxy for web-view-latest.json
+ * RCK Web Görüntüleme — Google Apps Script
  *
- * Setup:
- * 1. script.google.com -> New project -> paste this file
- * 2. Project Settings -> Script properties:
- *    - DRIVE_FILE_ID = Google Drive file id for web-view-latest.json
- *    - PIN_HASH = SHA-256 hex of your PIN (uppercase)
- * 3. Deploy -> New deployment -> Web app
- *    - Execute as: Me
- *    - Who has access: Anyone
- * 4. Copy deployment URL into web/config.js
+ * KURULUM (3 adım):
+ * 1) Aşağıdaki DRIVE_FILE_ID satırına Drive'daki web-view-latest.json dosya ID'sini yapıştır.
+ * 2) kurulumYap fonksiyonunu bir kez Çalıştır (izin ver).
+ * 3) Dağıt > Yeni dağıtım > Web uygulaması > Yürüt: Ben > Erişim: Herkes
+ *
+ * Site her istekte fileId parametresi gonderebilir; Script properties yedektir.
+ * Telefonda gireceğin PIN: 271179
  */
+
+// === BURAYI DOLDUR ===
+var DRIVE_FILE_ID = "1wJyu-kSWEG7YsFjSHmGAJ4RpRmFGvH_C";
+var WEB_PIN = "271179";
+var WEB_PIN_HASH = "A5AE5D5D7920AD56D6053C5691C0DBC06F94575EC9638BE37463A0E427780456";
 
 var RATE_LIMIT_MAX = 5;
 var RATE_LIMIT_WINDOW_MS = 60 * 1000;
 
+/** Bir kez çalıştır — Script properties'e kaydeder. */
+function kurulumYap() {
+  if (!DRIVE_FILE_ID || DRIVE_FILE_ID.indexOf("BURAYA") >= 0) {
+    throw new Error("Önce DRIVE_FILE_ID satırına Drive dosya ID yaz.");
+  }
+
+  PropertiesService.getScriptProperties().setProperties({
+    DRIVE_FILE_ID: DRIVE_FILE_ID,
+    PIN_HASH: WEB_PIN_HASH
+  });
+
+  Logger.log("Kurulum tamam. Telefonda PIN: " + WEB_PIN);
+}
+
 function doGet(e) {
-  return handleRequest_(e);
+  return respond_(e);
 }
 
 function doPost(e) {
-  return handleRequest_(e);
+  return respond_(e);
 }
 
-function handleRequest_(e) {
+function respond_(e) {
   var params = (e && e.parameter) ? e.parameter : {};
-  var pin = String(params.pin || '').trim();
+  var payload = buildPayload_(params);
+  var json = JSON.stringify(payload);
+  var callback = String(params.callback || "").trim();
+  if (callback && /^[A-Za-z0-9_]+$/.test(callback)) {
+    return ContentService
+      .createTextOutput(callback + "(" + json + ");")
+      .setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
+  return ContentService.createTextOutput(json).setMimeType(ContentService.MimeType.JSON);
+}
+
+function buildPayload_(params) {
+  var pin = String(params.pin || "").trim();
   if (!pin) {
-    return jsonResponse_(401, { error: 'PIN gerekli.' });
+    return { error: "PIN gerekli.", httpStatus: 401 };
   }
 
   if (!checkRateLimit_(pin)) {
-    return jsonResponse_(429, { error: 'Çok fazla deneme. Bir dakika bekleyin.' });
+    return { error: "Çok fazla deneme. Bir dakika bekleyin.", httpStatus: 429 };
   }
 
   var props = PropertiesService.getScriptProperties();
-  var expectedHash = String(props.getProperty('PIN_HASH') || '').trim().toUpperCase();
-  var fileId = String(props.getProperty('DRIVE_FILE_ID') || '').trim();
-  if (!expectedHash || !fileId) {
-    return jsonResponse_(500, { error: 'Sunucu yapılandırması eksik.' });
+  var expectedHash = String(props.getProperty("PIN_HASH") || WEB_PIN_HASH).trim().toUpperCase();
+  var fileId = String(params.fileId || props.getProperty("DRIVE_FILE_ID") || DRIVE_FILE_ID).trim();
+  if (!expectedHash) {
+    return { error: "Kurulum eksik. kurulumYap calistir.", httpStatus: 500 };
+  }
+  if (!fileId || fileId.indexOf("BURAYA") >= 0) {
+    return { error: "Drive dosya kimligi gerekli (siteden kaynak secin).", httpStatus: 400 };
   }
 
   if (hashPin_(pin) !== expectedHash) {
-    return jsonResponse_(401, { error: 'Geçersiz PIN.' });
+    return { error: "Geçersiz PIN.", httpStatus: 401 };
   }
 
   try {
     var file = DriveApp.getFileById(fileId);
-    var content = file.getBlob().getDataAsString('UTF-8');
+    var content = file.getBlob().getDataAsString("UTF-8");
     var parsed = JSON.parse(content);
-    if (parsed.kind !== 'web-view') {
-      return jsonResponse_(422, { error: 'Beklenmeyen dosya türü.' });
+    if (parsed.kind !== "web-view") {
+      return { error: "Beklenmeyen dosya türü.", httpStatus: 422 };
     }
-
-    return ContentService
-      .createTextOutput(JSON.stringify(parsed))
-      .setMimeType(ContentService.MimeType.JSON);
+    return parsed;
   } catch (err) {
-    return jsonResponse_(404, { error: 'Dosya okunamadı: ' + err });
+    return { error: "Dosya okunamadı: " + err, httpStatus: 404 };
   }
+}
+
+function handleRequest_(e) {
+  return respond_(e);
 }
 
 function hashPin_(pin) {
@@ -69,13 +102,13 @@ function hashPin_(pin) {
 function bytesToHex_(bytes) {
   return bytes.map(function (b) {
     var v = (b < 0 ? b + 256 : b).toString(16);
-    return v.length === 1 ? '0' + v : v;
-  }).join('');
+    return v.length === 1 ? "0" + v : v;
+  }).join("");
 }
 
 function checkRateLimit_(pin) {
   var cache = CacheService.getScriptCache();
-  var key = 'pin_attempts_' + hashPin_(pin).slice(0, 16);
+  var key = "pin_attempts_" + hashPin_(pin).slice(0, 16);
   var raw = cache.get(key);
   var count = raw ? parseInt(raw, 10) : 0;
   if (count >= RATE_LIMIT_MAX) {
@@ -88,15 +121,8 @@ function checkRateLimit_(pin) {
 function jsonResponse_(status, payload) {
   var output = ContentService.createTextOutput(JSON.stringify(payload))
     .setMimeType(ContentService.MimeType.JSON);
-  // Apps Script Web App cannot set HTTP status codes reliably; include status field.
-  if (typeof payload === 'object' && payload !== null) {
+  if (typeof payload === "object" && payload !== null) {
     payload.httpStatus = status;
   }
   return output;
-}
-
-/** Run once in editor to generate PIN_HASH for a PIN, then store in Script properties. */
-function generatePinHashForSetup() {
-  var pin = '1234'; // change before running, then delete from source
-  Logger.log(hashPin_(pin));
 }

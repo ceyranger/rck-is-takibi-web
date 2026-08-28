@@ -67,7 +67,7 @@
                                    FontFamily="{StaticResource Font.Primary}"
                                    FontSize="16"
                                    FontWeight="SemiBold"/>
-                        <TextBlock Text="Kaydet sonrası Google Drive sync klasörüne web-view-latest.json üretir. Canlı veritabanına dokunmaz."
+                        <TextBlock Text="Uygulama yalnızca web-view-latest.json dosyasını seçtiğiniz klasöre yazar. Google Drive Desktop ile aynı klasörü sync edin; personel paylaşılan site linkinden PIN ile görüntüler."
                                    Margin="0,4,0,0"
                                    TextWrapping="Wrap"
                                    Foreground="{StaticResource Brush.TextSecondary}"/>
