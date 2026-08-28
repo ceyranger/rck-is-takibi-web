@@ -123,10 +123,14 @@ public sealed partial class MainViewModel
             RefreshAcilIsOzet();
             PersonnelGorev?.Refresh();
 
+            var personnelRows = WebViewSnapshotDerivedBuilder.MapPersonnelAssignments(
+                _personnelAssignmentService?.GetAssignments() ?? [],
+                id => _personnelAssignmentService?.GetPersonnelName(id));
+
             var derived = WebViewSnapshotDerivedBuilder.Build(
                 WebViewSnapshotDerivedBuilder.GetAllTumEksiklerGroups(TumEksikler),
                 YibfModule.BekleyenGruplar,
-                PersonnelGorev?.Rows ?? [],
+                personnelRows,
                 AcilIsOzetItems);
 
             var exportDirectory = WebViewExportDirectory;

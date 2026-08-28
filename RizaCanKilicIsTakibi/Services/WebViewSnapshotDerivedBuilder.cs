@@ -1,4 +1,5 @@
 using RizaCanKilicIsTakibi.Models;
+using RizaCanKilicIsTakibi.Services.Abstractions;
 using RizaCanKilicIsTakibi.ViewModels;
 
 namespace RizaCanKilicIsTakibi.Services;
@@ -8,13 +9,13 @@ public static class WebViewSnapshotDerivedBuilder
     public static WebViewSnapshotDerived Build(
         IEnumerable<EksikIsGroupViewModel> tumEksiklerGroups,
         IEnumerable<YibfPendingGroupViewModel> projeOnayGroups,
-        IEnumerable<PersonnelGorevRowViewModel> personnelRows,
+        IEnumerable<WebViewPersonnelGorevRowDto> personnelRows,
         IEnumerable<AcilIsOzetItemViewModel> acilIsOzetItems)
         => new()
         {
             TumEksikler = tumEksiklerGroups.Select(MapTumEksiklerGroup).ToList(),
             ProjeOnayItems = projeOnayGroups.Select(MapProjeOnayGroup).ToList(),
-            PersonnelGorevItems = personnelRows.Select(MapPersonnelRow).ToList(),
+            PersonnelGorevItems = personnelRows.ToList(),
             AcilIsOzetItems = acilIsOzetItems.Select(MapAcilIsOzetItem).ToList()
         };
 
@@ -71,18 +72,30 @@ public static class WebViewSnapshotDerivedBuilder
             CategoryColor = YibfAnaBilgiApprovalStatuses.GetDefaultColorForStatus(item.PendingEvent.ApprovalStatus)
         };
 
-    private static WebViewPersonnelGorevRowDto MapPersonnelRow(PersonnelGorevRowViewModel row)
+    public static IReadOnlyList<WebViewPersonnelGorevRowDto> MapPersonnelAssignments(
+        IEnumerable<PersonnelAssignment> assignments,
+        Func<Guid?, string?> getPersonnelName)
+        => assignments
+            .Where(a => a.Status == PersonnelAssignmentStatus.Open)
+            .OrderBy(a => getPersonnelName(a.PersonnelId) ?? string.Empty)
+            .ThenByDescending(a => a.AssignedAt)
+            .Select(a => MapPersonnelAssignment(a, getPersonnelName(a.PersonnelId) ?? string.Empty))
+            .ToList();
+
+    private static WebViewPersonnelGorevRowDto MapPersonnelAssignment(PersonnelAssignment assignment, string personnelName)
         => new()
         {
-            PersonnelName = row.PersonnelName,
-            ModuleLabel = row.ModuleLabel,
-            Summary = row.Summary,
-            FieldLabel = row.FieldLabel,
-            ProjectIdentity = row.ProjectIdentity,
-            PriorityLabel = row.PriorityLabel,
-            StatusLabel = row.StatusLabel,
-            AssignedAtText = row.AssignedAtText,
-            IsOpen = row.IsOpen
+            PersonnelName = string.IsNullOrWhiteSpace(personnelName) ? "Atanmamış" : personnelName,
+            ModuleLabel = string.IsNullOrWhiteSpace(assignment.ModuleLabelSnapshot)
+                ? IPersonnelAssignmentService.ModuleLabel(assignment.SourceModule)
+                : assignment.ModuleLabelSnapshot,
+            Summary = assignment.SummarySnapshot,
+            FieldLabel = assignment.FieldLabelSnapshot,
+            ProjectIdentity = assignment.ProjectIdentitySnapshot,
+            PriorityLabel = IPersonnelAssignmentService.PriorityLabel(assignment.PrioritySnapshot),
+            StatusLabel = assignment.Status == PersonnelAssignmentStatus.Completed ? "Tamamlandı" : "Açık",
+            AssignedAtText = assignment.AssignedAt.ToString("g"),
+            IsOpen = assignment.Status == PersonnelAssignmentStatus.Open
         };
 
     private static WebViewAcilIsOzetItemDto MapAcilIsOzetItem(AcilIsOzetItemViewModel item)

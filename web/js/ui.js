@@ -193,6 +193,70 @@ window.WebUI = (function () {
     }).join("");
   }
 
+  function personnelPriorityClass(label) {
+    var upper = String(label || "").toLocaleUpperCase("tr-TR");
+    if (upper === "KRİTİK" || upper === "KRITIK") return "priority-kritik";
+    if (upper === "UYARI") return "priority-uyari";
+    if (upper === "ACİL" || upper === "ACIL") return "priority-acil";
+    return "";
+  }
+
+  function renderPersonnelTaskCard(row) {
+    var priorityCls = personnelPriorityClass(row.priorityLabel);
+    var priorityHtml = row.priorityLabel
+      ? '<span class="personnel-priority ' + priorityCls + '">' + escapeHtml(row.priorityLabel) + "</span>"
+      : "";
+    var taskText = row.summary || row.fieldLabel || "—";
+    return '<article class="personnel-task-card' + (row.isOpen ? "" : " completed") + '">' +
+      '<div class="personnel-task-top">' +
+      '<span class="personnel-module">' + escapeHtml(row.moduleLabel) + "</span>" +
+      priorityHtml +
+      '<span class="badge' + (row.isOpen ? " open" : "") + '">' + escapeHtml(row.statusLabel) + "</span>" +
+      "</div>" +
+      '<h4 class="personnel-task-title text-wrap">' + escapeHtml(taskText) + "</h4>" +
+      (row.projectIdentity && row.projectIdentity !== taskText
+        ? '<p class="personnel-task-project text-wrap">' + escapeHtml(row.projectIdentity) + "</p>"
+        : "") +
+      (row.fieldLabel && row.summary && row.fieldLabel !== taskText
+        ? '<p class="personnel-task-field text-wrap">' + escapeHtml(row.fieldLabel) + "</p>"
+        : "") +
+      '<p class="personnel-task-meta">Atama: ' + escapeHtml(row.assignedAtText || "—") + "</p>" +
+      "</article>";
+  }
+
+  function renderPersonnelGorevBoard(rows) {
+    var groups = {};
+    rows.forEach(function (row) {
+      var key = row.personnelName || "Atanmamış";
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(row);
+    });
+
+    var names = Object.keys(groups).sort(function (a, b) {
+      return a.localeCompare(b, "tr");
+    });
+
+    return '<div class="personnel-board">' + names.map(function (name) {
+      var items = groups[name];
+      var initials = name.split(/\s+/).filter(Boolean).slice(0, 2).map(function (part) {
+        return part.charAt(0);
+      }).join("").toLocaleUpperCase("tr-TR") || "?";
+
+      return '<section class="personnel-group-card">' +
+        '<header class="personnel-group-head">' +
+        '<span class="personnel-avatar" aria-hidden="true">' + escapeHtml(initials) + "</span>" +
+        '<div class="personnel-group-text">' +
+        '<h3 class="text-wrap">' + escapeHtml(name) + "</h3>" +
+        '<p>' + items.length + " açık görev</p>" +
+        "</div>" +
+        '<span class="module-count">' + items.length + "</span>" +
+        "</header>" +
+        '<div class="personnel-task-grid">' +
+        items.map(renderPersonnelTaskCard).join("") +
+        "</div></section>";
+    }).join("") + "</div>";
+  }
+
   function renderProjeOnayGroups(groups, filterKey) {
     var UI = {
       escapeHtml: escapeHtml,
@@ -252,6 +316,7 @@ window.WebUI = (function () {
     renderTaskTable: renderTaskTable,
     renderActionTable: renderActionTable,
     renderAcilOzetList: renderAcilOzetList,
+    renderPersonnelGorevBoard: renderPersonnelGorevBoard,
     renderProjeOnayGroups: renderProjeOnayGroups
   };
 })();

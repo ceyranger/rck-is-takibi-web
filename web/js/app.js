@@ -39,7 +39,8 @@
       aksiyon: "aksiyon"
     },
     filters: {
-      projeOnay: "all"
+      projeOnay: "all",
+      personel: "all"
     }
   };
 
@@ -186,6 +187,11 @@
       var filterValue = filterBtn.getAttribute("data-filter");
       if (filterModule === "projeOnay" && filterValue) {
         state.filters.projeOnay = filterValue;
+        renderContent();
+        return;
+      }
+      if (filterModule === "personel" && filterValue) {
+        state.filters.personel = filterValue;
         renderContent();
       }
     }
