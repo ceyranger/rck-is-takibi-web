@@ -141,15 +141,15 @@
   }
 
   function showMainScreen() {
-    pinScreen.style.display = "none";
+    pinScreen.hidden = true;
     mainScreen.hidden = false;
-    mainScreen.style.display = "block";
+    mainScreen.style.removeProperty("display");
   }
 
   function showPinScreen() {
-    pinScreen.style.display = "";
+    pinScreen.hidden = false;
     mainScreen.hidden = true;
-    mainScreen.style.display = "none";
+    mainScreen.style.removeProperty("display");
   }
 
   function setPinLoading(isLoading) {
@@ -203,7 +203,16 @@
       filters: state.filters,
       selections: state.selections
     };
-    content.innerHTML = render(viewState);
+    if (!render) {
+      content.innerHTML = '<div class="empty">Sayfa bulunamadı.</div>';
+      return;
+    }
+    try {
+      content.innerHTML = render(viewState);
+    } catch (err) {
+      console.error("renderContent failed:", err);
+      content.innerHTML = '<div class="empty">Sayfa yüklenemedi. Yenile butonunu deneyin.</div>';
+    }
   }
 
   function handleContentClick(event) {
