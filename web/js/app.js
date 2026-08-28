@@ -87,12 +87,24 @@
       throw new Error("Site yapılandırması eksik.");
     }
 
-    var response = await fetch(dataUrl, { method: "GET", cache: "no-store" });
-    if (!response.ok) {
-      throw new Error("Site verisi henüz yok. Uygulamada Şimdi Dışa Aktar yapın, 1-2 dk bekleyin.");
+    var response;
+    try {
+      response = await fetch(dataUrl, { method: "GET", cache: "no-store" });
+    } catch (networkErr) {
+      throw new Error("İnternet bağlantısı yok veya siteye ulaşılamıyor.");
     }
 
-    var raw = await response.json();
+    if (!response.ok) {
+      throw new Error("Veri henüz yüklenmemiş. Uygulamada Şimdi Dışa Aktar yapın, 2 dk bekleyip tekrar deneyin.");
+    }
+
+    var raw;
+    try {
+      raw = await response.json();
+    } catch (parseErr) {
+      throw new Error("Veri dosyası okunamadı. Birkaç dakika sonra Yenile deneyin.");
+    }
+
     if (raw && raw.error) {
       throw new Error(raw.error);
     }

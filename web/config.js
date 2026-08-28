@@ -1,4 +1,4 @@
 window.WEB_VIEWER_CONFIG = {
   webPin: "271179",
-  dataUrl: "./export/web-view-latest.json"
+  dataUrl: "/rck-is-takibi-web/export/web-view-latest.json"
 };
