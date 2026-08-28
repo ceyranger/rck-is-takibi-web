@@ -3,7 +3,7 @@ window.WebModules = window.WebModules || {};
 WebModules.acil = function renderAcil(state) {
   const q = state.query;
   const tasks = (state.envelope.data.tasks || []).filter(function (t) {
-    return t.boardType === 0 || t.boardType === "Acil";
+    return t.boardType === 1 || t.boardType === "Acil";
   });
 
   const filtered = tasks.filter(function (t) {

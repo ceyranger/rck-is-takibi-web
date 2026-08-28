@@ -9,11 +9,11 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>RCK İş Takibi — Görüntüleme</title>
-  <link rel="stylesheet" href="css/viewer.css?v=20260828d" />
+  <link rel="stylesheet" href="css/viewer.css?v=20260828e" />
   <script>
     window.WEB_VIEWER_CONFIG = {
       webPin: "271179",
-      dataUrl: "/rck-is-takibi-web/export/web-view-latest.json"
+      dataUrl: "export/web-view-latest.json"
     };
   </script>
 </head>
@@ -26,7 +26,7 @@
         <form id="pin-form" autocomplete="off">
           <label class="field">
             <span>PIN</span>
-            <input id="pin-input" name="pin" type="tel" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" placeholder="271179" maxlength="12" required />
+            <input id="pin-input" name="pin" type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="PIN girin" maxlength="12" required />
           </label>
           <button id="pin-submit" type="submit" class="btn primary">Giriş</button>
         </form>
@@ -53,130 +53,15 @@
     </section>
   </div>
 
-  <script src="js/parser.js?v=20260828d"></script>
-  <script src="js/modules/acil.js?v=20260828d"></script>
-  <script src="js/modules/proje-onay.js?v=20260828d"></script>
-  <script src="js/modules/personel.js?v=20260828d"></script>
-  <script src="js/modules/karot.js?v=20260828d"></script>
-  <script src="js/modules/tadilat.js?v=20260828d"></script>
-  <script src="js/modules/yibf-is-takibi.js?v=20260828d"></script>
-  <script src="js/modules/tum-eksikler.js?v=20260828d"></script>
-  <script src="js/modules/arama.js?v=20260828d"></script>
-  <script src="js/app.js?v=20260828d"></script>
-  <script>
-    (function () {
-      var form = document.getElementById("pin-form");
-      var pinInput = document.getElementById("pin-input");
-      var pinError = document.getElementById("pin-error");
-      var pinStatus = document.getElementById("pin-status");
-      var pinScreen = document.getElementById("pin-screen");
-      var submitBtn = document.getElementById("pin-submit");
-
-      function showError(message) {
-        pinError.hidden = false;
-        pinError.textContent = message;
-        pinStatus.hidden = true;
-      }
-
-      function showStatus(message) {
-        pinStatus.hidden = false;
-        pinStatus.textContent = message;
-        pinError.hidden = true;
-      }
-
-      function hideMessages() {
-        pinError.hidden = true;
-        pinStatus.hidden = true;
-      }
-
-      function normalizePin(value) {
-        return String(value || "").replace(/\s+/g, "").trim();
-      }
-
-      function fetchJson(url, callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", url + (url.indexOf("?") >= 0 ? "&" : "?") + "t=" + Date.now(), true);
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState !== 4) return;
-          callback(null, xhr);
-        };
-        xhr.onerror = function () {
-          callback(new Error("İnternet bağlantısı yok."), null);
-        };
-        xhr.send();
-      }
-
-      function handleSubmit(event) {
-        if (event) event.preventDefault();
-        hideMessages();
-
-        var pin = normalizePin(pinInput.value);
-        var expected = String((window.WEB_VIEWER_CONFIG || {}).webPin || "271179");
-        var dataUrl = String((window.WEB_VIEWER_CONFIG || {}).dataUrl || "");
-
-        if (!pin) {
-          showError("PIN girin.");
-          return;
-        }
-        if (pin !== expected) {
-          showError("Geçersiz PIN. Doğrusu: 271179");
-          return;
-        }
-        if (!dataUrl) {
-          showError("Site ayarı eksik.");
-          return;
-        }
-
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Yükleniyor…";
-        showStatus("Veri indiriliyor…");
-
-        fetchJson(dataUrl, function (networkErr, xhr) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Giriş";
-
-          if (networkErr || !xhr) {
-            showError("Bağlantı hatası. İnterneti kontrol edin.");
-            return;
-          }
-          if (xhr.status !== 200) {
-            showError("Veri henüz yok. Bilgisayarda uygulamadan Şimdi Dışa Aktar yapın, 2 dk bekleyin.");
-            return;
-          }
-
-          var raw;
-          try {
-            raw = JSON.parse(xhr.responseText);
-          } catch (parseErr) {
-            showError("Veri dosyası bozuk. 2 dk sonra tekrar deneyin.");
-            return;
-          }
-
-          if (raw && raw.error) {
-            showError(String(raw.error));
-            return;
-          }
-
-          try {
-            if (!window.RckApp || typeof window.RckApp.openWithEnvelope !== "function") {
-              throw new Error("Site modülleri yüklenemedi. Sayfayı yenileyin.");
-            }
-            var envelope = WebViewParser.normalizeEnvelope(raw);
-            window.RckApp.openWithEnvelope(envelope, pin);
-            pinScreen.style.display = "none";
-            var mainScreen = document.getElementById("main-screen");
-            mainScreen.hidden = false;
-            mainScreen.style.display = "block";
-          } catch (openErr) {
-            showError(openErr.message || "Açılamadı.");
-          }
-        });
-      }
-
-      form.addEventListener("submit", handleSubmit);
-      submitBtn.addEventListener("click", handleSubmit);
-    })();
-  </script>
+  <script src="js/parser.js?v=20260828e"></script>
+  <script src="js/modules/acil.js?v=20260828e"></script>
+  <script src="js/modules/proje-onay.js?v=20260828e"></script>
+  <script src="js/modules/personel.js?v=20260828e"></script>
+  <script src="js/modules/karot.js?v=20260828e"></script>
+  <script src="js/modules/tadilat.js?v=20260828e"></script>
+  <script src="js/modules/yibf-is-takibi.js?v=20260828e"></script>
+  <script src="js/modules/tum-eksikler.js?v=20260828e"></script>
+  <script src="js/modules/arama.js?v=20260828e"></script>
+  <script src="js/app.js?v=20260828e"></script>
 </body>
 </html>
-

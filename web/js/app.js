@@ -10,9 +10,17 @@
     { id: "arama", label: "Arama", render: WebModules.arama }
   ];
 
+  var SESSION_KEY = "rck-web-auth";
+  var SESSION_EXP_KEY = "rck-web-auth-exp";
+  var SESSION_TTL_MS = 12 * 60 * 60 * 1000;
+
   var pinScreen = document.getElementById("pin-screen");
   var mainScreen = document.getElementById("main-screen");
+  var pinForm = document.getElementById("pin-form");
   var pinInput = document.getElementById("pin-input");
+  var pinError = document.getElementById("pin-error");
+  var pinStatus = document.getElementById("pin-status");
+  var pinSubmit = document.getElementById("pin-submit");
   var lastUpdated = document.getElementById("last-updated");
   var refreshBtn = document.getElementById("refresh-btn");
   var globalSearch = document.getElementById("global-search");
@@ -20,14 +28,104 @@
   var content = document.getElementById("content");
 
   var state = {
-    pin: "",
     activeTab: TABS[0].id,
     query: "",
-    envelope: null
+    envelope: null,
+    loading: false
   };
 
   function getConfig() {
     return window.WEB_VIEWER_CONFIG || {};
+  }
+
+  function normalizePin(value) {
+    return String(value || "").replace(/\s+/g, "").trim();
+  }
+
+  function getExpectedPin() {
+    return normalizePin(getConfig().webPin || "271179");
+  }
+
+  function resolveDataUrl() {
+    var configured = String(getConfig().dataUrl || "").trim();
+    if (configured) {
+      if (configured.indexOf("http://") === 0 || configured.indexOf("https://") === 0) {
+        return configured;
+      }
+      if (configured.charAt(0) === "/") {
+        return configured;
+      }
+      var basePath = window.location.pathname.replace(/\/[^/]*$/, "/");
+      return basePath + configured.replace(/^\.\//, "");
+    }
+    var basePath = window.location.pathname.replace(/\/[^/]*$/, "/");
+    return basePath + "export/web-view-latest.json";
+  }
+
+  function saveSession() {
+    try {
+      sessionStorage.setItem(SESSION_KEY, "1");
+      sessionStorage.setItem(SESSION_EXP_KEY, String(Date.now() + SESSION_TTL_MS));
+    } catch (err) {
+      /* storage blocked */
+    }
+  }
+
+  function clearSession() {
+    try {
+      sessionStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem(SESSION_EXP_KEY);
+    } catch (err) {
+      /* storage blocked */
+    }
+  }
+
+  function isSessionValid() {
+    try {
+      if (sessionStorage.getItem(SESSION_KEY) !== "1") {
+        return false;
+      }
+      var expiresAt = parseInt(sessionStorage.getItem(SESSION_EXP_KEY) || "0", 10);
+      return Date.now() < expiresAt;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  function showPinError(message) {
+    pinError.hidden = false;
+    pinError.textContent = message;
+    pinStatus.hidden = true;
+  }
+
+  function showPinStatus(message) {
+    pinStatus.hidden = false;
+    pinStatus.textContent = message;
+    pinError.hidden = true;
+  }
+
+  function hidePinMessages() {
+    pinError.hidden = true;
+    pinStatus.hidden = true;
+  }
+
+  function showMainScreen() {
+    pinScreen.style.display = "none";
+    mainScreen.hidden = false;
+    mainScreen.style.display = "block";
+  }
+
+  function showPinScreen() {
+    pinScreen.style.display = "";
+    mainScreen.hidden = true;
+    mainScreen.style.display = "none";
+  }
+
+  function setPinLoading(isLoading) {
+    state.loading = isLoading;
+    pinSubmit.disabled = isLoading;
+    pinSubmit.textContent = isLoading ? "Yükleniyor…" : "Giriş";
+    refreshBtn.disabled = isLoading;
   }
 
   function buildTabs() {
@@ -59,47 +157,134 @@
   function fetchEnvelopeXHR(dataUrl) {
     return new Promise(function (resolve, reject) {
       var xhr = new XMLHttpRequest();
-      xhr.open("GET", dataUrl + (dataUrl.indexOf("?") >= 0 ? "&" : "?") + "t=" + Date.now(), true);
+      var url = dataUrl + (dataUrl.indexOf("?") >= 0 ? "&" : "?") + "t=" + Date.now();
+      xhr.open("GET", url, true);
+      xhr.timeout = 120000;
       xhr.onreadystatechange = function () {
         if (xhr.readyState !== 4) return;
         if (xhr.status !== 200) {
-          reject(new Error("Veri alınamadı."));
+          reject(new Error("Veri henüz yok. Bilgisayarda Şimdi Dışa Aktar yapın, 1-2 dk bekleyin."));
           return;
         }
         try {
-          resolve(WebViewParser.normalizeEnvelope(JSON.parse(xhr.responseText)));
+          var raw = JSON.parse(xhr.responseText);
+          if (raw && raw.error) {
+            reject(new Error(String(raw.error)));
+            return;
+          }
+          resolve(WebViewParser.normalizeEnvelope(raw));
         } catch (err) {
-          reject(err);
+          reject(new Error("Veri dosyası okunamadı. 1-2 dk sonra tekrar deneyin."));
         }
       };
+      xhr.ontimeout = function () {
+        reject(new Error("Veri indirme zaman aşımı. Tekrar deneyin."));
+      };
       xhr.onerror = function () {
-        reject(new Error("Bağlantı hatası."));
+        reject(new Error("Bağlantı hatası. İnterneti kontrol edin."));
       };
       xhr.send();
     });
   }
 
-  function openWithEnvelope(envelope, pin) {
-    state.pin = pin || state.pin;
+  function openWithEnvelope(envelope) {
     state.envelope = envelope;
     lastUpdated.textContent = "Son güncelleme: " + WebViewParser.formatDateTime(envelope.exportedAt);
+    showMainScreen();
     buildTabs();
     renderContent();
   }
 
-  async function refreshData() {
-    if (!state.pin) return;
-    var dataUrl = String(getConfig().dataUrl || "").trim();
-    if (!dataUrl) return;
-    content.innerHTML = '<div class="empty">Yenileniyor…</div>';
-    try {
-      var envelope = await fetchEnvelopeXHR(dataUrl);
-      openWithEnvelope(envelope, state.pin);
-    } catch (err) {
-      content.innerHTML = '<div class="empty">' + WebModules.escapeHtml(err.message || "Yenileme başarısız.") + '</div>';
+  function loadData(options) {
+    options = options || {};
+    var dataUrl = resolveDataUrl();
+    if (!dataUrl) {
+      if (!options.silent) {
+        showPinError("Site ayarı eksik.");
+      }
+      return Promise.reject(new Error("Site ayarı eksik."));
     }
+
+    if (!options.silent) {
+      setPinLoading(true);
+      showPinStatus("Veri indiriliyor…");
+    } else {
+      content.innerHTML = '<div class="empty">Yenileniyor…</div>';
+    }
+
+    return fetchEnvelopeXHR(dataUrl).then(function (envelope) {
+      openWithEnvelope(envelope);
+      if (!options.silent) {
+        hidePinMessages();
+      }
+      return envelope;
+    }).catch(function (err) {
+      if (options.silent && isSessionValid()) {
+        showPinScreen();
+      }
+      clearSession();
+      if (!options.silent) {
+        showPinError(err.message || "Veri yüklenemedi.");
+      } else if (state.envelope) {
+        content.innerHTML = '<div class="empty">' + WebModules.escapeHtml(err.message || "Yenileme başarısız.") + '</div>';
+      }
+      throw err;
+    }).finally(function () {
+      if (!options.silent) {
+        setPinLoading(false);
+      }
+    });
   }
 
+  function handlePinSubmit(event) {
+    if (event) event.preventDefault();
+    hidePinMessages();
+
+    var pin = normalizePin(pinInput.value);
+    if (!pin) {
+      showPinError("PIN girin.");
+      return;
+    }
+    if (pin !== getExpectedPin()) {
+      showPinError("Geçersiz PIN.");
+      pinInput.value = "";
+      pinInput.focus();
+      return;
+    }
+
+    saveSession();
+    loadData({ silent: false }).catch(function () {
+      /* error shown */
+    });
+  }
+
+  function refreshData() {
+    if (!isSessionValid()) {
+      clearSession();
+      showPinScreen();
+      showPinError("Oturum süresi doldu. PIN ile tekrar giriş yapın.");
+      return;
+    }
+
+    loadData({ silent: true }).catch(function () {
+      /* error shown in content */
+    });
+  }
+
+  function tryRestoreSession() {
+    if (!isSessionValid()) {
+      clearSession();
+      return;
+    }
+
+    showMainScreen();
+    content.innerHTML = '<div class="empty">Veri yükleniyor…</div>';
+    loadData({ silent: true }).catch(function () {
+      /* fallback to pin screen */
+    });
+  }
+
+  pinForm.addEventListener("submit", handlePinSubmit);
   refreshBtn.addEventListener("click", refreshData);
 
   globalSearch.addEventListener("input", function () {
@@ -108,8 +293,11 @@
   });
 
   buildTabs();
+  tryRestoreSession();
+
   window.RckApp = {
     openWithEnvelope: openWithEnvelope,
-    refreshData: refreshData
+    refreshData: refreshData,
+    resolveDataUrl: resolveDataUrl
   };
 })();
