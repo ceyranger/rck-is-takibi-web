@@ -9,6 +9,7 @@ namespace RizaCanKilicIsTakibi.ViewModels;
 public sealed partial class MainViewModel
 {
     private const string DefaultWebPin = "271179";
+    private readonly WebViewGitHubPublishService _webViewGitHubPublishService = new();
     private string _lastWebViewExportStatus = "Henüz dışa aktarılmadı.";
 
     private void InitializeWebViewExportFeature()
@@ -150,14 +151,32 @@ public sealed partial class MainViewModel
                 return null;
             }
 
-            UpdateLastWebViewExportStatus(result.ExportedAt, result.FileSizeBytes);
+            var jsonPath = Path.Combine(WebViewExportDirectory, IWebViewSnapshotService.LatestFileName);
+            var publishNote = string.Empty;
+            if (_settings.WebViewGitHubPublishEnabled)
+            {
+                var repo = string.IsNullOrWhiteSpace(_settings.WebViewGitHubRepository)
+                    ? WebViewGitHubPublishService.DefaultRepo
+                    : _settings.WebViewGitHubRepository.Trim();
+                var publishResult = await _webViewGitHubPublishService.TryPublishAsync(jsonPath, repo);
+                publishNote = publishResult switch
+                {
+                    { Success: true } => " Site güncellendi.",
+                    { Success: false } => $" Site yüklenemedi: {publishResult.Message}",
+                    _ => string.Empty
+                };
+            }
+
+            UpdateLastWebViewExportStatus(result.ExportedAt, result.FileSizeBytes, publishNote);
 
             if (showSuccessToast)
             {
                 _notificationService.ShowToast(
-                    $"Web dosyası güncellendi ({FormatBytes(result.FileSizeBytes)}). Drive sync sonrası siteden yenileyin.",
-                    ToastType.Success,
-                    TimeSpan.FromSeconds(4));
+                    publishNote.StartsWith(" Site güncellendi", StringComparison.Ordinal)
+                        ? $"Web sitesi güncellendi ({FormatBytes(result.FileSizeBytes)}). 1-2 dk sonra yenileyin."
+                        : $"JSON yazıldı ({FormatBytes(result.FileSizeBytes)}).{publishNote}",
+                    publishNote.StartsWith(" Site güncellendi", StringComparison.Ordinal) ? ToastType.Success : ToastType.Warning,
+                    TimeSpan.FromSeconds(5));
             }
 
             return result;
@@ -193,6 +212,6 @@ public sealed partial class MainViewModel
         UpdateLastWebViewExportStatus(info.LastWriteTime, info.Length);
     }
 
-    private void UpdateLastWebViewExportStatus(DateTime exportedAt, long bytes)
-        => LastWebViewExportStatus = $"Son dışa aktarma: {exportedAt:g} · {FormatBytes(bytes)} · PIN {DefaultWebPin}";
+    private void UpdateLastWebViewExportStatus(DateTime exportedAt, long bytes, string publishNote = "")
+        => LastWebViewExportStatus = $"Son dışa aktarma: {exportedAt:g} · {FormatBytes(bytes)} · PIN {DefaultWebPin}{publishNote}";
 }

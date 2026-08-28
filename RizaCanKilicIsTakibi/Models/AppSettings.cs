@@ -7,4 +7,6 @@ public sealed class AppSettings
     public bool SeedSampleDataOnEmpty { get; set; } = false;
     public bool WebViewExportEnabled { get; set; }
     public string WebViewExportDirectory { get; set; } = string.Empty;
+    public bool WebViewGitHubPublishEnabled { get; set; } = true;
+    public string WebViewGitHubRepository { get; set; } = "ceyranger/rck-is-takibi-web";
 }

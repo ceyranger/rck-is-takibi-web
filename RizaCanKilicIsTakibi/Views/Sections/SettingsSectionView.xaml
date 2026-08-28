@@ -67,7 +67,7 @@
                                    FontFamily="{StaticResource Font.Primary}"
                                    FontSize="16"
                                    FontWeight="SemiBold"/>
-                        <TextBlock Text="Uygulama yalnızca web-view-latest.json dosyasını seçtiğiniz klasöre yazar. Google Drive Desktop ile aynı klasörü sync edin; personel paylaşılan site linkinden PIN ile görüntüler."
+                        <TextBlock Text="JSON dosyası seçtiğiniz klasöre yazılır ve otomatik olarak web sitesine yüklenir (https://ceyranger.github.io/rck-is-takibi-web/). Personel yalnızca site linki + PIN kullanır."
                                    Margin="0,4,0,0"
                                    TextWrapping="Wrap"
                                    Foreground="{StaticResource Brush.TextSecondary}"/>
