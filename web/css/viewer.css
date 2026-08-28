@@ -633,17 +633,34 @@ body {
 
 .tracked-cell-note-badge {
   flex: 0 0 auto;
-  width: 10px;
-  height: 10px;
-  margin-top: 0.15rem;
+  width: 1.35rem;
+  height: 1.35rem;
+  min-width: 1.35rem;
+  margin-top: 0;
+  padding: 0;
+  border: none;
   border-radius: 50%;
   background: #2d6ac2;
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tracked-cell-note-badge:hover,
+.tracked-cell-note-badge:focus-visible {
+  transform: scale(1.08);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.95), 0 0 0 4px rgba(45, 106, 194, 0.35);
+  outline: none;
+}
+
+.tracked-cell.is-note-open .tracked-cell-note-badge {
+  background: #1d4f9c;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(45, 106, 194, 0.55);
 }
 
 .tracked-cell-note {
-  margin-top: 0.4rem;
-  padding: 0.3rem 0.4rem;
+  margin-top: 0.45rem;
+  padding: 0.45rem 0.5rem;
   font-size: 0.76rem;
   font-weight: 700;
   line-height: 1.35;
@@ -653,6 +670,10 @@ body {
   border-radius: 3px;
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+.tracked-cell-note[hidden] {
+  display: none !important;
 }
 
 .data-table tbody td.td-tracked-color .tracked-cell-note {

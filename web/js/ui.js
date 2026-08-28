@@ -91,11 +91,11 @@ window.WebUI = (function () {
     var html = '<div class="tracked-cell' + (hasNote ? " has-note" : "") + '">';
     html += '<div class="tracked-cell-value">' + valueHtml;
     if (hasNote) {
-      html += '<span class="tracked-cell-note-badge" aria-hidden="true" title="Hücre notu"></span>';
+      html += '<button type="button" class="tracked-cell-note-badge" data-cell-note-toggle aria-label="Hücre notunu göster" aria-expanded="false" title="Notu göster"></button>';
     }
     html += "</div>";
     if (hasNote) {
-      html += '<div class="tracked-cell-note">' + escapeHtml(note) + "</div>";
+      html += '<div class="tracked-cell-note" hidden>' + escapeHtml(note) + "</div>";
     }
     html += "</div>";
 
@@ -103,7 +103,7 @@ window.WebUI = (function () {
       html: html,
       tdClass: tdClass.join(" "),
       tdStyle: tdStyle,
-      tdTitle: note
+      tdTitle: ""
     };
   }
 

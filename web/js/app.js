@@ -363,7 +363,48 @@
     }
   }
 
+  function closeAllCellNotes(exceptCell) {
+    document.querySelectorAll(".tracked-cell.is-note-open").forEach(function (cell) {
+      if (exceptCell && cell === exceptCell) return;
+      cell.classList.remove("is-note-open");
+      var note = cell.querySelector(".tracked-cell-note");
+      var toggle = cell.querySelector("[data-cell-note-toggle]");
+      if (note) note.hidden = true;
+      if (toggle) toggle.setAttribute("aria-expanded", "false");
+    });
+  }
+
+  function toggleCellNote(toggleBtn) {
+    var cell = toggleBtn.closest(".tracked-cell");
+    var note = cell && cell.querySelector(".tracked-cell-note");
+    if (!cell || !note) return;
+
+    var willOpen = note.hidden;
+    closeAllCellNotes(willOpen ? cell : null);
+    if (willOpen) {
+      note.hidden = false;
+      cell.classList.add("is-note-open");
+      toggleBtn.setAttribute("aria-expanded", "true");
+      toggleBtn.setAttribute("aria-label", "Hücre notunu gizle");
+      toggleBtn.setAttribute("title", "Notu gizle");
+    } else {
+      note.hidden = true;
+      cell.classList.remove("is-note-open");
+      toggleBtn.setAttribute("aria-expanded", "false");
+      toggleBtn.setAttribute("aria-label", "Hücre notunu göster");
+      toggleBtn.setAttribute("title", "Notu göster");
+    }
+  }
+
   function handleContentClick(event) {
+    var noteBtn = event.target.closest("[data-cell-note-toggle]");
+    if (noteBtn) {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleCellNote(noteBtn);
+      return;
+    }
+
     var entryBtn = event.target.closest("[data-proje-entry]");
     if (entryBtn) {
       state.selections.projeTakibiEntryId = entryBtn.getAttribute("data-proje-entry");
@@ -537,6 +578,12 @@
   pinForm.addEventListener("submit", handlePinSubmit);
   refreshBtn.addEventListener("click", refreshData);
   content.addEventListener("click", handleContentClick);
+  document.addEventListener("click", function (event) {
+    if (!event.target.closest(".tracked-cell")) {
+      closeAllCellNotes();
+    }
+  });
+
   if (sidebarToggle) {
     sidebarToggle.addEventListener("click", function () {
       setSidebarOpen(!document.body.classList.contains("sidebar-open"));
