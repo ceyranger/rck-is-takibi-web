@@ -11,11 +11,17 @@ WebModules.arama = function renderArama(state) {
     envelope: state.envelope,
     query: state.query,
     subTabs: state.subTabs,
-    filters: state.filters
+    filters: state.filters,
+    selections: state.selections,
+    role: state.role,
+    isAdmin: state.isAdmin
   };
 
-  var sections = [
-    WebModules.genelIsTakibi(viewState),
+  var sections = [];
+  if (state.isAdmin) {
+    sections.push(WebModules.genelIsTakibi(viewState));
+  }
+  sections.push(
     WebModules.acilIsOzet(viewState),
     WebModules.tumEksikler(viewState),
     WebModules.aksiyon(viewState),
@@ -25,7 +31,7 @@ WebModules.arama = function renderArama(state) {
     WebModules.projeTakibi(viewState),
     WebModules.yibfIsTakibi(viewState),
     WebModules.personel(viewState)
-  ];
+  );
 
   var parts = sections.filter(function (html) {
     return html.indexOf("empty-state") < 0;
