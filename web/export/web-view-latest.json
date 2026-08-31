@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-08-31T18:33:41.5622781+03:00",
+  "exportedAt": "2026-08-31T18:34:41.4135181+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "A120E92090F8416608CDF1268001E678E9D47EE2BC5003A2AAFF79D1C4B46BC7",
+  "checksum": "43234A006BC87D78774E286CC81F60B7D56681120EE65BDC6B41BB592987C406",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "25618C4AB5446083B06582B86EFE8D5768B2C1018196591D0ECACED1F796D612",
-    "createdAt": "2026-08-31T18:33:41.5379511\u002B03:00",
+    "checksum": "877F1E8FD3BBAA410F0CDD1083909873637413197C68A928A62C2F83D4D1BE78",
+    "createdAt": "2026-08-31T18:34:41.3890466\u002B03:00",
     "tasks": [
       {
         "id": "8340a695-ef38-495e-ae05-eba7d9b0ed4b",
@@ -129,7 +129,7 @@
       },
       {
         "id": "e577c2bc-2cc9-46b4-8c59-7053322e8c2d",
-        "projectId": null,
+        "projectId": "f06d6503-6dd5-48cc-8737-fcc5409ff467",
         "isSpecialJob": false,
         "title": "CENG\u0130Z \u0130STANBULLU ELEKTR\u0130KLER RAFA KOYULDU. FOTOKOP\u0130 \u0130\u00C7\u0130N GER\u0130 GELECEK. KUVVETL\u0130 VE ZAYIF AKIM 2\u015EER ADET.",
         "description": "",
