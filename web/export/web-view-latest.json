@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-08-31T12:32:53.3715832+03:00",
+  "exportedAt": "2026-08-31T12:34:17.9363967+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "A5F07C66912675F731A4FC5EDBE9A1CB819164FE1F1C0D51613BE6C9297CCBE1",
+  "checksum": "606E3D18852AC7F107536BAEF54338F743841F90E45F100CA1DF318566312981",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "4FF15F874B6D08763733B36F7CAA889A2BBBA28E4C912CF5549DB0339DEA3A36",
-    "createdAt": "2026-08-31T12:32:53.3338369\u002B03:00",
+    "checksum": "1B6A1432287436A43762F4521D3CEDBED28051D12FB2AB0AB60EB29ADD39B3C0",
+    "createdAt": "2026-08-31T12:34:17.9130127\u002B03:00",
     "tasks": [
       {
         "id": "0c36d780-f574-48e0-8ea7-70c7da5e628b",
@@ -893,10 +893,10 @@
         "category": 0,
         "district": "MERKEZ",
         "ownerParcelText": "753-8 SERP\u0130L YALNIZ",
-        "workText": "RUHSAT VE PROJELER ALINACAK. \u0130\u015EYER\u0130 TESL\u0130M BELED\u0130YEYE VER\u0130L\u0130P GER\u0130 ALINACAK.",
+        "workText": "RUHSAT VE PROJELER ALINACAK.",
         "displayOrder": 8,
         "createdAt": "2026-07-07T14:17:12.5601277\u002B03:00",
-        "updatedAt": "2026-08-31T12:32:50.6537075\u002B03:00"
+        "updatedAt": "2026-08-31T12:34:16.8867215\u002B03:00"
       },
       {
         "id": "82f0a381-5ecd-4fee-9766-10920a372040",
