@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-08-31T12:57:01.4716426+03:00",
+  "exportedAt": "2026-08-31T13:03:43.8298978+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "58A71060F5FF369118852F176435C1E0756F00D77F571CCDAEC2772D1EAFB5D9",
+  "checksum": "B9E0B2A72ED4CC769F1A4CF02909E2DAC8E67D5448B18958880E848D423F08CE",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "A3D853E82F225738F9B2B2D656C903710E57019563EF5D22CE95E43CF9B72E07",
-    "createdAt": "2026-08-31T12:57:01.4472756\u002B03:00",
+    "checksum": "62F50D49ABBFA16BBDDEFC7F94FFBACCCBEC34703917E28AD1000A3076F15F70",
+    "createdAt": "2026-08-31T13:03:43.804904\u002B03:00",
     "tasks": [
       {
         "id": "0c36d780-f574-48e0-8ea7-70c7da5e628b",
@@ -808,7 +808,7 @@
         "workText": "KOT KES\u0130T PLANKOTE EKS\u0130K.",
         "displayOrder": 0,
         "createdAt": "2026-03-19T19:08:48.062251",
-        "updatedAt": "2026-08-31T12:56:57.2359142\u002B03:00"
+        "updatedAt": "2026-08-31T13:03:42.328543\u002B03:00"
       },
       {
         "id": "1fb8294d-222a-4ac8-865c-970aa785c39b",
@@ -819,7 +819,7 @@
         "workText": "M\u00DCTEAHH\u0130T TAAHH\u00DCTNAMES\u0130 , \u0130ST\u0130KAMET R\u00D6L\u00D6VES\u0130 EKS\u0130K. \u0130ST\u0130NAT RUHSATI NEDEN \u00C7IKMADI BELED\u0130YEYE SOR.",
         "displayOrder": 1,
         "createdAt": "2026-03-19T19:08:48.062256",
-        "updatedAt": "2026-08-31T12:56:57.2359143\u002B03:00"
+        "updatedAt": "2026-08-31T13:03:42.3285431\u002B03:00"
       },
       {
         "id": "f5478844-8f0b-4ad3-9a90-2b9cab45f518",
@@ -830,7 +830,7 @@
         "workText": "\u0130\u015E B\u0130T\u0130M\u0130 APL\u0130KASYONU BELED\u0130YEDEN ALINACAK.",
         "displayOrder": 2,
         "createdAt": "2026-03-19T19:08:48.062261",
-        "updatedAt": "2026-08-31T12:56:57.2359143\u002B03:00"
+        "updatedAt": "2026-08-31T13:03:42.3285431\u002B03:00"
       },
       {
         "id": "3a6aa20f-9f57-46a4-b3ad-b1caa73e0163",
@@ -841,7 +841,7 @@
         "workText": "YOL BA\u011ELANTI M\u0130MAR\u0130 VE STAT\u0130K PROJELER\u0130 BELED\u0130YEDEN ALINACAK. RUHSAT ALINACAK M\u00B2 KONTROL ED\u0130LECEK. SA\u011ELIK G\u00DCVENL\u0130K PLANI M\u00DCTEAHH\u0130TTEN \u0130STENECEK.",
         "displayOrder": 3,
         "createdAt": "2026-04-17T18:14:16.7217718\u002B03:00",
-        "updatedAt": "2026-08-31T12:56:57.2359144\u002B03:00"
+        "updatedAt": "2026-08-31T13:03:42.3285432\u002B03:00"
       },
       {
         "id": "8b844cdf-2a93-4011-914c-b2a4f7033599",
@@ -852,7 +852,7 @@
         "workText": "M\u00DCTEAHH\u0130TTEN SA\u011ELIK G\u00DCVENL\u0130K PLANI \u0130STENECEK.",
         "displayOrder": 4,
         "createdAt": "2026-04-17T18:17:48.6200995\u002B03:00",
-        "updatedAt": "2026-08-31T12:56:57.2359145\u002B03:00"
+        "updatedAt": "2026-08-31T13:03:42.3285432\u002B03:00"
       },
       {
         "id": "d5bb60ff-ba5d-4a9c-bcd6-0b02599acd60",
@@ -863,7 +863,7 @@
         "workText": "RUHSAT VE PROJELER ALINACAK.",
         "displayOrder": 5,
         "createdAt": "2026-07-07T14:17:12.5601277\u002B03:00",
-        "updatedAt": "2026-08-31T12:56:57.2359145\u002B03:00"
+        "updatedAt": "2026-08-31T13:03:42.3285433\u002B03:00"
       },
       {
         "id": "82f0a381-5ecd-4fee-9766-10920a372040",
@@ -874,7 +874,7 @@
         "workText": "06.08.2026 TAR\u0130HL\u0130 \u015E.\u015E. \u0130ST\u0130FA STTLER BELED\u0130YEDEN ALINACAK.",
         "displayOrder": 6,
         "createdAt": "2026-08-06T13:39:55.6814896\u002B03:00",
-        "updatedAt": "2026-08-31T12:56:57.2359146\u002B03:00"
+        "updatedAt": "2026-08-31T13:03:42.3285433\u002B03:00"
       },
       {
         "id": "12788162-62e7-426f-9ef7-5cb93f0feab8",
@@ -952,6 +952,17 @@
         "displayOrder": 4,
         "createdAt": "2026-06-02T16:45:43.5954443\u002B03:00",
         "updatedAt": "2026-08-31T12:20:54.6094037\u002B03:00"
+      },
+      {
+        "id": "3c1d5399-dbfb-44e5-ab98-d1da53039a8d",
+        "projectId": "c5c182ce-cff2-4b4f-98aa-72161b8951a8",
+        "category": 0,
+        "district": "MERKEZ",
+        "ownerParcelText": "430-11 H\u0130F OTEL T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130",
+        "workText": "\u0130\u015E B\u0130T\u0130M\u0130 APL\u0130KASYONU BELED\u0130YEDEN ALINACAK.",
+        "displayOrder": 7,
+        "createdAt": "2026-08-31T13:03:42.3251141\u002B03:00",
+        "updatedAt": "2026-08-31T13:03:42.3285434\u002B03:00"
       }
     ],
     "missingProjectEntries": [],
