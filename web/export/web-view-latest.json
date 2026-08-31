@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-08-31T18:13:33.8210822+03:00",
+  "exportedAt": "2026-08-31T18:14:49.7902981+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "481F37739352E2BD6D2B43D5C6E0C0333B066C5A2D17104F0B89A21AB606B433",
+  "checksum": "BEEE99A7FE585AE9FB7E5A986AA1958F5267A4F3AE0B1ACB3F4C504184AE7BAC",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "5968A8B659807B0E8BDF3B1681563F999AA13632BB891ACEA0EA119DB0F3B425",
-    "createdAt": "2026-08-31T18:13:33.7964197\u002B03:00",
+    "checksum": "3B476ABC4F50C855C58800C7884DE7FB07432C85CFAF546365C07FC20342562E",
+    "createdAt": "2026-08-31T18:14:49.7652363\u002B03:00",
     "tasks": [
       {
         "id": "8340a695-ef38-495e-ae05-eba7d9b0ed4b",
@@ -361,7 +361,7 @@
         "workText": "BELED\u0130YEDE HAKED\u0130\u015E VE EVRAK VAR MI KONTROL ED\u0130LECEK VARSA ALINACAK.",
         "displayOrder": 0,
         "createdAt": "2026-03-19T19:08:48.062087",
-        "updatedAt": "2026-08-31T17:38:47.0751729\u002B03:00"
+        "updatedAt": "2026-08-31T18:14:47.3888258\u002B03:00"
       },
       {
         "id": "1fc1d1c6-cc8b-4ad4-b2d9-80c682e24d11",
@@ -372,7 +372,7 @@
         "workText": "YAPI SAH\u0130B\u0130 M\u00DCT S\u00D6ZLE\u015EMES\u0130 , YAS\u0130N ERG\u00DCN K\u0130ML\u0130K , EKS\u0130K. 11.05.2026 TAR\u0130HL\u0130 \u015EANT\u0130YE \u015EEF\u0130 \u0130ST\u0130FA SEV\u0130YE TESP\u0130TLER BELED\u0130YEYE VER\u0130LECEK ONAYLANINCA GER\u0130 ALINACAK.",
         "displayOrder": 1,
         "createdAt": "2026-03-19T19:08:48.062093",
-        "updatedAt": "2026-08-31T17:38:47.0751899\u002B03:00"
+        "updatedAt": "2026-08-31T18:14:47.3888259\u002B03:00"
       },
       {
         "id": "bc5f00fd-3dfc-41c7-b2ab-21a06b238c3d",
@@ -383,7 +383,7 @@
         "workText": "SA\u011ELIK G\u00DCVENL\u0130K RAPORU M\u00DCTEAHH\u0130TTEN \u0130STENECEK.",
         "displayOrder": 2,
         "createdAt": "2026-04-17T17:57:10.1843934\u002B03:00",
-        "updatedAt": "2026-08-31T17:38:47.0752068\u002B03:00"
+        "updatedAt": "2026-08-31T18:14:47.388826\u002B03:00"
       },
       {
         "id": "f5578448-e067-4f27-9fd2-4de78d849359",
@@ -394,7 +394,7 @@
         "workText": "\u0130MZALI YAPI SAH\u0130B\u0130 M\u00DCTEAHH\u0130T S\u00D6ZLE\u015EMES\u0130 EKS\u0130K.",
         "displayOrder": 3,
         "createdAt": "2026-04-17T18:01:15.3511225\u002B03:00",
-        "updatedAt": "2026-08-31T17:38:47.0752232\u002B03:00"
+        "updatedAt": "2026-08-31T18:14:47.388826\u002B03:00"
       },
       {
         "id": "efa2e2dd-7d81-4ea1-9b67-07aa83708b7d",
@@ -405,7 +405,7 @@
         "workText": "SA\u011ELIK G\u00DCVENL\u0130K PLANI M\u00DCTEAHH\u0130TTEN \u0130STENECEK.",
         "displayOrder": 4,
         "createdAt": "2026-04-17T18:02:23.7274051\u002B03:00",
-        "updatedAt": "2026-08-31T17:38:47.0752385\u002B03:00"
+        "updatedAt": "2026-08-31T18:14:47.388826\u002B03:00"
       },
       {
         "id": "f2d0d4ee-a297-4bf5-8934-6155b1cd713d",
@@ -416,7 +416,7 @@
         "workText": "M\u00DCTEAHH\u0130TTEN SA\u011ELIK G\u00DCVENL\u0130K PLANI \u0130STENECEK. Y\u0130BF TAAHH\u00DCTNAME S\u00D6ZLE\u015EME RAFTAN ALINIP \u0130MZALATILIP GET\u0130R\u0130LECEK.",
         "displayOrder": 5,
         "createdAt": "2026-04-17T18:06:29.6501422\u002B03:00",
-        "updatedAt": "2026-08-31T17:38:47.0752538\u002B03:00"
+        "updatedAt": "2026-08-31T18:14:47.3888261\u002B03:00"
       },
       {
         "id": "fb6fc624-0a1b-4835-9c21-b184b3a67571",
@@ -427,7 +427,7 @@
         "workText": "TAPU, ZEM\u0130N ET\u00DCD\u00DC VE TAAHH\u00DCTLER EKS\u0130K.",
         "displayOrder": 6,
         "createdAt": "2026-06-12T17:04:11.1670517\u002B03:00",
-        "updatedAt": "2026-08-31T17:38:47.0752687\u002B03:00"
+        "updatedAt": "2026-08-31T18:14:47.3888261\u002B03:00"
       },
       {
         "id": "33102e71-c3df-4c6d-ae47-084273407121",
@@ -438,7 +438,7 @@
         "workText": "BU K\u0130\u015E\u0130LERDEN PROJES\u0130 C25 OLUP C30 ATILAN \u0130\u015ELER \u0130LE \u0130LG\u0130L\u0130 UYGUNLUK D\u0130LEK\u00C7ELER\u0130N\u0130N ASLI ELDEN ALINACAK.",
         "displayOrder": 7,
         "createdAt": "2026-07-02T15:17:32.9821397\u002B03:00",
-        "updatedAt": "2026-08-31T18:13:32.7307133\u002B03:00"
+        "updatedAt": "2026-08-31T18:14:47.3888262\u002B03:00"
       },
       {
         "id": "502321f3-3963-4cf9-b142-0d784c2b8afc",
@@ -449,7 +449,7 @@
         "workText": "Y\u0130BF TAAHH\u00DCTNAME S\u00D6ZLE\u015EME ALINACAK. (ORHAN MENTE\u015E\u0130 ARAYIN)",
         "displayOrder": 8,
         "createdAt": "2026-07-03T16:26:51.8547022\u002B03:00",
-        "updatedAt": "2026-08-31T17:38:47.0752996\u002B03:00"
+        "updatedAt": "2026-08-31T18:14:47.3888262\u002B03:00"
       },
       {
         "id": "b4ed9f5b-b886-478a-abcd-b87bba087f6f",
@@ -460,7 +460,7 @@
         "workText": "YAPI VE \u0130ST\u0130NATIN \u0130\u015E YER\u0130 TESL\u0130M TUTANA\u011EI G\u00D6T\u00DCR\u00DCLECEK ONAYLANINCA GER\u0130 ALINACAK.",
         "displayOrder": 9,
         "createdAt": "2026-07-22T15:06:08.8090873\u002B03:00",
-        "updatedAt": "2026-08-31T17:38:47.0753146\u002B03:00"
+        "updatedAt": "2026-08-31T18:14:47.3888262\u002B03:00"
       },
       {
         "id": "9101df5c-9cae-4a29-aa3b-9c2295561343",
@@ -471,7 +471,7 @@
         "workText": "EKB BELED\u0130YEDEN ALINACAK.",
         "displayOrder": 10,
         "createdAt": "2026-07-15T07:44:22.7973595\u002B03:00",
-        "updatedAt": "2026-08-31T18:02:42.6785867\u002B03:00"
+        "updatedAt": "2026-08-31T18:14:47.3888263\u002B03:00"
       },
       {
         "id": "2159af07-ca52-4a25-8e31-3a698cbeea61",
@@ -482,7 +482,7 @@
         "workText": "C30 YAZISI ADEM I\u015EIKTAN ALINACAK.",
         "displayOrder": 11,
         "createdAt": "2026-08-14T14:31:32.546317\u002B03:00",
-        "updatedAt": "2026-08-31T17:38:47.075345\u002B03:00"
+        "updatedAt": "2026-08-31T18:14:47.3888263\u002B03:00"
       },
       {
         "id": "8246e1a1-b86d-4a2e-99a4-3ee3f8160a1c",
@@ -493,29 +493,7 @@
         "workText": "\u015EANT\u0130YE \u015EEF\u0130 EVRAKLARI ALINACAK.",
         "displayOrder": 12,
         "createdAt": "2026-08-14T14:31:41.8513033\u002B03:00",
-        "updatedAt": "2026-08-31T18:06:08.8935628\u002B03:00"
-      },
-      {
-        "id": "06ee768f-cef3-4ad7-b477-4b7832939905",
-        "projectId": "a985758d-e33d-4dd6-8a9e-6f9241cd7d8a",
-        "category": 0,
-        "district": "BOYABAT",
-        "ownerParcelText": "808-7 AHMET KESER \u0130ST\u0130NAT",
-        "workText": "RUHSAT PROJELER \u0130\u015EYER\u0130 TESL\u0130M BELED\u0130YEDEN ALINACAK.",
-        "displayOrder": 13,
-        "createdAt": "2026-08-14T14:31:59.7489658\u002B03:00",
-        "updatedAt": "2026-08-31T17:38:47.0753757\u002B03:00"
-      },
-      {
-        "id": "ccda4528-85fc-4b7b-b580-e406df742470",
-        "projectId": "c4a16bb5-50ef-4a42-a01a-30b85eda0c92",
-        "category": 0,
-        "district": "BOYABAT",
-        "ownerParcelText": "955-2 HASAN \u015EAH\u0130N \u0130ST\u0130NAT",
-        "workText": "YEN\u0130 Y\u0130BF TAAHH\u00DCTNAME S\u00D6ZLE\u015EME \u0130MZALATILIP GET\u0130R\u0130LECEK.",
-        "displayOrder": 14,
-        "createdAt": "2026-08-14T17:04:55.7344316\u002B03:00",
-        "updatedAt": "2026-08-31T17:38:47.0753904\u002B03:00"
+        "updatedAt": "2026-08-31T18:14:47.3888264\u002B03:00"
       },
       {
         "id": "96862a56-f7b4-4fd5-8270-e2b624bfe878",
@@ -524,9 +502,9 @@
         "district": "BOYABAT",
         "ownerParcelText": "254-26 MUSTAFA MENTE\u015E",
         "workText": "SEV\u0130YE TESP\u0130TLER BELED\u0130YE DOSYASINDAK\u0130LER \u0130LE DE\u011E\u0130\u015ET\u0130R\u0130LECEK. YEN\u0130 \u00C7IKTI ALINANLAR ONAYLATILIP GER\u0130 GET\u0130R\u0130LECEK. (ORHAN MENTE\u015EE VER\u0130LD\u0130.)",
-        "displayOrder": 15,
+        "displayOrder": 13,
         "createdAt": "2026-08-17T16:08:05.1426525\u002B03:00",
-        "updatedAt": "2026-08-31T17:38:47.0754056\u002B03:00"
+        "updatedAt": "2026-08-31T18:14:47.3888264\u002B03:00"
       },
       {
         "id": "26cd3a8b-cb85-44e8-a32b-9284ab432da4",
