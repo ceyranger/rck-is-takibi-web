@@ -1,15 +1,41 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-08-31T18:37:09.1930495+03:00",
+  "exportedAt": "2026-08-31T18:37:59.0781506+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "C23688CB2648000F9944080BC216321985B26590068FE72E38E3F4422D0D1AF0",
+  "checksum": "BBC250F460B3BF141096F562108253DB50B2DD4E0489C201901249F1AD99A3DF",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "735A75BF15ACA7143FD9B72A035A4F04C219291F3E92C8FDF5CE9FAE0DC96E62",
-    "createdAt": "2026-08-31T18:37:09.1356707\u002B03:00",
+    "checksum": "68A83D3856E557F8BF214FD970AE5328FAA32A7B0C23CFF69F53F43648493FA0",
+    "createdAt": "2026-08-31T18:37:59.0556761\u002B03:00",
     "tasks": [
+      {
+        "id": "72dbb549-2892-4836-8c21-935f2c000584",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "GELEN PARA \u0130\u015ELE.",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-08-07T18:28:17.5132446\u002B03:00",
+        "updatedAt": "2026-08-31T18:37:55.3551273\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 0,
+        "notes": []
+      },
+      {
+        "id": "8427db6e-2040-4ff1-8e1c-ca663e3e126d",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "\u00D6ZLEM S\u0130STEM SEV\u0130YE VER\u0130LMELR\u0130 VE STT HAZIRLANMASI.",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-08-25T00:14:44.3187328\u002B03:00",
+        "updatedAt": "2026-08-31T18:37:57.5060757\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 1,
+        "notes": []
+      },
       {
         "id": "2a757163-80cc-4bbd-9279-324ff892ce5d",
         "projectId": null,
@@ -20,7 +46,7 @@
         "createdAt": "2026-08-31T18:35:28.6126341\u002B03:00",
         "updatedAt": "2026-08-31T18:35:28.6126354\u002B03:00",
         "boardType": 1,
-        "sortOrder": 0,
+        "sortOrder": 2,
         "notes": []
       },
       {
@@ -33,7 +59,7 @@
         "createdAt": "2026-08-31T17:35:56.3289481\u002B03:00",
         "updatedAt": "2026-08-31T18:34:41.0487632\u002B03:00",
         "boardType": 1,
-        "sortOrder": 1,
+        "sortOrder": 3,
         "notes": []
       },
       {
@@ -45,32 +71,6 @@
         "dueDate": null,
         "createdAt": "2026-08-31T17:08:14.5542866\u002B03:00",
         "updatedAt": "2026-08-31T18:34:41.0488579\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 2,
-        "notes": []
-      },
-      {
-        "id": "72dbb549-2892-4836-8c21-935f2c000584",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "GELEN PARA \u0130\u015ELE.",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-08-07T18:28:17.5132446\u002B03:00",
-        "updatedAt": "2026-08-31T18:34:41.0488896\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 3,
-        "notes": []
-      },
-      {
-        "id": "8427db6e-2040-4ff1-8e1c-ca663e3e126d",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "\u00D6ZLEM S\u0130STEM SEV\u0130YE VER\u0130LMELR\u0130 VE STT HAZIRLANMASI.",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-08-25T00:14:44.3187328\u002B03:00",
-        "updatedAt": "2026-08-31T18:34:41.0489091\u002B03:00",
         "boardType": 1,
         "sortOrder": 4,
         "notes": []
@@ -48743,6 +48743,18 @@
         "category": "GENEL",
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
+        "summary": "\u00D6ZLEM S\u0130STEM SEV\u0130YE VER\u0130LMELR\u0130 VE STT HAZIRLANMASI."
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "GELEN PARA \u0130\u015ELE."
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
         "summary": "TEB \u0130LE TEM\u0130NAT MEKTUBU VE D\u00DC\u015E\u00DCK FA\u0130ZL\u0130 2.EL ARA\u00C7 KRED\u0130S\u0130 \u0130\u00C7\u0130N G\u00D6R\u00DC\u015E."
       },
       {
@@ -48762,18 +48774,6 @@
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
         "summary": "M\u00DCKERRER YATIRILAN FAZLA HAKED\u0130\u015ELER\u0130 \u0130NCELE. 787-5 GERZE G\u00DCVEN KEKL\u0130K (20-36) VE 787-5 GERZE G\u00DCVEN KEKL\u0130K (36-50) FAZLA YATTI."
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "\u00D6ZLEM S\u0130STEM SEV\u0130YE VER\u0130LMELR\u0130 VE STT HAZIRLANMASI."
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "GELEN PARA \u0130\u015ELE."
       },
       {
         "category": "GENEL",
