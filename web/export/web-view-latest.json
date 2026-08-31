@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-08-31T18:02:43.9175151+03:00",
+  "exportedAt": "2026-08-31T18:06:10.1549079+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "2308FB42342F08D7C735B36090C911C3F25ADBCCBB63EEEE33DC3199FE3A8EAC",
+  "checksum": "7C72C4C6630FB71AA16B530773FD4AA45DE968DFDFBB77018A6D558ED26944D1",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "A12F45F729D7BB8750858CD5CFE7EF3F187751240A9AD6856548F2A4871B5214",
-    "createdAt": "2026-08-31T18:02:43.865898\u002B03:00",
+    "checksum": "31054002A9C51DF00E4D60B1FBE620EF9C4CDA652156BFE78C39BFF904BBBF01",
+    "createdAt": "2026-08-31T18:06:10.1178435\u002B03:00",
     "tasks": [
       {
         "id": "8340a695-ef38-495e-ae05-eba7d9b0ed4b",
@@ -490,10 +490,10 @@
         "category": 0,
         "district": "BOYABAT",
         "ownerParcelText": "808-7 AHMET KESER",
-        "workText": "PROJELER \u0130\u015EYER\u0130 TESL\u0130M BELED\u0130YEDEN ALINACAK. \u015EANT\u0130YE \u015EEF\u0130 EVRAKLARI ALINACAK.",
+        "workText": "\u015EANT\u0130YE \u015EEF\u0130 EVRAKLARI ALINACAK.",
         "displayOrder": 12,
         "createdAt": "2026-08-14T14:31:41.8513033\u002B03:00",
-        "updatedAt": "2026-08-31T17:38:47.0753606\u002B03:00"
+        "updatedAt": "2026-08-31T18:06:08.8935628\u002B03:00"
       },
       {
         "id": "06ee768f-cef3-4ad7-b477-4b7832939905",
