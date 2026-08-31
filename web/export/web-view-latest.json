@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-08-31T18:37:59.0781506+03:00",
+  "exportedAt": "2026-08-31T18:38:06.348116+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "BBC250F460B3BF141096F562108253DB50B2DD4E0489C201901249F1AD99A3DF",
+  "checksum": "36A8811E8D168CB54053B36F67568E33F06C158DAE4671E1D9380D3DDADB6002",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "68A83D3856E557F8BF214FD970AE5328FAA32A7B0C23CFF69F53F43648493FA0",
-    "createdAt": "2026-08-31T18:37:59.0556761\u002B03:00",
+    "checksum": "823C79B835A88C53DCC6B5FB5252CE65F23FF91A7B63A018E38173CE42399607",
+    "createdAt": "2026-08-31T18:38:06.3265253\u002B03:00",
     "tasks": [
       {
         "id": "72dbb549-2892-4836-8c21-935f2c000584",
@@ -99,19 +99,6 @@
         "updatedAt": "2026-08-31T18:34:41.04897\u002B03:00",
         "boardType": 1,
         "sortOrder": 6,
-        "notes": []
-      },
-      {
-        "id": "a39f0015-1946-40c3-b44a-c9c14f5fe23f",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "DAVA S\u00DCRES\u0130 HAZIRLIKLARA BA\u015ELANILMASI.",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-08-25T00:16:22.3112145\u002B03:00",
-        "updatedAt": "2026-08-31T18:34:41.0490036\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 7,
         "notes": []
       },
       {
@@ -48756,12 +48743,6 @@
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
         "summary": "TEB \u0130LE TEM\u0130NAT MEKTUBU VE D\u00DC\u015E\u00DCK FA\u0130ZL\u0130 2.EL ARA\u00C7 KRED\u0130S\u0130 \u0130\u00C7\u0130N G\u00D6R\u00DC\u015E."
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "DAVA S\u00DCRES\u0130 HAZIRLIKLARA BA\u015ELANILMASI."
       },
       {
         "category": "GENEL",
