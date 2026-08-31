@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-08-31T18:40:49.905471+03:00",
+  "exportedAt": "2026-08-31T18:41:06.3959543+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "8C5A302BE2CB62FB0B91EC701D17BF11855577FA2EE4461361645EF339485BDB",
+  "checksum": "6766F06777E8B6CB72AC959E2431C1A340007E6FA74DB9BF1E1A989AFA542BB9",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "4801EC6667E72BD633EAA10CF16648A7707BBEC451251DDB7A600533B7A1D729",
-    "createdAt": "2026-08-31T18:40:49.8607809\u002B03:00",
+    "checksum": "C1F52E974BB7B4A63020646F355E195A5B71E0CF3DC8BD73787F60FBFA647B8A",
+    "createdAt": "2026-08-31T18:41:06.3482187\u002B03:00",
     "tasks": [
       {
         "id": "72dbb549-2892-4836-8c21-935f2c000584",
@@ -40,7 +40,7 @@
         "id": "4beddde2-959a-4a72-b74a-b3b0a9d6890f",
         "projectId": null,
         "isSpecialJob": false,
-        "title": "MAA\u015E HESABI PARA TAL\u0130MATI YAP.",
+        "title": "MAA\u015E HESABI G\u0130DENLER \u0130\u00C7\u0130N PARA TAL\u0130MATI YAP.",
         "description": "",
         "dueDate": null,
         "createdAt": "2026-08-31T18:38:18.0620109\u002B03:00",
@@ -48755,7 +48755,7 @@
         "category": "GENEL",
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
-        "summary": "MAA\u015E HESABI PARA TAL\u0130MATI YAP."
+        "summary": "MAA\u015E HESABI G\u0130DENLER \u0130\u00C7\u0130N PARA TAL\u0130MATI YAP."
       },
       {
         "category": "GENEL",
