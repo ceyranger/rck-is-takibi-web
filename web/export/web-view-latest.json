@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-08-31T18:41:41.9829675+03:00",
+  "exportedAt": "2026-08-31T18:42:04.6613224+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "F980CD8A65F69331D2AC00B51C79B6DDAD35FBD0A1B28C11F0381EB2E3D7DB01",
+  "checksum": "05700719B4CC9759D4E4CE475392AB7541C30C935C432054F45D2DDCD2E181A9",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "D66FDB432AD7994F8C550F551C4C343F02A91212E88EB11AE3AB0C8C558AA223",
-    "createdAt": "2026-08-31T18:41:41.9607583\u002B03:00",
+    "checksum": "E7A0E3BAA9A3815CF689CFB38419A6FDE4921A49AE4F207F22098601AAA39C85",
+    "createdAt": "2026-08-31T18:42:04.6388171\u002B03:00",
     "tasks": [
       {
         "id": "72dbb549-2892-4836-8c21-935f2c000584",
@@ -122,9 +122,9 @@
         "description": "",
         "dueDate": null,
         "createdAt": "2026-08-21T09:15:51.2320094\u002B03:00",
-        "updatedAt": "2026-08-31T18:34:41.0490265\u002B03:00",
-        "boardType": 0,
-        "sortOrder": 0,
+        "updatedAt": "2026-08-31T18:41:58.3279629\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 8,
         "notes": []
       },
       {
@@ -135,9 +135,9 @@
         "description": "",
         "dueDate": null,
         "createdAt": "2026-07-29T13:47:38.9073854\u002B03:00",
-        "updatedAt": "2026-08-31T18:34:41.0490419\u002B03:00",
-        "boardType": 0,
-        "sortOrder": 1,
+        "updatedAt": "2026-08-31T18:42:02.3405428\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 9,
         "notes": []
       },
       {
@@ -150,7 +150,7 @@
         "createdAt": "2026-08-31T14:48:37.3611107\u002B03:00",
         "updatedAt": "2026-08-31T18:34:41.0490576\u002B03:00",
         "boardType": 0,
-        "sortOrder": 2,
+        "sortOrder": 0,
         "notes": []
       },
       {
@@ -163,7 +163,7 @@
         "createdAt": "2026-03-19T19:08:48.061819",
         "updatedAt": "2026-08-31T18:34:41.049076\u002B03:00",
         "boardType": 0,
-        "sortOrder": 3,
+        "sortOrder": 1,
         "notes": []
       },
       {
@@ -176,7 +176,7 @@
         "createdAt": "2026-07-15T07:11:16.3060726\u002B03:00",
         "updatedAt": "2026-08-31T18:34:41.0490927\u002B03:00",
         "boardType": 0,
-        "sortOrder": 4,
+        "sortOrder": 2,
         "notes": []
       },
       {
@@ -189,7 +189,7 @@
         "createdAt": "2026-07-15T07:10:29.4874871\u002B03:00",
         "updatedAt": "2026-08-31T18:34:41.0491086\u002B03:00",
         "boardType": 0,
-        "sortOrder": 5,
+        "sortOrder": 3,
         "notes": []
       },
       {
@@ -202,7 +202,7 @@
         "createdAt": "2026-03-19T19:08:48.061829",
         "updatedAt": "2026-08-31T18:34:41.0491243\u002B03:00",
         "boardType": 0,
-        "sortOrder": 6,
+        "sortOrder": 4,
         "notes": []
       },
       {
@@ -215,7 +215,7 @@
         "createdAt": "2026-03-19T19:08:48.061835",
         "updatedAt": "2026-08-31T18:34:41.0491398\u002B03:00",
         "boardType": 0,
-        "sortOrder": 7,
+        "sortOrder": 5,
         "notes": []
       },
       {
@@ -228,7 +228,7 @@
         "createdAt": "2026-08-06T16:25:42.5710159\u002B03:00",
         "updatedAt": "2026-08-31T18:34:41.0491557\u002B03:00",
         "boardType": 0,
-        "sortOrder": 8,
+        "sortOrder": 6,
         "notes": []
       }
     ],
@@ -48739,6 +48739,18 @@
       }
     ],
     "acilIsOzetItems": [
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "VAL\u0130 YARDIMCISI Z\u0130YARETE G\u0130D\u0130LECEK."
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "RCK DENET\u00C7\u0130 BELGES\u0130 BA\u015EVURU EVRAKLARI HAZIRLA."
+      },
       {
         "category": "GENEL",
         "priorityLabel": "AC\u0130L",
