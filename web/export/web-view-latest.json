@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-08-31T18:41:06.3959543+03:00",
+  "exportedAt": "2026-08-31T18:41:41.9829675+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "6766F06777E8B6CB72AC959E2431C1A340007E6FA74DB9BF1E1A989AFA542BB9",
+  "checksum": "F980CD8A65F69331D2AC00B51C79B6DDAD35FBD0A1B28C11F0381EB2E3D7DB01",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "C1F52E974BB7B4A63020646F355E195A5B71E0CF3DC8BD73787F60FBFA647B8A",
-    "createdAt": "2026-08-31T18:41:06.3482187\u002B03:00",
+    "checksum": "D66FDB432AD7994F8C550F551C4C343F02A91212E88EB11AE3AB0C8C558AA223",
+    "createdAt": "2026-08-31T18:41:41.9607583\u002B03:00",
     "tasks": [
       {
         "id": "72dbb549-2892-4836-8c21-935f2c000584",
@@ -24,6 +24,19 @@
         "notes": []
       },
       {
+        "id": "01781f94-7ab1-4a16-8459-f44535f11c7b",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "M\u00DCKERRER YATIRILAN FAZLA HAKED\u0130\u015ELER\u0130 \u0130NCELE. 787-5 GERZE G\u00DCVEN KEKL\u0130K (20-36) VE 787-5 GERZE G\u00DCVEN KEKL\u0130K (36-50) FAZLA YATTI.",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-07-21T18:35:12.6946034\u002B03:00",
+        "updatedAt": "2026-08-31T18:41:40.0612464\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 1,
+        "notes": []
+      },
+      {
         "id": "92c3d58d-adfe-47b0-b14b-1627f9b71347",
         "projectId": null,
         "isSpecialJob": false,
@@ -33,7 +46,7 @@
         "createdAt": "2026-08-31T17:08:14.5542866\u002B03:00",
         "updatedAt": "2026-08-31T18:38:47.4298112\u002B03:00",
         "boardType": 1,
-        "sortOrder": 1,
+        "sortOrder": 2,
         "notes": []
       },
       {
@@ -46,7 +59,7 @@
         "createdAt": "2026-08-31T18:38:18.0620109\u002B03:00",
         "updatedAt": "2026-08-31T18:38:34.3898021\u002B03:00",
         "boardType": 1,
-        "sortOrder": 2,
+        "sortOrder": 3,
         "notes": []
       },
       {
@@ -59,7 +72,7 @@
         "createdAt": "2026-08-31T18:35:28.6126341\u002B03:00",
         "updatedAt": "2026-08-31T18:35:28.6126354\u002B03:00",
         "boardType": 1,
-        "sortOrder": 3,
+        "sortOrder": 4,
         "notes": []
       },
       {
@@ -72,7 +85,7 @@
         "createdAt": "2026-08-31T17:35:56.3289481\u002B03:00",
         "updatedAt": "2026-08-31T18:34:41.0487632\u002B03:00",
         "boardType": 1,
-        "sortOrder": 4,
+        "sortOrder": 5,
         "notes": []
       },
       {
@@ -84,19 +97,6 @@
         "dueDate": null,
         "createdAt": "2026-08-25T00:14:44.3187328\u002B03:00",
         "updatedAt": "2026-08-31T18:38:45.0329575\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 5,
-        "notes": []
-      },
-      {
-        "id": "01781f94-7ab1-4a16-8459-f44535f11c7b",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "M\u00DCKERRER YATIRILAN FAZLA HAKED\u0130\u015ELER\u0130 \u0130NCELE. 787-5 GERZE G\u00DCVEN KEKL\u0130K (20-36) VE 787-5 GERZE G\u00DCVEN KEKL\u0130K (36-50) FAZLA YATTI.",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-07-21T18:35:12.6946034\u002B03:00",
-        "updatedAt": "2026-08-31T18:34:41.0489427\u002B03:00",
         "boardType": 1,
         "sortOrder": 6,
         "notes": []
@@ -48743,6 +48743,12 @@
         "category": "GENEL",
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
+        "summary": "M\u00DCKERRER YATIRILAN FAZLA HAKED\u0130\u015ELER\u0130 \u0130NCELE. 787-5 GERZE G\u00DCVEN KEKL\u0130K (20-36) VE 787-5 GERZE G\u00DCVEN KEKL\u0130K (36-50) FAZLA YATTI."
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
         "summary": "K\u0130ML\u0130K VE \u0130MZA S\u0130RL\u00DCS\u00DC \u0130LE NOTERE G\u0130T. HEM B\u0130REYSEL HEM \u015E\u0130RKET OLARAK AVUKAT VEKALET VER\u0130LECEK. TUANA ZOR PERFORMANS VE \u0130SKAN VE PERFORMANS VS BELED\u0130YEDEN ALINACAK."
       },
       {
@@ -48774,12 +48780,6 @@
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
         "summary": "TEB B\u0130REYSEL OTOMAT\u0130K FATURA SU TAL\u0130MATI OLU\u015ETUR. 27277 S\u0130NOP SU."
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "M\u00DCKERRER YATIRILAN FAZLA HAKED\u0130\u015ELER\u0130 \u0130NCELE. 787-5 GERZE G\u00DCVEN KEKL\u0130K (20-36) VE 787-5 GERZE G\u00DCVEN KEKL\u0130K (36-50) FAZLA YATTI."
       },
       {
         "category": "GENEL",
