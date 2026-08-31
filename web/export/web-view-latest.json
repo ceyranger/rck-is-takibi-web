@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-08-31T18:38:06.348116+03:00",
+  "exportedAt": "2026-08-31T18:38:35.6379789+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "36A8811E8D168CB54053B36F67568E33F06C158DAE4671E1D9380D3DDADB6002",
+  "checksum": "7979562C211F4B06E951D8AEDF6E09F7D54E9120E5B4E4BD1AC449F60699318C",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "823C79B835A88C53DCC6B5FB5252CE65F23FF91A7B63A018E38173CE42399607",
-    "createdAt": "2026-08-31T18:38:06.3265253\u002B03:00",
+    "checksum": "9F33F66E8B254BA8DC36E49D52CB2C329CF130EAB9018C7D9487AC6E3DFDE17E",
+    "createdAt": "2026-08-31T18:38:35.6166119\u002B03:00",
     "tasks": [
       {
         "id": "72dbb549-2892-4836-8c21-935f2c000584",
@@ -37,6 +37,19 @@
         "notes": []
       },
       {
+        "id": "4beddde2-959a-4a72-b74a-b3b0a9d6890f",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "MAA\u015E HESABI PARA TAL\u0130MATI YAP.",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-08-31T18:38:18.0620109\u002B03:00",
+        "updatedAt": "2026-08-31T18:38:34.3898021\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 2,
+        "notes": []
+      },
+      {
         "id": "2a757163-80cc-4bbd-9279-324ff892ce5d",
         "projectId": null,
         "isSpecialJob": false,
@@ -46,7 +59,7 @@
         "createdAt": "2026-08-31T18:35:28.6126341\u002B03:00",
         "updatedAt": "2026-08-31T18:35:28.6126354\u002B03:00",
         "boardType": 1,
-        "sortOrder": 2,
+        "sortOrder": 3,
         "notes": []
       },
       {
@@ -59,7 +72,7 @@
         "createdAt": "2026-08-31T17:35:56.3289481\u002B03:00",
         "updatedAt": "2026-08-31T18:34:41.0487632\u002B03:00",
         "boardType": 1,
-        "sortOrder": 3,
+        "sortOrder": 4,
         "notes": []
       },
       {
@@ -72,7 +85,7 @@
         "createdAt": "2026-08-31T17:08:14.5542866\u002B03:00",
         "updatedAt": "2026-08-31T18:34:41.0488579\u002B03:00",
         "boardType": 1,
-        "sortOrder": 4,
+        "sortOrder": 5,
         "notes": []
       },
       {
@@ -85,7 +98,7 @@
         "createdAt": "2026-07-21T18:35:12.6946034\u002B03:00",
         "updatedAt": "2026-08-31T18:34:41.0489427\u002B03:00",
         "boardType": 1,
-        "sortOrder": 5,
+        "sortOrder": 6,
         "notes": []
       },
       {
@@ -98,7 +111,7 @@
         "createdAt": "2026-08-18T16:04:50.6801569\u002B03:00",
         "updatedAt": "2026-08-31T18:34:41.04897\u002B03:00",
         "boardType": 1,
-        "sortOrder": 6,
+        "sortOrder": 7,
         "notes": []
       },
       {
@@ -48726,6 +48739,12 @@
       }
     ],
     "acilIsOzetItems": [
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "MAA\u015E HESABI PARA TAL\u0130MATI YAP."
+      },
       {
         "category": "GENEL",
         "priorityLabel": "AC\u0130L",
