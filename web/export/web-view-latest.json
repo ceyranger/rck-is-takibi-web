@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-08-31T18:33:28.4635487+03:00",
+  "exportedAt": "2026-08-31T18:33:38.151046+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "13C1DDE5E9EA870844F253E6B8604F5C0264BB1E6C036C1528C8F74C96E1563D",
+  "checksum": "86485D72EEAA5F4A3B18C08D93A2A150332B6A8842C306D55A990E23ED48D8D3",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "41D3AF34A15CAF4BBF7E85D62717DD8E40765F9A60F43523F82E39245A76AB24",
-    "createdAt": "2026-08-31T18:33:28.3922273\u002B03:00",
+    "checksum": "92BF0CBB5C6BA8CA952905A50182E67D3E9EDDCE550F57DD6A91B043DA57EC08",
+    "createdAt": "2026-08-31T18:33:38.1146242\u002B03:00",
     "tasks": [
       {
         "id": "8340a695-ef38-495e-ae05-eba7d9b0ed4b",
@@ -102,6 +102,19 @@
         "notes": []
       },
       {
+        "id": "1baf83dd-d0a5-440b-ab05-f5283936d53e",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "RCK DENET\u00C7\u0130 BELGES\u0130 BA\u015EVURUSU.",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-08-21T09:15:51.2320094\u002B03:00",
+        "updatedAt": "2026-08-31T18:33:35.9296451\u002B03:00",
+        "boardType": 0,
+        "sortOrder": 0,
+        "notes": []
+      },
+      {
         "id": "e577c2bc-2cc9-46b4-8c59-7053322e8c2d",
         "projectId": null,
         "isSpecialJob": false,
@@ -110,19 +123,6 @@
         "dueDate": null,
         "createdAt": "2026-08-31T14:48:37.3611107\u002B03:00",
         "updatedAt": "2026-08-31T18:14:49.5463109\u002B03:00",
-        "boardType": 0,
-        "sortOrder": 0,
-        "notes": []
-      },
-      {
-        "id": "1baf83dd-d0a5-440b-ab05-f5283936d53e",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "RCK DENET\u00C7\u0130 BELGES\u0130 BA\u015EVURUSU.",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-08-21T09:15:51.2320094\u002B03:00",
-        "updatedAt": "2026-08-31T18:14:49.5463268\u002B03:00",
         "boardType": 0,
         "sortOrder": 1,
         "notes": []
