@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-08-31T18:38:35.6379789+03:00",
+  "exportedAt": "2026-08-31T18:38:49.146948+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "7979562C211F4B06E951D8AEDF6E09F7D54E9120E5B4E4BD1AC449F60699318C",
+  "checksum": "699359D5EFC5D2B0D76AD4B427A070CC999BD257958F2DFB866916D0056321D6",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "9F33F66E8B254BA8DC36E49D52CB2C329CF130EAB9018C7D9487AC6E3DFDE17E",
-    "createdAt": "2026-08-31T18:38:35.6166119\u002B03:00",
+    "checksum": "ECAE533DBED21810883B122CCDBEDBBAD0E24DF7A17E93AF6CB8032E1090B648",
+    "createdAt": "2026-08-31T18:38:49.1262356\u002B03:00",
     "tasks": [
       {
         "id": "72dbb549-2892-4836-8c21-935f2c000584",
@@ -24,14 +24,14 @@
         "notes": []
       },
       {
-        "id": "8427db6e-2040-4ff1-8e1c-ca663e3e126d",
+        "id": "92c3d58d-adfe-47b0-b14b-1627f9b71347",
         "projectId": null,
         "isSpecialJob": false,
-        "title": "\u00D6ZLEM S\u0130STEM SEV\u0130YE VER\u0130LMELR\u0130 VE STT HAZIRLANMASI.",
+        "title": "AVUKAT VEKALET VER\u0130LECEK. TUANA ZOR PERFORMANS VE \u0130SKAN VE PERFORMANS VS BELED\u0130YEDEN ALINACAK.",
         "description": "",
         "dueDate": null,
-        "createdAt": "2026-08-25T00:14:44.3187328\u002B03:00",
-        "updatedAt": "2026-08-31T18:37:57.5060757\u002B03:00",
+        "createdAt": "2026-08-31T17:08:14.5542866\u002B03:00",
+        "updatedAt": "2026-08-31T18:38:47.4298112\u002B03:00",
         "boardType": 1,
         "sortOrder": 1,
         "notes": []
@@ -76,14 +76,14 @@
         "notes": []
       },
       {
-        "id": "92c3d58d-adfe-47b0-b14b-1627f9b71347",
+        "id": "8427db6e-2040-4ff1-8e1c-ca663e3e126d",
         "projectId": null,
         "isSpecialJob": false,
-        "title": "AVUKAT VEKALET VER\u0130LECEK. TUANA ZOR PERFORMANS VE \u0130SKAN VE PERFORMANS VS BELED\u0130YEDEN ALINACAK.",
+        "title": "\u00D6ZLEM S\u0130STEM SEV\u0130YE VER\u0130LMELR\u0130 VE STT HAZIRLANMASI.",
         "description": "",
         "dueDate": null,
-        "createdAt": "2026-08-31T17:08:14.5542866\u002B03:00",
-        "updatedAt": "2026-08-31T18:34:41.0488579\u002B03:00",
+        "createdAt": "2026-08-25T00:14:44.3187328\u002B03:00",
+        "updatedAt": "2026-08-31T18:38:45.0329575\u002B03:00",
         "boardType": 1,
         "sortOrder": 5,
         "notes": []
@@ -48743,13 +48743,19 @@
         "category": "GENEL",
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
-        "summary": "MAA\u015E HESABI PARA TAL\u0130MATI YAP."
+        "summary": "AVUKAT VEKALET VER\u0130LECEK. TUANA ZOR PERFORMANS VE \u0130SKAN VE PERFORMANS VS BELED\u0130YEDEN ALINACAK."
       },
       {
         "category": "GENEL",
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
         "summary": "\u00D6ZLEM S\u0130STEM SEV\u0130YE VER\u0130LMELR\u0130 VE STT HAZIRLANMASI."
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "MAA\u015E HESABI PARA TAL\u0130MATI YAP."
       },
       {
         "category": "GENEL",
@@ -48774,12 +48780,6 @@
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
         "summary": "M\u00DCKERRER YATIRILAN FAZLA HAKED\u0130\u015ELER\u0130 \u0130NCELE. 787-5 GERZE G\u00DCVEN KEKL\u0130K (20-36) VE 787-5 GERZE G\u00DCVEN KEKL\u0130K (36-50) FAZLA YATTI."
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "AVUKAT VEKALET VER\u0130LECEK. TUANA ZOR PERFORMANS VE \u0130SKAN VE PERFORMANS VS BELED\u0130YEDEN ALINACAK."
       },
       {
         "category": "GENEL",
