@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-08-31T18:35:49.678168+03:00",
+  "exportedAt": "2026-08-31T18:37:09.1930495+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "73D61ADE1E64FD294921FEDC69D17F8FE55957D6F778108A900357EA5BF6C0FC",
+  "checksum": "C23688CB2648000F9944080BC216321985B26590068FE72E38E3F4422D0D1AF0",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "8C61400C7D708B0CB3F60C38235392EA862FC4CE0EBCA3B4A061BABAE5B73938",
-    "createdAt": "2026-08-31T18:35:49.6066308\u002B03:00",
+    "checksum": "735A75BF15ACA7143FD9B72A035A4F04C219291F3E92C8FDF5CE9FAE0DC96E62",
+    "createdAt": "2026-08-31T18:37:09.1356707\u002B03:00",
     "tasks": [
       {
         "id": "2a757163-80cc-4bbd-9279-324ff892ce5d",
@@ -118,7 +118,7 @@
         "id": "1baf83dd-d0a5-440b-ab05-f5283936d53e",
         "projectId": null,
         "isSpecialJob": false,
-        "title": "RCK DENET\u00C7\u0130 BELGES\u0130 BA\u015EVURUSU.",
+        "title": "RCK DENET\u00C7\u0130 BELGES\u0130 BA\u015EVURU EVRAKLARI HAZIRLA.",
         "description": "",
         "dueDate": null,
         "createdAt": "2026-08-21T09:15:51.2320094\u002B03:00",
