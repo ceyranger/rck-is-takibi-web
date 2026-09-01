@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-01T15:35:56.0168906+03:00",
+  "exportedAt": "2026-09-01T15:43:01.3163578+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "F11385B1A7C93ABFB4A21EF7C6399567530DF956A7113BEB008609212366B4FA",
+  "checksum": "6A683E6A47D67398D2A90CD8D8F631C12948D12958F89BB3DB3E944B914EC5CF",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "FF8005E34EAF659FB04A11331342FECAC9CD8F412A75AA7569D3A4DCF6ACF229",
-    "createdAt": "2026-09-01T15:35:55.9796454\u002B03:00",
+    "checksum": "1DDFBB6F506EB076C4F0533C4F33E8FA154916776D6D22FDBE962F5848A49D5D",
+    "createdAt": "2026-09-01T15:43:01.2789222\u002B03:00",
     "tasks": [
       {
         "id": "72dbb549-2892-4836-8c21-935f2c000584",
@@ -37,45 +37,6 @@
         "notes": []
       },
       {
-        "id": "4beddde2-959a-4a72-b74a-b3b0a9d6890f",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "MAA\u015E HESABI G\u0130DENLER \u0130\u00C7\u0130N PARA TAL\u0130MATI YAP.",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-08-31T18:38:18.0620109\u002B03:00",
-        "updatedAt": "2026-09-01T14:45:55.6300179\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 2,
-        "notes": []
-      },
-      {
-        "id": "2a757163-80cc-4bbd-9279-324ff892ce5d",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "TEB \u0130LE TEM\u0130NAT MEKTUBU VE D\u00DC\u015E\u00DCK FA\u0130ZL\u0130 2.EL ARA\u00C7 KRED\u0130S\u0130 \u0130\u00C7\u0130N G\u00D6R\u00DC\u015E.",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-08-31T18:35:28.6126341\u002B03:00",
-        "updatedAt": "2026-09-01T14:45:55.6300402\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 3,
-        "notes": []
-      },
-      {
-        "id": "8340a695-ef38-495e-ae05-eba7d9b0ed4b",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "REFAHAT STAT\u0130K D\u00DCZELTMEYLE B\u0130RL\u0130KTE STAT\u0130K M\u00DCELL\u0130F DONATI DE\u011E\u0130\u015EMED\u0130 YAZISI ALINACAK.",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-08-31T17:35:56.3289481\u002B03:00",
-        "updatedAt": "2026-09-01T14:45:55.6302057\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 4,
-        "notes": []
-      },
-      {
         "id": "8427db6e-2040-4ff1-8e1c-ca663e3e126d",
         "projectId": null,
         "isSpecialJob": false,
@@ -85,7 +46,7 @@
         "createdAt": "2026-08-25T00:14:44.3187328\u002B03:00",
         "updatedAt": "2026-09-01T14:45:55.6302447\u002B03:00",
         "boardType": 1,
-        "sortOrder": 5,
+        "sortOrder": 2,
         "notes": []
       },
       {
@@ -98,7 +59,7 @@
         "createdAt": "2026-08-31T18:42:15.8256857\u002B03:00",
         "updatedAt": "2026-09-01T14:45:55.6302716\u002B03:00",
         "boardType": 1,
-        "sortOrder": 6,
+        "sortOrder": 3,
         "notes": []
       },
       {
@@ -111,7 +72,7 @@
         "createdAt": "2026-08-18T16:04:50.6801569\u002B03:00",
         "updatedAt": "2026-09-01T14:45:55.6303013\u002B03:00",
         "boardType": 1,
-        "sortOrder": 7,
+        "sortOrder": 4,
         "notes": []
       },
       {
@@ -124,7 +85,7 @@
         "createdAt": "2026-08-21T09:15:51.2320094\u002B03:00",
         "updatedAt": "2026-09-01T14:45:55.6303226\u002B03:00",
         "boardType": 1,
-        "sortOrder": 8,
+        "sortOrder": 5,
         "notes": []
       },
       {
@@ -137,7 +98,20 @@
         "createdAt": "2026-07-29T13:47:38.9073854\u002B03:00",
         "updatedAt": "2026-09-01T14:45:55.6303461\u002B03:00",
         "boardType": 1,
-        "sortOrder": 9,
+        "sortOrder": 6,
+        "notes": []
+      },
+      {
+        "id": "8340a695-ef38-495e-ae05-eba7d9b0ed4b",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "REFAHAT STAT\u0130K D\u00DCZELTMEYLE B\u0130RL\u0130KTE STAT\u0130K M\u00DCELL\u0130F DONATI DE\u011E\u0130\u015EMED\u0130 YAZISI ALINACAK.",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-08-31T17:35:56.3289481\u002B03:00",
+        "updatedAt": "2026-09-01T15:42:59.5663196\u002B03:00",
+        "boardType": 0,
+        "sortOrder": 0,
         "notes": []
       },
       {
@@ -150,7 +124,7 @@
         "createdAt": "2026-08-31T14:48:37.3611107\u002B03:00",
         "updatedAt": "2026-09-01T14:45:55.6303665\u002B03:00",
         "boardType": 0,
-        "sortOrder": 0,
+        "sortOrder": 1,
         "notes": []
       },
       {
@@ -163,7 +137,7 @@
         "createdAt": "2026-03-19T19:08:48.061819",
         "updatedAt": "2026-09-01T14:45:55.6303865\u002B03:00",
         "boardType": 0,
-        "sortOrder": 1,
+        "sortOrder": 2,
         "notes": []
       },
       {
@@ -176,7 +150,7 @@
         "createdAt": "2026-07-15T07:11:16.3060726\u002B03:00",
         "updatedAt": "2026-09-01T14:45:55.6304576\u002B03:00",
         "boardType": 0,
-        "sortOrder": 2,
+        "sortOrder": 3,
         "notes": []
       },
       {
@@ -189,7 +163,7 @@
         "createdAt": "2026-07-15T07:10:29.4874871\u002B03:00",
         "updatedAt": "2026-09-01T14:45:55.6304828\u002B03:00",
         "boardType": 0,
-        "sortOrder": 3,
+        "sortOrder": 4,
         "notes": []
       },
       {
@@ -202,7 +176,7 @@
         "createdAt": "2026-03-19T19:08:48.061829",
         "updatedAt": "2026-09-01T14:45:55.6305046\u002B03:00",
         "boardType": 0,
-        "sortOrder": 4,
+        "sortOrder": 5,
         "notes": []
       },
       {
@@ -215,7 +189,7 @@
         "createdAt": "2026-03-19T19:08:48.061835",
         "updatedAt": "2026-09-01T14:45:55.6305249\u002B03:00",
         "boardType": 0,
-        "sortOrder": 5,
+        "sortOrder": 6,
         "notes": []
       },
       {
@@ -228,7 +202,7 @@
         "createdAt": "2026-08-06T16:25:42.5710159\u002B03:00",
         "updatedAt": "2026-09-01T14:45:55.6305452\u002B03:00",
         "boardType": 0,
-        "sortOrder": 6,
+        "sortOrder": 7,
         "notes": []
       }
     ],
@@ -48806,24 +48780,6 @@
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
         "summary": "\u00D6ZLEM S\u0130STEM SEV\u0130YE VER\u0130LMELR\u0130 VE STT HAZIRLANMASI."
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "REFAHAT STAT\u0130K D\u00DCZELTMEYLE B\u0130RL\u0130KTE STAT\u0130K M\u00DCELL\u0130F DONATI DE\u011E\u0130\u015EMED\u0130 YAZISI ALINACAK."
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "TEB \u0130LE TEM\u0130NAT MEKTUBU VE D\u00DC\u015E\u00DCK FA\u0130ZL\u0130 2.EL ARA\u00C7 KRED\u0130S\u0130 \u0130\u00C7\u0130N G\u00D6R\u00DC\u015E."
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "MAA\u015E HESABI G\u0130DENLER \u0130\u00C7\u0130N PARA TAL\u0130MATI YAP."
       },
       {
         "category": "GENEL",
