@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-02T16:42:37.6187955+03:00",
+  "exportedAt": "2026-09-02T16:42:52.710336+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "5EFB4D5040E3779C95151E51360E0066F7AA8EA0233821485C82ABBAA2BB8DBE",
+  "checksum": "F5BFEC569C52C9EDC48D9EBFDABD4E0B05C16875CF4F90FCABD1FC99751A2A04",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "1B18DB9CB5F6355B49021DDD0371EA2BA259C77A7756B3E5460E77902626687F",
-    "createdAt": "2026-09-02T16:42:37.5674655\u002B03:00",
+    "checksum": "527BD958458970CD96F915028B2AD3A03FA53598AFAC73ECD225050D2F5FB347",
+    "createdAt": "2026-09-02T16:42:52.6891478\u002B03:00",
     "tasks": [
       {
         "id": "84ccaa23-6b2b-4e8b-9eef-3b31be609d11",
@@ -170,7 +170,7 @@
         "id": "9253f228-e148-4989-9861-a348bfe691f5",
         "projectId": null,
         "isSpecialJob": false,
-        "title": "KRED\u0130 KARTI \u00D6DEMELER\u0130",
+        "title": "Z\u0130RAAT KRED\u0130 KARTI \u00D6DEMES\u0130",
         "description": "",
         "dueDate": null,
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
@@ -48945,12 +48945,6 @@
         "category": "GENEL",
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
-        "summary": "KRED\u0130 KARTI \u00D6DEMELER\u0130"
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
         "summary": "MAA\u015E \u00D6DEMELER\u0130"
       },
       {
@@ -48964,6 +48958,12 @@
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
         "summary": "VEKT\u00D6R OSGB \u00D6DEMES\u0130"
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "Z\u0130RAAT KRED\u0130 KARTI \u00D6DEMES\u0130"
       },
       {
         "category": "GENEL",
