@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-02T16:41:04.3127791+03:00",
+  "exportedAt": "2026-09-02T16:41:19.747686+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "5F65B0DB7ADB89869A94F3359D640E0A4532C6D57E59585C965C70813D3119E6",
+  "checksum": "074D67B7EF118A433CAF31EEBFBBDF852F6552557FC84B807BD2E2F2657C8699",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "EDC8707126A9AED6BC5BCC6C13AD354452462F52A44304557658F0DE5D45BC61",
-    "createdAt": "2026-09-02T16:41:04.2918378\u002B03:00",
+    "checksum": "13EA5EE13A93E652D0D1A00AD96D8692E7FEB87BB1E51CFAE8CD16431D4493D0",
+    "createdAt": "2026-09-02T16:41:19.7142224\u002B03:00",
     "tasks": [
       {
         "id": "84ccaa23-6b2b-4e8b-9eef-3b31be609d11",
@@ -167,32 +167,6 @@
         "notes": []
       },
       {
-        "id": "53b7db14-60a7-4940-8945-56d40bd63f17",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "MUHASEBE DOSYASI \u00C7IKTI ALINACAK (GIBIRNET YEPA\u015E VE G\u00DCZEL ENERJ\u0130 FATURALAR GEL\u0130NCE)",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
-        "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 12,
-        "notes": []
-      },
-      {
-        "id": "6ce55824-cbfa-4fce-8690-261b2f701e17",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "BANKA HAREKETLER\u0130 BU\u011ERAYA G\u00D6NDER",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
-        "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 13,
-        "notes": []
-      },
-      {
         "id": "72dbb549-2892-4836-8c21-935f2c000584",
         "projectId": null,
         "isSpecialJob": false,
@@ -202,7 +176,7 @@
         "createdAt": "2026-08-07T18:28:17.5132446\u002B03:00",
         "updatedAt": "2026-09-02T16:18:54.8847117\u002B03:00",
         "boardType": 1,
-        "sortOrder": 14,
+        "sortOrder": 12,
         "notes": []
       },
       {
@@ -215,7 +189,7 @@
         "createdAt": "2026-07-21T18:35:12.6946034\u002B03:00",
         "updatedAt": "2026-09-02T16:18:54.8847399\u002B03:00",
         "boardType": 1,
-        "sortOrder": 15,
+        "sortOrder": 13,
         "notes": []
       },
       {
@@ -228,7 +202,7 @@
         "createdAt": "2026-08-31T18:42:15.8256857\u002B03:00",
         "updatedAt": "2026-09-02T16:18:54.8847749\u002B03:00",
         "boardType": 1,
-        "sortOrder": 16,
+        "sortOrder": 14,
         "notes": []
       },
       {
@@ -241,7 +215,7 @@
         "createdAt": "2026-08-18T16:04:50.6801569\u002B03:00",
         "updatedAt": "2026-09-02T16:18:54.8848063\u002B03:00",
         "boardType": 1,
-        "sortOrder": 17,
+        "sortOrder": 15,
         "notes": []
       },
       {
@@ -254,7 +228,7 @@
         "createdAt": "2026-08-21T09:15:51.2320094\u002B03:00",
         "updatedAt": "2026-09-02T16:18:54.8848334\u002B03:00",
         "boardType": 1,
-        "sortOrder": 18,
+        "sortOrder": 16,
         "notes": []
       },
       {
@@ -266,6 +240,32 @@
         "dueDate": null,
         "createdAt": "2026-07-29T13:47:38.9073854\u002B03:00",
         "updatedAt": "2026-09-02T16:18:54.8848612\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 17,
+        "notes": []
+      },
+      {
+        "id": "6ce55824-cbfa-4fce-8690-261b2f701e17",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "BANKA HAREKETLER\u0130 BU\u011ERAYA G\u00D6NDER",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "updatedAt": "2026-09-02T16:41:15.6848957\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 18,
+        "notes": []
+      },
+      {
+        "id": "53b7db14-60a7-4940-8945-56d40bd63f17",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "MUHASEBE DOSYASI \u00C7IKTI ALINACAK (GIBIRNET YEPA\u015E VE G\u00DCZEL ENERJ\u0130 FATURALAR GEL\u0130NCE)",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "updatedAt": "2026-09-02T16:41:10.8041566\u002B03:00",
         "boardType": 1,
         "sortOrder": 19,
         "notes": []
@@ -48867,6 +48867,18 @@
         "category": "GENEL",
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
+        "summary": "BANKA HAREKETLER\u0130 BU\u011ERAYA G\u00D6NDER"
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "MUHASEBE DOSYASI \u00C7IKTI ALINACAK (GIBIRNET YEPA\u015E VE G\u00DCZEL ENERJ\u0130 FATURALAR GEL\u0130NCE)"
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
         "summary": "havva i\u015Fyeri teslim isg defter hakedi\u015F"
       },
       {
@@ -48903,12 +48915,6 @@
         "category": "GENEL",
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
-        "summary": "BANKA HAREKETLER\u0130 BU\u011ERAYA G\u00D6NDER"
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
         "summary": "BORDRO PUSULA PUANTAJ \u00C7IKTILARI AL"
       },
       {
@@ -48928,12 +48934,6 @@
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
         "summary": "MAA\u015E \u00D6DEMELER\u0130"
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "MUHASEBE DOSYASI \u00C7IKTI ALINACAK (GIBIRNET YEPA\u015E VE G\u00DCZEL ENERJ\u0130 FATURALAR GEL\u0130NCE)"
       },
       {
         "category": "GENEL",
