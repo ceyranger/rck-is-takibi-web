@@ -2,7 +2,7 @@
 
 ## Current Task: Cloudflare geçişi (Aşama 1 — tamamlandı)
 - [x] Worker deploy: `https://rck-is-takibi-api.rck-istakibi.workers.dev/api/data`
-- [x] KV depolama (R2 hesapta etkin değil)
+- [x] KV → **R2** geçişi (`rck-is-takibi-data` bucket, ~2.1 MB JSON yüklendi)
 - [x] Publish exe güncellendi; `Data/settings.json` Cloudflare yapılandırıldı
 - [x] `web/config.js` cloudflareDataUrl ayarlandı
 - [x] GitHub push yedek olarak korunuyor

@@ -4,7 +4,8 @@ GitHub push **korunur**. Bu API paralel çalışır.
 
 ## Depolama
 
-Hesapta R2 etkin değilse **Workers KV** kullanılır (JSON snapshot için yeterli).
+**Cloudflare R2** bucket: `rck-is-takibi-data`  
+Object key: `web-view-latest.json`
 
 ## Canlı adres
 
