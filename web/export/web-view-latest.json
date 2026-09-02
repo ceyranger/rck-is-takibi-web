@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-02T16:41:40.9387477+03:00",
+  "exportedAt": "2026-09-02T16:42:37.6187955+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "5392ED58D6F1C09BA2FBADA6E267F4AE4D9EAA098140003B6B894784F1F470F0",
+  "checksum": "5EFB4D5040E3779C95151E51360E0066F7AA8EA0233821485C82ABBAA2BB8DBE",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "46F439C4DC794F3FF5AC2C91F0491E3FAEE82493FE42744ABCB8D66AFCBF6121",
-    "createdAt": "2026-09-02T16:41:40.9045693\u002B03:00",
+    "checksum": "1B18DB9CB5F6355B49021DDD0371EA2BA259C77A7756B3E5460E77902626687F",
+    "createdAt": "2026-09-02T16:42:37.5674655\u002B03:00",
     "tasks": [
       {
         "id": "84ccaa23-6b2b-4e8b-9eef-3b31be609d11",
@@ -24,6 +24,19 @@
         "notes": []
       },
       {
+        "id": "13713e19-9fba-43ab-bafc-6b598531e353",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "havva i\u015Fyeri teslim isg defter hakedi\u015F",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-02T15:38:40.2851385\u002B03:00",
+        "updatedAt": "2026-09-02T16:41:44.612479\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 1,
+        "notes": []
+      },
+      {
         "id": "5767eab9-f994-4e5b-ad42-e1014470de46",
         "projectId": null,
         "isSpecialJob": false,
@@ -32,19 +45,6 @@
         "dueDate": null,
         "createdAt": "2026-09-02T12:41:31.373904\u002B03:00",
         "updatedAt": "2026-09-02T16:40:45.2044678\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 1,
-        "notes": []
-      },
-      {
-        "id": "13713e19-9fba-43ab-bafc-6b598531e353",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "havva i\u015Fyeri teslim isg defter hakedi\u015F",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-09-02T15:38:40.2851385\u002B03:00",
-        "updatedAt": "2026-09-02T16:40:49.0260752\u002B03:00",
         "boardType": 1,
         "sortOrder": 2,
         "notes": []
@@ -76,6 +76,32 @@
         "notes": []
       },
       {
+        "id": "72dbb549-2892-4836-8c21-935f2c000584",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "GELEN PARA \u0130\u015ELE.",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-08-07T18:28:17.5132446\u002B03:00",
+        "updatedAt": "2026-09-02T16:42:31.4715278\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 5,
+        "notes": []
+      },
+      {
+        "id": "01781f94-7ab1-4a16-8459-f44535f11c7b",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "M\u00DCKERRER YATIRILAN FAZLA HAKED\u0130\u015ELER\u0130 \u0130NCELE. 787-5 GERZE G\u00DCVEN KEKL\u0130K (20-36) VE 787-5 GERZE G\u00DCVEN KEKL\u0130K (36-50) FAZLA YATTI.",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-07-21T18:35:12.6946034\u002B03:00",
+        "updatedAt": "2026-09-02T16:42:34.3657058\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 6,
+        "notes": []
+      },
+      {
         "id": "2b423029-da16-4371-b46a-8912732e9b3d",
         "projectId": null,
         "isSpecialJob": false,
@@ -85,7 +111,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "boardType": 1,
-        "sortOrder": 5,
+        "sortOrder": 7,
         "notes": []
       },
       {
@@ -98,7 +124,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "boardType": 1,
-        "sortOrder": 6,
+        "sortOrder": 8,
         "notes": []
       },
       {
@@ -111,7 +137,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "boardType": 1,
-        "sortOrder": 7,
+        "sortOrder": 9,
         "notes": []
       },
       {
@@ -124,7 +150,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "boardType": 1,
-        "sortOrder": 8,
+        "sortOrder": 10,
         "notes": []
       },
       {
@@ -137,7 +163,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "boardType": 1,
-        "sortOrder": 9,
+        "sortOrder": 11,
         "notes": []
       },
       {
@@ -150,7 +176,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "boardType": 1,
-        "sortOrder": 10,
+        "sortOrder": 12,
         "notes": []
       },
       {
@@ -162,32 +188,6 @@
         "dueDate": null,
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 11,
-        "notes": []
-      },
-      {
-        "id": "72dbb549-2892-4836-8c21-935f2c000584",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "GELEN PARA \u0130\u015ELE.",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-08-07T18:28:17.5132446\u002B03:00",
-        "updatedAt": "2026-09-02T16:18:54.8847117\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 12,
-        "notes": []
-      },
-      {
-        "id": "01781f94-7ab1-4a16-8459-f44535f11c7b",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "M\u00DCKERRER YATIRILAN FAZLA HAKED\u0130\u015ELER\u0130 \u0130NCELE. 787-5 GERZE G\u00DCVEN KEKL\u0130K (20-36) VE 787-5 GERZE G\u00DCVEN KEKL\u0130K (36-50) FAZLA YATTI.",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-07-21T18:35:12.6946034\u002B03:00",
-        "updatedAt": "2026-09-02T16:18:54.8847399\u002B03:00",
         "boardType": 1,
         "sortOrder": 13,
         "notes": []
@@ -48867,6 +48867,24 @@
         "category": "GENEL",
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
+        "summary": "M\u00DCKERRER YATIRILAN FAZLA HAKED\u0130\u015ELER\u0130 \u0130NCELE. 787-5 GERZE G\u00DCVEN KEKL\u0130K (20-36) VE 787-5 GERZE G\u00DCVEN KEKL\u0130K (36-50) FAZLA YATTI."
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "GELEN PARA \u0130\u015ELE."
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "havva i\u015Fyeri teslim isg defter hakedi\u015F"
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
         "summary": "AYLIK DENET\u00C7\u0130 RAPORU HAZIRLA"
       },
       {
@@ -48892,12 +48910,6 @@
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
         "summary": "MUHASEBE DOSYASI \u00C7IKTI ALINACAK (GIBIRNET YEPA\u015E VE G\u00DCZEL ENERJ\u0130 FATURALAR GEL\u0130NCE)"
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "havva i\u015Fyeri teslim isg defter hakedi\u015F"
       },
       {
         "category": "GENEL",
@@ -48970,18 +48982,6 @@
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
         "summary": "TEB B\u0130REYSEL OTOMAT\u0130K FATURA SU TAL\u0130MATI OLU\u015ETUR. 27277 S\u0130NOP SU."
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "M\u00DCKERRER YATIRILAN FAZLA HAKED\u0130\u015ELER\u0130 \u0130NCELE. 787-5 GERZE G\u00DCVEN KEKL\u0130K (20-36) VE 787-5 GERZE G\u00DCVEN KEKL\u0130K (36-50) FAZLA YATTI."
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "GELEN PARA \u0130\u015ELE."
       },
       {
         "category": "TAD\u0130LAT",
