@@ -42,3 +42,5 @@ publish/
 *.tmp
 *.bak
 *.corrupt.json
+cloudflare/.upload-api-key.local
+cloudflare/.wrangler/

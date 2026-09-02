@@ -1,54 +1,40 @@
 # RCK İş Takibi — Cloudflare API (Aşama 1)
 
-GitHub push **korunur**. Bu API paralel çalışır; doğrulandıktan sonra git akışı kaldırılabilir.
+GitHub push **korunur**. Bu API paralel çalışır.
 
-## Mimari
+## Depolama
 
-```
-WPF Kaydet → JSON (yerel + isteğe bağlı git push)
-           → PUT Cloudflare Worker → R2
+Hesapta R2 etkin değilse **Workers KV** kullanılır (JSON snapshot için yeterli).
 
-Web sitesi → GET Worker /api/data (PIN) → anında veri
-           → başarısızsa export/web-view-latest.json (GitHub yedek)
-```
+## Canlı adres
 
-## Kurulum
+- Worker: `https://rck-is-takibi-api.rck-istakibi.workers.dev`
+- Veri API: `https://rck-is-takibi-api.rck-istakibi.workers.dev/api/data`
 
-1. Cloudflare hesabında R2 bucket oluşturun: `rck-is-takibi-data`
-2. Bu klasörde giriş yapın: `npx wrangler login`
-3. Upload anahtarı: `npx wrangler secret put UPLOAD_API_KEY` (güçlü rastgele değer)
-4. Deploy: `npx wrangler deploy`
-5. Worker URL örneği: `https://rck-is-takibi-api.<hesap>.workers.dev/api/data`
+## Kurulum (tamamlandı)
 
-## Uygulama ayarları
+1. `wrangler login` ✓
+2. KV namespace `RCK_DATA` ✓
+3. `UPLOAD_API_KEY` secret ✓
+4. `wrangler deploy` ✓
+5. workers.dev subdomain: `rck-istakibi` ✓
 
-**Ayarlar → Web Görüntüleme**
+Upload API key: `cloudflare/.upload-api-key.local` (gitignore'da, repoya gitmez)
 
-- Cloudflare API URL: Worker `/api/data` adresi
-- Cloudflare API Key: `UPLOAD_API_KEY` ile aynı değer
-- Cloudflare yükleme: açık
-- Git push: isteğe bağlı (yedek, aşama 1)
+## Uygulama ayarları (publish Data/settings.json güncellendi)
+
+- Cloudflare R2'ye yükle: **açık**
+- API URL: yukarıdaki `/api/data` adresi
+- API Key: `.upload-api-key.local` içindeki değer
 
 ## Web sitesi
 
-`web/config.js`:
+`web/config.js` → `cloudflareDataUrl` ayarlandı. GitHub `dataUrl` yedek olarak duruyor.
 
-```js
-window.WEB_VIEWER_CONFIG = {
-  webPin: "271179",
-  adminPin: "0258",
-  cloudflareDataUrl: "https://rck-is-takibi-api.<hesap>.workers.dev/api/data",
-  dataUrl: "export/web-view-latest.json"
-};
+## Yeniden deploy
+
+```powershell
+cd cloudflare
+.\deploy.ps1 -SkipLogin
 ```
 
-`cloudflareDataUrl` doluysa önce Cloudflare denenir; hata olursa `dataUrl` (GitHub) kullanılır.
-
-## Güvenlik
-
-| İstek | Header |
-|--------|--------|
-| Web okuma (GET) | `X-Web-Pin: 271179` |
-| Masaüstü yazma (PUT) | `X-API-Key: <UPLOAD_API_KEY>` |
-
-R2 bucket public değildir; erişim yalnızca Worker üzerinden.

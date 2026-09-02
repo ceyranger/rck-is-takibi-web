@@ -1,22 +1,20 @@
 # Todo
 
-## Current Task: Cloudflare geçişi (Aşama 1 — GitHub korunur)
-- [x] `cloudflare/worker.js` + `wrangler.toml` (R2 GET/PUT, PIN + API key)
-- [x] `WebViewCloudflareSyncService` + AppSettings + Ayarlar UI
-- [x] Kayıt sonrası: Cloudflare upload + isteğe bağlı git push (paralel)
-- [x] Web: `cloudflareDataUrl` önce, `dataUrl` GitHub yedek
-- [x] Build + test (242/242)
+## Current Task: Cloudflare geçişi (Aşama 1 — tamamlandı)
+- [x] Worker deploy: `https://rck-is-takibi-api.rck-istakibi.workers.dev/api/data`
+- [x] KV depolama (R2 hesapta etkin değil)
+- [x] Publish exe güncellendi; `Data/settings.json` Cloudflare yapılandırıldı
+- [x] `web/config.js` cloudflareDataUrl ayarlandı
+- [x] GitHub push yedek olarak korunuyor
 
-## Sonraki adım (aşama 2)
-- [ ] Cloudflare Worker deploy + `UPLOAD_API_KEY` secret
-- [ ] `web/config.js` → gerçek Worker URL
-- [ ] Uygulama ayarlarında Cloudflare URL/key
-- [ ] Birkaç gün doğrulama
-- [ ] Doğrulanınca git push / GitHub Pages kaldır
+## Sizin kontrol listesi
+- [ ] Uygulamayı aç → Ayarlar → Kaydet → Cloudflare durumunu kontrol et
+- [ ] Web sitesinde PIN ile giriş → veri geliyor mu?
+- [ ] Birkaç gün sorunsuz → aşama 2: git/GitHub kaldır
 
-## Review
-- Aşama 1 hibrit: GitHub yedek olarak duruyor; Cloudflare başarısız olursa site statik JSON'dan okur.
+## API key
+Dosya: `cloudflare/.upload-api-key.local` (repoda yok)
 
-## Previous: Web olay sırası ve anlık senkronizasyon
-- [x] parser.js olay sırası WPF ile hizalı
-- [x] Debounced export + 30 sn web polling
+## Aşama 2 (ileride)
+- [ ] Git push / GitHub Pages kaldır
+- [ ] İsteğe bağlı: R2 etkinleştir ve KV'den taşı

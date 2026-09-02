@@ -59,4 +59,5 @@
 - 2026-08-28: Web viewer (GitHub Pages) güncellendi: hücre dolgu renkleri/notları (YİBF, Tadilat, Karot, Eksik Proje), simsiyah yazı, not ikonu tıklanınca açılma, Proje Takibi ters sıra, aydınlık/karanlık tema seçici. Push `f247ad1` (`rck-is-takibi-web`).
 - 2026-09-02: Web Proje Takibi olay sırası WPF ile hizalandı (`eventDate` azalan). Kayıt sonrası 2 sn debounced web export; `WebViewExportEnabled` varsayılan açık. Web sitesi 30 sn otomatik yenileme (arka plan hatalarında oturum korunur). Tests 236/236.
 - 2026-09-02: Cloudflare aşama 1 (hibrit): Worker+R2 API eklendi; masaüstü Cloudflare upload + git push paralel; web `cloudflareDataUrl` önce, GitHub `dataUrl` yedek. GitHub kaldırma aşama 2'ye ertelendi. Tests 242/242.
+- 2026-09-02: Cloudflare Worker deploy edildi (`rck-is-takibi-api.rck-istakibi.workers.dev`, KV depolama). Publish exe güncellendi; `settings.json` Cloudflare URL/key ile yapılandırıldı (canlı Data hash korundu).
 

@@ -27,12 +27,12 @@ async function handleGet(request, env) {
     return corsResponse(JSON.stringify({ error: "Geçersiz PIN." }), 401);
   }
 
-  const object = await env.DATA_BUCKET.get(DATA_OBJECT_KEY);
-  if (!object) {
+  const payload = await env.DATA_KV.get(DATA_OBJECT_KEY);
+  if (!payload) {
     return corsResponse(JSON.stringify({ error: "Veri henüz yok." }), 404);
   }
 
-  return corsResponse(object.body, 200, {
+  return corsResponse(payload, 200, {
     "Content-Type": "application/json; charset=utf-8",
     "Cache-Control": "no-store",
   });
@@ -49,10 +49,12 @@ async function handlePut(request, env) {
     return corsResponse(JSON.stringify({ error: "Content-Type application/json gerekli." }), 415);
   }
 
-  await env.DATA_BUCKET.put(DATA_OBJECT_KEY, request.body, {
-    httpMetadata: { contentType: "application/json; charset=utf-8" },
-  });
+  const body = await request.text();
+  if (!body || !body.trim()) {
+    return corsResponse(JSON.stringify({ error: "Boş JSON." }), 400);
+  }
 
+  await env.DATA_KV.put(DATA_OBJECT_KEY, body);
   return corsResponse(JSON.stringify({ ok: true }), 200);
 }
 

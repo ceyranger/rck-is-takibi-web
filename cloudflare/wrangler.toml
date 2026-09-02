@@ -2,10 +2,9 @@ name = "rck-is-takibi-api"
 main = "worker.js"
 compatibility_date = "2024-09-01"
 
-[[r2_buckets]]
-binding = "DATA_BUCKET"
-bucket_name = "rck-is-takibi-data"
-preview_bucket_name = "rck-is-takibi-data-preview"
+[[kv_namespaces]]
+binding = "DATA_KV"
+id = "8002a0b3190d4a0aa6e32a898cb3cbb5"
 
 [vars]
 WEB_PIN = "271179"
