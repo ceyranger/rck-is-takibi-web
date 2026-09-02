@@ -14,6 +14,7 @@ public sealed partial class MainViewModel
     private const string WebViewSiteUrl = "https://ceyranger.github.io/rck-is-takibi-web/";
     private static readonly TimeSpan WebViewExportDebounceInterval = TimeSpan.FromSeconds(2);
     private readonly WebViewGitSyncService _webViewGitSyncService = new();
+    private readonly WebViewCloudflareSyncService _webViewCloudflareSyncService = new();
     private string _lastWebViewExportStatus = "Henüz dışa aktarılmadı.";
     private DispatcherTimer? _webViewExportDebounceTimer;
 
@@ -40,6 +41,56 @@ public sealed partial class MainViewModel
             OnPropertyChanged();
             HasUnsavedSettings = true;
             ExportWebViewNowCommand.NotifyCanExecuteChanged();
+        }
+    }
+
+    public bool WebViewCloudflareEnabled
+    {
+        get => _settings.WebViewCloudflareEnabled;
+        set
+        {
+            if (_settings.WebViewCloudflareEnabled == value)
+            {
+                return;
+            }
+
+            _settings.WebViewCloudflareEnabled = value;
+            OnPropertyChanged();
+            HasUnsavedSettings = true;
+        }
+    }
+
+    public string WebViewCloudflareApiUrl
+    {
+        get => _settings.WebViewCloudflareApiUrl;
+        set
+        {
+            var normalized = value?.Trim() ?? string.Empty;
+            if (string.Equals(_settings.WebViewCloudflareApiUrl, normalized, StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            _settings.WebViewCloudflareApiUrl = normalized;
+            OnPropertyChanged();
+            HasUnsavedSettings = true;
+        }
+    }
+
+    public string WebViewCloudflareApiKey
+    {
+        get => _settings.WebViewCloudflareApiKey;
+        set
+        {
+            var normalized = value?.Trim() ?? string.Empty;
+            if (string.Equals(_settings.WebViewCloudflareApiKey, normalized, StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            _settings.WebViewCloudflareApiKey = normalized;
+            OnPropertyChanged();
+            HasUnsavedSettings = true;
         }
     }
 
@@ -191,17 +242,34 @@ public sealed partial class MainViewModel
             }
 
             var jsonPath = result.FilePath;
-            var publishNote = string.Empty;
+            var publishNotes = new List<string>();
+
+            if (WebViewCloudflareEnabled
+                && WebViewCloudflareSyncService.IsConfigured(WebViewCloudflareApiUrl, WebViewCloudflareApiKey))
+            {
+                var cloudflareResult = await _webViewCloudflareSyncService.TryUploadAsync(
+                    WebViewCloudflareApiUrl,
+                    WebViewCloudflareApiKey,
+                    jsonPath);
+                publishNotes.Add(cloudflareResult.Success
+                    ? cloudflareResult.Message
+                    : $"Cloudflare: {cloudflareResult.Message}");
+            }
+
             if (WebViewGitSyncEnabled)
             {
                 var syncResult = await _webViewGitSyncService.TrySyncAsync(WebViewRepoRoot, jsonPath);
-                publishNote = syncResult switch
+                publishNotes.Add(syncResult switch
                 {
-                    { Success: true } => $" {syncResult.Message}",
-                    { Success: false } => $" Site güncellenemedi: {syncResult.Message}",
+                    { Success: true } => syncResult.Message,
+                    { Success: false } => $"GitHub: {syncResult.Message}",
                     _ => string.Empty
-                };
+                });
             }
+
+            var publishNote = publishNotes.Count == 0
+                ? string.Empty
+                : " " + string.Join(" · ", publishNotes.Where(note => !string.IsNullOrWhiteSpace(note)));
 
             UpdateLastWebViewExportStatus(result.ExportedAt, result.FileSizeBytes, publishNote);
 
@@ -209,9 +277,14 @@ public sealed partial class MainViewModel
             {
                 var siteUpdated = publishNote.Contains("güncellendi", StringComparison.OrdinalIgnoreCase)
                                   || publishNote.Contains("güncel", StringComparison.OrdinalIgnoreCase);
+                var waitHint = publishNote.Contains("Cloudflare", StringComparison.OrdinalIgnoreCase)
+                    ? " Birkaç saniye içinde webde görünür."
+                    : siteUpdated
+                        ? " 1-2 dk sonra yenileyin."
+                        : string.Empty;
                 _notificationService.ShowToast(
                     siteUpdated
-                        ? $"Web sitesi güncellendi ({FormatBytes(result.FileSizeBytes)}). 1-2 dk sonra yenileyin."
+                        ? $"Web verisi yayınlandı ({FormatBytes(result.FileSizeBytes)}).{waitHint}"
                         : $"JSON yazıldı ({FormatBytes(result.FileSizeBytes)}).{publishNote}",
                     siteUpdated ? ToastType.Success : ToastType.Warning,
                     TimeSpan.FromSeconds(5));

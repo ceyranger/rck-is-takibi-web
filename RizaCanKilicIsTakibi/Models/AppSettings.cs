@@ -10,4 +10,7 @@ public sealed class AppSettings
     public bool WebViewExportEnabled { get; set; } = true;
     public string WebViewRepoRoot { get; set; } = DefaultWebViewRepoRoot;
     public bool WebViewGitSyncEnabled { get; set; } = true;
+    public bool WebViewCloudflareEnabled { get; set; }
+    public string WebViewCloudflareApiUrl { get; set; } = string.Empty;
+    public string WebViewCloudflareApiKey { get; set; } = string.Empty;
 }

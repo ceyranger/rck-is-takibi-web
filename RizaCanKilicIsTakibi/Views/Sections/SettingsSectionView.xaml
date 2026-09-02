@@ -67,13 +67,39 @@
                                    FontFamily="{StaticResource Font.Primary}"
                                    FontSize="16"
                                    FontWeight="SemiBold"/>
-                        <TextBlock Text="JSON repodaki web/export klasörüne yazılır ve git push ile site güncellenir (https://ceyranger.github.io/rck-is-takibi-web/). Personel yalnızca site linki + PIN kullanır."
+                        <TextBlock Text="JSON yerel repoya yazılır. Cloudflare (anında) ve/veya git push (GitHub Pages yedek) ile site güncellenir."
                                    Margin="0,4,0,0"
                                    TextWrapping="Wrap"
                                    Foreground="{StaticResource Brush.TextSecondary}"/>
                         <CheckBox Content="Kaydet sonrası web sitesini güncelle"
                                   Margin="0,12,0,0"
                                   IsChecked="{Binding WebViewExportEnabled, Mode=TwoWay}"/>
+                        <Separator Margin="0,16,0,12"/>
+                        <TextBlock Text="Cloudflare (anında)"
+                                   FontWeight="SemiBold"/>
+                        <CheckBox Content="Cloudflare R2'ye yükle"
+                                  Margin="0,8,0,0"
+                                  IsChecked="{Binding WebViewCloudflareEnabled, Mode=TwoWay}"/>
+                        <StackPanel Margin="0,10,0,0">
+                            <TextBlock Text="API URL (/api/data):"
+                                       Foreground="{StaticResource Brush.TextSecondary}"/>
+                            <TextBox Text="{Binding WebViewCloudflareApiUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="0,4,0,0"
+                                     TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,10,0,0">
+                            <TextBlock Text="Upload API Key:"
+                                       Foreground="{StaticResource Brush.TextSecondary}"/>
+                            <TextBox Text="{Binding WebViewCloudflareApiKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="0,4,0,0"
+                                     TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <Separator Margin="0,16,0,12"/>
+                        <TextBlock Text="GitHub yedek (aşama 1)"
+                                   FontWeight="SemiBold"/>
+                        <CheckBox Content="Git push ile GitHub Pages güncelle"
+                                  Margin="0,8,0,0"
+                                  IsChecked="{Binding WebViewGitSyncEnabled, Mode=TwoWay}"/>
                         <StackPanel Margin="0,10,0,0">
                             <TextBlock Text="Git repo klasörü:"
                                        Foreground="{StaticResource Brush.TextSecondary}"/>

@@ -15,6 +15,7 @@
 
   var SESSION_KEY = "rck-web-auth";
   var SESSION_ROLE_KEY = "rck-web-auth-role";
+  var SESSION_PIN_KEY = "rck-web-auth-pin";
   var SESSION_EXP_KEY = "rck-web-auth-exp";
   var THEME_KEY = "rck-web-theme";
   var SESSION_TTL_MS = 12 * 60 * 60 * 1000;
@@ -215,10 +216,36 @@
     return basePath + "export/web-view-latest.json";
   }
 
-  function saveSession(role) {
+  function resolveCloudflareDataUrl() {
+    return String(getConfig().cloudflareDataUrl || "").trim();
+  }
+
+  function resolveDataSources() {
+    var sources = [];
+    var cloudflareUrl = resolveCloudflareDataUrl();
+    if (cloudflareUrl) {
+      sources.push({ url: cloudflareUrl, usePin: true, label: "Cloudflare" });
+    }
+    var fallbackUrl = resolveDataUrl();
+    if (!fallbackUrl || sources.every(function (item) { return item.url !== fallbackUrl; })) {
+      sources.push({ url: fallbackUrl, usePin: false, label: "Yedek" });
+    }
+    return sources;
+  }
+
+  function getSessionPin() {
+    try {
+      return normalizePin(sessionStorage.getItem(SESSION_PIN_KEY) || "");
+    } catch (err) {
+      return "";
+    }
+  }
+
+  function saveSession(role, pin) {
     try {
       sessionStorage.setItem(SESSION_KEY, "1");
       sessionStorage.setItem(SESSION_ROLE_KEY, role);
+      sessionStorage.setItem(SESSION_PIN_KEY, normalizePin(pin));
       sessionStorage.setItem(SESSION_EXP_KEY, String(Date.now() + SESSION_TTL_MS));
     } catch (err) {
       /* storage blocked */
@@ -230,6 +257,7 @@
     try {
       sessionStorage.removeItem(SESSION_KEY);
       sessionStorage.removeItem(SESSION_ROLE_KEY);
+      sessionStorage.removeItem(SESSION_PIN_KEY);
       sessionStorage.removeItem(SESSION_EXP_KEY);
     } catch (err) {
       /* storage blocked */
@@ -442,16 +470,23 @@
     }
   }
 
-  function fetchEnvelopeXHR(dataUrl) {
+  function fetchEnvelopeXHR(source) {
     return new Promise(function (resolve, reject) {
       var xhr = new XMLHttpRequest();
+      var dataUrl = source.url;
       var url = dataUrl + (dataUrl.indexOf("?") >= 0 ? "&" : "?") + "t=" + Date.now();
       xhr.open("GET", url, true);
       xhr.timeout = 120000;
+      if (source.usePin) {
+        var pin = getSessionPin();
+        if (pin) {
+          xhr.setRequestHeader("X-Web-Pin", pin);
+        }
+      }
       xhr.onreadystatechange = function () {
         if (xhr.readyState !== 4) return;
         if (xhr.status !== 200) {
-          reject(new Error("Veri henüz yok. Bilgisayarda Şimdi Dışa Aktar yapın, 1-2 dk bekleyin."));
+          reject(new Error(source.label + " verisi alınamadı (" + xhr.status + ")."));
           return;
         }
         try {
@@ -462,17 +497,30 @@
           }
           resolve(WebViewParser.normalizeEnvelope(raw));
         } catch (err) {
-          reject(new Error("Veri dosyası okunamadı. 1-2 dk sonra tekrar deneyin."));
+          reject(new Error("Veri dosyası okunamadı."));
         }
       };
       xhr.ontimeout = function () {
-        reject(new Error("Veri indirme zaman aşımı. Tekrar deneyin."));
+        reject(new Error("Veri indirme zaman aşımı."));
       };
       xhr.onerror = function () {
-        reject(new Error("Bağlantı hatası. İnterneti kontrol edin."));
+        reject(new Error("Bağlantı hatası."));
       };
       xhr.send();
     });
+  }
+
+  function fetchEnvelopeWithFallback() {
+    var sources = resolveDataSources();
+    var attempt = function (index) {
+      if (index >= sources.length) {
+        return Promise.reject(new Error("Veri kaynağına ulaşılamadı. Bilgisayarda Kaydet / Dışa Aktar yapın."));
+      }
+      return fetchEnvelopeXHR(sources[index]).catch(function () {
+        return attempt(index + 1);
+      });
+    };
+    return attempt(0);
   }
 
   function openWithEnvelope(envelope, options) {
@@ -490,8 +538,8 @@
 
   function loadData(options) {
     options = options || {};
-    var dataUrl = resolveDataUrl();
-    if (!dataUrl) {
+    var sources = resolveDataSources();
+    if (!sources.length) {
       if (!options.silent) {
         showPinError("Site ayarı eksik.");
       }
@@ -505,7 +553,7 @@
       content.innerHTML = '<div class="empty">Yenileniyor…</div>';
     }
 
-    return fetchEnvelopeXHR(dataUrl).then(function (envelope) {
+    return fetchEnvelopeWithFallback().then(function (envelope) {
       openWithEnvelope(envelope, { background: options.background });
       if (!options.silent) {
         hidePinMessages();
@@ -572,7 +620,7 @@
 
     state.role = role;
     state.activeTab = isAdminRole(role) ? DEFAULT_ADMIN_TAB : DEFAULT_USER_TAB;
-    saveSession(role);
+    saveSession(role, pin);
     loadData({ silent: false }).catch(function () {
       /* error shown */
     });

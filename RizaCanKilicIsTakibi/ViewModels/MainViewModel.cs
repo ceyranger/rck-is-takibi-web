@@ -1016,7 +1016,10 @@ public sealed partial class MainViewModel : ViewModelBase
             SeedSampleDataOnEmpty = _settings.SeedSampleDataOnEmpty,
             WebViewExportEnabled = _settings.WebViewExportEnabled,
             WebViewRepoRoot = _settings.WebViewRepoRoot,
-            WebViewGitSyncEnabled = _settings.WebViewGitSyncEnabled
+            WebViewGitSyncEnabled = _settings.WebViewGitSyncEnabled,
+            WebViewCloudflareEnabled = _settings.WebViewCloudflareEnabled,
+            WebViewCloudflareApiUrl = _settings.WebViewCloudflareApiUrl,
+            WebViewCloudflareApiKey = _settings.WebViewCloudflareApiKey
         };
 
     private async Task<T> RunExclusiveOperationAsync<T>(Func<Task<T>> operation)
@@ -1136,12 +1139,18 @@ public sealed partial class MainViewModel : ViewModelBase
         _settings.WebViewExportEnabled = snapshot.Settings.WebViewExportEnabled;
         _settings.WebViewRepoRoot = WebViewRepoPaths.NormalizeRepoRoot(snapshot.Settings.WebViewRepoRoot);
         _settings.WebViewGitSyncEnabled = snapshot.Settings.WebViewGitSyncEnabled;
+        _settings.WebViewCloudflareEnabled = snapshot.Settings.WebViewCloudflareEnabled;
+        _settings.WebViewCloudflareApiUrl = snapshot.Settings.WebViewCloudflareApiUrl;
+        _settings.WebViewCloudflareApiKey = snapshot.Settings.WebViewCloudflareApiKey;
         OnPropertyChanged(nameof(AutoBackupEnabled));
         OnPropertyChanged(nameof(AutoBackupMinutes));
         OnPropertyChanged(nameof(SeedSampleDataOnEmpty));
         OnPropertyChanged(nameof(WebViewExportEnabled));
         OnPropertyChanged(nameof(WebViewRepoRoot));
         OnPropertyChanged(nameof(WebViewGitSyncEnabled));
+        OnPropertyChanged(nameof(WebViewCloudflareEnabled));
+        OnPropertyChanged(nameof(WebViewCloudflareApiUrl));
+        OnPropertyChanged(nameof(WebViewCloudflareApiKey));
         OnPropertyChanged(nameof(WebViewExportDirectoryDisplay));
         RefreshWebViewExportStatusFromDisk();
         ExportWebViewNowCommand.NotifyCanExecuteChanged();
