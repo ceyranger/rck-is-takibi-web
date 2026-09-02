@@ -8,6 +8,17 @@ export default {
       return corsResponse(null, 204);
     }
 
+    if (url.pathname === "/" || url.pathname === "") {
+      return corsResponse(
+        JSON.stringify({
+          ok: true,
+          message: "RCK İş Takibi API",
+          dataEndpoint: "/api/data",
+        }),
+        200
+      );
+    }
+
     if (url.pathname === "/api/data" || url.pathname === "/api/data/") {
       if (request.method === "GET") {
         return handleGet(request, env);
