@@ -18,6 +18,7 @@
   var SESSION_EXP_KEY = "rck-web-auth-exp";
   var THEME_KEY = "rck-web-theme";
   var SESSION_TTL_MS = 12 * 60 * 60 * 1000;
+  var AUTO_REFRESH_INTERVAL_MS = 30 * 1000;
   var DEFAULT_USER_TAB = "acil-is-ozet";
   var DEFAULT_ADMIN_TAB = "genel-is-takibi";
 
@@ -72,6 +73,7 @@
       projeTakibiEntryId: null
     }
   };
+  var autoRefreshTimer = null;
 
   function getTheme() {
     var theme = document.documentElement.getAttribute("data-theme");
@@ -224,6 +226,7 @@
   }
 
   function clearSession() {
+    stopAutoRefresh();
     try {
       sessionStorage.removeItem(SESSION_KEY);
       sessionStorage.removeItem(SESSION_ROLE_KEY);
@@ -472,13 +475,17 @@
     });
   }
 
-  function openWithEnvelope(envelope) {
+  function openWithEnvelope(envelope, options) {
+    options = options || {};
     state.envelope = envelope;
     lastUpdated.textContent = "Son güncelleme: " + WebViewParser.formatDateTime(envelope.exportedAt);
-    ensureActiveTab();
-    showMainScreen();
-    buildTabs();
+    if (!options.background) {
+      ensureActiveTab();
+      showMainScreen();
+      buildTabs();
+    }
     renderContent();
+    startAutoRefresh();
   }
 
   function loadData(options) {
@@ -494,24 +501,21 @@
     if (!options.silent) {
       setPinLoading(true);
       showPinStatus("Veri indiriliyor…");
-    } else {
+    } else if (!options.background) {
       content.innerHTML = '<div class="empty">Yenileniyor…</div>';
     }
 
     return fetchEnvelopeXHR(dataUrl).then(function (envelope) {
-      openWithEnvelope(envelope);
+      openWithEnvelope(envelope, { background: options.background });
       if (!options.silent) {
         hidePinMessages();
       }
       return envelope;
     }).catch(function (err) {
-      if (options.silent && isSessionValid()) {
-        showPinScreen();
-      }
-      clearSession();
       if (!options.silent) {
+        clearSession();
         showPinError(err.message || "Veri yüklenemedi.");
-      } else if (state.envelope) {
+      } else if (!options.background && state.envelope) {
         content.innerHTML = '<div class="empty">' + WebModules.escapeHtml(err.message || "Yenileme başarısız.") + '</div>';
       }
       throw err;
@@ -520,6 +524,32 @@
         setPinLoading(false);
       }
     });
+  }
+
+  function refreshDataInBackground() {
+    if (!isSessionValid() || document.hidden) {
+      return;
+    }
+
+    loadData({ silent: true, background: true }).catch(function () {
+      /* keep current view on transient refresh errors */
+    });
+  }
+
+  function stopAutoRefresh() {
+    if (autoRefreshTimer) {
+      clearInterval(autoRefreshTimer);
+      autoRefreshTimer = null;
+    }
+  }
+
+  function startAutoRefresh() {
+    stopAutoRefresh();
+    if (!isSessionValid()) {
+      return;
+    }
+
+    autoRefreshTimer = setInterval(refreshDataInBackground, AUTO_REFRESH_INTERVAL_MS);
   }
 
   function handlePinSubmit(event) {
@@ -551,6 +581,7 @@
   function refreshData() {
     if (!isSessionValid()) {
       clearSession();
+      stopAutoRefresh();
       showPinScreen();
       showPinError("Oturum süresi doldu. PIN ile tekrar giriş yapın.");
       return;
@@ -602,6 +633,18 @@
   globalSearch.addEventListener("input", function () {
     state.query = globalSearch.value.trim();
     renderContent();
+  });
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) {
+      stopAutoRefresh();
+      return;
+    }
+
+    if (isSessionValid() && state.envelope) {
+      refreshDataInBackground();
+      startAutoRefresh();
+    }
   });
 
   buildTabs();

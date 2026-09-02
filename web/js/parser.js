@@ -198,9 +198,9 @@ window.WebViewParser = (function () {
     });
     Object.keys(map).forEach(function (entryId) {
       map[entryId].sort(function (a, b) {
-        var orderDiff = (a.displayOrder || 0) - (b.displayOrder || 0);
-        if (orderDiff !== 0) return orderDiff;
-        return new Date(a.eventDate || 0) - new Date(b.eventDate || 0);
+        var dateDiff = new Date(b.eventDate || 0) - new Date(a.eventDate || 0);
+        if (dateDiff !== 0) return dateDiff;
+        return (b.displayOrder || 0) - (a.displayOrder || 0);
       });
     });
     return map;
@@ -208,7 +208,7 @@ window.WebViewParser = (function () {
 
   function getLatestYibfEvent(events) {
     if (!events || !events.length) return null;
-    return events[events.length - 1];
+    return events[0];
   }
 
   function buildCellStateMap(cellStates) {

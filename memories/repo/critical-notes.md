@@ -57,4 +57,5 @@
 - 2026-08-15: Personel atama ikonları (3 varyant) + kaynak korumalı düzenleme notu + otomatik kayıt toast netliği. Tests 225/225. Commit `9612100`; canonical publish exe güncellendi; Data hash değişmedi.
 - 2026-08-28: Personel Görev web görünümü düzeltildi: `personnelAssignments` fallback, kart UI, export servisten tüm açık atamalar. Tests 236/236; publish güncellendi; Data hash korundu. Commit `1be8eb2` push edildi.
 - 2026-08-28: Web viewer (GitHub Pages) güncellendi: hücre dolgu renkleri/notları (YİBF, Tadilat, Karot, Eksik Proje), simsiyah yazı, not ikonu tıklanınca açılma, Proje Takibi ters sıra, aydınlık/karanlık tema seçici. Push `f247ad1` (`rck-is-takibi-web`).
+- 2026-09-02: Web Proje Takibi olay sırası WPF ile hizalandı (`eventDate` azalan). Kayıt sonrası 2 sn debounced web export; `WebViewExportEnabled` varsayılan açık. Web sitesi 30 sn otomatik yenileme (arka plan hatalarında oturum korunur). Tests 236/236.
 

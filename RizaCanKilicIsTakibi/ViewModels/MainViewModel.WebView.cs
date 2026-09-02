@@ -3,6 +3,8 @@ using RizaCanKilicIsTakibi.Models;
 using RizaCanKilicIsTakibi.Services;
 using RizaCanKilicIsTakibi.Services.Abstractions;
 using System.IO;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace RizaCanKilicIsTakibi.ViewModels;
 
@@ -10,8 +12,10 @@ public sealed partial class MainViewModel
 {
     private const string DefaultWebPin = "271179";
     private const string WebViewSiteUrl = "https://ceyranger.github.io/rck-is-takibi-web/";
+    private static readonly TimeSpan WebViewExportDebounceInterval = TimeSpan.FromSeconds(2);
     private readonly WebViewGitSyncService _webViewGitSyncService = new();
     private string _lastWebViewExportStatus = "Henüz dışa aktarılmadı.";
+    private DispatcherTimer? _webViewExportDebounceTimer;
 
     private void InitializeWebViewExportFeature()
     {
@@ -101,6 +105,30 @@ public sealed partial class MainViewModel
 
     private void TryExportWebViewSnapshotFireAndForget()
     {
+        if (_webViewSnapshotService is null || !WebViewExportEnabled || !CanExportWebViewNow())
+        {
+            return;
+        }
+
+        if (Application.Current?.Dispatcher is null)
+        {
+            RunSafeBackgroundTask(TryExportWebViewSnapshotAsync(showSuccessToast: false), "Web görüntüleme dosyası güncellenemedi.");
+            return;
+        }
+
+        _webViewExportDebounceTimer ??= new DispatcherTimer
+        {
+            Interval = WebViewExportDebounceInterval
+        };
+        _webViewExportDebounceTimer.Tick -= OnWebViewExportDebounceTick;
+        _webViewExportDebounceTimer.Tick += OnWebViewExportDebounceTick;
+        _webViewExportDebounceTimer.Stop();
+        _webViewExportDebounceTimer.Start();
+    }
+
+    private void OnWebViewExportDebounceTick(object? sender, EventArgs e)
+    {
+        _webViewExportDebounceTimer?.Stop();
         if (_webViewSnapshotService is null || !WebViewExportEnabled || !CanExportWebViewNow())
         {
             return;
