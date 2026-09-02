@@ -1,26 +1,169 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-02T16:34:47.7562508+03:00",
+  "exportedAt": "2026-09-02T16:40:37.6969715+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "79F4B9AB7938BAE31078389067F8CAFC1EAEBD717CF30D502D0303406E981A64",
+  "checksum": "AB2B5BCED9FE89BEE7EA597A269A798012734DCC95AE0701005F5783EB421CD5",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "03A6FD83179CD75C2479C03E3C7D3ECB7DCAAE55A8B3C952C2681E78A107D50A",
-    "createdAt": "2026-09-02T16:34:47.7315575\u002B03:00",
+    "checksum": "498C87D294A1BB30131D2C003A9D7E937A910EA690FC6B05B31EE8F9F32FAD92",
+    "createdAt": "2026-09-02T16:40:37.6648789\u002B03:00",
     "tasks": [
       {
-        "id": "13713e19-9fba-43ab-bafc-6b598531e353",
+        "id": "2b423029-da16-4371-b46a-8912732e9b3d",
         "projectId": null,
         "isSpecialJob": false,
-        "title": "havva i\u015Fyeri teslim isg defter hakedi\u015F",
+        "title": "B\u00DCRO K\u0130RA \u00D6DEMES\u0130",
         "description": "",
         "dueDate": null,
-        "createdAt": "2026-09-02T15:38:40.2851385\u002B03:00",
-        "updatedAt": "2026-09-02T16:18:54.8840677\u002B03:00",
+        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "boardType": 1,
         "sortOrder": 0,
+        "notes": []
+      },
+      {
+        "id": "54f4592d-8d85-45ed-8989-dbf3ce61bc04",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "VEKT\u00D6R OSGB \u00D6DEMES\u0130",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 1,
+        "notes": []
+      },
+      {
+        "id": "c84212c9-83bb-4802-90c8-0b89578ba014",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "MUHASEBE \u00D6DEMES\u0130",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 2,
+        "notes": []
+      },
+      {
+        "id": "8e0655f3-dabe-4c55-b845-35317968f08a",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "MAA\u015E \u00D6DEMELER\u0130",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 3,
+        "notes": []
+      },
+      {
+        "id": "44741b33-81a5-4b39-8a6b-706ffdf9c3ae",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "ARSLAN \u0130CRA \u00D6DEMES\u0130",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 4,
+        "notes": []
+      },
+      {
+        "id": "9253f228-e148-4989-9861-a348bfe691f5",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "KRED\u0130 KARTI \u00D6DEMELER\u0130",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 5,
+        "notes": []
+      },
+      {
+        "id": "b6823bc3-f360-445a-b2d5-e66ff0ec6c07",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "AYLIK SEV\u0130YE TESP\u0130T TABLOSU HAZIRLA",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 6,
+        "notes": []
+      },
+      {
+        "id": "561c3786-da30-40f1-8b80-acc237753486",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "AYLIK DENET\u00C7\u0130 RAPORU HAZIRLA",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 7,
+        "notes": []
+      },
+      {
+        "id": "823a641f-7779-4e7c-9665-54b3729466e7",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "BORDRO PUSULA PUANTAJ \u00C7IKTILARI AL",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 8,
+        "notes": []
+      },
+      {
+        "id": "470480b1-6c4f-4e84-8edb-c804f2e5128c",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "GEL\u0130R G\u0130DER G\u00DCNCELLE",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 9,
+        "notes": []
+      },
+      {
+        "id": "53b7db14-60a7-4940-8945-56d40bd63f17",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "MUHASEBE DOSYASI \u00C7IKTI ALINACAK (GIBIRNET YEPA\u015E VE G\u00DCZEL ENERJ\u0130 FATURALAR GEL\u0130NCE)",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 10,
+        "notes": []
+      },
+      {
+        "id": "6ce55824-cbfa-4fce-8690-261b2f701e17",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "BANKA HAREKETLER\u0130 BU\u011ERAYA G\u00D6NDER",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 11,
         "notes": []
       },
       {
@@ -31,9 +174,22 @@
         "description": "",
         "dueDate": null,
         "createdAt": "2026-09-02T12:47:14.1037065\u002B03:00",
-        "updatedAt": "2026-09-02T16:18:54.8846177\u002B03:00",
+        "updatedAt": "2026-09-02T16:34:49.1091463\u002B03:00",
         "boardType": 1,
-        "sortOrder": 1,
+        "sortOrder": 12,
+        "notes": []
+      },
+      {
+        "id": "13713e19-9fba-43ab-bafc-6b598531e353",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "havva i\u015Fyeri teslim isg defter hakedi\u015F",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-02T15:38:40.2851385\u002B03:00",
+        "updatedAt": "2026-09-02T16:18:54.8840677\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 13,
         "notes": []
       },
       {
@@ -46,7 +202,7 @@
         "createdAt": "2026-09-02T12:41:31.373904\u002B03:00",
         "updatedAt": "2026-09-02T16:18:54.884679\u002B03:00",
         "boardType": 1,
-        "sortOrder": 2,
+        "sortOrder": 14,
         "notes": []
       },
       {
@@ -59,7 +215,7 @@
         "createdAt": "2026-08-07T18:28:17.5132446\u002B03:00",
         "updatedAt": "2026-09-02T16:18:54.8847117\u002B03:00",
         "boardType": 1,
-        "sortOrder": 3,
+        "sortOrder": 15,
         "notes": []
       },
       {
@@ -72,7 +228,7 @@
         "createdAt": "2026-07-21T18:35:12.6946034\u002B03:00",
         "updatedAt": "2026-09-02T16:18:54.8847399\u002B03:00",
         "boardType": 1,
-        "sortOrder": 4,
+        "sortOrder": 16,
         "notes": []
       },
       {
@@ -85,7 +241,7 @@
         "createdAt": "2026-08-31T18:42:15.8256857\u002B03:00",
         "updatedAt": "2026-09-02T16:18:54.8847749\u002B03:00",
         "boardType": 1,
-        "sortOrder": 5,
+        "sortOrder": 17,
         "notes": []
       },
       {
@@ -98,7 +254,7 @@
         "createdAt": "2026-08-18T16:04:50.6801569\u002B03:00",
         "updatedAt": "2026-09-02T16:18:54.8848063\u002B03:00",
         "boardType": 1,
-        "sortOrder": 6,
+        "sortOrder": 18,
         "notes": []
       },
       {
@@ -111,7 +267,7 @@
         "createdAt": "2026-08-21T09:15:51.2320094\u002B03:00",
         "updatedAt": "2026-09-02T16:18:54.8848334\u002B03:00",
         "boardType": 1,
-        "sortOrder": 7,
+        "sortOrder": 19,
         "notes": []
       },
       {
@@ -124,7 +280,7 @@
         "createdAt": "2026-07-29T13:47:38.9073854\u002B03:00",
         "updatedAt": "2026-09-02T16:18:54.8848612\u002B03:00",
         "boardType": 1,
-        "sortOrder": 8,
+        "sortOrder": 20,
         "notes": []
       },
       {
@@ -48724,6 +48880,84 @@
         "category": "GENEL",
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
+        "summary": "ARSLAN \u0130CRA \u00D6DEMES\u0130"
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "AYLIK DENET\u00C7\u0130 RAPORU HAZIRLA"
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "AYLIK SEV\u0130YE TESP\u0130T TABLOSU HAZIRLA"
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "BANKA HAREKETLER\u0130 BU\u011ERAYA G\u00D6NDER"
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "BORDRO PUSULA PUANTAJ \u00C7IKTILARI AL"
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "B\u00DCRO K\u0130RA \u00D6DEMES\u0130"
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "GEL\u0130R G\u0130DER G\u00DCNCELLE"
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "KRED\u0130 KARTI \u00D6DEMELER\u0130"
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "MAA\u015E \u00D6DEMELER\u0130"
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "MUHASEBE DOSYASI \u00C7IKTI ALINACAK (GIBIRNET YEPA\u015E VE G\u00DCZEL ENERJ\u0130 FATURALAR GEL\u0130NCE)"
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "MUHASEBE \u00D6DEMES\u0130"
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "VEKT\u00D6R OSGB \u00D6DEMES\u0130"
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "Yeni gelen i\u015F i\u015Flemleri"
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
         "summary": "VAL\u0130 YARDIMCISI Z\u0130YARETE G\u0130D\u0130LECEK."
       },
       {
@@ -48761,12 +48995,6 @@
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
         "summary": "veli demircan iskan haz\u0131rlanmas\u0131"
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "Yeni gelen i\u015F i\u015Flemleri"
       },
       {
         "category": "GENEL",
