@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-02T16:41:19.747686+03:00",
+  "exportedAt": "2026-09-02T16:41:40.9387477+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "074D67B7EF118A433CAF31EEBFBBDF852F6552557FC84B807BD2E2F2657C8699",
+  "checksum": "5392ED58D6F1C09BA2FBADA6E267F4AE4D9EAA098140003B6B894784F1F470F0",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "13EA5EE13A93E652D0D1A00AD96D8692E7FEB87BB1E51CFAE8CD16431D4493D0",
-    "createdAt": "2026-09-02T16:41:19.7142224\u002B03:00",
+    "checksum": "46F439C4DC794F3FF5AC2C91F0491E3FAEE82493FE42744ABCB8D66AFCBF6121",
+    "createdAt": "2026-09-02T16:41:40.9045693\u002B03:00",
     "tasks": [
       {
         "id": "84ccaa23-6b2b-4e8b-9eef-3b31be609d11",
@@ -50,6 +50,32 @@
         "notes": []
       },
       {
+        "id": "b6823bc3-f360-445a-b2d5-e66ff0ec6c07",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "AYLIK SEV\u0130YE TESP\u0130T TABLOSU HAZIRLA",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "updatedAt": "2026-09-02T16:41:34.0433548\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 3,
+        "notes": []
+      },
+      {
+        "id": "561c3786-da30-40f1-8b80-acc237753486",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "AYLIK DENET\u00C7\u0130 RAPORU HAZIRLA",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "updatedAt": "2026-09-02T16:41:37.3561009\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 4,
+        "notes": []
+      },
+      {
         "id": "2b423029-da16-4371-b46a-8912732e9b3d",
         "projectId": null,
         "isSpecialJob": false,
@@ -59,7 +85,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "boardType": 1,
-        "sortOrder": 3,
+        "sortOrder": 5,
         "notes": []
       },
       {
@@ -72,7 +98,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "boardType": 1,
-        "sortOrder": 4,
+        "sortOrder": 6,
         "notes": []
       },
       {
@@ -85,7 +111,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "boardType": 1,
-        "sortOrder": 5,
+        "sortOrder": 7,
         "notes": []
       },
       {
@@ -98,7 +124,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "boardType": 1,
-        "sortOrder": 6,
+        "sortOrder": 8,
         "notes": []
       },
       {
@@ -111,7 +137,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "boardType": 1,
-        "sortOrder": 7,
+        "sortOrder": 9,
         "notes": []
       },
       {
@@ -119,32 +145,6 @@
         "projectId": null,
         "isSpecialJob": false,
         "title": "KRED\u0130 KARTI \u00D6DEMELER\u0130",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
-        "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 8,
-        "notes": []
-      },
-      {
-        "id": "b6823bc3-f360-445a-b2d5-e66ff0ec6c07",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "AYLIK SEV\u0130YE TESP\u0130T TABLOSU HAZIRLA",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
-        "updatedAt": "2026-09-02T16:35:16.0834218\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 9,
-        "notes": []
-      },
-      {
-        "id": "561c3786-da30-40f1-8b80-acc237753486",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "AYLIK DENET\u00C7\u0130 RAPORU HAZIRLA",
         "description": "",
         "dueDate": null,
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
@@ -193,19 +193,6 @@
         "notes": []
       },
       {
-        "id": "fd402063-bbfe-4d10-ae64-9863ad7fd766",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "T\u00DCM RUHSAT L\u0130STES\u0130 KA\u011EITLARI \u0130NCELENECEK. EKS\u0130KLER PROGRAMA G\u0130R\u0130LECEK.",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-08-31T18:42:15.8256857\u002B03:00",
-        "updatedAt": "2026-09-02T16:18:54.8847749\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 14,
-        "notes": []
-      },
-      {
         "id": "75d55082-3747-4fea-aae2-f57aff7b4b7b",
         "projectId": null,
         "isSpecialJob": false,
@@ -214,6 +201,19 @@
         "dueDate": null,
         "createdAt": "2026-08-18T16:04:50.6801569\u002B03:00",
         "updatedAt": "2026-09-02T16:18:54.8848063\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 14,
+        "notes": []
+      },
+      {
+        "id": "fd402063-bbfe-4d10-ae64-9863ad7fd766",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "T\u00DCM RUHSAT L\u0130STES\u0130 KA\u011EITLARI \u0130NCELENECEK. EKS\u0130KLER PROGRAMA G\u0130R\u0130LECEK.",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-08-31T18:42:15.8256857\u002B03:00",
+        "updatedAt": "2026-09-02T16:41:25.928812\u002B03:00",
         "boardType": 1,
         "sortOrder": 15,
         "notes": []
@@ -48867,6 +48867,24 @@
         "category": "GENEL",
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
+        "summary": "AYLIK DENET\u00C7\u0130 RAPORU HAZIRLA"
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "AYLIK SEV\u0130YE TESP\u0130T TABLOSU HAZIRLA"
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "T\u00DCM RUHSAT L\u0130STES\u0130 KA\u011EITLARI \u0130NCELENECEK. EKS\u0130KLER PROGRAMA G\u0130R\u0130LECEK."
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
         "summary": "BANKA HAREKETLER\u0130 BU\u011ERAYA G\u00D6NDER"
       },
       {
@@ -48898,18 +48916,6 @@
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
         "summary": "ARSLAN \u0130CRA \u00D6DEMES\u0130"
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "AYLIK DENET\u00C7\u0130 RAPORU HAZIRLA"
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "AYLIK SEV\u0130YE TESP\u0130T TABLOSU HAZIRLA"
       },
       {
         "category": "GENEL",
@@ -48964,12 +48970,6 @@
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
         "summary": "TEB B\u0130REYSEL OTOMAT\u0130K FATURA SU TAL\u0130MATI OLU\u015ETUR. 27277 S\u0130NOP SU."
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "T\u00DCM RUHSAT L\u0130STES\u0130 KA\u011EITLARI \u0130NCELENECEK. EKS\u0130KLER PROGRAMA G\u0130R\u0130LECEK."
       },
       {
         "category": "GENEL",
