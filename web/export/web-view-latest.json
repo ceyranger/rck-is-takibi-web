@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-03T16:43:57.0261781+03:00",
+  "exportedAt": "2026-09-03T16:45:00.7253419+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "F86EF9983B20B1242F5D66708F6CF609BA222BCB746CEFD65973CB4629E3471C",
+  "checksum": "B78A8632FFC2C8D1FF0414C846E35E1D60818B99644027BA16D2BBBF2FD06F09",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "EC093BDF378E1A8ECB58912945AC97DEC808EE67F898F5BF9F8622980730BEB0",
-    "createdAt": "2026-09-03T16:43:56.9707084\u002B03:00",
+    "checksum": "458719AB1E0FF54DA884D1CF98C12F236A87B113E569C7494380171678ACB96D",
+    "createdAt": "2026-09-03T16:45:00.7058535\u002B03:00",
     "tasks": [
       {
         "id": "13713e19-9fba-43ab-bafc-6b598531e353",
@@ -867,10 +867,10 @@
         "category": 0,
         "district": "GERZE",
         "ownerParcelText": "559-51 HAVVA \u00D6ZER",
-        "workText": "ASANS\u00D6R AVAN PROJES\u0130 GELMED\u0130.",
+        "workText": "ASANS\u00D6R AVAN PROJES\u0130 GELMED\u0130. \u0130\u015EYER\u0130 TESL\u0130M , Y\u0130BF TAAHH\u00DCTNAME S\u00D6ZLE\u015EME , \u0130SG YAZISI VE SA\u011ELIK G\u00DCVENL\u0130K RAPORU ALINACAK.",
         "displayOrder": 20,
         "createdAt": "2026-09-01T17:28:24.2623162\u002B03:00",
-        "updatedAt": "2026-09-03T15:40:53.1183448\u002B03:00"
+        "updatedAt": "2026-09-03T16:44:57.3562121\u002B03:00"
       },
       {
         "id": "2f5146bc-8873-4930-acad-4a9c4163a04e",
