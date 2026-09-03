@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-03T15:26:47.0569199+03:00",
+  "exportedAt": "2026-09-03T15:27:23.0897594+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "D481D41810131058198E5DAB66A738F7A5944196DFC96FEE0EB94698978286EA",
+  "checksum": "68D2D0B021CAA032B1E4AF131B160A7BA376C3BE5780D66FF3F73D0A90FD4CFD",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "D2797FA58714A7354510FCC3FB4462C0D69C16FD42AD8D67446938A8CC6CE890",
-    "createdAt": "2026-09-03T15:26:46.9979153\u002B03:00",
+    "checksum": "C9A8815810CE3F1AA117CB95C621EDAC147B50D8EB3C26EB967A9F3886C62D9F",
+    "createdAt": "2026-09-03T15:27:23.0565109\u002B03:00",
     "tasks": [
       {
         "id": "13713e19-9fba-43ab-bafc-6b598531e353",
@@ -2587,9 +2587,9 @@
         "archivedFromMunicipality": "",
         "description1": "O\u011EUZ AB\u0130 VE SEFA AB\u0130 SOLDAK\u0130 \u0130ST\u0130NATI MEVCUT \u0130ST\u0130NAT D\u0130YE PROJELER\u0130NDEN ELLE D\u00DCZELTECEK",
         "description2": "",
-        "displayOrder": 36,
+        "displayOrder": 0,
         "createdAt": "2026-03-21T01:38:32.6827908\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7952786\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866126\u002B03:00"
       },
       {
         "id": "b3299d4b-7905-4663-934b-797cd507be3c",
@@ -2605,9 +2605,9 @@
         "archivedFromMunicipality": "",
         "description1": "BAKANLIK DENET\u0130M\u0130NDE TAD\u0130LAT ED\u0130LS\u0130N DEN\u0130LD\u0130. SEL\u00C7UK AB\u0130 YAPACAK.",
         "description2": "",
-        "displayOrder": 37,
+        "displayOrder": 1,
         "createdAt": "2026-07-29T13:19:31.3633629\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.795308\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866132\u002B03:00"
       },
       {
         "id": "50771d3b-1802-4f3f-be27-8c5410b46583",
@@ -2623,9 +2623,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "TAD\u0130LAT RAPORU VAR.",
         "description2": "",
-        "displayOrder": 38,
+        "displayOrder": 2,
         "createdAt": "2026-08-03T14:35:47.0417098\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7953384\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866134\u002B03:00"
       },
       {
         "id": "f64fd6eb-d114-4979-8083-382a6ae4b6d6",
@@ -2641,9 +2641,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "ELLE D\u00DCZELTME AMPART VE AKS D\u00DCZELT\u0130M\u0130",
         "description2": "06.08.2026 TAR\u0130H\u0130NDE DEN\u0130Z KIRMIZIG\u00DCLE 2 PAFTA VER\u0130LD\u0130.",
-        "displayOrder": 39,
+        "displayOrder": 3,
         "createdAt": "2026-08-05T13:20:17.3683506\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7953688\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866135\u002B03:00"
       },
       {
         "id": "82d2e6b1-3ff7-47fb-affc-55eb2d09fc46",
@@ -2659,9 +2659,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "ELLE D\u00DCZELTME AMPART VE AKS D\u00DCZELT\u0130M\u0130",
         "description2": "",
-        "displayOrder": 40,
+        "displayOrder": 4,
         "createdAt": "2026-08-05T13:20:40.3790998\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7953974\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866137\u002B03:00"
       },
       {
         "id": "74d19342-a5c9-4312-8bfd-87291c41023b",
@@ -2677,9 +2677,9 @@
         "archivedFromMunicipality": "",
         "description1": "TAD\u0130LAT RAPORU VAR.",
         "description2": "",
-        "displayOrder": 41,
+        "displayOrder": 5,
         "createdAt": "2026-08-25T16:29:05.6438885\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7954263\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866137\u002B03:00"
       },
       {
         "id": "02b53a89-0a1a-4340-be8a-ded935c8198e",
@@ -2695,9 +2695,9 @@
         "archivedFromMunicipality": "",
         "description1": "",
         "description2": "",
-        "displayOrder": 42,
+        "displayOrder": 6,
         "createdAt": "2026-08-25T16:29:13.6887811\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7954565\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866138\u002B03:00"
       },
       {
         "id": "3118dcc2-1d8b-44ac-8f20-9b8edcd7210f",
@@ -2713,27 +2713,9 @@
         "archivedFromMunicipality": "",
         "description1": "",
         "description2": "",
-        "displayOrder": 43,
+        "displayOrder": 7,
         "createdAt": "2026-08-25T16:29:21.2943777\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7954861\u002B03:00"
-      },
-      {
-        "id": "ffb6b171-10af-4f71-9939-3fc0168f7c5b",
-        "projectId": "efa43f87-8c73-46e7-9630-c39df3908f77",
-        "subTab": 0,
-        "district": "S\u0130NOP",
-        "jobName": "575-6 REFAHAT A\u00C7IKG\u00D6Z",
-        "projectType": "STAT\u0130K",
-        "digitalReceived": "",
-        "inspectorApproved": "",
-        "outputAndReportArrived": "",
-        "officialLetterSubmitted": "",
-        "archivedFromMunicipality": "",
-        "description1": "ELLE D\u00DCZELT\u0130LECEK.",
-        "description2": "",
-        "displayOrder": 44,
-        "createdAt": "2026-08-31T17:28:37.8476322\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7955164\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866139\u002B03:00"
       },
       {
         "id": "c4cc6a11-2eac-4a35-a394-076966369269",
@@ -2749,9 +2731,9 @@
         "archivedFromMunicipality": "",
         "description1": "",
         "description2": "",
-        "displayOrder": 45,
+        "displayOrder": 8,
         "createdAt": "2026-08-31T17:38:45.672266\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7955448\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866139\u002B03:00"
       },
       {
         "id": "bc062239-35d1-49c5-85dd-f566ccd5938d",
@@ -4765,9 +4747,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "\u015EANT\u0130YE \u015EEF\u0130 \u0130ST\u0130FASI SEBEB\u0130YLE PROJELER VE RUHSAT BELED\u0130YEDE BEKL\u0130YOR.",
         "description2": "",
-        "displayOrder": 157,
+        "displayOrder": 0,
         "createdAt": "2026-03-21T01:38:32.6924093\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7987342\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866378\u002B03:00"
       },
       {
         "id": "1ec8bfac-e441-47c2-b92c-606ef4589b9b",
@@ -4783,9 +4765,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 158,
+        "displayOrder": 1,
         "createdAt": "2026-03-21T01:38:32.692575\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7987621\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866379\u002B03:00"
       },
       {
         "id": "2e0a772c-43bf-4ca8-9c16-9613a9869050",
@@ -4801,9 +4783,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 159,
+        "displayOrder": 2,
         "createdAt": "2026-03-21T01:38:32.6927237\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7987904\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.286638\u002B03:00"
       },
       {
         "id": "8eb34d88-ac19-484f-aa89-82a2eca4aae2",
@@ -4819,9 +4801,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 160,
+        "displayOrder": 3,
         "createdAt": "2026-03-21T01:38:32.6928833\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7988183\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866381\u002B03:00"
       },
       {
         "id": "dcaa3353-aaf5-4a2e-9705-f1c90af9587d",
@@ -4837,9 +4819,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 161,
+        "displayOrder": 4,
         "createdAt": "2026-03-21T01:38:32.6930289\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7988473\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866382\u002B03:00"
       },
       {
         "id": "8155c055-4cd4-4b0a-8e2d-15548b98f07c",
@@ -4855,9 +4837,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 162,
+        "displayOrder": 5,
         "createdAt": "2026-03-21T01:38:32.6931721\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7988759\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866382\u002B03:00"
       },
       {
         "id": "cdb4da59-12b6-44c0-8556-5c0fd48f2d10",
@@ -4873,9 +4855,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 163,
+        "displayOrder": 6,
         "createdAt": "2026-03-21T01:38:32.6933176\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7989034\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866382\u002B03:00"
       },
       {
         "id": "b7395244-b52d-47bf-9230-9e19306753a5",
@@ -4891,9 +4873,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 164,
+        "displayOrder": 7,
         "createdAt": "2026-03-21T01:38:32.6934604\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7989318\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866383\u002B03:00"
       },
       {
         "id": "5d196f64-fc96-485e-a6d3-663e84706794",
@@ -4909,9 +4891,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 165,
+        "displayOrder": 8,
         "createdAt": "2026-03-21T01:38:32.693602\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7989602\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866383\u002B03:00"
       },
       {
         "id": "eb964b71-3fe4-45de-b1eb-7ef26981d3ca",
@@ -4927,9 +4909,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 166,
+        "displayOrder": 9,
         "createdAt": "2026-03-21T01:38:32.6937442\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7989882\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866384\u002B03:00"
       },
       {
         "id": "5542a6ce-92e3-4a88-a46d-b66b7e445a6c",
@@ -4945,9 +4927,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "ISITMA VE SIHH\u0130 TES\u0130SAT PROJELER\u0130",
         "description2": "",
-        "displayOrder": 167,
+        "displayOrder": 10,
         "createdAt": "2026-03-21T01:38:32.6938868\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7990171\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866384\u002B03:00"
       },
       {
         "id": "cea3aa44-148b-4b30-9648-c7ea00fc0e8d",
@@ -4963,9 +4945,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "PROJE \u00DCZER\u0130NDEN D\u00DCZELT\u0130LECEK. 30.09.2024 DEN\u0130Z KIRMIZIG\u00DCLE A-B-C-D BLOK M\u0130MAR\u0130LER VER\u0130LD\u0130.",
         "description2": "03.12.2024 BELED\u0130YEDEN ALINDI AR\u015E\u0130VE KONULDU.",
-        "displayOrder": 168,
+        "displayOrder": 11,
         "createdAt": "2026-03-21T01:38:32.6940298\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7990463\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866385\u002B03:00"
       },
       {
         "id": "e723c957-1a3f-4e94-9eda-dadb8e7620ce",
@@ -4981,9 +4963,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 169,
+        "displayOrder": 12,
         "createdAt": "2026-03-21T01:38:32.694172\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7990751\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866385\u002B03:00"
       },
       {
         "id": "e4598df8-4023-4fee-8b56-bcf8342fa1b8",
@@ -4999,9 +4981,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "PROJE \u00DCZER\u0130NE YAPI\u015ETIRILACAK.",
         "description2": "",
-        "displayOrder": 170,
+        "displayOrder": 13,
         "createdAt": "2026-03-21T01:38:32.6943144\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7991033\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866386\u002B03:00"
       },
       {
         "id": "d506edb0-dd2c-48bb-aef4-2eaa68600cdb",
@@ -5017,9 +4999,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 171,
+        "displayOrder": 14,
         "createdAt": "2026-03-21T01:38:32.6944564\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7991319\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866386\u002B03:00"
       },
       {
         "id": "827d84bf-a5a8-4458-b020-21a167cc9c12",
@@ -5035,9 +5017,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "G\u0130R\u0130\u015E KAPISI B\u0130NA H\u0130ZASI \u0130E SIFIRLANACAK.",
         "description2": "DEN\u0130Z KIRMIZIG\u00DCL EL \u0130LE D\u00DCZELTECEK.",
-        "displayOrder": 172,
+        "displayOrder": 15,
         "createdAt": "2026-03-21T01:38:32.6945992\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7991599\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866387\u002B03:00"
       },
       {
         "id": "10fdb346-6293-4a0d-bdaa-15a4003b7bf6",
@@ -5053,9 +5035,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 173,
+        "displayOrder": 16,
         "createdAt": "2026-03-21T01:38:32.6947409\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7991884\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866387\u002B03:00"
       },
       {
         "id": "6a9e4b8f-8594-4c9e-b021-103bb4b99756",
@@ -5071,9 +5053,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "16.06.2025 BELED\u0130YEYLE G\u00D6R\u00DC\u015E\u00DCLD\u00DC. HESAP RAPORU DE\u011E\u0130\u015EEN KISMI ESK\u0130S\u0130N\u0130N YER\u0130NE TAKILACAK. AR\u015E\u0130VDE TAKILDI.",
         "description2": "",
-        "displayOrder": 174,
+        "displayOrder": 17,
         "createdAt": "2026-03-21T01:38:32.6948871\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7992213\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866387\u002B03:00"
       },
       {
         "id": "92d57bf5-339c-4b04-8844-11dd3e055f78",
@@ -5089,9 +5071,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 175,
+        "displayOrder": 18,
         "createdAt": "2026-03-21T01:38:32.6950294\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7992516\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866388\u002B03:00"
       },
       {
         "id": "bda2ba95-dc9c-4535-bb06-29feedcdff5f",
@@ -5107,9 +5089,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "ELLE D\u00DCZELT\u0130LD\u0130.",
         "description2": "",
-        "displayOrder": 176,
+        "displayOrder": 19,
         "createdAt": "2026-03-21T01:38:32.6951719\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7992864\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866388\u002B03:00"
       },
       {
         "id": "f9dbb140-7f3e-486e-a5c9-343fabcd99a1",
@@ -5125,9 +5107,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "DEN\u0130Z KIRMIZIG\u00DCLE VER\u0130LD\u0130.",
         "description2": "AYNI G\u00DCN ALINDI. 13.05.2025",
-        "displayOrder": 177,
+        "displayOrder": 20,
         "createdAt": "2026-03-21T01:38:32.6953141\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7993152\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866389\u002B03:00"
       },
       {
         "id": "f7d2ddb0-abac-498f-9ea5-dfad0938abc5",
@@ -5143,9 +5125,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 178,
+        "displayOrder": 21,
         "createdAt": "2026-03-21T01:38:32.6954549\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7993441\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866389\u002B03:00"
       },
       {
         "id": "f30305ac-ab62-4216-b0bb-be03db4c4a1b",
@@ -5161,9 +5143,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 179,
+        "displayOrder": 22,
         "createdAt": "2026-03-21T01:38:32.6955968\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7993728\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.286639\u002B03:00"
       },
       {
         "id": "fbe8bfac-7de9-4766-890c-c93b48dc0304",
@@ -5179,9 +5161,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 180,
+        "displayOrder": 23,
         "createdAt": "2026-03-21T01:38:32.6957386\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7994004\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.286639\u002B03:00"
       },
       {
         "id": "0f502fbd-b187-4fc1-9979-a9bb0d50c5f1",
@@ -5197,9 +5179,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "ISITMA VE SIHH\u0130 TES\u0130SAT PROJELER\u0130",
         "description2": "",
-        "displayOrder": 181,
+        "displayOrder": 24,
         "createdAt": "2026-03-21T01:38:32.6958811\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7994292\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866391\u002B03:00"
       },
       {
         "id": "805ecd56-e841-4d34-8d09-48fdf1cc9b78",
@@ -5215,9 +5197,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 182,
+        "displayOrder": 25,
         "createdAt": "2026-03-21T01:38:32.6960225\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7994585\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866391\u002B03:00"
       },
       {
         "id": "b42d594e-1e86-4f6c-b590-ddfd0775c995",
@@ -5233,9 +5215,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 183,
+        "displayOrder": 26,
         "createdAt": "2026-03-21T01:38:32.6961642\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7994864\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866391\u002B03:00"
       },
       {
         "id": "bd70ac86-3aba-46e0-b4c1-5bc0bf45fb0b",
@@ -5251,9 +5233,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 184,
+        "displayOrder": 27,
         "createdAt": "2026-03-21T01:38:32.6963046\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7995151\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866392\u002B03:00"
       },
       {
         "id": "dd360036-6c40-4ba6-bb0e-a1819deb4c70",
@@ -5269,9 +5251,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 185,
+        "displayOrder": 28,
         "createdAt": "2026-03-21T01:38:32.6964447\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7995441\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866392\u002B03:00"
       },
       {
         "id": "c88257e5-a1e8-4962-864e-25582952865b",
@@ -5287,9 +5269,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "DE\u011E\u0130\u015E TOKU\u015E YAPILACAK DEND\u0130. ARDINDAN BELED\u0130YE TAD\u0130LAT RAPORU VE \u00DCST YAZI \u0130STED\u0130.",
         "description2": "",
-        "displayOrder": 186,
+        "displayOrder": 29,
         "createdAt": "2026-03-21T01:38:32.6965857\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7995723\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866393\u002B03:00"
       },
       {
         "id": "9174061f-f814-49ac-bb57-ef3abbabf366",
@@ -5305,9 +5287,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "\u0130ST\u0130NAT \u0130MAL ED\u0130LD\u0130KTEN SONRA PROJE TAD\u0130LAT ED\u0130LECEK.",
         "description2": "PROJELER GELD\u0130 \u0130MZALANDI DEN\u0130Z KIRMIZIG\u00DCLE VER\u0130LD\u0130.",
-        "displayOrder": 187,
+        "displayOrder": 30,
         "createdAt": "2026-03-21T01:38:32.6967272\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7996019\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866393\u002B03:00"
       },
       {
         "id": "0cc7a7e2-1370-4ed3-95f9-bc3cc345b026",
@@ -5323,9 +5305,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "25.04.2025 TAR\u0130H\u0130NDE CEME 2 M\u0130MAR\u0130 PAFTA D\u00DCZELT\u0130LMES\u0130 \u0130\u00C7\u0130N VER\u0130LD\u0130.",
         "description2": "28.04.2025 GER\u0130 ALINDI.",
-        "displayOrder": 188,
+        "displayOrder": 31,
         "createdAt": "2026-03-21T01:38:32.6968704\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7996303\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866394\u002B03:00"
       },
       {
         "id": "492f9162-7bd7-4121-ba13-efd746f01b7b",
@@ -5341,9 +5323,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 189,
+        "displayOrder": 32,
         "createdAt": "2026-03-21T01:38:32.6970171\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7996591\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866395\u002B03:00"
       },
       {
         "id": "ac5f9008-6697-4d8b-8709-7b27812283bd",
@@ -5359,9 +5341,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 190,
+        "displayOrder": 33,
         "createdAt": "2026-03-21T01:38:32.6971593\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7996878\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866395\u002B03:00"
       },
       {
         "id": "b3eb9f36-c69c-4a9d-b524-b1aa532c7cad",
@@ -5377,9 +5359,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "ELLE D\u00DCZELT\u0130LECEK.",
         "description2": "15.09.2025 TAR\u0130H\u0130NDE CEMALETT\u0130N ERSOY VE SAL\u0130M AKBA\u015EA 2 ADET PAFTA 2 VER\u0130LD\u0130.",
-        "displayOrder": 191,
+        "displayOrder": 34,
         "createdAt": "2026-03-21T01:38:32.697301\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7997158\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866396\u002B03:00"
       },
       {
         "id": "1b3c2783-1c28-4401-8133-08ed569e83d1",
@@ -5395,9 +5377,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 192,
+        "displayOrder": 35,
         "createdAt": "2026-03-21T01:38:32.6974475\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7997494\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866396\u002B03:00"
       },
       {
         "id": "79548bd6-1961-444d-bb91-221fcb80895a",
@@ -5413,9 +5395,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 193,
+        "displayOrder": 36,
         "createdAt": "2026-03-21T01:38:32.6975885\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7997797\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866397\u002B03:00"
       },
       {
         "id": "0c1f5bfe-4454-41ef-b138-3e0ff54fffb5",
@@ -5431,9 +5413,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "TAD\u0130LAT RAPORU VAR.",
         "description2": "",
-        "displayOrder": 194,
+        "displayOrder": 37,
         "createdAt": "2026-03-21T01:38:32.6977306\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.799808\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866397\u002B03:00"
       },
       {
         "id": "2e741f47-4d69-4c8d-964a-6d7133bf1f54",
@@ -5449,9 +5431,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "M\u0130MAR\u0130 VE STAT\u0130K 1,2,3 PAFTALAR 01.05.2025 TAR\u0130H\u0130NDE CEME VER\u0130LD\u0130.",
         "description2": "DENET\u0130M \u00D6NCES\u0130NDE KONTROLE G\u0130D\u0130LD\u0130 ARDINDAN TAD\u0130LAT YAPILMASI \u0130STEND\u0130.",
-        "displayOrder": 195,
+        "displayOrder": 38,
         "createdAt": "2026-03-21T01:38:32.6978722\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7998374\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866397\u002B03:00"
       },
       {
         "id": "edb1258f-ea67-46f3-8efb-fc72a162b84f",
@@ -5467,9 +5449,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "08.01.2026 TAR\u0130H\u0130NDE DEN\u0130Z KIRMIZIG\u00DCLE AR\u015E\u0130VDEN 2 M\u0130MAR\u0130 PROJE EL \u00DCZER\u0130NDEN D\u00DCZELT\u0130LMES\u0130 \u0130\u00C7\u0130N VER\u0130LD\u0130.",
         "description2": "",
-        "displayOrder": 196,
+        "displayOrder": 39,
         "createdAt": "2026-03-21T01:38:32.6980184\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7998667\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866399\u002B03:00"
       },
       {
         "id": "65a37142-54f1-41b6-b8f6-1d053ad23cc7",
@@ -5485,9 +5467,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "ELLE D\u00DCZELT\u0130LECEK.",
         "description2": "07.11.2024 TAR\u0130H\u0130NDE SEM\u0130H APUL \u0130N\u015EAATA DEVAM ETMED\u0130KLER\u0130N\u0130 S\u00D6YLED\u0130. 19.02.2026 2 ADET M\u0130MAR\u0130 N\u0130SAYA VER\u0130LD\u0130.",
-        "displayOrder": 197,
+        "displayOrder": 40,
         "createdAt": "2026-03-21T01:38:32.6981622\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.799895\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866399\u002B03:00"
       },
       {
         "id": "6cb17bf2-5300-4db0-bc9d-c1b54cb9ceb1",
@@ -5503,9 +5485,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "ELLE D\u00DCZELT\u0130LECEK.",
         "description2": "19.02.2026 2 \u015EER ADET STAT\u0130K S1 S2 N\u0130SAYA VER\u0130LD\u0130.",
-        "displayOrder": 198,
+        "displayOrder": 41,
         "createdAt": "2026-03-21T01:38:32.6983075\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7999235\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.28664\u002B03:00"
       },
       {
         "id": "3e50a783-11b5-4109-b576-239a0e84eecc",
@@ -5521,9 +5503,9 @@
         "archivedFromMunicipality": "MUAF",
         "description1": "BODRUM KAT Y\u00DCKSEKL\u0130\u011E\u0130 DE\u011E\u0130\u015ET\u0130.",
         "description2": "",
-        "displayOrder": 199,
+        "displayOrder": 42,
         "createdAt": "2026-03-21T01:38:32.6829167\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7999513\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866401\u002B03:00"
       },
       {
         "id": "061cfe69-1562-41ee-9812-5d7b31fe6202",
@@ -5539,9 +5521,9 @@
         "archivedFromMunicipality": "MUAF",
         "description1": "",
         "description2": "",
-        "displayOrder": 200,
+        "displayOrder": 43,
         "createdAt": "2026-03-21T01:38:32.682957\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.7999806\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866401\u002B03:00"
       },
       {
         "id": "bef25f72-3ea4-428e-bc4a-65731cbd1f9e",
@@ -5557,9 +5539,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 201,
+        "displayOrder": 44,
         "createdAt": "2026-03-21T01:38:32.6829951\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.8000102\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866402\u002B03:00"
       },
       {
         "id": "a65abfd7-706d-4eb7-a4a6-e671c483b763",
@@ -5575,9 +5557,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "normal yap\u0131da kot kesit ile arazi kotlar\u0131 uyumsuzduo y\u00FCzden temeli 1m daha a\u015Fag\u0131ya indik kot kesite g\u00F6re 1 m havadayd\u0131 temel",
         "description2": "",
-        "displayOrder": 202,
+        "displayOrder": 45,
         "createdAt": "2026-03-21T01:38:32.683023\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.8000374\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866402\u002B03:00"
       },
       {
         "id": "cbb3142c-9168-4269-be35-cb205ecdce7c",
@@ -5593,9 +5575,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "\u0130stinat projesine istinat 5 eklendi",
         "description2": "",
-        "displayOrder": 203,
+        "displayOrder": 46,
         "createdAt": "2026-03-21T01:38:32.6830505\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.8000659\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866402\u002B03:00"
       },
       {
         "id": "776f89b7-a7c4-4173-ba31-b86e7c8b481d",
@@ -5611,9 +5593,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "PERDE KALDIRILDI.",
         "description2": "",
-        "displayOrder": 204,
+        "displayOrder": 47,
         "createdAt": "2026-05-20T15:43:52.7171886\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.8000945\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866403\u002B03:00"
       },
       {
         "id": "4f6297ca-1523-49fa-afec-c7b995e96fa8",
@@ -5629,9 +5611,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 205,
+        "displayOrder": 48,
         "createdAt": "2026-05-18T16:44:16.8688407\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.8001236\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866403\u002B03:00"
       },
       {
         "id": "8c2127af-06bb-4d11-8e19-92303bea3bed",
@@ -5647,9 +5629,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 206,
+        "displayOrder": 49,
         "createdAt": "2026-05-05T16:28:09.7978989\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.8001526\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866404\u002B03:00"
       },
       {
         "id": "a3c94bc4-c96d-4374-bdf4-999126dd8f3b",
@@ -5665,9 +5647,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 207,
+        "displayOrder": 50,
         "createdAt": "2026-05-05T16:28:11.1044561\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.8001809\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866404\u002B03:00"
       },
       {
         "id": "03268f49-3b76-4ffc-9f76-60ed74175572",
@@ -5683,9 +5665,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "BODRUM VE ZEM\u0130N TAVANDAK\u0130 D-E AKSI ARASINDA KALAN BALKON UZATILDI. ELLE D\u00DCZELT\u0130LECEK.",
         "description2": "2 ADET M\u0130MAR\u0130 VE 2 ADET PAFTA 3 EMRAH K\u00D6\u015ETEO\u011ELUNA VER\u0130LD\u0130.",
-        "displayOrder": 208,
+        "displayOrder": 51,
         "createdAt": "2026-03-21T01:38:32.6830774\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.8002082\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866405\u002B03:00"
       },
       {
         "id": "7f29ad80-06ef-436c-98b5-e890a05fe364",
@@ -5701,9 +5683,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "BODRUM VE ZEM\u0130N TAVANDAK\u0130 D-E AKSI ARASINDA KALAN BALKON UZATILDI. ELLE D\u00DCZELT\u0130LECEK.",
         "description2": "2 ADET M\u0130MAR\u0130 VE 2 ADET PAFTA 3 EMRAH K\u00D6\u015ETEO\u011ELUNA VER\u0130LD\u0130.",
-        "displayOrder": 209,
+        "displayOrder": 52,
         "createdAt": "2026-03-21T01:38:32.6831038\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.8002371\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866405\u002B03:00"
       },
       {
         "id": "fd9dfcb9-4761-4d6e-a45e-74ece8f0fdbe",
@@ -5719,9 +5701,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 210,
+        "displayOrder": 53,
         "createdAt": "2026-05-05T16:28:11.8384656\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.8002655\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866406\u002B03:00"
       },
       {
         "id": "19bdd268-67bb-4e82-935a-2fdbb687269c",
@@ -5737,9 +5719,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 211,
+        "displayOrder": 54,
         "createdAt": "2026-06-15T14:08:38.8361041\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.8002933\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866406\u002B03:00"
       },
       {
         "id": "0ef5acd8-1202-40f1-9a69-039b60706378",
@@ -5755,9 +5737,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 212,
+        "displayOrder": 55,
         "createdAt": "2026-07-06T15:21:39.4474477\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.8003215\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866407\u002B03:00"
       },
       {
         "id": "a2dec8b2-0ab2-4e5a-b70a-e47e5b28be76",
@@ -5773,9 +5755,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 213,
+        "displayOrder": 56,
         "createdAt": "2026-07-06T15:21:40.5949\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.8003493\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866407\u002B03:00"
       },
       {
         "id": "b314d15d-b9f1-4d38-8140-0f358d3bf61d",
@@ -5791,9 +5773,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "O\u011EUZ AB\u0130 VE SEFA AB\u0130 SOLDAK\u0130 \u0130ST\u0130NATI MEVCUT \u0130ST\u0130NAT D\u0130YE PROJELER\u0130NDEN ELLE D\u00DCZELTECEK",
         "description2": "",
-        "displayOrder": 214,
+        "displayOrder": 57,
         "createdAt": "2026-03-21T01:38:32.6827524\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.8003774\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866407\u002B03:00"
       },
       {
         "id": "c02ce1ee-1eaa-4d53-8b10-30f562b4c6c4",
@@ -5809,9 +5791,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 215,
+        "displayOrder": 58,
         "createdAt": "2026-05-20T15:24:55.794619\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.800406\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866408\u002B03:00"
       },
       {
         "id": "a703ba1e-7809-40da-8a9b-a7884d591422",
@@ -5827,9 +5809,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 216,
+        "displayOrder": 59,
         "createdAt": "2026-05-20T15:25:35.3246329\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.8004357\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866408\u002B03:00"
       },
       {
         "id": "29b4d086-2b21-4b1a-88b2-aaa18ca8fc32",
@@ -5845,9 +5827,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 217,
+        "displayOrder": 60,
         "createdAt": "2026-05-20T15:25:36.5339159\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.8004641\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866409\u002B03:00"
       },
       {
         "id": "6a07078b-6608-477e-8a93-7f790c7b42cf",
@@ -5863,9 +5845,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "1 TANE STAT\u0130K LEVENTE VER\u0130LD\u0130. ELLE D\u00DCZELT\u0130LECEK. 06.08.2026",
         "description2": "",
-        "displayOrder": 218,
+        "displayOrder": 61,
         "createdAt": "2026-08-06T15:11:46.0274534\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.8004936\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866409\u002B03:00"
       },
       {
         "id": "d098afd2-efd2-4105-8840-8b90c906f76d",
@@ -5881,9 +5863,9 @@
         "archivedFromMunicipality": "MUAF",
         "description1": "M\u0130MAR\u0130 TAD\u0130LAT PROJES\u0130 BEKLEN\u0130YOR.",
         "description2": "YOL BA\u011ELANTI PROJES\u0130 YAPILINCA BU \u0130PTAL OLDU.",
-        "displayOrder": 219,
+        "displayOrder": 62,
         "createdAt": "2026-04-18T14:01:00.9158078\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.8005212\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.286641\u002B03:00"
       },
       {
         "id": "54c668e0-7b80-45a3-af21-7d03c9cf9a91",
@@ -5899,9 +5881,9 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 220,
+        "displayOrder": 63,
         "createdAt": "2026-04-24T15:11:53.2778749\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.8005505\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.286641\u002B03:00"
       },
       {
         "id": "c96f811f-2d76-49f5-9aa6-23061b84207c",
@@ -5917,9 +5899,27 @@
         "archivedFromMunicipality": "EVET",
         "description1": "",
         "description2": "",
-        "displayOrder": 221,
+        "displayOrder": 64,
         "createdAt": "2026-04-27T16:48:19.4706208\u002B03:00",
-        "updatedAt": "2026-09-03T00:35:04.8005802\u002B03:00"
+        "updatedAt": "2026-09-03T15:27:18.2866411\u002B03:00"
+      },
+      {
+        "id": "ffb6b171-10af-4f71-9939-3fc0168f7c5b",
+        "projectId": "efa43f87-8c73-46e7-9630-c39df3908f77",
+        "subTab": 1,
+        "district": "S\u0130NOP",
+        "jobName": "575-6 REFAHAT A\u00C7IKG\u00D6Z",
+        "projectType": "STAT\u0130K",
+        "digitalReceived": "MUAF",
+        "inspectorApproved": "EVET",
+        "outputAndReportArrived": "MUAF",
+        "officialLetterSubmitted": "MUAF",
+        "archivedFromMunicipality": "EVET",
+        "description1": "ELLE D\u00DCZELT\u0130LECEK.",
+        "description2": "",
+        "displayOrder": 65,
+        "createdAt": "2026-08-31T17:28:37.8476322\u002B03:00",
+        "updatedAt": "2026-09-03T15:27:18.2866439\u002B03:00"
       },
       {
         "id": "3dcd5140-e474-4e85-bae3-90932a1273f6",
@@ -36549,6 +36549,60 @@
         "columnKey": "OfficialLetterSubmitted",
         "backgroundColor": "",
         "noteText": "\u00C7\u00DCNK\u00DC RUHSAT BA\u015EVURUSU YEN\u0130 YAPILACAK."
+      },
+      {
+        "entryId": "ffb6b171-10af-4f71-9939-3fc0168f7c5b",
+        "columnKey": "InspectorApproved",
+        "backgroundColor": "#FF4F81BD",
+        "noteText": ""
+      },
+      {
+        "entryId": "ffb6b171-10af-4f71-9939-3fc0168f7c5b",
+        "columnKey": "JobName",
+        "backgroundColor": "#FF4F81BD",
+        "noteText": ""
+      },
+      {
+        "entryId": "ffb6b171-10af-4f71-9939-3fc0168f7c5b",
+        "columnKey": "ProjectType",
+        "backgroundColor": "#FF4F81BD",
+        "noteText": ""
+      },
+      {
+        "entryId": "ffb6b171-10af-4f71-9939-3fc0168f7c5b",
+        "columnKey": "DigitalReceived",
+        "backgroundColor": "#FF4F81BD",
+        "noteText": ""
+      },
+      {
+        "entryId": "ffb6b171-10af-4f71-9939-3fc0168f7c5b",
+        "columnKey": "OutputAndReportArrived",
+        "backgroundColor": "#FF4F81BD",
+        "noteText": ""
+      },
+      {
+        "entryId": "ffb6b171-10af-4f71-9939-3fc0168f7c5b",
+        "columnKey": "OfficialLetterSubmitted",
+        "backgroundColor": "#FF4F81BD",
+        "noteText": ""
+      },
+      {
+        "entryId": "ffb6b171-10af-4f71-9939-3fc0168f7c5b",
+        "columnKey": "ArchivedFromMunicipality",
+        "backgroundColor": "#FF4F81BD",
+        "noteText": ""
+      },
+      {
+        "entryId": "ffb6b171-10af-4f71-9939-3fc0168f7c5b",
+        "columnKey": "Description1",
+        "backgroundColor": "#FF4F81BD",
+        "noteText": ""
+      },
+      {
+        "entryId": "ffb6b171-10af-4f71-9939-3fc0168f7c5b",
+        "columnKey": "Description2",
+        "backgroundColor": "#FF4F81BD",
+        "noteText": ""
       }
     ],
     "projectCatalogEntries": [
@@ -42045,6 +42099,53 @@
         ]
       },
       {
+        "headerText": "180-67 - \u0130BRAH\u0130M \u015EENER",
+        "detailText": "Y\u0130BF: 2076229 | M\u00FCteahhit: HASAN \u0130NCE \u0130NCE PRES VE \u0130N\u015EAAT",
+        "adaParsel": "180-67",
+        "yapiSahibi": "\u0130BRAH\u0130M \u015EENER",
+        "matchStatus": "Matched",
+        "eksikCount": 3,
+        "criticalCount": 1,
+        "items": [
+          {
+            "sourceModule": "Tadilat",
+            "fieldLabel": "\u00C7\u0131kt\u0131 ve tadilat raporu b\u00FCroya geldi mi?",
+            "reason": "\u00C7\u0131kt\u0131/rapor gelmedi",
+            "currentValue": "MUAF",
+            "noteText": "rizacuan:\r\nPROJE \u00DCZER\u0130NDE D\u00DCZELT\u0130LECEK",
+            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 180-67 \u0130BRAH\u0130M \u015EENER | Proje T\u00FCr\u00FC: \u0130ST\u0130NAT | A\u00E7\u0131klama: O\u011EUZ AB\u0130 VE SEFA AB\u0130 SOLDAK\u0130 \u0130ST\u0130NATI MEVCUT \u0130ST\u0130NAT D\u0130YE PROJELER\u0130NDEN ELLE D\u00DCZELTECEK",
+            "assignedPersonnelBadge": "",
+            "severity": "Critical",
+            "severityLabel": "KR\u0130T\u0130K",
+            "updatedAt": "2026-09-03T15:27:18.2866126+03:00"
+          },
+          {
+            "sourceModule": "Tadilat",
+            "fieldLabel": "Projeler belediyeden al\u0131n\u0131p ar\u015Five konuldu mu?",
+            "reason": "Bo\u015F takip alan\u0131",
+            "currentValue": "(Bo\u015F)",
+            "noteText": "",
+            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 180-67 \u0130BRAH\u0130M \u015EENER | Proje T\u00FCr\u00FC: \u0130ST\u0130NAT | A\u00E7\u0131klama: O\u011EUZ AB\u0130 VE SEFA AB\u0130 SOLDAK\u0130 \u0130ST\u0130NATI MEVCUT \u0130ST\u0130NAT D\u0130YE PROJELER\u0130NDEN ELLE D\u00DCZELTECEK",
+            "assignedPersonnelBadge": "",
+            "severity": "BlankRequired",
+            "severityLabel": "BO\u015E",
+            "updatedAt": "2026-09-03T15:27:18.2866126+03:00"
+          },
+          {
+            "sourceModule": "Tadilat",
+            "fieldLabel": "\u00DCst yaz\u0131 belediyeye teslim edildi mi?",
+            "reason": "Bo\u015F takip alan\u0131",
+            "currentValue": "(Bo\u015F)",
+            "noteText": "",
+            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 180-67 \u0130BRAH\u0130M \u015EENER | Proje T\u00FCr\u00FC: \u0130ST\u0130NAT | A\u00E7\u0131klama: O\u011EUZ AB\u0130 VE SEFA AB\u0130 SOLDAK\u0130 \u0130ST\u0130NATI MEVCUT \u0130ST\u0130NAT D\u0130YE PROJELER\u0130NDEN ELLE D\u00DCZELTECEK",
+            "assignedPersonnelBadge": "",
+            "severity": "BlankRequired",
+            "severityLabel": "BO\u015E",
+            "updatedAt": "2026-09-03T15:27:18.2866126+03:00"
+          }
+        ]
+      },
+      {
         "headerText": "435-7 - CEM\u0130L YILDIRIM",
         "detailText": "Y\u0130BF: 2589102 | M\u00FCteahhit: CEM\u0130L YILDIRIM",
         "adaParsel": "435-7",
@@ -42088,53 +42189,6 @@
             "severity": "Warning",
             "severityLabel": "UYARI",
             "updatedAt": "2026-09-03T00:35:04.7851086+03:00"
-          }
-        ]
-      },
-      {
-        "headerText": "180-67 - \u0130BRAH\u0130M \u015EENER",
-        "detailText": "Y\u0130BF: 2076229 | M\u00FCteahhit: HASAN \u0130NCE \u0130NCE PRES VE \u0130N\u015EAAT",
-        "adaParsel": "180-67",
-        "yapiSahibi": "\u0130BRAH\u0130M \u015EENER",
-        "matchStatus": "Matched",
-        "eksikCount": 3,
-        "criticalCount": 1,
-        "items": [
-          {
-            "sourceModule": "Tadilat",
-            "fieldLabel": "\u00C7\u0131kt\u0131 ve tadilat raporu b\u00FCroya geldi mi?",
-            "reason": "\u00C7\u0131kt\u0131/rapor gelmedi",
-            "currentValue": "MUAF",
-            "noteText": "rizacuan:\r\nPROJE \u00DCZER\u0130NDE D\u00DCZELT\u0130LECEK",
-            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 180-67 \u0130BRAH\u0130M \u015EENER | Proje T\u00FCr\u00FC: \u0130ST\u0130NAT | A\u00E7\u0131klama: O\u011EUZ AB\u0130 VE SEFA AB\u0130 SOLDAK\u0130 \u0130ST\u0130NATI MEVCUT \u0130ST\u0130NAT D\u0130YE PROJELER\u0130NDEN ELLE D\u00DCZELTECEK",
-            "assignedPersonnelBadge": "",
-            "severity": "Critical",
-            "severityLabel": "KR\u0130T\u0130K",
-            "updatedAt": "2026-09-03T00:35:04.7952786+03:00"
-          },
-          {
-            "sourceModule": "Tadilat",
-            "fieldLabel": "Projeler belediyeden al\u0131n\u0131p ar\u015Five konuldu mu?",
-            "reason": "Bo\u015F takip alan\u0131",
-            "currentValue": "(Bo\u015F)",
-            "noteText": "",
-            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 180-67 \u0130BRAH\u0130M \u015EENER | Proje T\u00FCr\u00FC: \u0130ST\u0130NAT | A\u00E7\u0131klama: O\u011EUZ AB\u0130 VE SEFA AB\u0130 SOLDAK\u0130 \u0130ST\u0130NATI MEVCUT \u0130ST\u0130NAT D\u0130YE PROJELER\u0130NDEN ELLE D\u00DCZELTECEK",
-            "assignedPersonnelBadge": "",
-            "severity": "BlankRequired",
-            "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7952786+03:00"
-          },
-          {
-            "sourceModule": "Tadilat",
-            "fieldLabel": "\u00DCst yaz\u0131 belediyeye teslim edildi mi?",
-            "reason": "Bo\u015F takip alan\u0131",
-            "currentValue": "(Bo\u015F)",
-            "noteText": "",
-            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 180-67 \u0130BRAH\u0130M \u015EENER | Proje T\u00FCr\u00FC: \u0130ST\u0130NAT | A\u00E7\u0131klama: O\u011EUZ AB\u0130 VE SEFA AB\u0130 SOLDAK\u0130 \u0130ST\u0130NATI MEVCUT \u0130ST\u0130NAT D\u0130YE PROJELER\u0130NDEN ELLE D\u00DCZELTECEK",
-            "assignedPersonnelBadge": "",
-            "severity": "BlankRequired",
-            "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7952786+03:00"
           }
         ]
       },
@@ -43530,7 +43584,7 @@
             "assignedPersonnelBadge": "",
             "severity": "Warning",
             "severityLabel": "UYARI",
-            "updatedAt": "2026-09-03T00:35:04.7954263+03:00"
+            "updatedAt": "2026-09-03T15:27:18.2866137+03:00"
           },
           {
             "sourceModule": "Tadilat",
@@ -43542,7 +43596,7 @@
             "assignedPersonnelBadge": "",
             "severity": "BlankRequired",
             "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7954861+03:00"
+            "updatedAt": "2026-09-03T15:27:18.2866139+03:00"
           },
           {
             "sourceModule": "Tadilat",
@@ -43554,7 +43608,7 @@
             "assignedPersonnelBadge": "",
             "severity": "BlankRequired",
             "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7954861+03:00"
+            "updatedAt": "2026-09-03T15:27:18.2866139+03:00"
           },
           {
             "sourceModule": "Tadilat",
@@ -43566,7 +43620,7 @@
             "assignedPersonnelBadge": "",
             "severity": "BlankRequired",
             "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7954861+03:00"
+            "updatedAt": "2026-09-03T15:27:18.2866139+03:00"
           },
           {
             "sourceModule": "Tadilat",
@@ -43578,7 +43632,7 @@
             "assignedPersonnelBadge": "",
             "severity": "BlankRequired",
             "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7954861+03:00"
+            "updatedAt": "2026-09-03T15:27:18.2866139+03:00"
           },
           {
             "sourceModule": "Tadilat",
@@ -43590,7 +43644,7 @@
             "assignedPersonnelBadge": "",
             "severity": "BlankRequired",
             "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7954861+03:00"
+            "updatedAt": "2026-09-03T15:27:18.2866139+03:00"
           },
           {
             "sourceModule": "Tadilat",
@@ -43602,7 +43656,7 @@
             "assignedPersonnelBadge": "",
             "severity": "BlankRequired",
             "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7954565+03:00"
+            "updatedAt": "2026-09-03T15:27:18.2866138+03:00"
           },
           {
             "sourceModule": "Tadilat",
@@ -43614,7 +43668,7 @@
             "assignedPersonnelBadge": "",
             "severity": "BlankRequired",
             "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7954565+03:00"
+            "updatedAt": "2026-09-03T15:27:18.2866138+03:00"
           },
           {
             "sourceModule": "Tadilat",
@@ -43626,7 +43680,7 @@
             "assignedPersonnelBadge": "",
             "severity": "BlankRequired",
             "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7954565+03:00"
+            "updatedAt": "2026-09-03T15:27:18.2866138+03:00"
           },
           {
             "sourceModule": "Tadilat",
@@ -43638,7 +43692,7 @@
             "assignedPersonnelBadge": "",
             "severity": "BlankRequired",
             "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7954565+03:00"
+            "updatedAt": "2026-09-03T15:27:18.2866138+03:00"
           },
           {
             "sourceModule": "Tadilat",
@@ -43650,7 +43704,7 @@
             "assignedPersonnelBadge": "",
             "severity": "BlankRequired",
             "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7954565+03:00"
+            "updatedAt": "2026-09-03T15:27:18.2866138+03:00"
           },
           {
             "sourceModule": "Tadilat",
@@ -43662,7 +43716,7 @@
             "assignedPersonnelBadge": "",
             "severity": "BlankRequired",
             "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7954263+03:00"
+            "updatedAt": "2026-09-03T15:27:18.2866137+03:00"
           },
           {
             "sourceModule": "Tadilat",
@@ -43674,7 +43728,7 @@
             "assignedPersonnelBadge": "",
             "severity": "BlankRequired",
             "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7954263+03:00"
+            "updatedAt": "2026-09-03T15:27:18.2866137+03:00"
           },
           {
             "sourceModule": "Tadilat",
@@ -43686,7 +43740,7 @@
             "assignedPersonnelBadge": "",
             "severity": "BlankRequired",
             "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7954263+03:00"
+            "updatedAt": "2026-09-03T15:27:18.2866137+03:00"
           }
         ]
       },
@@ -44259,6 +44313,137 @@
             "severity": "BlankRequired",
             "severityLabel": "BO\u015E",
             "updatedAt": "2026-09-03T00:35:04.7942531+03:00"
+          }
+        ]
+      },
+      {
+        "headerText": "439-4 - FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130",
+        "detailText": "Y\u0130BF: 2457158",
+        "adaParsel": "439-4",
+        "yapiSahibi": "FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130",
+        "matchStatus": "Matched",
+        "eksikCount": 10,
+        "criticalCount": 0,
+        "items": [
+          {
+            "sourceModule": "Tadilat",
+            "fieldLabel": "\u00C7\u0131kt\u0131 ve tadilat raporu b\u00FCroya geldi mi?",
+            "reason": "Bo\u015F takip alan\u0131",
+            "currentValue": "(Bo\u015F)",
+            "noteText": "",
+            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 439-4 FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130 | Proje T\u00FCr\u00FC: STAT\u0130K",
+            "assignedPersonnelBadge": "",
+            "severity": "BlankRequired",
+            "severityLabel": "BO\u015E",
+            "updatedAt": "2026-09-03T15:27:18.2866139+03:00"
+          },
+          {
+            "sourceModule": "Tadilat",
+            "fieldLabel": "Projeler belediyeden al\u0131n\u0131p ar\u015Five konuldu mu?",
+            "reason": "Bo\u015F takip alan\u0131",
+            "currentValue": "(Bo\u015F)",
+            "noteText": "",
+            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 439-4 FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130 | Proje T\u00FCr\u00FC: STAT\u0130K",
+            "assignedPersonnelBadge": "",
+            "severity": "BlankRequired",
+            "severityLabel": "BO\u015E",
+            "updatedAt": "2026-09-03T15:27:18.2866139+03:00"
+          },
+          {
+            "sourceModule": "Tadilat",
+            "fieldLabel": "Projenin dijitali geldi mi?",
+            "reason": "Bo\u015F takip alan\u0131",
+            "currentValue": "(Bo\u015F)",
+            "noteText": "",
+            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 439-4 FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130 | Proje T\u00FCr\u00FC: STAT\u0130K",
+            "assignedPersonnelBadge": "",
+            "severity": "BlankRequired",
+            "severityLabel": "BO\u015E",
+            "updatedAt": "2026-09-03T15:27:18.2866139+03:00"
+          },
+          {
+            "sourceModule": "Tadilat",
+            "fieldLabel": "Projeyi ilgili denet\u00E7i onaylad\u0131 m\u0131?",
+            "reason": "Bo\u015F takip alan\u0131",
+            "currentValue": "(Bo\u015F)",
+            "noteText": "",
+            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 439-4 FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130 | Proje T\u00FCr\u00FC: STAT\u0130K",
+            "assignedPersonnelBadge": "",
+            "severity": "BlankRequired",
+            "severityLabel": "BO\u015E",
+            "updatedAt": "2026-09-03T15:27:18.2866139+03:00"
+          },
+          {
+            "sourceModule": "Tadilat",
+            "fieldLabel": "\u00DCst yaz\u0131 belediyeye teslim edildi mi?",
+            "reason": "Bo\u015F takip alan\u0131",
+            "currentValue": "(Bo\u015F)",
+            "noteText": "",
+            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 439-4 FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130 | Proje T\u00FCr\u00FC: STAT\u0130K",
+            "assignedPersonnelBadge": "",
+            "severity": "BlankRequired",
+            "severityLabel": "BO\u015E",
+            "updatedAt": "2026-09-03T15:27:18.2866139+03:00"
+          },
+          {
+            "sourceModule": "Tadilat",
+            "fieldLabel": "\u00C7\u0131kt\u0131 ve tadilat raporu b\u00FCroya geldi mi?",
+            "reason": "Bo\u015F takip alan\u0131",
+            "currentValue": "(Bo\u015F)",
+            "noteText": "",
+            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 439-4 FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130 | Proje T\u00FCr\u00FC: MEKAN\u0130K | A\u00E7\u0131klama: BAKANLIK DENET\u0130M\u0130NDE TAD\u0130LAT ED\u0130LS\u0130N DEN\u0130LD\u0130. SEL\u00C7UK AB\u0130 YAPACAK.",
+            "assignedPersonnelBadge": "",
+            "severity": "BlankRequired",
+            "severityLabel": "BO\u015E",
+            "updatedAt": "2026-09-03T15:27:18.2866132+03:00"
+          },
+          {
+            "sourceModule": "Tadilat",
+            "fieldLabel": "Projeler belediyeden al\u0131n\u0131p ar\u015Five konuldu mu?",
+            "reason": "Bo\u015F takip alan\u0131",
+            "currentValue": "(Bo\u015F)",
+            "noteText": "",
+            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 439-4 FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130 | Proje T\u00FCr\u00FC: MEKAN\u0130K | A\u00E7\u0131klama: BAKANLIK DENET\u0130M\u0130NDE TAD\u0130LAT ED\u0130LS\u0130N DEN\u0130LD\u0130. SEL\u00C7UK AB\u0130 YAPACAK.",
+            "assignedPersonnelBadge": "",
+            "severity": "BlankRequired",
+            "severityLabel": "BO\u015E",
+            "updatedAt": "2026-09-03T15:27:18.2866132+03:00"
+          },
+          {
+            "sourceModule": "Tadilat",
+            "fieldLabel": "Projenin dijitali geldi mi?",
+            "reason": "Bo\u015F takip alan\u0131",
+            "currentValue": "(Bo\u015F)",
+            "noteText": "",
+            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 439-4 FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130 | Proje T\u00FCr\u00FC: MEKAN\u0130K | A\u00E7\u0131klama: BAKANLIK DENET\u0130M\u0130NDE TAD\u0130LAT ED\u0130LS\u0130N DEN\u0130LD\u0130. SEL\u00C7UK AB\u0130 YAPACAK.",
+            "assignedPersonnelBadge": "",
+            "severity": "BlankRequired",
+            "severityLabel": "BO\u015E",
+            "updatedAt": "2026-09-03T15:27:18.2866132+03:00"
+          },
+          {
+            "sourceModule": "Tadilat",
+            "fieldLabel": "Projeyi ilgili denet\u00E7i onaylad\u0131 m\u0131?",
+            "reason": "Bo\u015F takip alan\u0131",
+            "currentValue": "(Bo\u015F)",
+            "noteText": "",
+            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 439-4 FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130 | Proje T\u00FCr\u00FC: MEKAN\u0130K | A\u00E7\u0131klama: BAKANLIK DENET\u0130M\u0130NDE TAD\u0130LAT ED\u0130LS\u0130N DEN\u0130LD\u0130. SEL\u00C7UK AB\u0130 YAPACAK.",
+            "assignedPersonnelBadge": "",
+            "severity": "BlankRequired",
+            "severityLabel": "BO\u015E",
+            "updatedAt": "2026-09-03T15:27:18.2866132+03:00"
+          },
+          {
+            "sourceModule": "Tadilat",
+            "fieldLabel": "\u00DCst yaz\u0131 belediyeye teslim edildi mi?",
+            "reason": "Bo\u015F takip alan\u0131",
+            "currentValue": "(Bo\u015F)",
+            "noteText": "",
+            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 439-4 FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130 | Proje T\u00FCr\u00FC: MEKAN\u0130K | A\u00E7\u0131klama: BAKANLIK DENET\u0130M\u0130NDE TAD\u0130LAT ED\u0130LS\u0130N DEN\u0130LD\u0130. SEL\u00C7UK AB\u0130 YAPACAK.",
+            "assignedPersonnelBadge": "",
+            "severity": "BlankRequired",
+            "severityLabel": "BO\u015E",
+            "updatedAt": "2026-09-03T15:27:18.2866132+03:00"
           }
         ]
       },
@@ -46097,137 +46282,6 @@
         ]
       },
       {
-        "headerText": "439-4 - FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130",
-        "detailText": "Y\u0130BF: 2457158",
-        "adaParsel": "439-4",
-        "yapiSahibi": "FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130",
-        "matchStatus": "Matched",
-        "eksikCount": 10,
-        "criticalCount": 0,
-        "items": [
-          {
-            "sourceModule": "Tadilat",
-            "fieldLabel": "\u00C7\u0131kt\u0131 ve tadilat raporu b\u00FCroya geldi mi?",
-            "reason": "Bo\u015F takip alan\u0131",
-            "currentValue": "(Bo\u015F)",
-            "noteText": "",
-            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 439-4 FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130 | Proje T\u00FCr\u00FC: STAT\u0130K",
-            "assignedPersonnelBadge": "",
-            "severity": "BlankRequired",
-            "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7955448+03:00"
-          },
-          {
-            "sourceModule": "Tadilat",
-            "fieldLabel": "Projeler belediyeden al\u0131n\u0131p ar\u015Five konuldu mu?",
-            "reason": "Bo\u015F takip alan\u0131",
-            "currentValue": "(Bo\u015F)",
-            "noteText": "",
-            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 439-4 FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130 | Proje T\u00FCr\u00FC: STAT\u0130K",
-            "assignedPersonnelBadge": "",
-            "severity": "BlankRequired",
-            "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7955448+03:00"
-          },
-          {
-            "sourceModule": "Tadilat",
-            "fieldLabel": "Projenin dijitali geldi mi?",
-            "reason": "Bo\u015F takip alan\u0131",
-            "currentValue": "(Bo\u015F)",
-            "noteText": "",
-            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 439-4 FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130 | Proje T\u00FCr\u00FC: STAT\u0130K",
-            "assignedPersonnelBadge": "",
-            "severity": "BlankRequired",
-            "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7955448+03:00"
-          },
-          {
-            "sourceModule": "Tadilat",
-            "fieldLabel": "Projeyi ilgili denet\u00E7i onaylad\u0131 m\u0131?",
-            "reason": "Bo\u015F takip alan\u0131",
-            "currentValue": "(Bo\u015F)",
-            "noteText": "",
-            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 439-4 FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130 | Proje T\u00FCr\u00FC: STAT\u0130K",
-            "assignedPersonnelBadge": "",
-            "severity": "BlankRequired",
-            "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7955448+03:00"
-          },
-          {
-            "sourceModule": "Tadilat",
-            "fieldLabel": "\u00DCst yaz\u0131 belediyeye teslim edildi mi?",
-            "reason": "Bo\u015F takip alan\u0131",
-            "currentValue": "(Bo\u015F)",
-            "noteText": "",
-            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 439-4 FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130 | Proje T\u00FCr\u00FC: STAT\u0130K",
-            "assignedPersonnelBadge": "",
-            "severity": "BlankRequired",
-            "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7955448+03:00"
-          },
-          {
-            "sourceModule": "Tadilat",
-            "fieldLabel": "\u00C7\u0131kt\u0131 ve tadilat raporu b\u00FCroya geldi mi?",
-            "reason": "Bo\u015F takip alan\u0131",
-            "currentValue": "(Bo\u015F)",
-            "noteText": "",
-            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 439-4 FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130 | Proje T\u00FCr\u00FC: MEKAN\u0130K | A\u00E7\u0131klama: BAKANLIK DENET\u0130M\u0130NDE TAD\u0130LAT ED\u0130LS\u0130N DEN\u0130LD\u0130. SEL\u00C7UK AB\u0130 YAPACAK.",
-            "assignedPersonnelBadge": "",
-            "severity": "BlankRequired",
-            "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.795308+03:00"
-          },
-          {
-            "sourceModule": "Tadilat",
-            "fieldLabel": "Projeler belediyeden al\u0131n\u0131p ar\u015Five konuldu mu?",
-            "reason": "Bo\u015F takip alan\u0131",
-            "currentValue": "(Bo\u015F)",
-            "noteText": "",
-            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 439-4 FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130 | Proje T\u00FCr\u00FC: MEKAN\u0130K | A\u00E7\u0131klama: BAKANLIK DENET\u0130M\u0130NDE TAD\u0130LAT ED\u0130LS\u0130N DEN\u0130LD\u0130. SEL\u00C7UK AB\u0130 YAPACAK.",
-            "assignedPersonnelBadge": "",
-            "severity": "BlankRequired",
-            "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.795308+03:00"
-          },
-          {
-            "sourceModule": "Tadilat",
-            "fieldLabel": "Projenin dijitali geldi mi?",
-            "reason": "Bo\u015F takip alan\u0131",
-            "currentValue": "(Bo\u015F)",
-            "noteText": "",
-            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 439-4 FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130 | Proje T\u00FCr\u00FC: MEKAN\u0130K | A\u00E7\u0131klama: BAKANLIK DENET\u0130M\u0130NDE TAD\u0130LAT ED\u0130LS\u0130N DEN\u0130LD\u0130. SEL\u00C7UK AB\u0130 YAPACAK.",
-            "assignedPersonnelBadge": "",
-            "severity": "BlankRequired",
-            "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.795308+03:00"
-          },
-          {
-            "sourceModule": "Tadilat",
-            "fieldLabel": "Projeyi ilgili denet\u00E7i onaylad\u0131 m\u0131?",
-            "reason": "Bo\u015F takip alan\u0131",
-            "currentValue": "(Bo\u015F)",
-            "noteText": "",
-            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 439-4 FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130 | Proje T\u00FCr\u00FC: MEKAN\u0130K | A\u00E7\u0131klama: BAKANLIK DENET\u0130M\u0130NDE TAD\u0130LAT ED\u0130LS\u0130N DEN\u0130LD\u0130. SEL\u00C7UK AB\u0130 YAPACAK.",
-            "assignedPersonnelBadge": "",
-            "severity": "BlankRequired",
-            "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.795308+03:00"
-          },
-          {
-            "sourceModule": "Tadilat",
-            "fieldLabel": "\u00DCst yaz\u0131 belediyeye teslim edildi mi?",
-            "reason": "Bo\u015F takip alan\u0131",
-            "currentValue": "(Bo\u015F)",
-            "noteText": "",
-            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 439-4 FAHRETT\u0130N GEN\u00C7G\u00DCN \u0026 GEN\u00C7G\u00DCN PETROL \u0130N\u015EAAT TUR\u0130ZM T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130 | Proje T\u00FCr\u00FC: MEKAN\u0130K | A\u00E7\u0131klama: BAKANLIK DENET\u0130M\u0130NDE TAD\u0130LAT ED\u0130LS\u0130N DEN\u0130LD\u0130. SEL\u00C7UK AB\u0130 YAPACAK.",
-            "assignedPersonnelBadge": "",
-            "severity": "BlankRequired",
-            "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.795308+03:00"
-          }
-        ]
-      },
-      {
         "headerText": "437-20 - RECEP TOPCU",
         "detailText": "Y\u0130BF: 2278500 | M\u00FCteahhit: OSMANLI SARAY \u0130N\u015EAAT TUR\u0130ZM GIDA VE SANAY\u0130 T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130",
         "adaParsel": "437-20",
@@ -47583,77 +47637,6 @@
         ]
       },
       {
-        "headerText": "575-6 - REFAHAT A\u00C7IKG\u00D6Z",
-        "detailText": "Y\u0130BF: 2556396 | M\u00FCteahhit: U\u00C7R GRUP GIDA \u00DCRET\u0130M \u0130N\u015EAAT TAAHH\u00DCT TUR\u0130ZM \u0130THALAT \u0130HRACAT SANAY\u0130 VE T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130",
-        "adaParsel": "575-6",
-        "yapiSahibi": "REFAHAT A\u00C7IKG\u00D6Z",
-        "matchStatus": "Matched",
-        "eksikCount": 5,
-        "criticalCount": 0,
-        "items": [
-          {
-            "sourceModule": "Tadilat",
-            "fieldLabel": "\u00C7\u0131kt\u0131 ve tadilat raporu b\u00FCroya geldi mi?",
-            "reason": "Bo\u015F takip alan\u0131",
-            "currentValue": "(Bo\u015F)",
-            "noteText": "",
-            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 575-6 REFAHAT A\u00C7IKG\u00D6Z | Proje T\u00FCr\u00FC: STAT\u0130K | A\u00E7\u0131klama: ELLE D\u00DCZELT\u0130LECEK.",
-            "assignedPersonnelBadge": "",
-            "severity": "BlankRequired",
-            "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7955164+03:00"
-          },
-          {
-            "sourceModule": "Tadilat",
-            "fieldLabel": "Projeler belediyeden al\u0131n\u0131p ar\u015Five konuldu mu?",
-            "reason": "Bo\u015F takip alan\u0131",
-            "currentValue": "(Bo\u015F)",
-            "noteText": "",
-            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 575-6 REFAHAT A\u00C7IKG\u00D6Z | Proje T\u00FCr\u00FC: STAT\u0130K | A\u00E7\u0131klama: ELLE D\u00DCZELT\u0130LECEK.",
-            "assignedPersonnelBadge": "",
-            "severity": "BlankRequired",
-            "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7955164+03:00"
-          },
-          {
-            "sourceModule": "Tadilat",
-            "fieldLabel": "Projenin dijitali geldi mi?",
-            "reason": "Bo\u015F takip alan\u0131",
-            "currentValue": "(Bo\u015F)",
-            "noteText": "",
-            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 575-6 REFAHAT A\u00C7IKG\u00D6Z | Proje T\u00FCr\u00FC: STAT\u0130K | A\u00E7\u0131klama: ELLE D\u00DCZELT\u0130LECEK.",
-            "assignedPersonnelBadge": "",
-            "severity": "BlankRequired",
-            "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7955164+03:00"
-          },
-          {
-            "sourceModule": "Tadilat",
-            "fieldLabel": "Projeyi ilgili denet\u00E7i onaylad\u0131 m\u0131?",
-            "reason": "Bo\u015F takip alan\u0131",
-            "currentValue": "(Bo\u015F)",
-            "noteText": "",
-            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 575-6 REFAHAT A\u00C7IKG\u00D6Z | Proje T\u00FCr\u00FC: STAT\u0130K | A\u00E7\u0131klama: ELLE D\u00DCZELT\u0130LECEK.",
-            "assignedPersonnelBadge": "",
-            "severity": "BlankRequired",
-            "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7955164+03:00"
-          },
-          {
-            "sourceModule": "Tadilat",
-            "fieldLabel": "\u00DCst yaz\u0131 belediyeye teslim edildi mi?",
-            "reason": "Bo\u015F takip alan\u0131",
-            "currentValue": "(Bo\u015F)",
-            "noteText": "",
-            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 575-6 REFAHAT A\u00C7IKG\u00D6Z | Proje T\u00FCr\u00FC: STAT\u0130K | A\u00E7\u0131klama: ELLE D\u00DCZELT\u0130LECEK.",
-            "assignedPersonnelBadge": "",
-            "severity": "BlankRequired",
-            "severityLabel": "BO\u015E",
-            "updatedAt": "2026-09-03T00:35:04.7955164+03:00"
-          }
-        ]
-      },
-      {
         "headerText": "585-4 - Y\u00DCKSEL ALTUN",
         "detailText": "Y\u0130BF: 2496426 | M\u00FCteahhit: Y\u00DCKSEL ALTUN",
         "adaParsel": "585-4",
@@ -48090,6 +48073,41 @@
         ]
       },
       {
+        "headerText": "642-25 - G\u00DCLHAN HELVACIO\u011ELU A BLOK",
+        "detailText": "Y\u0130BF: 2512094 | M\u00FCteahhit: OSMANLI YAPI DEKARASYON \u0130N\u015EAAT, \u0130MALAT TAAHH\u00DCT, GIDA, NAKL\u0130YE SANAY\u0130 VE T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130",
+        "adaParsel": "642-25",
+        "yapiSahibi": "G\u00DCLHAN HELVACIO\u011ELU A BLOK",
+        "matchStatus": "Matched",
+        "eksikCount": 2,
+        "criticalCount": 0,
+        "items": [
+          {
+            "sourceModule": "Tadilat",
+            "fieldLabel": "Projenin dijitali geldi mi?",
+            "reason": "Projenin dijitali gelmedi",
+            "currentValue": "HAYIR",
+            "noteText": "",
+            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 642-25 G\u00DCLHAN HELVACIO\u011ELU A BLOK | Proje T\u00FCr\u00FC: M\u0130MAR\u0130 | A\u00E7\u0131klama: ELLE D\u00DCZELTME AMPART VE AKS D\u00DCZELT\u0130M\u0130 | A\u00E7\u0131klama 2: 06.08.2026 TAR\u0130H\u0130NDE DEN\u0130Z KIRMIZIG\u00DCLE 2 PAFTA VER\u0130LD\u0130.",
+            "assignedPersonnelBadge": "",
+            "severity": "Warning",
+            "severityLabel": "UYARI",
+            "updatedAt": "2026-09-03T15:27:18.2866135+03:00"
+          },
+          {
+            "sourceModule": "Y\u0130BF \u0130\u015F Takibi",
+            "fieldLabel": "Sa\u011Fl\u0131k g\u00FCvenlik plan\u0131 geldi mi?",
+            "reason": "Sa\u011Fl\u0131k g\u00FCvenlik plan\u0131 gelmedi",
+            "currentValue": "HAYIR",
+            "noteText": "",
+            "sourceContext": "Sat\u0131r: \u0130\u015F: 642-25 G\u00DCLHAN HELVACIO\u011ELU A BLOK | \u0130\u015F Kimli\u011Fi: Ana \u0130\u015F",
+            "assignedPersonnelBadge": "",
+            "severity": "Warning",
+            "severityLabel": "UYARI",
+            "updatedAt": "2026-09-03T15:26:30.8399072+03:00"
+          }
+        ]
+      },
+      {
         "headerText": "753-8 - SERP\u0130L YALNIZ",
         "detailText": "Y\u0130BF: 2556965 | M\u00FCteahhit: \u00C7ER\u00C7\u0130L \u0130N\u015EAAT TUR\u0130ZM VE GIDA T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130",
         "adaParsel": "753-8",
@@ -48156,41 +48174,6 @@
             "severity": "Warning",
             "severityLabel": "UYARI",
             "updatedAt": "2026-09-03T00:35:04.7850776+03:00"
-          }
-        ]
-      },
-      {
-        "headerText": "642-25 - G\u00DCLHAN HELVACIO\u011ELU A BLOK",
-        "detailText": "Y\u0130BF: 2512094 | M\u00FCteahhit: OSMANLI YAPI DEKARASYON \u0130N\u015EAAT, \u0130MALAT TAAHH\u00DCT, GIDA, NAKL\u0130YE SANAY\u0130 VE T\u0130CARET L\u0130M\u0130TED \u015E\u0130RKET\u0130",
-        "adaParsel": "642-25",
-        "yapiSahibi": "G\u00DCLHAN HELVACIO\u011ELU A BLOK",
-        "matchStatus": "Matched",
-        "eksikCount": 2,
-        "criticalCount": 0,
-        "items": [
-          {
-            "sourceModule": "Y\u0130BF \u0130\u015F Takibi",
-            "fieldLabel": "Sa\u011Fl\u0131k g\u00FCvenlik plan\u0131 geldi mi?",
-            "reason": "Sa\u011Fl\u0131k g\u00FCvenlik plan\u0131 gelmedi",
-            "currentValue": "HAYIR",
-            "noteText": "",
-            "sourceContext": "Sat\u0131r: \u0130\u015F: 642-25 G\u00DCLHAN HELVACIO\u011ELU A BLOK | \u0130\u015F Kimli\u011Fi: Ana \u0130\u015F",
-            "assignedPersonnelBadge": "",
-            "severity": "Warning",
-            "severityLabel": "UYARI",
-            "updatedAt": "2026-09-03T15:26:30.8399072+03:00"
-          },
-          {
-            "sourceModule": "Tadilat",
-            "fieldLabel": "Projenin dijitali geldi mi?",
-            "reason": "Projenin dijitali gelmedi",
-            "currentValue": "HAYIR",
-            "noteText": "",
-            "sourceContext": "Sat\u0131r: \u0130l\u00E7e: S\u0130NOP | \u0130\u015F: 642-25 G\u00DCLHAN HELVACIO\u011ELU A BLOK | Proje T\u00FCr\u00FC: M\u0130MAR\u0130 | A\u00E7\u0131klama: ELLE D\u00DCZELTME AMPART VE AKS D\u00DCZELT\u0130M\u0130 | A\u00E7\u0131klama 2: 06.08.2026 TAR\u0130H\u0130NDE DEN\u0130Z KIRMIZIG\u00DCLE 2 PAFTA VER\u0130LD\u0130.",
-            "assignedPersonnelBadge": "",
-            "severity": "Warning",
-            "severityLabel": "UYARI",
-            "updatedAt": "2026-09-03T00:35:04.7953688+03:00"
           }
         ]
       },
