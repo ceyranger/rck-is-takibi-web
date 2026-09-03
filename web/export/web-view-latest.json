@@ -1,28 +1,15 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-03T16:10:58.5257885+03:00",
+  "exportedAt": "2026-09-03T16:11:05.9695878+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "AD020301E16A35B7D2BC23280D84522E0B32470BD1B3CA2C240C3141B6BB5737",
+  "checksum": "6372B61B00D42C64C74BBEAAA6D5F25644BE0580844373F7A2B1DDAB77ECFC7C",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "C04C9B1E83EA69AEE15F4D952601AE28A892BE6617E548CDF934241DF2A0D45A",
-    "createdAt": "2026-09-03T16:10:58.4801424\u002B03:00",
+    "checksum": "6B02CD610DA7936EB601276366FB87438B91C3929BECB8007906ABC173D8DBF7",
+    "createdAt": "2026-09-03T16:11:05.8996019\u002B03:00",
     "tasks": [
-      {
-        "id": "8a319a88-9f4f-4168-8926-b68c23e48a1a",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "Yeni i\u015F",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-09-03T16:10:57.6233183\u002B03:00",
-        "updatedAt": "2026-09-03T16:10:57.6233185\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 0,
-        "notes": []
-      },
       {
         "id": "a0810bca-c6f9-467d-8c21-5301f18b5075",
         "projectId": null,
@@ -33,7 +20,7 @@
         "createdAt": "2026-09-03T15:33:31.1610815\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1069733\u002B03:00",
         "boardType": 1,
-        "sortOrder": 1,
+        "sortOrder": 0,
         "notes": []
       },
       {
@@ -46,7 +33,7 @@
         "createdAt": "2026-09-03T15:30:59.7145178\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1074945\u002B03:00",
         "boardType": 1,
-        "sortOrder": 2,
+        "sortOrder": 1,
         "notes": []
       },
       {
@@ -59,7 +46,7 @@
         "createdAt": "2026-09-02T15:38:40.2851385\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1075494\u002B03:00",
         "boardType": 1,
-        "sortOrder": 3,
+        "sortOrder": 2,
         "notes": []
       },
       {
@@ -71,6 +58,19 @@
         "dueDate": null,
         "createdAt": "2026-09-02T12:41:31.373904\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1075931\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 3,
+        "notes": []
+      },
+      {
+        "id": "8a319a88-9f4f-4168-8926-b68c23e48a1a",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "GEL\u0130R G\u0130DER G\u00DCNCELLE.",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-03T16:10:57.6233183\u002B03:00",
+        "updatedAt": "2026-09-03T16:11:05.7742349\u002B03:00",
         "boardType": 1,
         "sortOrder": 4,
         "notes": []
@@ -48939,7 +48939,7 @@
         "category": "GENEL",
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
-        "summary": "Yeni i\u015F"
+        "summary": "GEL\u0130R G\u0130DER G\u00DCNCELLE."
       },
       {
         "category": "GENEL",
