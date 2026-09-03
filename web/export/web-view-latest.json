@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-03T16:11:10.3946905+03:00",
+  "exportedAt": "2026-09-03T16:17:01.5961226+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "9DFFAA69171BB9A199D19D2663B0A80FD4AF476B54E7C487BF647FE86006508A",
+  "checksum": "50E5C50410E7A7E8C5651D9BB0DA9BEBA3DB3294F527D043D8E0B708524C31B7",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "BBFDED4252E73CC41F699BD49788B6DE55347B20BB7CF991BDBFE997BF9D3CF7",
-    "createdAt": "2026-09-03T16:11:10.3752577\u002B03:00",
+    "checksum": "0CE5B4ED6632AEB7006C33317545EE23C9315DC1287AB9E7782035DD834893BD",
+    "createdAt": "2026-09-03T16:17:01.5749374\u002B03:00",
     "tasks": [
       {
         "id": "a0810bca-c6f9-467d-8c21-5301f18b5075",
@@ -89,19 +89,6 @@
         "notes": []
       },
       {
-        "id": "9253f228-e148-4989-9861-a348bfe691f5",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "Z\u0130RAAT KRED\u0130 KARTI \u00D6DEMES\u0130",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
-        "updatedAt": "2026-09-03T15:40:53.1078353\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 6,
-        "notes": []
-      },
-      {
         "id": "823a641f-7779-4e7c-9665-54b3729466e7",
         "projectId": null,
         "isSpecialJob": false,
@@ -111,7 +98,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1078601\u002B03:00",
         "boardType": 1,
-        "sortOrder": 7,
+        "sortOrder": 6,
         "notes": []
       },
       {
@@ -124,7 +111,7 @@
         "createdAt": "2026-09-02T20:09:39.1315828\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1078855\u002B03:00",
         "boardType": 1,
-        "sortOrder": 8,
+        "sortOrder": 7,
         "notes": []
       },
       {
@@ -137,7 +124,7 @@
         "createdAt": "2026-09-03T15:28:35.0542289\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1079142\u002B03:00",
         "boardType": 1,
-        "sortOrder": 9,
+        "sortOrder": 8,
         "notes": []
       },
       {
@@ -150,7 +137,7 @@
         "createdAt": "2026-08-18T16:04:50.6801569\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1079454\u002B03:00",
         "boardType": 1,
-        "sortOrder": 10,
+        "sortOrder": 9,
         "notes": []
       },
       {
@@ -163,7 +150,7 @@
         "createdAt": "2026-09-03T16:10:57.6233183\u002B03:00",
         "updatedAt": "2026-09-03T16:11:06.9296357\u002B03:00",
         "boardType": 1,
-        "sortOrder": 11,
+        "sortOrder": 10,
         "notes": []
       },
       {
@@ -176,7 +163,7 @@
         "createdAt": "2026-08-21T09:15:51.2320094\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1079701\u002B03:00",
         "boardType": 1,
-        "sortOrder": 12,
+        "sortOrder": 11,
         "notes": []
       },
       {
@@ -189,7 +176,7 @@
         "createdAt": "2026-07-29T13:47:38.9073854\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1079966\u002B03:00",
         "boardType": 1,
-        "sortOrder": 13,
+        "sortOrder": 12,
         "notes": []
       },
       {
@@ -202,7 +189,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1080201\u002B03:00",
         "boardType": 1,
-        "sortOrder": 14,
+        "sortOrder": 13,
         "notes": []
       },
       {
@@ -215,7 +202,7 @@
         "createdAt": "2026-08-31T18:42:15.8256857\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.108044\u002B03:00",
         "boardType": 1,
-        "sortOrder": 15,
+        "sortOrder": 14,
         "notes": []
       },
       {
@@ -48988,12 +48975,6 @@
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
         "summary": "BORDRO PUSULA PUANTAJ \u00C7IKTILARI AL"
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "Z\u0130RAAT KRED\u0130 KARTI \u00D6DEMES\u0130"
       },
       {
         "category": "GENEL",
