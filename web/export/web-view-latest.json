@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-03T17:01:56.7527464+03:00",
+  "exportedAt": "2026-09-03T17:10:04.5431331+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "06B59CEF038C6FA44C78F365589563A7893EE184222DD260E6EDA7465752C166",
+  "checksum": "CC2F97A43E4408EDE0017D3CAE93F639BDD9338F8CEB93F8458F160DAA98E18D",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "282CDFDD4A133719CCAE710E037C4E024AD1AD48E52B050F641DEF22E96845B8",
-    "createdAt": "2026-09-03T17:01:56.7084645\u002B03:00",
+    "checksum": "5C1C3889D7AE87FCD824820A1176B35304C4E0E3FD202278CBBE9F6F60CEB61F",
+    "createdAt": "2026-09-03T17:10:04.5076576\u002B03:00",
     "tasks": [
       {
         "id": "5767eab9-f994-4e5b-ad42-e1014470de46",
@@ -1848,25 +1848,6 @@
         "displayOrder": 43,
         "createdAt": "2026-08-31T23:38:47.4829247\u002B03:00",
         "updatedAt": "2026-09-03T16:52:19.9811523\u002B03:00"
-      },
-      {
-        "id": "176b63ab-007f-4c42-824f-f57b14626377",
-        "projectId": "24efa339-f9e3-4a45-bf77-b3e42301512e",
-        "sampleReceivedDate": "2026-08-03T00:00:00",
-        "yibfNo": "2589102",
-        "adaParsel": "435-7",
-        "yapiSahibi": "CEM\u0130L YILDIRIM",
-        "muteahhit": "CEM\u0130L YILDIRIM",
-        "katBilgisi": "TEMEL",
-        "betonSinifi": "C30",
-        "twentyEightDayResult": "35,70",
-        "betonFirmasi": "KAVUNCULAR",
-        "laboratuvar": "ESAT",
-        "aciklama": "KAROT ALINACAK.",
-        "status": 0,
-        "displayOrder": 44,
-        "createdAt": "2026-09-02T16:34:18.1681167\u002B03:00",
-        "updatedAt": "2026-09-03T16:52:19.9811791\u002B03:00"
       }
     ],
     "karotCellStates": [],
@@ -42401,53 +42382,6 @@
         ]
       },
       {
-        "headerText": "435-7 - CEM\u0130L YILDIRIM",
-        "detailText": "Y\u0130BF: 2589102 | M\u00FCteahhit: CEM\u0130L YILDIRIM",
-        "adaParsel": "435-7",
-        "yapiSahibi": "CEM\u0130L YILDIRIM",
-        "matchStatus": "Matched",
-        "eksikCount": 3,
-        "criticalCount": 1,
-        "items": [
-          {
-            "sourceModule": "Y\u0130BF \u0130\u015F Takibi",
-            "fieldLabel": "T\u00FCm projelerin dijitali var m\u0131?",
-            "reason": "T\u00FCm projelerin dijitali yok",
-            "currentValue": "MEK. EKS\u0130K.",
-            "noteText": "",
-            "sourceContext": "Sat\u0131r: \u0130\u015F: 435-7 CEM\u0130L YILDIRIM | \u0130\u015F Kimli\u011Fi: Ana \u0130\u015F",
-            "assignedPersonnelBadge": "",
-            "severity": "Critical",
-            "severityLabel": "KR\u0130T\u0130K",
-            "updatedAt": "2026-09-03T17:01:43.4861045+03:00"
-          },
-          {
-            "sourceModule": "Y\u0130BF \u0130\u015F Takibi",
-            "fieldLabel": "\u0130SG yaz\u0131s\u0131 haz\u0131rland\u0131 m\u0131?",
-            "reason": "\u0130SG yaz\u0131s\u0131 haz\u0131rlanmad\u0131",
-            "currentValue": "EKS\u0130K",
-            "noteText": "HAZIRLANDI. \u0130MZALAR EKS\u0130K.",
-            "sourceContext": "Sat\u0131r: \u0130\u015F: 435-7 CEM\u0130L YILDIRIM | \u0130\u015F Kimli\u011Fi: Ana \u0130\u015F",
-            "assignedPersonnelBadge": "",
-            "severity": "Warning",
-            "severityLabel": "UYARI",
-            "updatedAt": "2026-09-03T17:01:43.4861045+03:00"
-          },
-          {
-            "sourceModule": "Karot",
-            "fieldLabel": "Karot Durumu",
-            "reason": "Karot al\u0131nacak",
-            "currentValue": "TEMEL",
-            "noteText": "KAROT ALINACAK.",
-            "sourceContext": "Sat\u0131r: Kat Bilgisi: TEMEL | Beton S\u0131n\u0131f\u0131: C30 | Beton Firmas\u0131: KAVUNCULAR | Laboratuvar: ESAT | A\u00E7\u0131klama: KAROT ALINACAK.",
-            "assignedPersonnelBadge": "",
-            "severity": "Warning",
-            "severityLabel": "UYARI",
-            "updatedAt": "2026-09-03T16:52:19.9811791+03:00"
-          }
-        ]
-      },
-      {
         "headerText": "180-67 - \u0130BRAH\u0130M \u015EENER",
         "detailText": "Y\u0130BF: 2076229 | M\u00FCteahhit: HASAN \u0130NCE \u0130NCE PRES VE \u0130N\u015EAAT",
         "adaParsel": "180-67",
@@ -42491,6 +42425,41 @@
             "severity": "BlankRequired",
             "severityLabel": "BO\u015E",
             "updatedAt": "2026-09-03T16:52:19.9826883+03:00"
+          }
+        ]
+      },
+      {
+        "headerText": "435-7 - CEM\u0130L YILDIRIM",
+        "detailText": "Y\u0130BF: 2589102 | M\u00FCteahhit: CEM\u0130L YILDIRIM",
+        "adaParsel": "435-7",
+        "yapiSahibi": "CEM\u0130L YILDIRIM",
+        "matchStatus": "Matched",
+        "eksikCount": 2,
+        "criticalCount": 1,
+        "items": [
+          {
+            "sourceModule": "Y\u0130BF \u0130\u015F Takibi",
+            "fieldLabel": "T\u00FCm projelerin dijitali var m\u0131?",
+            "reason": "T\u00FCm projelerin dijitali yok",
+            "currentValue": "MEK. EKS\u0130K.",
+            "noteText": "",
+            "sourceContext": "Sat\u0131r: \u0130\u015F: 435-7 CEM\u0130L YILDIRIM | \u0130\u015F Kimli\u011Fi: Ana \u0130\u015F",
+            "assignedPersonnelBadge": "",
+            "severity": "Critical",
+            "severityLabel": "KR\u0130T\u0130K",
+            "updatedAt": "2026-09-03T17:01:43.4861045+03:00"
+          },
+          {
+            "sourceModule": "Y\u0130BF \u0130\u015F Takibi",
+            "fieldLabel": "\u0130SG yaz\u0131s\u0131 haz\u0131rland\u0131 m\u0131?",
+            "reason": "\u0130SG yaz\u0131s\u0131 haz\u0131rlanmad\u0131",
+            "currentValue": "EKS\u0130K",
+            "noteText": "HAZIRLANDI. \u0130MZALAR EKS\u0130K.",
+            "sourceContext": "Sat\u0131r: \u0130\u015F: 435-7 CEM\u0130L YILDIRIM | \u0130\u015F Kimli\u011Fi: Ana \u0130\u015F",
+            "assignedPersonnelBadge": "",
+            "severity": "Warning",
+            "severityLabel": "UYARI",
+            "updatedAt": "2026-09-03T17:01:43.4861045+03:00"
           }
         ]
       },
@@ -49079,12 +49048,6 @@
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
         "summary": "212-6 MURAT SARIKAYA \u0130ST\u0130NAT - \u0130\u015EYER\u0130 TESL\u0130M TUTANA\u011EI HAZIRLANMADI"
-      },
-      {
-        "category": "KAROT",
-        "priorityLabel": "D\u0130KKAT",
-        "priorityRank": 1,
-        "summary": "435-7 \u002B CEM\u0130L YILDIRIM - TEMEL"
       },
       {
         "category": "KAROT",
