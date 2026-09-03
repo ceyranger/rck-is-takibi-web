@@ -1,15 +1,28 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-03T15:55:14.9694368+03:00",
+  "exportedAt": "2026-09-03T16:10:58.5257885+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "4113FD54D5A358093E3B6607C171A7EE4B5F48CE7F92AE6DF28ECFB31279E088",
+  "checksum": "AD020301E16A35B7D2BC23280D84522E0B32470BD1B3CA2C240C3141B6BB5737",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "E01F40F4A03E412AEB2A22B9F167A591A3DEBC4178425D9EB963337D11A09D96",
-    "createdAt": "2026-09-03T15:55:14.891409\u002B03:00",
+    "checksum": "C04C9B1E83EA69AEE15F4D952601AE28A892BE6617E548CDF934241DF2A0D45A",
+    "createdAt": "2026-09-03T16:10:58.4801424\u002B03:00",
     "tasks": [
+      {
+        "id": "8a319a88-9f4f-4168-8926-b68c23e48a1a",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "Yeni i\u015F",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-03T16:10:57.6233183\u002B03:00",
+        "updatedAt": "2026-09-03T16:10:57.6233185\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 0,
+        "notes": []
+      },
       {
         "id": "a0810bca-c6f9-467d-8c21-5301f18b5075",
         "projectId": null,
@@ -20,7 +33,7 @@
         "createdAt": "2026-09-03T15:33:31.1610815\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1069733\u002B03:00",
         "boardType": 1,
-        "sortOrder": 0,
+        "sortOrder": 1,
         "notes": []
       },
       {
@@ -33,7 +46,7 @@
         "createdAt": "2026-09-03T15:30:59.7145178\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1074945\u002B03:00",
         "boardType": 1,
-        "sortOrder": 1,
+        "sortOrder": 2,
         "notes": []
       },
       {
@@ -46,7 +59,7 @@
         "createdAt": "2026-09-02T15:38:40.2851385\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1075494\u002B03:00",
         "boardType": 1,
-        "sortOrder": 2,
+        "sortOrder": 3,
         "notes": []
       },
       {
@@ -59,7 +72,7 @@
         "createdAt": "2026-09-02T12:41:31.373904\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1075931\u002B03:00",
         "boardType": 1,
-        "sortOrder": 3,
+        "sortOrder": 4,
         "notes": []
       },
       {
@@ -72,7 +85,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.107627\u002B03:00",
         "boardType": 1,
-        "sortOrder": 4,
+        "sortOrder": 5,
         "notes": []
       },
       {
@@ -85,72 +98,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.107656\u002B03:00",
         "boardType": 1,
-        "sortOrder": 5,
-        "notes": []
-      },
-      {
-        "id": "2b423029-da16-4371-b46a-8912732e9b3d",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "B\u00DCRO K\u0130RA \u00D6DEMES\u0130",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
-        "updatedAt": "2026-09-03T15:40:53.1076832\u002B03:00",
-        "boardType": 1,
         "sortOrder": 6,
-        "notes": []
-      },
-      {
-        "id": "54f4592d-8d85-45ed-8989-dbf3ce61bc04",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "VEKT\u00D6R OSGB \u00D6DEMES\u0130",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
-        "updatedAt": "2026-09-03T15:40:53.1077176\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 7,
-        "notes": []
-      },
-      {
-        "id": "c84212c9-83bb-4802-90c8-0b89578ba014",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "MUHASEBE \u00D6DEMES\u0130",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
-        "updatedAt": "2026-09-03T15:40:53.1077424\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 8,
-        "notes": []
-      },
-      {
-        "id": "8e0655f3-dabe-4c55-b845-35317968f08a",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "MAA\u015E \u00D6DEMELER\u0130",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
-        "updatedAt": "2026-09-03T15:40:53.1077671\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 9,
-        "notes": []
-      },
-      {
-        "id": "44741b33-81a5-4b39-8a6b-706ffdf9c3ae",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "ARSLAN \u0130CRA \u00D6DEMES\u0130",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
-        "updatedAt": "2026-09-03T15:40:53.1077989\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 10,
         "notes": []
       },
       {
@@ -163,7 +111,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1078353\u002B03:00",
         "boardType": 1,
-        "sortOrder": 11,
+        "sortOrder": 7,
         "notes": []
       },
       {
@@ -176,7 +124,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1078601\u002B03:00",
         "boardType": 1,
-        "sortOrder": 12,
+        "sortOrder": 8,
         "notes": []
       },
       {
@@ -189,7 +137,7 @@
         "createdAt": "2026-09-02T20:09:39.1315828\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1078855\u002B03:00",
         "boardType": 1,
-        "sortOrder": 13,
+        "sortOrder": 9,
         "notes": []
       },
       {
@@ -202,7 +150,7 @@
         "createdAt": "2026-09-03T15:28:35.0542289\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1079142\u002B03:00",
         "boardType": 1,
-        "sortOrder": 14,
+        "sortOrder": 10,
         "notes": []
       },
       {
@@ -215,7 +163,7 @@
         "createdAt": "2026-08-18T16:04:50.6801569\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1079454\u002B03:00",
         "boardType": 1,
-        "sortOrder": 15,
+        "sortOrder": 11,
         "notes": []
       },
       {
@@ -228,7 +176,7 @@
         "createdAt": "2026-08-21T09:15:51.2320094\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1079701\u002B03:00",
         "boardType": 1,
-        "sortOrder": 16,
+        "sortOrder": 12,
         "notes": []
       },
       {
@@ -241,7 +189,7 @@
         "createdAt": "2026-07-29T13:47:38.9073854\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1079966\u002B03:00",
         "boardType": 1,
-        "sortOrder": 17,
+        "sortOrder": 13,
         "notes": []
       },
       {
@@ -254,7 +202,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1080201\u002B03:00",
         "boardType": 1,
-        "sortOrder": 18,
+        "sortOrder": 14,
         "notes": []
       },
       {
@@ -267,7 +215,7 @@
         "createdAt": "2026-08-31T18:42:15.8256857\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.108044\u002B03:00",
         "boardType": 1,
-        "sortOrder": 19,
+        "sortOrder": 15,
         "notes": []
       },
       {
@@ -48991,6 +48939,12 @@
         "category": "GENEL",
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
+        "summary": "Yeni i\u015F"
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
         "summary": "T\u00DCM RUHSAT L\u0130STES\u0130 KA\u011EITLARI \u0130NCELENECEK. EKS\u0130KLER PROGRAMA G\u0130R\u0130LECEK."
       },
       {
@@ -49040,36 +48994,6 @@
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
         "summary": "Z\u0130RAAT KRED\u0130 KARTI \u00D6DEMES\u0130"
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "ARSLAN \u0130CRA \u00D6DEMES\u0130"
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "MAA\u015E \u00D6DEMELER\u0130"
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "MUHASEBE \u00D6DEMES\u0130"
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "VEKT\u00D6R OSGB \u00D6DEMES\u0130"
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "B\u00DCRO K\u0130RA \u00D6DEMES\u0130"
       },
       {
         "category": "GENEL",
