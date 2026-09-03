@@ -1,28 +1,15 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-03T17:49:50.6693558+03:00",
+  "exportedAt": "2026-09-03T17:53:38.1873591+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "59736506CF11C06ABB186CD323492B1ABD6B852B4B00ED1922C427185650EED7",
+  "checksum": "D2BD9C99F6BC0A56BB53A9EB696FD7E58A14EBBA29D63300E264C15355270136",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "17AB724295C658CB067CC0E349E95E6F683FC948D9FBBC08CF28B41E02106378",
-    "createdAt": "2026-09-03T17:49:50.6297391\u002B03:00",
+    "checksum": "AC420EE532329E070EDD71D3ADD6E608074E7BEE05EF4F17792F123FF93492F7",
+    "createdAt": "2026-09-03T17:53:38.1661317\u002B03:00",
     "tasks": [
-      {
-        "id": "823a641f-7779-4e7c-9665-54b3729466e7",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "BORDRO PUSULA PUANTAJ \u00C7IKTILARI AL",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
-        "updatedAt": "2026-09-03T17:23:50.290378\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 0,
-        "notes": []
-      },
       {
         "id": "abfdc00a-c9c8-4117-8e63-7760504a7ffa",
         "projectId": null,
@@ -33,7 +20,7 @@
         "createdAt": "2026-09-02T20:09:39.1315828\u002B03:00",
         "updatedAt": "2026-09-03T17:23:50.2904257\u002B03:00",
         "boardType": 1,
-        "sortOrder": 1,
+        "sortOrder": 0,
         "notes": []
       },
       {
@@ -45,6 +32,19 @@
         "dueDate": null,
         "createdAt": "2026-09-03T15:28:35.0542289\u002B03:00",
         "updatedAt": "2026-09-03T17:23:50.290457\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 1,
+        "notes": []
+      },
+      {
+        "id": "823a641f-7779-4e7c-9665-54b3729466e7",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "AYLIK SEV\u0130YE G\u0130R\u0130\u015ELER\u0130 BA\u015ELANMASI.",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
+        "updatedAt": "2026-09-03T17:53:37.7438594\u002B03:00",
         "boardType": 1,
         "sortOrder": 2,
         "notes": []
@@ -48840,6 +48840,12 @@
         "category": "GENEL",
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
+        "summary": "AYLIK SEV\u0130YE G\u0130R\u0130\u015ELER\u0130 BA\u015ELANMASI."
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
         "summary": "T\u00DCM RUHSAT L\u0130STES\u0130 KA\u011EITLARI \u0130NCELENECEK. EKS\u0130KLER PROGRAMA G\u0130R\u0130LECEK."
       },
       {
@@ -48883,12 +48889,6 @@
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
         "summary": "HAKED\u0130\u015E \u00D6DEND\u0130 TABLOSU VE  \u0130\u015ELEMLER\u0130 YAPILACAK."
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "BORDRO PUSULA PUANTAJ \u00C7IKTILARI AL"
       },
       {
         "category": "TAD\u0130LAT",
