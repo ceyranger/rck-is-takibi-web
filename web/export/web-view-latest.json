@@ -1,15 +1,28 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-03T16:35:14.5182021+03:00",
+  "exportedAt": "2026-09-03T16:43:57.0261781+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "79287123806FF49E12D686A53D2B841F1AE7C4077B72E6F1D11ECBB5BDBF30C0",
+  "checksum": "F86EF9983B20B1242F5D66708F6CF609BA222BCB746CEFD65973CB4629E3471C",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "522BF095A6D486956EBAD03A8B76AA3FC19FC748440B9B97B1D3865FFEA96377",
-    "createdAt": "2026-09-03T16:35:14.4565222\u002B03:00",
+    "checksum": "EC093BDF378E1A8ECB58912945AC97DEC808EE67F898F5BF9F8622980730BEB0",
+    "createdAt": "2026-09-03T16:43:56.9707084\u002B03:00",
     "tasks": [
+      {
+        "id": "13713e19-9fba-43ab-bafc-6b598531e353",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "havva i\u015Fyeri teslim isg defter hakedi\u015F",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-02T15:38:40.2851385\u002B03:00",
+        "updatedAt": "2026-09-03T16:35:14.5481029\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 0,
+        "notes": []
+      },
       {
         "id": "adc66ef9-48d4-4668-9f43-aab59e8447a0",
         "projectId": null,
@@ -20,7 +33,7 @@
         "createdAt": "2026-09-03T16:32:38.1814305\u002B03:00",
         "updatedAt": "2026-09-03T16:32:38.1814308\u002B03:00",
         "boardType": 1,
-        "sortOrder": 0,
+        "sortOrder": 1,
         "notes": []
       },
       {
@@ -32,19 +45,6 @@
         "dueDate": null,
         "createdAt": "2026-09-03T15:30:59.7145178\u002B03:00",
         "updatedAt": "2026-09-03T15:40:53.1074945\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 1,
-        "notes": []
-      },
-      {
-        "id": "13713e19-9fba-43ab-bafc-6b598531e353",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "havva i\u015Fyeri teslim isg defter hakedi\u015F",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-09-02T15:38:40.2851385\u002B03:00",
-        "updatedAt": "2026-09-03T15:40:53.1075494\u002B03:00",
         "boardType": 1,
         "sortOrder": 2,
         "notes": []
@@ -48926,6 +48926,12 @@
         "category": "GENEL",
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
+        "summary": "havva i\u015Fyeri teslim isg defter hakedi\u015F"
+      },
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
         "summary": "AHMET ACAR i\u015Fyeri teslim isg defter hakedi\u015F"
       },
       {
@@ -48999,12 +49005,6 @@
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
         "summary": "veli demircan iskan haz\u0131rlanmas\u0131"
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "havva i\u015Fyeri teslim isg defter hakedi\u015F"
       },
       {
         "category": "GENEL",
