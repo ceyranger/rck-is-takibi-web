@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-04T10:23:39.5175301+03:00",
+  "exportedAt": "2026-09-04T10:25:24.7425637+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "FC9FD540764368ADDBD038248FE56B5876AB52CF8651305E739EC3631CDD9DC9",
+  "checksum": "0FB887A7E82AC17C1B4BA1FD9B3C372DB24AB82FB493ACA8A0F12A15CA6B9C22",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "D1FC0F28B8DCF313FBCA7511B533694F14C6FBFAC098BA9FC602BC49D165DFB4",
-    "createdAt": "2026-09-04T10:23:39.4021575\u002B03:00",
+    "checksum": "E2896BB583E6412C550C0A3C6A0A76621454FA0BBA2A8B26569B38612BC3DA61",
+    "createdAt": "2026-09-04T10:25:24.6339076\u002B03:00",
     "tasks": [
       {
         "id": "5bc33a53-ecc5-407d-bcc3-fe2dd97b6229",
@@ -348,11 +348,11 @@
         "projectId": null,
         "category": 0,
         "district": "AYANCIK",
-        "ownerParcelText": "HAKED\u0130\u015E VE EVRAK",
-        "workText": "BELED\u0130YEDE HAKED\u0130\u015E VE EVRAK VAR MI KONTROL ED\u0130LECEK VARSA ALINACAK.",
+        "ownerParcelText": "TUTANAK",
+        "workText": "\u00D6ZLEM SEVN\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
         "displayOrder": 0,
         "createdAt": "2026-03-19T19:08:48.06218",
-        "updatedAt": "2026-09-04T10:19:38.3584245\u002B03:00"
+        "updatedAt": "2026-09-04T10:25:17.9737602\u002B03:00"
       },
       {
         "id": "55c63d31-9094-4a4a-a53f-03cf0ffd1158",
