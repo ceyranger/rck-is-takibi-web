@@ -1,15 +1,28 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-04T09:30:59.6561822+03:00",
+  "exportedAt": "2026-09-04T09:31:39.5890368+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "983A677904B970638DE0AECB5D422B0C7D3CABB852FE5861D490741F7F3AC4C7",
+  "checksum": "97D2ECF829DA0D056E668DE16C9AEF0E5E999F7770C1592F39328A3317D40C2D",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "8398FC7DC42C59DFDC9995628132682AD6E91BFCF93CD1EF990AC53FC05F0E75",
-    "createdAt": "2026-09-04T09:30:59.610926\u002B03:00",
+    "checksum": "03BFFFA28F332D433914689FBFA713DD7A7BCF088A5877E51039F84DFA4E7763",
+    "createdAt": "2026-09-04T09:31:39.5498932\u002B03:00",
     "tasks": [
+      {
+        "id": "e7041b7c-b4aa-4565-9251-b45d5666bd8f",
+        "projectId": null,
+        "isSpecialJob": false,
+        "title": "personel g\u00F6rev atamalar\u0131 yap.",
+        "description": "",
+        "dueDate": null,
+        "createdAt": "2026-09-04T09:31:22.6610564\u002B03:00",
+        "updatedAt": "2026-09-04T09:31:22.6610569\u002B03:00",
+        "boardType": 1,
+        "sortOrder": 0,
+        "notes": []
+      },
       {
         "id": "5bc33a53-ecc5-407d-bcc3-fe2dd97b6229",
         "projectId": null,
@@ -20,7 +33,7 @@
         "createdAt": "2026-09-04T09:30:32.6225765\u002B03:00",
         "updatedAt": "2026-09-04T09:30:32.6225785\u002B03:00",
         "boardType": 1,
-        "sortOrder": 0,
+        "sortOrder": 1,
         "notes": []
       },
       {
@@ -33,7 +46,7 @@
         "createdAt": "2026-08-18T16:04:50.6801569\u002B03:00",
         "updatedAt": "2026-09-03T22:44:31.2952579\u002B03:00",
         "boardType": 1,
-        "sortOrder": 1,
+        "sortOrder": 2,
         "notes": []
       },
       {
@@ -46,7 +59,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-03T22:44:31.2956707\u002B03:00",
         "boardType": 1,
-        "sortOrder": 2,
+        "sortOrder": 3,
         "notes": []
       },
       {
@@ -59,7 +72,7 @@
         "createdAt": "2026-09-02T20:09:39.1315828\u002B03:00",
         "updatedAt": "2026-09-03T22:44:31.2957207\u002B03:00",
         "boardType": 1,
-        "sortOrder": 3,
+        "sortOrder": 4,
         "notes": []
       },
       {
@@ -72,7 +85,7 @@
         "createdAt": "2026-09-03T15:28:35.0542289\u002B03:00",
         "updatedAt": "2026-09-03T22:44:31.2957771\u002B03:00",
         "boardType": 1,
-        "sortOrder": 4,
+        "sortOrder": 5,
         "notes": []
       },
       {
@@ -85,7 +98,7 @@
         "createdAt": "2026-08-21T09:15:51.2320094\u002B03:00",
         "updatedAt": "2026-09-03T22:44:31.295814\u002B03:00",
         "boardType": 1,
-        "sortOrder": 5,
+        "sortOrder": 6,
         "notes": []
       },
       {
@@ -98,7 +111,7 @@
         "createdAt": "2026-07-29T13:47:38.9073854\u002B03:00",
         "updatedAt": "2026-09-03T22:44:31.29585\u002B03:00",
         "boardType": 1,
-        "sortOrder": 6,
+        "sortOrder": 7,
         "notes": []
       },
       {
@@ -111,7 +124,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-03T22:44:31.2958782\u002B03:00",
         "boardType": 1,
-        "sortOrder": 7,
+        "sortOrder": 8,
         "notes": []
       },
       {
@@ -124,7 +137,7 @@
         "createdAt": "2026-08-31T18:42:15.8256857\u002B03:00",
         "updatedAt": "2026-09-03T22:44:31.2959109\u002B03:00",
         "boardType": 1,
-        "sortOrder": 8,
+        "sortOrder": 9,
         "notes": []
       },
       {
@@ -48836,6 +48849,12 @@
       }
     ],
     "acilIsOzetItems": [
+      {
+        "category": "GENEL",
+        "priorityLabel": "AC\u0130L",
+        "priorityRank": 0,
+        "summary": "personel g\u00F6rev atamalar\u0131 yap."
+      },
       {
         "category": "GENEL",
         "priorityLabel": "AC\u0130L",
