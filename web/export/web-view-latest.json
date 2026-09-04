@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-04T10:02:21.9431866+03:00",
+  "exportedAt": "2026-09-04T10:03:38.3793977+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "E18EFE5048423733579C40B96F1DEEBFED88C98FED6E3B3E24410D934B7DE405",
+  "checksum": "3D263B12F465843965FA1238557B664FFD0BAA510019E469EA0E4C7C7ED85A3E",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "A373939DD76A682FC816EDE9A6A4DD8FC83C4475D5E64A91013810ADE9794282",
-    "createdAt": "2026-09-04T10:02:21.8987596\u002B03:00",
+    "checksum": "BD1ED0A4352A1C35FE076F1436C1340B2F76BB58EACFC3793B3452F8AA04BE46",
+    "createdAt": "2026-09-04T10:03:38.3327627\u002B03:00",
     "tasks": [
       {
         "id": "e7041b7c-b4aa-4565-9251-b45d5666bd8f",
@@ -912,21 +912,10 @@
         "category": 0,
         "district": "S\u0130NOP OSB",
         "ownerParcelText": "101-1 KCS KAYA CAM",
-        "workText": "\u00D6NCEK\u0130 TAD\u0130LAT RUHSATI ALINACAK.  EN SON \u00C7IKAN RUHSATLAR ALINACAK. TAD\u0130LAT VE \u0130ST\u0130NAT PROJELER\u0130 ALINACAK. APL\u0130KASYON ALINACAK.",
+        "workText": "\u00D6NCEK\u0130 TAD\u0130LAT RUHSATI ALINACAK.  EN SON \u00C7IKAN RUHSATLAR ALINACAK. TAD\u0130LAT VE \u0130ST\u0130NAT PROJELER\u0130 ALINACAK. APL\u0130KASYON ALINACAK. \u0130ST\u0130NAT RUHSATI ALINACAK.",
         "displayOrder": 0,
         "createdAt": "2026-03-19T19:08:48.062283",
-        "updatedAt": "2026-09-04T10:02:02.8376561\u002B03:00"
-      },
-      {
-        "id": "41d24c87-95ad-470b-a77e-e893de88a529",
-        "projectId": "1d417978-629a-418f-89d5-9f0339031520",
-        "category": 0,
-        "district": "S\u0130NOP OSB",
-        "ownerParcelText": "101-1 KCS KAYA CAM",
-        "workText": "ONAYLI TA\u015E DUVAR PROJE VE HESAP OSBDEN ALINACAK. RUHSAT ALINACAK.",
-        "displayOrder": 1,
-        "createdAt": "2026-06-24T14:52:30.8511355\u002B03:00",
-        "updatedAt": "2026-09-04T09:56:31.7763151\u002B03:00"
+        "updatedAt": "2026-09-04T10:03:34.3340075\u002B03:00"
       },
       {
         "id": "2b99f8c3-32b9-4b99-b08e-a13b806f0378",
