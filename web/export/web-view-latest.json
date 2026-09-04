@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-04T11:19:06.7608824+03:00",
+  "exportedAt": "2026-09-04T11:20:25.3291877+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "D416C8A92DAA39E7057E339BFC5C3525BBFBA2A18A12B1270C99EF03ACBCEAB8",
+  "checksum": "6E546230834364CAEE2238951C03AFBB6B8B85C82953CC3EF963F5C35240CF28",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "6A4432EB268F28B876748D797E5F477013DDEF134DDAD4EC5A62D8CB71523F8F",
-    "createdAt": "2026-09-04T11:19:06.7308432\u002B03:00",
+    "checksum": "B6165F3661B376D65DBC2A530900A63BC8301B112429F384D568DB4D94B9BBB2",
+    "createdAt": "2026-09-04T11:20:25.2963431\u002B03:00",
     "tasks": [
       {
         "id": "75d55082-3747-4fea-aae2-f57aff7b4b7b",
@@ -128,19 +128,6 @@
         "notes": []
       },
       {
-        "id": "e577c2bc-2cc9-46b4-8c59-7053322e8c2d",
-        "projectId": "f06d6503-6dd5-48cc-8737-fcc5409ff467",
-        "isSpecialJob": false,
-        "title": "CENG\u0130Z \u0130STANBULLU ELEKTR\u0130KLER RAFA KOYULDU. FOTOKOP\u0130 \u0130\u00C7\u0130N GER\u0130 GELECEK. KUVVETL\u0130 VE ZAYIF AKIM 2\u015EER ADET.",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-08-31T14:48:37.3611107\u002B03:00",
-        "updatedAt": "2026-09-04T11:17:29.4872557\u002B03:00",
-        "boardType": 0,
-        "sortOrder": 1,
-        "notes": []
-      },
-      {
         "id": "55f7f278-463f-44a5-aef0-bda74433e079",
         "projectId": null,
         "isSpecialJob": false,
@@ -150,7 +137,7 @@
         "createdAt": "2026-03-19T19:08:48.061819",
         "updatedAt": "2026-09-04T11:17:29.4872811\u002B03:00",
         "boardType": 0,
-        "sortOrder": 2,
+        "sortOrder": 1,
         "notes": []
       },
       {
@@ -163,7 +150,7 @@
         "createdAt": "2026-07-15T07:11:16.3060726\u002B03:00",
         "updatedAt": "2026-09-04T11:17:29.487304\u002B03:00",
         "boardType": 0,
-        "sortOrder": 3,
+        "sortOrder": 2,
         "notes": []
       },
       {
@@ -176,7 +163,7 @@
         "createdAt": "2026-07-15T07:10:29.4874871\u002B03:00",
         "updatedAt": "2026-09-04T11:17:29.4873258\u002B03:00",
         "boardType": 0,
-        "sortOrder": 4,
+        "sortOrder": 3,
         "notes": []
       },
       {
@@ -189,7 +176,7 @@
         "createdAt": "2026-03-19T19:08:48.061829",
         "updatedAt": "2026-09-04T11:17:29.4873475\u002B03:00",
         "boardType": 0,
-        "sortOrder": 5,
+        "sortOrder": 4,
         "notes": []
       },
       {
@@ -202,7 +189,7 @@
         "createdAt": "2026-03-19T19:08:48.061835",
         "updatedAt": "2026-09-04T11:17:29.4873708\u002B03:00",
         "boardType": 0,
-        "sortOrder": 6,
+        "sortOrder": 5,
         "notes": []
       },
       {
@@ -215,7 +202,7 @@
         "createdAt": "2026-08-06T16:25:42.5710159\u002B03:00",
         "updatedAt": "2026-09-04T11:17:29.4873936\u002B03:00",
         "boardType": 0,
-        "sortOrder": 7,
+        "sortOrder": 6,
         "notes": []
       }
     ],
@@ -42521,21 +42508,6 @@
         "moduleLabelSnapshot": "Genel \u0130\u015F Takibi"
       },
       {
-        "id": "6bba2e1a-369b-4e1f-afee-5808aa2ef814",
-        "personnelId": "710cd990-29ab-4c2c-8f20-0ba862c589eb",
-        "sourceModule": 0,
-        "sourceEntryId": "e577c2bc-2cc9-46b4-8c59-7053322e8c2d",
-        "sourceColumnKey": null,
-        "status": 0,
-        "assignedAt": "2026-09-04T10:06:49.0904301\u002B03:00",
-        "completedAt": null,
-        "prioritySnapshot": 0,
-        "fieldLabelSnapshot": "",
-        "summarySnapshot": "CENG\u0130Z \u0130STANBULLU ELEKTR\u0130KLER RAFA KOYULDU. FOTOKOP\u0130 \u0130\u00C7\u0130N GER\u0130 GELECEK. KUVVETL\u0130 VE ZAYIF AKIM 2\u015EER ADET.",
-        "projectIdentitySnapshot": "",
-        "moduleLabelSnapshot": "Genel \u0130\u015F Takibi"
-      },
-      {
         "id": "bad9b60a-fcd6-4877-9ff2-0f135b7805da",
         "personnelId": "62765a69-7a23-42c7-b492-d13f42961807",
         "sourceModule": 2,
@@ -50662,17 +50634,6 @@
         "personnelName": "ARSLAN ARSLAN",
         "moduleLabel": "Genel \u0130\u015F Takibi",
         "summary": "MURAT SARIKAYA \u0130ST\u0130NAT TEMEL PERDE D\u00D6K\u00DCLM\u00DC\u015E G\u0130B\u0130 YAPILACAK D\u00DCZELT\u0130LECEK.",
-        "fieldLabel": "",
-        "projectIdentity": "",
-        "priorityLabel": "",
-        "statusLabel": "A\u00E7\u0131k",
-        "assignedAtText": "4.09.2026 10:06",
-        "isOpen": true
-      },
-      {
-        "personnelName": "ARSLAN ARSLAN",
-        "moduleLabel": "Genel \u0130\u015F Takibi",
-        "summary": "CENG\u0130Z \u0130STANBULLU ELEKTR\u0130KLER RAFA KOYULDU. FOTOKOP\u0130 \u0130\u00C7\u0130N GER\u0130 GELECEK. KUVVETL\u0130 VE ZAYIF AKIM 2\u015EER ADET.",
         "fieldLabel": "",
         "projectIdentity": "",
         "priorityLabel": "",
