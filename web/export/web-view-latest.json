@@ -1,28 +1,15 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-04T11:40:32.9968155+03:00",
+  "exportedAt": "2026-09-04T11:40:38.3887775+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "A1CB6A950354895393F79DAF0C1363155C0CBA0214C3890FC72FC99C184F4A52",
+  "checksum": "CB3D27C0F1ADE370453BEC21A4C6ED956BB5D19A622FBF7195BFBB80A186A932",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "5942B09289D36B514E030C847626A859526FCA38ADE706CC1BBD197B56D19DB0",
-    "createdAt": "2026-09-04T11:40:32.932088\u002B03:00",
+    "checksum": "0020339270E19E5F76C64C7D72B69AC808ADB98BA7FF05A2A7A769CD7527E722",
+    "createdAt": "2026-09-04T11:40:38.3587777\u002B03:00",
     "tasks": [
-      {
-        "id": "abfdc00a-c9c8-4117-8e63-7760504a7ffa",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "HAKED\u0130\u015E \u00D6DEND\u0130 \u0130\u015ELEMLER\u0130 \u0130\u00C7\u0130N TABLO VER\u0130LER\u0130N\u0130 BELED\u0130YELERE G\u00D6NDER.",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-09-02T20:09:39.1315828\u002B03:00",
-        "updatedAt": "2026-09-04T11:17:29.4869969\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 0,
-        "notes": []
-      },
       {
         "id": "823a641f-7779-4e7c-9665-54b3729466e7",
         "projectId": null,
@@ -33,7 +20,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-04T11:17:29.4870514\u002B03:00",
         "boardType": 1,
-        "sortOrder": 1,
+        "sortOrder": 0,
         "notes": []
       },
       {
@@ -46,7 +33,7 @@
         "createdAt": "2026-09-03T15:28:35.0542289\u002B03:00",
         "updatedAt": "2026-09-04T11:17:29.4870946\u002B03:00",
         "boardType": 1,
-        "sortOrder": 2,
+        "sortOrder": 1,
         "notes": []
       },
       {
@@ -59,7 +46,7 @@
         "createdAt": "2026-08-21T09:15:51.2320094\u002B03:00",
         "updatedAt": "2026-09-04T11:17:29.4871286\u002B03:00",
         "boardType": 1,
-        "sortOrder": 3,
+        "sortOrder": 2,
         "notes": []
       },
       {
@@ -72,7 +59,7 @@
         "createdAt": "2026-07-29T13:47:38.9073854\u002B03:00",
         "updatedAt": "2026-09-04T11:17:29.4871584\u002B03:00",
         "boardType": 1,
-        "sortOrder": 4,
+        "sortOrder": 3,
         "notes": []
       },
       {
@@ -85,7 +72,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-04T11:17:29.4871826\u002B03:00",
         "boardType": 1,
-        "sortOrder": 5,
+        "sortOrder": 4,
         "notes": []
       },
       {
@@ -98,7 +85,7 @@
         "createdAt": "2026-08-31T18:42:15.8256857\u002B03:00",
         "updatedAt": "2026-09-04T11:17:29.4872104\u002B03:00",
         "boardType": 1,
-        "sortOrder": 6,
+        "sortOrder": 5,
         "notes": []
       },
       {
@@ -111,7 +98,7 @@
         "createdAt": "2026-08-18T16:04:50.6801569\u002B03:00",
         "updatedAt": "2026-09-04T11:40:29.647986\u002B03:00",
         "boardType": 1,
-        "sortOrder": 7,
+        "sortOrder": 6,
         "notes": []
       },
       {
@@ -51330,12 +51317,6 @@
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
         "summary": "AYLIK SEV\u0130YE G\u0130R\u0130\u015ELER\u0130 BA\u015ELANMASI."
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "HAKED\u0130\u015E \u00D6DEND\u0130 \u0130\u015ELEMLER\u0130 \u0130\u00C7\u0130N TABLO VER\u0130LER\u0130N\u0130 BELED\u0130YELERE G\u00D6NDER."
       },
       {
         "category": "TAD\u0130LAT",
