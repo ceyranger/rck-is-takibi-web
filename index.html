@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#16355c" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>RCK İş Takibi — Görüntüleme</title>
+  <script>
+    (function () {
+      var key = "rck-web-theme";
+      var stored = localStorage.getItem(key);
+      var theme = stored === "light" || stored === "dark"
+        ? stored
+        : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <link rel="stylesheet" href="css/viewer.css?v=20260902r" />
+  <script src="config.js?v=20260902r"></script>
+</head>
+<body>
+  <div id="app" class="app">
+    <div id="sidebar-backdrop" class="sidebar-backdrop" hidden></div>
+
+    <section id="pin-screen" class="pin-screen">
+      <div class="pin-card">
+        <h1>RCK İş Takibi</h1>
+        <p class="muted">Salt okunur görüntüleme</p>
+        <form id="pin-form" autocomplete="off">
+          <label class="field">
+            <span>PIN</span>
+            <input id="pin-input" name="pin" type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="PIN girin" maxlength="12" required />
+          </label>
+          <div class="pin-actions">
+            <button id="theme-toggle-pin" type="button" class="btn ghost theme-toggle-btn" aria-label="Temayı değiştir" title="Temayı değiştir">🌙</button>
+            <button id="pin-submit" type="submit" class="btn primary">Giriş</button>
+          </div>
+        </form>
+        <p id="pin-error" class="error" hidden></p>
+        <p id="pin-status" class="muted status-line" hidden></p>
+      </div>
+    </section>
+
+    <section id="main-screen" class="app-shell" hidden>
+
+      <aside class="sidebar" id="sidebar" aria-label="Modül menüsü">
+        <div class="sidebar-brand">
+          <span class="brand-mark" aria-hidden="true">RCK</span>
+          <div class="brand-text">
+            <strong>RCK İş Takibi <span id="admin-badge" class="admin-badge" hidden>Admin</span></strong>
+            <p id="last-updated" class="muted">Son güncelleme: —</p>
+          </div>
+        </div>
+        <nav class="sidebar-nav" id="tab-bar"></nav>
+      </aside>
+
+      <div class="app-main">
+        <header class="main-topbar">
+          <button id="sidebar-toggle" type="button" class="btn icon-btn" aria-label="Menüyü aç/kapat">☰</button>
+          <div class="search-bar">
+            <input id="global-search" type="search" placeholder="Ara (ada/parsel, iş adı, metin…)" />
+          </div>
+          <button id="theme-toggle" type="button" class="btn ghost theme-toggle-btn" aria-label="Temayı değiştir" title="Temayı değiştir">🌙</button>
+          <button id="refresh-btn" type="button" class="btn ghost refresh-btn">Yenile</button>
+        </header>
+        <main id="content" class="content" aria-live="polite"></main>
+      </div>
+    </section>
+  </div>
+
+  <script src="js/parser.js?v=20260902r"></script>
+  <script src="js/ui.js?v=20260902r"></script>
+  <script src="js/modules/genel-is-takibi.js?v=20260902r"></script>
+  <script src="js/modules/acil-is-ozet.js?v=20260902r"></script>
+  <script src="js/modules/tum-eksikler.js?v=20260902r"></script>
+  <script src="js/modules/aksiyon.js?v=20260902r"></script>
+  <script src="js/modules/eksik-proje.js?v=20260902r"></script>
+  <script src="js/modules/karot.js?v=20260902r"></script>
+  <script src="js/modules/tadilat.js?v=20260902r"></script>
+  <script src="js/modules/proje-takibi.js?v=20260902r"></script>
+  <script src="js/modules/yibf-is-takibi.js?v=20260902r"></script>
+  <script src="js/modules/personel.js?v=20260902r"></script>
+  <script src="js/modules/arama.js?v=20260902r"></script>
+  <script src="js/app.js?v=20260902r"></script>
+</body>
+</html>
