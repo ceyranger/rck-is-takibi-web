@@ -1,28 +1,15 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-04T10:20:27.9067004+03:00",
+  "exportedAt": "2026-09-04T10:23:39.5175301+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "F0883B325438885718D5BCC3B6742F0067CD97FD1A47E3095937BC1FB9117D58",
+  "checksum": "FC9FD540764368ADDBD038248FE56B5876AB52CF8651305E739EC3631CDD9DC9",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "159E442FFD8ACE4A81EDCD3B356EAD0D032E20721723DBBE04CFAED72EFBA317",
-    "createdAt": "2026-09-04T10:20:27.8454391\u002B03:00",
+    "checksum": "D1FC0F28B8DCF313FBCA7511B533694F14C6FBFAC098BA9FC602BC49D165DFB4",
+    "createdAt": "2026-09-04T10:23:39.4021575\u002B03:00",
     "tasks": [
-      {
-        "id": "e7041b7c-b4aa-4565-9251-b45d5666bd8f",
-        "projectId": null,
-        "isSpecialJob": false,
-        "title": "personel g\u00F6rev atamalar\u0131 yap.",
-        "description": "",
-        "dueDate": null,
-        "createdAt": "2026-09-04T09:31:22.6610564\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3405053\u002B03:00",
-        "boardType": 1,
-        "sortOrder": 0,
-        "notes": []
-      },
       {
         "id": "5bc33a53-ecc5-407d-bcc3-fe2dd97b6229",
         "projectId": null,
@@ -33,7 +20,7 @@
         "createdAt": "2026-09-04T09:30:32.6225765\u002B03:00",
         "updatedAt": "2026-09-04T10:19:38.3407338\u002B03:00",
         "boardType": 1,
-        "sortOrder": 1,
+        "sortOrder": 0,
         "notes": []
       },
       {
@@ -46,7 +33,7 @@
         "createdAt": "2026-08-18T16:04:50.6801569\u002B03:00",
         "updatedAt": "2026-09-04T10:19:38.3407718\u002B03:00",
         "boardType": 1,
-        "sortOrder": 2,
+        "sortOrder": 1,
         "notes": []
       },
       {
@@ -59,7 +46,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-04T10:19:38.3408254\u002B03:00",
         "boardType": 1,
-        "sortOrder": 3,
+        "sortOrder": 2,
         "notes": []
       },
       {
@@ -72,7 +59,7 @@
         "createdAt": "2026-09-02T20:09:39.1315828\u002B03:00",
         "updatedAt": "2026-09-04T10:19:38.3408456\u002B03:00",
         "boardType": 1,
-        "sortOrder": 4,
+        "sortOrder": 3,
         "notes": []
       },
       {
@@ -85,7 +72,7 @@
         "createdAt": "2026-09-03T15:28:35.0542289\u002B03:00",
         "updatedAt": "2026-09-04T10:19:38.3408686\u002B03:00",
         "boardType": 1,
-        "sortOrder": 5,
+        "sortOrder": 4,
         "notes": []
       },
       {
@@ -98,7 +85,7 @@
         "createdAt": "2026-08-21T09:15:51.2320094\u002B03:00",
         "updatedAt": "2026-09-04T10:19:38.3408853\u002B03:00",
         "boardType": 1,
-        "sortOrder": 6,
+        "sortOrder": 5,
         "notes": []
       },
       {
@@ -111,7 +98,7 @@
         "createdAt": "2026-07-29T13:47:38.9073854\u002B03:00",
         "updatedAt": "2026-09-04T10:19:38.3409065\u002B03:00",
         "boardType": 1,
-        "sortOrder": 7,
+        "sortOrder": 6,
         "notes": []
       },
       {
@@ -124,7 +111,7 @@
         "createdAt": "2026-09-02T16:35:16.0834218\u002B03:00",
         "updatedAt": "2026-09-04T10:19:38.3409233\u002B03:00",
         "boardType": 1,
-        "sortOrder": 8,
+        "sortOrder": 7,
         "notes": []
       },
       {
@@ -137,7 +124,7 @@
         "createdAt": "2026-08-31T18:42:15.8256857\u002B03:00",
         "updatedAt": "2026-09-04T10:19:38.3409395\u002B03:00",
         "boardType": 1,
-        "sortOrder": 9,
+        "sortOrder": 8,
         "notes": []
       },
       {
@@ -42406,6 +42393,201 @@
         "summarySnapshot": "Aksiyon: 02.06.2026 TAR\u0130HL\u0130 \u015EANT\u0130YE \u015EEF\u0130 \u0130ST\u0130FA SEV\u0130YE TESP\u0130TLER BELED\u0130YEYE VER\u0130LECEK SONRASINDA GER\u0130 ALINACAK.",
         "projectIdentitySnapshot": "166-21 AHMET TURHAL",
         "moduleLabelSnapshot": "Aksiyon"
+      },
+      {
+        "id": "372bd5cd-5887-40e3-a5ab-f2c4166e7540",
+        "personnelId": "710cd990-29ab-4c2c-8f20-0ba862c589eb",
+        "sourceModule": 4,
+        "sourceEntryId": "05172bb0-5da9-49c0-af07-d1440851ec9b",
+        "sourceColumnKey": null,
+        "status": 0,
+        "assignedAt": "2026-09-04T10:20:56.5144218\u002B03:00",
+        "completedAt": null,
+        "prioritySnapshot": 1,
+        "fieldLabelSnapshot": "",
+        "summarySnapshot": "KarotAlindiSonucBekleniyor: ZEM\u0130N KAT KOLON TAVAN",
+        "projectIdentitySnapshot": "421-7",
+        "moduleLabelSnapshot": "Karot Takibi"
+      },
+      {
+        "id": "168a2f4e-8850-4f64-9300-4a4ffc48d2f0",
+        "personnelId": "710cd990-29ab-4c2c-8f20-0ba862c589eb",
+        "sourceModule": 4,
+        "sourceEntryId": "917a424b-dbaf-433e-bf16-5c0ae21c417e",
+        "sourceColumnKey": null,
+        "status": 0,
+        "assignedAt": "2026-09-04T10:21:00.1618773\u002B03:00",
+        "completedAt": null,
+        "prioritySnapshot": 1,
+        "fieldLabelSnapshot": "",
+        "summarySnapshot": "KarotAlinacak: 1.KAT KOLON VE TAVAN",
+        "projectIdentitySnapshot": "421-7",
+        "moduleLabelSnapshot": "Karot Takibi"
+      },
+      {
+        "id": "0b228afc-39d7-49c4-bf73-77c8e547786c",
+        "personnelId": "710cd990-29ab-4c2c-8f20-0ba862c589eb",
+        "sourceModule": 4,
+        "sourceEntryId": "aba70288-eed9-4517-a2b6-a30d1e19ad3f",
+        "sourceColumnKey": null,
+        "status": 0,
+        "assignedAt": "2026-09-04T10:21:04.0821814\u002B03:00",
+        "completedAt": null,
+        "prioritySnapshot": 1,
+        "fieldLabelSnapshot": "",
+        "summarySnapshot": "KarotAlinacak: 3.KAT KOLON TAVAN ASLINDA 2.KAT KOLON TAVAN",
+        "projectIdentitySnapshot": "635/26",
+        "moduleLabelSnapshot": "Karot Takibi"
+      },
+      {
+        "id": "ecd1d3a3-0731-4c63-9412-ddccd2a115ac",
+        "personnelId": "710cd990-29ab-4c2c-8f20-0ba862c589eb",
+        "sourceModule": 4,
+        "sourceEntryId": "29cd729f-4f07-4c40-9b1a-d97f3f8cbf02",
+        "sourceColumnKey": null,
+        "status": 0,
+        "assignedAt": "2026-09-04T10:21:08.1449927\u002B03:00",
+        "completedAt": null,
+        "prioritySnapshot": 1,
+        "fieldLabelSnapshot": "",
+        "summarySnapshot": "KarotAlinacak: 4.KAT KOLON VE TAVAN ASLINDA 3.KAT KOLON TAVAN",
+        "projectIdentitySnapshot": "635-26",
+        "moduleLabelSnapshot": "Karot Takibi"
+      },
+      {
+        "id": "2b1f8ebd-07cd-4e48-b71e-5949b2b78136",
+        "personnelId": "710cd990-29ab-4c2c-8f20-0ba862c589eb",
+        "sourceModule": 4,
+        "sourceEntryId": "aebbf0ac-a0c0-4fe3-bc99-346abf6f6e8b",
+        "sourceColumnKey": null,
+        "status": 0,
+        "assignedAt": "2026-09-04T10:21:11.9175153\u002B03:00",
+        "completedAt": null,
+        "prioritySnapshot": 1,
+        "fieldLabelSnapshot": "",
+        "summarySnapshot": "KarotAlindiSonucBekleniyor: 2.KAT KOLON TAVAN",
+        "projectIdentitySnapshot": "216-9",
+        "moduleLabelSnapshot": "Karot Takibi"
+      },
+      {
+        "id": "6a2032ef-4392-45fe-8366-6f734b0f5ad1",
+        "personnelId": "710cd990-29ab-4c2c-8f20-0ba862c589eb",
+        "sourceModule": 4,
+        "sourceEntryId": "cb2e7202-e195-4a41-8b2c-8054474a2351",
+        "sourceColumnKey": null,
+        "status": 0,
+        "assignedAt": "2026-09-04T10:21:14.4635535\u002B03:00",
+        "completedAt": null,
+        "prioritySnapshot": 1,
+        "fieldLabelSnapshot": "",
+        "summarySnapshot": "KarotAlindiSonucBekleniyor: 3.KAT KOLON TAVAN",
+        "projectIdentitySnapshot": "216-9",
+        "moduleLabelSnapshot": "Karot Takibi"
+      },
+      {
+        "id": "534677ef-99af-4ad1-a155-4c8f2f0c13ca",
+        "personnelId": "710cd990-29ab-4c2c-8f20-0ba862c589eb",
+        "sourceModule": 4,
+        "sourceEntryId": "38ae0a2a-0acc-4397-9cac-e34a8fddf264",
+        "sourceColumnKey": null,
+        "status": 0,
+        "assignedAt": "2026-09-04T10:21:17.8013414\u002B03:00",
+        "completedAt": null,
+        "prioritySnapshot": 1,
+        "fieldLabelSnapshot": "",
+        "summarySnapshot": "KarotAlinacak: \u00C7ATI KAT TAVAN",
+        "projectIdentitySnapshot": "549-8",
+        "moduleLabelSnapshot": "Karot Takibi"
+      },
+      {
+        "id": "8f0d1d22-4bc4-466a-8d37-f3a38d1a4e54",
+        "personnelId": "62765a69-7a23-42c7-b492-d13f42961807",
+        "sourceModule": 4,
+        "sourceEntryId": "1d5b36fe-e63f-4e2f-8d8f-48db1172bb46",
+        "sourceColumnKey": null,
+        "status": 0,
+        "assignedAt": "2026-09-04T10:21:22.1785077\u002B03:00",
+        "completedAt": null,
+        "prioritySnapshot": 1,
+        "fieldLabelSnapshot": "",
+        "summarySnapshot": "KarotAlinacak: 1.KAT KOLON VE TAVAN",
+        "projectIdentitySnapshot": "212-6",
+        "moduleLabelSnapshot": "Karot Takibi"
+      },
+      {
+        "id": "6650ddb7-a274-4dd9-b34a-209770f7ac1a",
+        "personnelId": "62765a69-7a23-42c7-b492-d13f42961807",
+        "sourceModule": 4,
+        "sourceEntryId": "d5531160-03b9-451b-bf3d-6b2767d9a5ad",
+        "sourceColumnKey": null,
+        "status": 0,
+        "assignedAt": "2026-09-04T10:21:25.7399892\u002B03:00",
+        "completedAt": null,
+        "prioritySnapshot": 1,
+        "fieldLabelSnapshot": "",
+        "summarySnapshot": "KarotAlinacak: TEMEL",
+        "projectIdentitySnapshot": "144-1",
+        "moduleLabelSnapshot": "Karot Takibi"
+      },
+      {
+        "id": "ecb05f56-353b-4e03-a307-85243d9e192e",
+        "personnelId": "62765a69-7a23-42c7-b492-d13f42961807",
+        "sourceModule": 4,
+        "sourceEntryId": "b50036c6-3d9a-4d7d-ab4b-715b04a7a1d1",
+        "sourceColumnKey": null,
+        "status": 0,
+        "assignedAt": "2026-09-04T10:21:30.8766567\u002B03:00",
+        "completedAt": null,
+        "prioritySnapshot": 1,
+        "fieldLabelSnapshot": "",
+        "summarySnapshot": "KarotAlinacak: ZEM\u0130N KAT KOLON TAVAN",
+        "projectIdentitySnapshot": "814-16",
+        "moduleLabelSnapshot": "Karot Takibi"
+      },
+      {
+        "id": "ee45a459-0ced-4806-abb3-c8108f8335a3",
+        "personnelId": "710cd990-29ab-4c2c-8f20-0ba862c589eb",
+        "sourceModule": 4,
+        "sourceEntryId": "1b6875ef-2f6d-48ae-acc2-82c3fe9dcd2a",
+        "sourceColumnKey": null,
+        "status": 0,
+        "assignedAt": "2026-09-04T10:21:35.1478986\u002B03:00",
+        "completedAt": null,
+        "prioritySnapshot": 1,
+        "fieldLabelSnapshot": "",
+        "summarySnapshot": "KarotAlinacak: ZEM\u0130N KAT KOLON VE TAVAN",
+        "projectIdentitySnapshot": "725-4",
+        "moduleLabelSnapshot": "Karot Takibi"
+      },
+      {
+        "id": "ba94ad6d-2cc7-425b-970c-d35b0f818ace",
+        "personnelId": "62765a69-7a23-42c7-b492-d13f42961807",
+        "sourceModule": 4,
+        "sourceEntryId": "4dcc0a50-f9de-48a5-9d37-ce6fc63f1d7b",
+        "sourceColumnKey": null,
+        "status": 0,
+        "assignedAt": "2026-09-04T10:21:37.9563947\u002B03:00",
+        "completedAt": null,
+        "prioritySnapshot": 1,
+        "fieldLabelSnapshot": "",
+        "summarySnapshot": "KarotAlinacak: 2.KAT KOLON TAVAN",
+        "projectIdentitySnapshot": "1115-20",
+        "moduleLabelSnapshot": "Karot Takibi"
+      },
+      {
+        "id": "38595544-d623-4428-b518-c7ab8ffc1194",
+        "personnelId": "62765a69-7a23-42c7-b492-d13f42961807",
+        "sourceModule": 7,
+        "sourceEntryId": "9c779366-7770-4ef7-8144-d5e054dd3e75",
+        "sourceColumnKey": null,
+        "status": 0,
+        "assignedAt": "2026-09-04T10:23:18.5580443\u002B03:00",
+        "completedAt": null,
+        "prioritySnapshot": 0,
+        "fieldLabelSnapshot": "Sat\u0131r",
+        "summarySnapshot": "570-34 SEBAHATT\u0130N \u00C7AKIR",
+        "projectIdentitySnapshot": "570-34 SEBAHATT\u0130N \u00C7AKIR",
+        "moduleLabelSnapshot": "Y\u0130BF \u0130\u015F Takibi"
       }
     ]
   },
@@ -43226,7 +43408,7 @@
             "currentValue": "ZEM\u0130N KAT KOLON TAVAN",
             "noteText": "KAROT ALINACAK. PROJES\u0130 C25 DE\u011E\u0130L.",
             "sourceContext": "Sat\u0131r: Kat Bilgisi: ZEM\u0130N KAT KOLON TAVAN | Beton S\u0131n\u0131f\u0131: C30 | Beton Firmas\u0131: KAVUNCULAR | A\u00E7\u0131klama: KAROT ALINACAK. PROJES\u0130 C25 DE\u011E\u0130L.",
-            "assignedPersonnelBadge": "",
+            "assignedPersonnelBadge": "MERT MUTLU TA\u015EKIN",
             "severity": "Warning",
             "severityLabel": "UYARI",
             "updatedAt": "2026-09-04T10:19:38.369648+03:00"
@@ -43321,7 +43503,7 @@
             "currentValue": "1.KAT KOLON VE TAVAN",
             "noteText": "KAROT ALINACAK.",
             "sourceContext": "Sat\u0131r: Kat Bilgisi: 1.KAT KOLON VE TAVAN | Beton S\u0131n\u0131f\u0131: C25 | Beton Firmas\u0131: \u00C7ET\u0130N NAKL\u0130YAT | A\u00E7\u0131klama: KAROT ALINACAK.",
-            "assignedPersonnelBadge": "",
+            "assignedPersonnelBadge": "MERT MUTLU TA\u015EKIN",
             "severity": "Warning",
             "severityLabel": "UYARI",
             "updatedAt": "2026-09-04T10:19:38.3695885+03:00"
@@ -43380,7 +43562,7 @@
             "currentValue": "EKS\u0130K",
             "noteText": "ISLAK \u0130MZALI EKS\u0130K.",
             "sourceContext": "Sat\u0131r: \u0130\u015F: 570-34 SEBAHATT\u0130N \u00C7AKIR | \u0130\u015F Kimli\u011Fi: Ana \u0130\u015F",
-            "assignedPersonnelBadge": "",
+            "assignedPersonnelBadge": "MERT MUTLU TA\u015EKIN",
             "severity": "Critical",
             "severityLabel": "KR\u0130T\u0130K",
             "updatedAt": "2026-09-04T10:19:43.7501654+03:00"
@@ -43392,7 +43574,7 @@
             "currentValue": "EKS\u0130K",
             "noteText": "HAZIRLANDI. \u0130MZALAR EKS\u0130K.",
             "sourceContext": "Sat\u0131r: \u0130\u015F: 570-34 SEBAHATT\u0130N \u00C7AKIR | \u0130\u015F Kimli\u011Fi: Ana \u0130\u015F",
-            "assignedPersonnelBadge": "",
+            "assignedPersonnelBadge": "MERT MUTLU TA\u015EKIN",
             "severity": "Warning",
             "severityLabel": "UYARI",
             "updatedAt": "2026-09-04T10:19:43.7501654+03:00"
@@ -43404,7 +43586,7 @@
             "currentValue": "EKS\u0130K",
             "noteText": "HAZIRLANDI. \u0130MZALAR EKS\u0130K.",
             "sourceContext": "Sat\u0131r: \u0130\u015F: 570-34 SEBAHATT\u0130N \u00C7AKIR | \u0130\u015F Kimli\u011Fi: Ana \u0130\u015F",
-            "assignedPersonnelBadge": "",
+            "assignedPersonnelBadge": "MERT MUTLU TA\u015EKIN",
             "severity": "Warning",
             "severityLabel": "UYARI",
             "updatedAt": "2026-09-04T10:19:43.7501654+03:00"
@@ -43416,7 +43598,7 @@
             "currentValue": "HAYIR",
             "noteText": "",
             "sourceContext": "Sat\u0131r: \u0130\u015F: 570-34 SEBAHATT\u0130N \u00C7AKIR | \u0130\u015F Kimli\u011Fi: Ana \u0130\u015F",
-            "assignedPersonnelBadge": "",
+            "assignedPersonnelBadge": "MERT MUTLU TA\u015EKIN",
             "severity": "Warning",
             "severityLabel": "UYARI",
             "updatedAt": "2026-09-04T10:19:43.7501654+03:00"
@@ -43428,7 +43610,7 @@
             "currentValue": "(Bo\u015F)",
             "noteText": "",
             "sourceContext": "Sat\u0131r: \u0130\u015F: 570-34 SEBAHATT\u0130N \u00C7AKIR | \u0130\u015F Kimli\u011Fi: Ana \u0130\u015F",
-            "assignedPersonnelBadge": "",
+            "assignedPersonnelBadge": "MERT MUTLU TA\u015EKIN",
             "severity": "BlankRequired",
             "severityLabel": "BO\u015E",
             "updatedAt": "2026-09-04T10:19:43.7501654+03:00"
@@ -43674,7 +43856,7 @@
             "currentValue": "4.KAT KOLON VE TAVAN ASLINDA 3.KAT KOLON TAVAN",
             "noteText": "KAROT ALINACAK.",
             "sourceContext": "Sat\u0131r: Kat Bilgisi: 4.KAT KOLON VE TAVAN ASLINDA 3.KAT KOLON TAVAN | Beton S\u0131n\u0131f\u0131: C25 | Beton Firmas\u0131: MEM\u0130\u015E | A\u00E7\u0131klama: KAROT ALINACAK.",
-            "assignedPersonnelBadge": "",
+            "assignedPersonnelBadge": "ARSLAN ARSLAN",
             "severity": "Warning",
             "severityLabel": "UYARI",
             "updatedAt": "2026-09-04T10:19:38.3694687+03:00"
@@ -43686,7 +43868,7 @@
             "currentValue": "3.KAT KOLON TAVAN ASLINDA 2.KAT KOLON TAVAN",
             "noteText": "KAROT ALINACAK.",
             "sourceContext": "Sat\u0131r: Kat Bilgisi: 3.KAT KOLON TAVAN ASLINDA 2.KAT KOLON TAVAN | Beton S\u0131n\u0131f\u0131: C25 | Beton Firmas\u0131: MEM\u0130\u015E | A\u00E7\u0131klama: KAROT ALINACAK.",
-            "assignedPersonnelBadge": "",
+            "assignedPersonnelBadge": "ARSLAN ARSLAN",
             "severity": "Warning",
             "severityLabel": "UYARI",
             "updatedAt": "2026-09-04T10:19:38.3694386+03:00"
@@ -44535,7 +44717,7 @@
             "currentValue": "1.KAT KOLON VE TAVAN",
             "noteText": "KAROT ALINACANK",
             "sourceContext": "Sat\u0131r: Kat Bilgisi: 1.KAT KOLON VE TAVAN | Beton S\u0131n\u0131f\u0131: C25 | Beton Firmas\u0131: GEN\u00C7G\u00DCN PETROL | A\u00E7\u0131klama: KAROT ALINACANK",
-            "assignedPersonnelBadge": "",
+            "assignedPersonnelBadge": "ARSLAN ARSLAN",
             "severity": "Warning",
             "severityLabel": "UYARI",
             "updatedAt": "2026-09-04T10:19:38.3693173+03:00"
@@ -44547,7 +44729,7 @@
             "currentValue": "ZEM\u0130N KAT KOLON TAVAN",
             "noteText": "KAROT ALINDI. SONU\u00C7 BEKLEN\u0130YOR.",
             "sourceContext": "Sat\u0131r: Kat Bilgisi: ZEM\u0130N KAT KOLON TAVAN | Beton S\u0131n\u0131f\u0131: C25 | Beton Firmas\u0131: GEN\u00C7G\u00DCN PETROL | Laboratuvar: G\u00DCLERY\u00DCZ | A\u00E7\u0131klama: KAROT ALINDI. SONU\u00C7 BEKLEN\u0130YOR.",
-            "assignedPersonnelBadge": "",
+            "assignedPersonnelBadge": "ARSLAN ARSLAN",
             "severity": "Warning",
             "severityLabel": "UYARI",
             "updatedAt": "2026-09-04T10:19:38.3692256+03:00"
@@ -49009,7 +49191,7 @@
             "currentValue": "ZEM\u0130N KAT KOLON VE TAVAN",
             "noteText": "KAROT ALINACAK.",
             "sourceContext": "Sat\u0131r: Kat Bilgisi: ZEM\u0130N KAT KOLON VE TAVAN | Beton S\u0131n\u0131f\u0131: C25 | Beton Firmas\u0131: \u00C7ET\u0130N NAKL\u0130YAT | A\u00E7\u0131klama: KAROT ALINACAK.",
-            "assignedPersonnelBadge": "",
+            "assignedPersonnelBadge": "ARSLAN ARSLAN",
             "severity": "Warning",
             "severityLabel": "UYARI",
             "updatedAt": "2026-09-04T10:19:38.3696782+03:00"
@@ -49173,7 +49355,7 @@
             "currentValue": "2.KAT KOLON TAVAN",
             "noteText": "KAROT ALINACAK.",
             "sourceContext": "Sat\u0131r: Kat Bilgisi: 2.KAT KOLON TAVAN | Beton S\u0131n\u0131f\u0131: C30 | Beton Firmas\u0131: KAVUNCULAR | Laboratuvar: ESAT | A\u00E7\u0131klama: KAROT ALINACAK.",
-            "assignedPersonnelBadge": "",
+            "assignedPersonnelBadge": "MERT MUTLU TA\u015EKIN",
             "severity": "Warning",
             "severityLabel": "UYARI",
             "updatedAt": "2026-09-04T10:19:38.369708+03:00"
@@ -49301,7 +49483,7 @@
             "currentValue": "3.KAT KOLON TAVAN",
             "noteText": "KAROT ALINDI. SONU\u00C7 BEKLEN\u0130YOR.",
             "sourceContext": "Sat\u0131r: Kat Bilgisi: 3.KAT KOLON TAVAN | Beton S\u0131n\u0131f\u0131: C30 | Beton Firmas\u0131: AKSARAY HAZIR BETON | Laboratuvar: ESAT | A\u00E7\u0131klama: KAROT ALINDI. SONU\u00C7 BEKLEN\u0130YOR.",
-            "assignedPersonnelBadge": "",
+            "assignedPersonnelBadge": "ARSLAN ARSLAN",
             "severity": "Warning",
             "severityLabel": "UYARI",
             "updatedAt": "2026-09-04T10:19:38.3695282+03:00"
@@ -49313,7 +49495,7 @@
             "currentValue": "2.KAT KOLON TAVAN",
             "noteText": "KAROT ALINDI. SONU\u00C7 BEKLEN\u0130YOR.",
             "sourceContext": "Sat\u0131r: Kat Bilgisi: 2.KAT KOLON TAVAN | Beton S\u0131n\u0131f\u0131: C30 | Beton Firmas\u0131: AKSARAY HAZIR BETON | A\u00E7\u0131klama: KAROT ALINDI. SONU\u00C7 BEKLEN\u0130YOR.",
-            "assignedPersonnelBadge": "",
+            "assignedPersonnelBadge": "ARSLAN ARSLAN",
             "severity": "Warning",
             "severityLabel": "UYARI",
             "updatedAt": "2026-09-04T10:19:38.3694985+03:00"
@@ -49566,7 +49748,7 @@
             "currentValue": "TEMEL",
             "noteText": "KAROT ALINACAK.",
             "sourceContext": "Sat\u0131r: Kat Bilgisi: TEMEL | Beton S\u0131n\u0131f\u0131: C25 | Beton Firmas\u0131: \u00C7AKILSAN | A\u00E7\u0131klama: KAROT ALINACAK.",
-            "assignedPersonnelBadge": "",
+            "assignedPersonnelBadge": "MERT MUTLU TA\u015EKIN",
             "severity": "Warning",
             "severityLabel": "UYARI",
             "updatedAt": "2026-09-04T10:19:38.369618+03:00"
@@ -49589,7 +49771,7 @@
             "currentValue": "\u00C7ATI KAT TAVAN",
             "noteText": "KAROT ALINACAK.",
             "sourceContext": "Sat\u0131r: Kat Bilgisi: \u00C7ATI KAT TAVAN | Beton S\u0131n\u0131f\u0131: C25 | Beton Firmas\u0131: MEM\u0130\u015E | A\u00E7\u0131klama: KAROT ALINACAK.",
-            "assignedPersonnelBadge": "",
+            "assignedPersonnelBadge": "ARSLAN ARSLAN",
             "severity": "Warning",
             "severityLabel": "UYARI",
             "updatedAt": "2026-09-04T10:19:38.3695583+03:00"
@@ -49642,7 +49824,7 @@
         "titleText": "954-5   H\u00DCSEY\u0130N EREN",
         "adaParsel": "954-5",
         "yapiSahibi": "H\u00DCSEY\u0130N EREN",
-        "isOverdue": true,
+        "isOverdue": false,
         "events": [
           {
             "statusLabel": "Denet\u00E7iden d\u00F6n\u00FC\u015F bekleniyor",
@@ -49659,7 +49841,7 @@
         "titleText": "357-5   SERDAR YENER",
         "adaParsel": "357-5",
         "yapiSahibi": "SERDAR YENER",
-        "isOverdue": true,
+        "isOverdue": false,
         "events": [
           {
             "statusLabel": "Denet\u00E7iden d\u00F6n\u00FC\u015F bekleniyor",
@@ -49685,7 +49867,7 @@
         "titleText": "985-7   K\u00DCBRA NUR SULTAN T\u00DCRKMEN",
         "adaParsel": "985-7",
         "yapiSahibi": "K\u00DCBRA NUR SULTAN T\u00DCRKMEN",
-        "isOverdue": true,
+        "isOverdue": false,
         "events": [
           {
             "statusLabel": "Denet\u00E7iden d\u00F6n\u00FC\u015F bekleniyor",
@@ -49702,7 +49884,7 @@
         "titleText": "728-4   EROL ACAR",
         "adaParsel": "728-4",
         "yapiSahibi": "EROL ACAR",
-        "isOverdue": true,
+        "isOverdue": false,
         "events": [
           {
             "statusLabel": "Denet\u00E7iden d\u00F6n\u00FC\u015F bekleniyor",
@@ -49745,7 +49927,7 @@
         "titleText": "814-16   \u015EEREF KESK\u0130N",
         "adaParsel": "814-16",
         "yapiSahibi": "\u015EEREF KESK\u0130N",
-        "isOverdue": true,
+        "isOverdue": false,
         "events": [
           {
             "statusLabel": "M\u00FCelliften revize bekleniyor",
@@ -49762,7 +49944,7 @@
         "titleText": "907-21   YAL\u00C7IN K\u00DC\u00C7\u00DCKBA\u015E",
         "adaParsel": "907-21",
         "yapiSahibi": "YAL\u00C7IN K\u00DC\u00C7\u00DCKBA\u015E",
-        "isOverdue": true,
+        "isOverdue": false,
         "events": [
           {
             "statusLabel": "M\u00FCelliften revize bekleniyor",
@@ -49779,7 +49961,7 @@
         "titleText": "570-34   SEBAHATT\u0130N \u00C7AKIR",
         "adaParsel": "570-34",
         "yapiSahibi": "SEBAHATT\u0130N \u00C7AKIR",
-        "isOverdue": true,
+        "isOverdue": false,
         "events": [
           {
             "statusLabel": "M\u00FCelliften revize bekleniyor",
@@ -49796,7 +49978,7 @@
         "titleText": "233-13   AHMET ACAR",
         "adaParsel": "233-13",
         "yapiSahibi": "AHMET ACAR",
-        "isOverdue": true,
+        "isOverdue": false,
         "events": [
           {
             "statusLabel": "M\u00FCelliften revize bekleniyor",
@@ -49813,7 +49995,7 @@
         "titleText": "873-1   SEV\u0130M YAL\u00C7IN SARAB\u0130L",
         "adaParsel": "873-1",
         "yapiSahibi": "SEV\u0130M YAL\u00C7IN SARAB\u0130L",
-        "isOverdue": true,
+        "isOverdue": false,
         "events": [
           {
             "statusLabel": "Beklenen",
@@ -49839,7 +50021,7 @@
         "titleText": "500-4   SEBAHATT\u0130N UYSAL",
         "adaParsel": "500-4",
         "yapiSahibi": "SEBAHATT\u0130N UYSAL",
-        "isOverdue": true,
+        "isOverdue": false,
         "events": [
           {
             "statusLabel": "M\u00FCelliften revize bekleniyor",
@@ -49865,7 +50047,7 @@
         "titleText": "831-6   ESRA K\u00DC\u00C7\u00DCKAVCI",
         "adaParsel": "831-6",
         "yapiSahibi": "ESRA K\u00DC\u00C7\u00DCKAVCI",
-        "isOverdue": true,
+        "isOverdue": false,
         "events": [
           {
             "statusLabel": "M\u00FCelliften revize bekleniyor",
@@ -49882,7 +50064,7 @@
         "titleText": "237-23   AYDIN ELMACI",
         "adaParsel": "237-23",
         "yapiSahibi": "AYDIN ELMACI",
-        "isOverdue": true,
+        "isOverdue": false,
         "events": [
           {
             "statusLabel": "M\u00FCelliften revize bekleniyor",
@@ -49899,7 +50081,7 @@
         "titleText": "829-4   H\u00DCSEY\u0130N YILMAZ",
         "adaParsel": "829-4",
         "yapiSahibi": "H\u00DCSEY\u0130N YILMAZ",
-        "isOverdue": true,
+        "isOverdue": false,
         "events": [
           {
             "statusLabel": "M\u00FCelliften revize bekleniyor",
@@ -49940,6 +50122,94 @@
       }
     ],
     "personnelGorevItems": [
+      {
+        "personnelName": "ARSLAN ARSLAN",
+        "moduleLabel": "Karot Takibi",
+        "summary": "KarotAlinacak: ZEM\u0130N KAT KOLON VE TAVAN",
+        "fieldLabel": "",
+        "projectIdentity": "725-4",
+        "priorityLabel": "Uyar\u0131",
+        "statusLabel": "A\u00E7\u0131k",
+        "assignedAtText": "4.09.2026 10:21",
+        "isOpen": true
+      },
+      {
+        "personnelName": "ARSLAN ARSLAN",
+        "moduleLabel": "Karot Takibi",
+        "summary": "KarotAlinacak: \u00C7ATI KAT TAVAN",
+        "fieldLabel": "",
+        "projectIdentity": "549-8",
+        "priorityLabel": "Uyar\u0131",
+        "statusLabel": "A\u00E7\u0131k",
+        "assignedAtText": "4.09.2026 10:21",
+        "isOpen": true
+      },
+      {
+        "personnelName": "ARSLAN ARSLAN",
+        "moduleLabel": "Karot Takibi",
+        "summary": "KarotAlindiSonucBekleniyor: 3.KAT KOLON TAVAN",
+        "fieldLabel": "",
+        "projectIdentity": "216-9",
+        "priorityLabel": "Uyar\u0131",
+        "statusLabel": "A\u00E7\u0131k",
+        "assignedAtText": "4.09.2026 10:21",
+        "isOpen": true
+      },
+      {
+        "personnelName": "ARSLAN ARSLAN",
+        "moduleLabel": "Karot Takibi",
+        "summary": "KarotAlindiSonucBekleniyor: 2.KAT KOLON TAVAN",
+        "fieldLabel": "",
+        "projectIdentity": "216-9",
+        "priorityLabel": "Uyar\u0131",
+        "statusLabel": "A\u00E7\u0131k",
+        "assignedAtText": "4.09.2026 10:21",
+        "isOpen": true
+      },
+      {
+        "personnelName": "ARSLAN ARSLAN",
+        "moduleLabel": "Karot Takibi",
+        "summary": "KarotAlinacak: 4.KAT KOLON VE TAVAN ASLINDA 3.KAT KOLON TAVAN",
+        "fieldLabel": "",
+        "projectIdentity": "635-26",
+        "priorityLabel": "Uyar\u0131",
+        "statusLabel": "A\u00E7\u0131k",
+        "assignedAtText": "4.09.2026 10:21",
+        "isOpen": true
+      },
+      {
+        "personnelName": "ARSLAN ARSLAN",
+        "moduleLabel": "Karot Takibi",
+        "summary": "KarotAlinacak: 3.KAT KOLON TAVAN ASLINDA 2.KAT KOLON TAVAN",
+        "fieldLabel": "",
+        "projectIdentity": "635/26",
+        "priorityLabel": "Uyar\u0131",
+        "statusLabel": "A\u00E7\u0131k",
+        "assignedAtText": "4.09.2026 10:21",
+        "isOpen": true
+      },
+      {
+        "personnelName": "ARSLAN ARSLAN",
+        "moduleLabel": "Karot Takibi",
+        "summary": "KarotAlinacak: 1.KAT KOLON VE TAVAN",
+        "fieldLabel": "",
+        "projectIdentity": "421-7",
+        "priorityLabel": "Uyar\u0131",
+        "statusLabel": "A\u00E7\u0131k",
+        "assignedAtText": "4.09.2026 10:21",
+        "isOpen": true
+      },
+      {
+        "personnelName": "ARSLAN ARSLAN",
+        "moduleLabel": "Karot Takibi",
+        "summary": "KarotAlindiSonucBekleniyor: ZEM\u0130N KAT KOLON TAVAN",
+        "fieldLabel": "",
+        "projectIdentity": "421-7",
+        "priorityLabel": "Uyar\u0131",
+        "statusLabel": "A\u00E7\u0131k",
+        "assignedAtText": "4.09.2026 10:20",
+        "isOpen": true
+      },
       {
         "personnelName": "ARSLAN ARSLAN",
         "moduleLabel": "Aksiyon",
@@ -50356,6 +50626,61 @@
         "priorityLabel": "",
         "statusLabel": "A\u00E7\u0131k",
         "assignedAtText": "4.09.2026 10:07",
+        "isOpen": true
+      },
+      {
+        "personnelName": "MERT MUTLU TA\u015EKIN",
+        "moduleLabel": "Y\u0130BF \u0130\u015F Takibi",
+        "summary": "570-34 SEBAHATT\u0130N \u00C7AKIR",
+        "fieldLabel": "Sat\u0131r",
+        "projectIdentity": "570-34 SEBAHATT\u0130N \u00C7AKIR",
+        "priorityLabel": "",
+        "statusLabel": "A\u00E7\u0131k",
+        "assignedAtText": "4.09.2026 10:23",
+        "isOpen": true
+      },
+      {
+        "personnelName": "MERT MUTLU TA\u015EKIN",
+        "moduleLabel": "Karot Takibi",
+        "summary": "KarotAlinacak: 2.KAT KOLON TAVAN",
+        "fieldLabel": "",
+        "projectIdentity": "1115-20",
+        "priorityLabel": "Uyar\u0131",
+        "statusLabel": "A\u00E7\u0131k",
+        "assignedAtText": "4.09.2026 10:21",
+        "isOpen": true
+      },
+      {
+        "personnelName": "MERT MUTLU TA\u015EKIN",
+        "moduleLabel": "Karot Takibi",
+        "summary": "KarotAlinacak: ZEM\u0130N KAT KOLON TAVAN",
+        "fieldLabel": "",
+        "projectIdentity": "814-16",
+        "priorityLabel": "Uyar\u0131",
+        "statusLabel": "A\u00E7\u0131k",
+        "assignedAtText": "4.09.2026 10:21",
+        "isOpen": true
+      },
+      {
+        "personnelName": "MERT MUTLU TA\u015EKIN",
+        "moduleLabel": "Karot Takibi",
+        "summary": "KarotAlinacak: TEMEL",
+        "fieldLabel": "",
+        "projectIdentity": "144-1",
+        "priorityLabel": "Uyar\u0131",
+        "statusLabel": "A\u00E7\u0131k",
+        "assignedAtText": "4.09.2026 10:21",
+        "isOpen": true
+      },
+      {
+        "personnelName": "MERT MUTLU TA\u015EKIN",
+        "moduleLabel": "Karot Takibi",
+        "summary": "KarotAlinacak: 1.KAT KOLON VE TAVAN",
+        "fieldLabel": "",
+        "projectIdentity": "212-6",
+        "priorityLabel": "Uyar\u0131",
+        "statusLabel": "A\u00E7\u0131k",
+        "assignedAtText": "4.09.2026 10:21",
         "isOpen": true
       },
       {
@@ -50886,12 +51211,6 @@
         "priorityLabel": "AC\u0130L",
         "priorityRank": 0,
         "summary": "den el de\u011Fi\u015Fikli\u011Fi aksiyona ekle."
-      },
-      {
-        "category": "GENEL",
-        "priorityLabel": "AC\u0130L",
-        "priorityRank": 0,
-        "summary": "personel g\u00F6rev atamalar\u0131 yap."
       },
       {
         "category": "TAD\u0130LAT",
