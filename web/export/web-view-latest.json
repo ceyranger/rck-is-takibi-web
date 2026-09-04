@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-04T11:21:02.4152352+03:00",
+  "exportedAt": "2026-09-04T11:21:49.606262+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "11FCE88BA3CE258B4DB2032DE98DB1C4C61DB476061E2E1590F815938D4D0A33",
+  "checksum": "2F3359DD2361220B2FD1CC31D74BB017034DEA0C6D3FF6A1A27D217E8A3366D8",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "4CEA9A305A5283E5B2998314B60BB8C3F4E1342C53BFB0FDA54FB1FAED09A18B",
-    "createdAt": "2026-09-04T11:21:02.3957502\u002B03:00",
+    "checksum": "65CD571553DCC1522522BB120D33A2B3E56DF0694D5E7A765CAB1C66D0ABA62C",
+    "createdAt": "2026-09-04T11:21:49.5863769\u002B03:00",
     "tasks": [
       {
         "id": "75d55082-3747-4fea-aae2-f57aff7b4b7b",
@@ -741,10 +741,10 @@
         "category": 0,
         "district": "GERZE",
         "ownerParcelText": "585-4 Y\u00DCKSEL ALTUN",
-        "workText": "M\u0130MAR\u0130 ELEKTR\u0130K MEKAN\u0130K TAD\u0130LATLARI YAPTIRILACAK.",
+        "workText": "ELEKTR\u0130K TAD\u0130LATLARI YAPTIRILACAK.",
         "displayOrder": 16,
         "createdAt": "2026-07-03T16:00:36.5594133\u002B03:00",
-        "updatedAt": "2026-09-04T11:17:29.510674\u002B03:00"
+        "updatedAt": "2026-09-04T11:21:45.3423508\u002B03:00"
       },
       {
         "id": "189b0f51-497f-4e39-b081-79b8d7029fa5",
