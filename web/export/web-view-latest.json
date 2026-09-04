@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-04T10:25:24.7425637+03:00",
+  "exportedAt": "2026-09-04T10:27:05.329284+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "0FB887A7E82AC17C1B4BA1FD9B3C372DB24AB82FB493ACA8A0F12A15CA6B9C22",
+  "checksum": "4373D7A21CDC31EE764DE0303FC622DFBA4115E6EA978A09514526654D3DF16A",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "E2896BB583E6412C550C0A3C6A0A76621454FA0BBA2A8B26569B38612BC3DA61",
-    "createdAt": "2026-09-04T10:25:24.6339076\u002B03:00",
+    "checksum": "8D0E3576498999220686E14E6CFF62BE07CB797EB6DFD99EB3CEEEC846A502CE",
+    "createdAt": "2026-09-04T10:27:05.2128606\u002B03:00",
     "tasks": [
       {
         "id": "5bc33a53-ecc5-407d-bcc3-fe2dd97b6229",
@@ -349,10 +349,10 @@
         "category": 0,
         "district": "AYANCIK",
         "ownerParcelText": "TUTANAK",
-        "workText": "\u00D6ZLEM SEVN\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
+        "workText": "\u00D6ZLEM SEV\u0130N\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
         "displayOrder": 0,
         "createdAt": "2026-03-19T19:08:48.06218",
-        "updatedAt": "2026-09-04T10:25:17.9737602\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:01.6391138\u002B03:00"
       },
       {
         "id": "55c63d31-9094-4a4a-a53f-03cf0ffd1158",
@@ -374,7 +374,7 @@
         "workText": "BELED\u0130YEDE HAKED\u0130\u015E VE EVRAK VAR MI KONTROL ED\u0130LECEK VARSA ALINACAK.",
         "displayOrder": 0,
         "createdAt": "2026-03-19T19:08:48.062087",
-        "updatedAt": "2026-09-04T10:19:38.358645\u002B03:00"
+        "updatedAt": "2026-09-04T10:25:36.7429737\u002B03:00"
       },
       {
         "id": "1fc1d1c6-cc8b-4ad4-b2d9-80c682e24d11",
@@ -385,7 +385,7 @@
         "workText": "YAPI SAH\u0130B\u0130 M\u00DCT S\u00D6ZLE\u015EMES\u0130 , YAS\u0130N ERG\u00DCN K\u0130ML\u0130K , EKS\u0130K. 11.05.2026 TAR\u0130HL\u0130 \u015EANT\u0130YE \u015EEF\u0130 \u0130ST\u0130FA SEV\u0130YE TESP\u0130TLER BELED\u0130YEYE VER\u0130LECEK ONAYLANINCA GER\u0130 ALINACAK.",
         "displayOrder": 1,
         "createdAt": "2026-03-19T19:08:48.062093",
-        "updatedAt": "2026-09-04T10:19:38.3586574\u002B03:00"
+        "updatedAt": "2026-09-04T10:25:36.7429741\u002B03:00"
       },
       {
         "id": "bc5f00fd-3dfc-41c7-b2ab-21a06b238c3d",
@@ -396,7 +396,7 @@
         "workText": "SA\u011ELIK G\u00DCVENL\u0130K RAPORU M\u00DCTEAHH\u0130TTEN \u0130STENECEK.",
         "displayOrder": 2,
         "createdAt": "2026-04-17T17:57:10.1843934\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3586693\u002B03:00"
+        "updatedAt": "2026-09-04T10:25:36.7429742\u002B03:00"
       },
       {
         "id": "f5578448-e067-4f27-9fd2-4de78d849359",
@@ -407,7 +407,7 @@
         "workText": "\u0130MZALI YAPI SAH\u0130B\u0130 M\u00DCTEAHH\u0130T S\u00D6ZLE\u015EMES\u0130 EKS\u0130K.",
         "displayOrder": 3,
         "createdAt": "2026-04-17T18:01:15.3511225\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3586822\u002B03:00"
+        "updatedAt": "2026-09-04T10:25:36.7429742\u002B03:00"
       },
       {
         "id": "efa2e2dd-7d81-4ea1-9b67-07aa83708b7d",
@@ -418,7 +418,7 @@
         "workText": "SA\u011ELIK G\u00DCVENL\u0130K PLANI M\u00DCTEAHH\u0130TTEN \u0130STENECEK.",
         "displayOrder": 4,
         "createdAt": "2026-04-17T18:02:23.7274051\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3586931\u002B03:00"
+        "updatedAt": "2026-09-04T10:25:36.7429743\u002B03:00"
       },
       {
         "id": "f2d0d4ee-a297-4bf5-8934-6155b1cd713d",
@@ -429,7 +429,7 @@
         "workText": "M\u00DCTEAHH\u0130TTEN SA\u011ELIK G\u00DCVENL\u0130K PLANI \u0130STENECEK. Y\u0130BF TAAHH\u00DCTNAME S\u00D6ZLE\u015EME RAFTAN ALINIP \u0130MZALATILIP GET\u0130R\u0130LECEK.",
         "displayOrder": 5,
         "createdAt": "2026-04-17T18:06:29.6501422\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3587044\u002B03:00"
+        "updatedAt": "2026-09-04T10:25:36.7429743\u002B03:00"
       },
       {
         "id": "fb6fc624-0a1b-4835-9c21-b184b3a67571",
@@ -440,7 +440,7 @@
         "workText": "TAPU, ZEM\u0130N ET\u00DCD\u00DC VE TAAHH\u00DCTLER EKS\u0130K.",
         "displayOrder": 6,
         "createdAt": "2026-06-12T17:04:11.1670517\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3587154\u002B03:00"
+        "updatedAt": "2026-09-04T10:25:36.7429743\u002B03:00"
       },
       {
         "id": "33102e71-c3df-4c6d-ae47-084273407121",
@@ -451,7 +451,7 @@
         "workText": "BU K\u0130\u015E\u0130LERDEN PROJES\u0130 C25 OLUP C30 ATILAN \u0130\u015ELER \u0130LE \u0130LG\u0130L\u0130 UYGUNLUK D\u0130LEK\u00C7ELER\u0130N\u0130N ASLI ELDEN ALINACAK.",
         "displayOrder": 7,
         "createdAt": "2026-07-02T15:17:32.9821397\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3587263\u002B03:00"
+        "updatedAt": "2026-09-04T10:25:36.7429744\u002B03:00"
       },
       {
         "id": "502321f3-3963-4cf9-b142-0d784c2b8afc",
@@ -462,7 +462,7 @@
         "workText": "Y\u0130BF TAAHH\u00DCTNAME S\u00D6ZLE\u015EME ALINACAK. (ORHAN MENTE\u015E\u0130 ARAYIN)",
         "displayOrder": 8,
         "createdAt": "2026-07-03T16:26:51.8547022\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3587382\u002B03:00"
+        "updatedAt": "2026-09-04T10:25:36.7429744\u002B03:00"
       },
       {
         "id": "9101df5c-9cae-4a29-aa3b-9c2295561343",
@@ -473,7 +473,7 @@
         "workText": "EKB BELED\u0130YEDEN ALINACAK.",
         "displayOrder": 9,
         "createdAt": "2026-07-15T07:44:22.7973595\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3587488\u002B03:00"
+        "updatedAt": "2026-09-04T10:25:36.7429745\u002B03:00"
       },
       {
         "id": "2159af07-ca52-4a25-8e31-3a698cbeea61",
@@ -484,7 +484,7 @@
         "workText": "C30 YAZISI ADEM I\u015EIKTAN ALINACAK.",
         "displayOrder": 10,
         "createdAt": "2026-08-14T14:31:32.546317\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3587598\u002B03:00"
+        "updatedAt": "2026-09-04T10:25:36.7429745\u002B03:00"
       },
       {
         "id": "8246e1a1-b86d-4a2e-99a4-3ee3f8160a1c",
@@ -495,18 +495,18 @@
         "workText": "\u015EANT\u0130YE \u015EEF\u0130 EVRAKLARI ALINACAK.",
         "displayOrder": 11,
         "createdAt": "2026-08-14T14:31:41.8513033\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3587703\u002B03:00"
+        "updatedAt": "2026-09-04T10:25:36.7429745\u002B03:00"
       },
       {
         "id": "26cd3a8b-cb85-44e8-a32b-9284ab432da4",
         "projectId": null,
         "category": 0,
         "district": "DURA\u011EAN",
-        "ownerParcelText": "HAKED\u0130\u015E VE EVRAK",
-        "workText": "BELED\u0130YEDE HAKED\u0130\u015E VE EVRAK VAR MI KONTROL ED\u0130LECEK VARSA ALINACAK.",
+        "ownerParcelText": "TUTANAK",
+        "workText": "\u00D6ZLEM SEV\u0130N\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
         "displayOrder": 0,
         "createdAt": "2026-07-04T15:14:43.4675564\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3587817\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:27.448761\u002B03:00"
       },
       {
         "id": "f534fc1c-71f3-4fce-8533-b8c7bf78f355",
@@ -572,7 +572,7 @@
         "workText": "STAT\u0130K ELEKTR\u0130K MEKAN\u0130K TAD\u0130LAT PROJELER\u0130 GELECEK.",
         "displayOrder": 0,
         "createdAt": "2026-03-19T19:08:48.061974",
-        "updatedAt": "2026-09-04T10:19:38.3588484\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:40.2564817\u002B03:00"
       },
       {
         "id": "4e72ef84-72b6-468d-aa73-8e59b9ddf5c9",
@@ -583,7 +583,7 @@
         "workText": "\u0130SKAN EKB APL\u0130KASYON BELED\u0130YEDEN ALINACAK.",
         "displayOrder": 1,
         "createdAt": "2026-03-19T19:08:48.061985",
-        "updatedAt": "2026-09-04T10:19:38.358859\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:40.2564818\u002B03:00"
       },
       {
         "id": "28a09367-d086-4c13-83f9-07b45458d6cd",
@@ -594,7 +594,7 @@
         "workText": "ASANS\u00D6R UYGULAMA PROJES\u0130 BELED\u0130YEDEN ALINACAK. \u0130SKAN APL\u0130KASYONU BELED\u0130YEDEN ALINACAK.",
         "displayOrder": 2,
         "createdAt": "2026-03-19T19:08:48.061998",
-        "updatedAt": "2026-09-04T10:19:38.3588702\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:40.2564818\u002B03:00"
       },
       {
         "id": "5aaafd4b-20dd-4f5f-9be4-155aeda64ef1",
@@ -605,7 +605,7 @@
         "workText": "ELEKTR\u0130K MEKAN\u0130K TAD\u0130LAT ED\u0130LECEK.",
         "displayOrder": 3,
         "createdAt": "2026-03-19T19:08:48.062015",
-        "updatedAt": "2026-09-04T10:19:38.3588809\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:40.2564819\u002B03:00"
       },
       {
         "id": "caeb1383-e07f-49a9-baa3-c5d20d77c80a",
@@ -616,7 +616,7 @@
         "workText": "\u0130\u015E B\u0130T\u0130RME APL\u0130KASYONU BELED\u0130YEDEN ALINACAK.",
         "displayOrder": 4,
         "createdAt": "2026-03-19T19:08:48.062025",
-        "updatedAt": "2026-09-04T10:19:38.3588917\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:40.2564819\u002B03:00"
       },
       {
         "id": "985366b5-755f-4410-93e1-b0c3df42939c",
@@ -627,7 +627,7 @@
         "workText": "\u0130SKAN VE APL\u0130KASYON ALINACAK.",
         "displayOrder": 5,
         "createdAt": "2026-03-19T19:08:48.06203",
-        "updatedAt": "2026-09-04T10:19:38.3589027\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:40.2564819\u002B03:00"
       },
       {
         "id": "521f06c2-4fe9-41f3-bfa6-8dc2b4e71fbd",
@@ -638,7 +638,7 @@
         "workText": "G\u00DCNCEL TAPU VE ELEKTR\u0130K M\u00DCELL\u0130F TAAHH\u00DCTNAME ALINACAK. \u0130SG YAZISI \u0130MZALATILACAK.",
         "displayOrder": 6,
         "createdAt": "2026-03-19T19:08:48.062036",
-        "updatedAt": "2026-09-04T10:19:38.358913\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:40.256482\u002B03:00"
       },
       {
         "id": "3c605af2-9e16-4aaa-810c-2bd47d40d358",
@@ -649,7 +649,7 @@
         "workText": "\u0130SKAN EKB BELED\u0130YEDEN ALINACAK.",
         "displayOrder": 7,
         "createdAt": "2026-03-19T19:08:48.062041",
-        "updatedAt": "2026-09-04T10:19:38.3589245\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:40.256482\u002B03:00"
       },
       {
         "id": "48154a20-e6e4-4b1f-a3ca-eed1fa557c73",
@@ -660,7 +660,7 @@
         "workText": "TAPU EKS\u0130K. \u0130SG YAZISI \u0130MZALATILACAK.",
         "displayOrder": 8,
         "createdAt": "2026-03-19T19:08:48.062061",
-        "updatedAt": "2026-09-04T10:19:38.3589358\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:40.2564821\u002B03:00"
       },
       {
         "id": "69479004-5e85-4964-b77c-2c0314226732",
@@ -671,7 +671,7 @@
         "workText": "\u0130N\u015EAAT ELEKTR\u0130K ZEM\u0130N ET\u00DCD\u00DC HAR\u0130TA M\u00DCHEND\u0130S\u0130 TAAHH\u00DCTNAMELER\u0130 EKS\u0130K. ELEKTR\u0130K VE MEKAN\u0130K TAD\u0130LATLARI YAPILMADI BASKI KURULACAK.",
         "displayOrder": 9,
         "createdAt": "2026-03-19T19:08:48.062066",
-        "updatedAt": "2026-09-04T10:19:38.3589471\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:40.2564821\u002B03:00"
       },
       {
         "id": "0cab9210-17a8-4762-bb5d-d1d4fa87e773",
@@ -682,7 +682,7 @@
         "workText": "EKB APL\u0130KASYON ALINACAK.",
         "displayOrder": 10,
         "createdAt": "2026-03-19T19:08:48.062072",
-        "updatedAt": "2026-09-04T10:19:38.3589575\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:40.2564821\u002B03:00"
       },
       {
         "id": "9fe6b9bf-8ca7-49b0-bd29-ccc646018c20",
@@ -693,7 +693,7 @@
         "workText": "M\u00DCTEAHH\u0130T TAAHH\u00DCTNAMES\u0130 EKS\u0130K. \u0130SG YAZISI \u0130MZALATILACAK. SA\u011ELIK G\u00DCVENL\u0130K PLANI \u0130STENECEK. M\u0130MAR\u0130 TAD\u0130LAT PROJES\u0130 ALINACAK. (D\u0130J\u0130TAL GELM\u0130\u015E ONAYLANMI\u015E AMA \u00C7IKTISI YOK) STAT\u0130K ELLE D\u00DCZELTME \u0130\u00C7\u0130N GERZEYE G\u0130TT\u0130. GER\u0130 GET\u0130R\u0130LECEK.",
         "displayOrder": 11,
         "createdAt": "2026-04-30T16:22:16.9349126\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3589683\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:40.2564822\u002B03:00"
       },
       {
         "id": "a19daa67-8f9e-4606-8076-d14649baa2b4",
@@ -704,7 +704,7 @@
         "workText": "YAPI SAH\u0130B\u0130 K\u0130ML\u0130K VE ADRES KAYDI , PEYZAJ TAAHH\u00DCTNAME VE T\u00DCM \u015EANT\u0130YE \u015EEF\u0130 EVRAKLARI EKS\u0130K. \u0130SG YAZISI \u0130MZALATILACAK. SA\u011ELIK G\u00DCVENL\u0130K PLANI M\u00DCTEAHH\u0130TTEN \u0130STENECEK.",
         "displayOrder": 12,
         "createdAt": "2026-05-05T17:45:05.0422083\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.35898\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:40.2564822\u002B03:00"
       },
       {
         "id": "e5811dbf-3c84-4d26-8906-41aacc6de741",
@@ -715,7 +715,7 @@
         "workText": "\u0130SG YAZISI \u0130MZALATILACAK. M\u00DCTEAHH\u0130TTEN SA\u011ELIK G\u00DCVENL\u0130K PLANI \u0130STENECEK.",
         "displayOrder": 13,
         "createdAt": "2026-05-14T15:28:03.3842068\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3589914\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:40.2564823\u002B03:00"
       },
       {
         "id": "790c49bc-c993-4bb7-bd56-1256b3427c8f",
@@ -726,7 +726,7 @@
         "workText": "ELEKTR\u0130K PROJELER\u0130 BELED\u0130YEDEN ALINACAK. \u0130SG YAZISI \u0130MZALATILACAK. SA\u011ELIK G\u00DCVENL\u0130K PLANI M\u00DCTEAHH\u0130TTEN \u0130STENECEK. M\u0130MAR\u0130 VE STAT\u0130K ELLE D\u00DCZELTME \u0130\u00C7\u0130N GERZEYE G\u00D6NDER\u0130LEN \u00C7IKTILAR D\u00DCZELT\u0130L\u0130P GER\u0130 GET\u0130R\u0130LECEK.",
         "displayOrder": 14,
         "createdAt": "2026-05-14T15:34:17.4599044\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3590028\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:40.2564823\u002B03:00"
       },
       {
         "id": "6d88610e-c473-474f-b182-de5796ee93ec",
@@ -737,7 +737,7 @@
         "workText": "18.05.2026 TAR\u0130HL\u0130 \u015EANT\u0130YE \u015EEF\u0130 \u0130ST\u0130FA SEV\u0130YE TESP\u0130TLER BELED\u0130YEYE VER\u0130L\u0130P SONRA ALINACAK.",
         "displayOrder": 15,
         "createdAt": "2026-05-18T15:58:04.2543902\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3590137\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:40.2564824\u002B03:00"
       },
       {
         "id": "4defcfa8-b230-4aab-ad2d-c0650f18972d",
@@ -748,7 +748,7 @@
         "workText": "M\u0130MAR\u0130 ELEKTR\u0130K MEKAN\u0130K TAD\u0130LATLARI YAPTIRILACAK.",
         "displayOrder": 16,
         "createdAt": "2026-07-03T16:00:36.5594133\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3590242\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:40.2564824\u002B03:00"
       },
       {
         "id": "189b0f51-497f-4e39-b081-79b8d7029fa5",
@@ -759,7 +759,7 @@
         "workText": "\u0130SKAN BELED\u0130YEDEN ALINACAK.",
         "displayOrder": 17,
         "createdAt": "2026-06-12T16:31:00.6267002\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3590354\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:40.2564824\u002B03:00"
       },
       {
         "id": "d06df2ec-0b59-4277-87f3-29cead811dbc",
@@ -770,7 +770,7 @@
         "workText": "\u0130SKAN ALINACAK.",
         "displayOrder": 18,
         "createdAt": "2026-07-21T18:18:54.6811079\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3590534\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:40.2564825\u002B03:00"
       },
       {
         "id": "6e651a4e-6b9d-4530-85d4-bc7e0c76f175",
@@ -781,7 +781,7 @@
         "workText": "\u0130SKAN EKB VE APL\u0130KASYON BELED\u0130YEDEN ALINACAK.",
         "displayOrder": 19,
         "createdAt": "2026-07-17T15:37:42.8380975\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3590655\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:40.2564825\u002B03:00"
       },
       {
         "id": "1317f64b-658c-4610-83f2-c6119980fc3d",
@@ -792,7 +792,7 @@
         "workText": "ASANS\u00D6R AVAN PROJES\u0130 GELMED\u0130. \u0130\u015EYER\u0130 TESL\u0130M , Y\u0130BF TAAHH\u00DCTNAME S\u00D6ZLE\u015EME , \u0130SG YAZISI VE SA\u011ELIK G\u00DCVENL\u0130K RAPORU ALINACAK.",
         "displayOrder": 20,
         "createdAt": "2026-09-01T17:28:24.2623162\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3590762\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:40.2564826\u002B03:00"
       },
       {
         "id": "2f5146bc-8873-4930-acad-4a9c4163a04e",
@@ -803,7 +803,7 @@
         "workText": "KOT KES\u0130T PLANKOTE EKS\u0130K.",
         "displayOrder": 0,
         "createdAt": "2026-03-19T19:08:48.062251",
-        "updatedAt": "2026-09-04T10:19:38.3590871\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:50.74023\u002B03:00"
       },
       {
         "id": "1fb8294d-222a-4ac8-865c-970aa785c39b",
@@ -814,7 +814,7 @@
         "workText": "M\u00DCTEAHH\u0130T TAAHH\u00DCTNAMES\u0130 , \u0130ST\u0130KAMET R\u00D6L\u00D6VES\u0130 EKS\u0130K.",
         "displayOrder": 1,
         "createdAt": "2026-03-19T19:08:48.062256",
-        "updatedAt": "2026-09-04T10:19:38.3590987\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:50.7402301\u002B03:00"
       },
       {
         "id": "f5478844-8f0b-4ad3-9a90-2b9cab45f518",
@@ -825,7 +825,7 @@
         "workText": "\u0130\u015E B\u0130T\u0130M\u0130 APL\u0130KASYONU BELED\u0130YEDEN ALINACAK.",
         "displayOrder": 2,
         "createdAt": "2026-03-19T19:08:48.062261",
-        "updatedAt": "2026-09-04T10:19:38.3591098\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:50.7402301\u002B03:00"
       },
       {
         "id": "3a6aa20f-9f57-46a4-b3ad-b1caa73e0163",
@@ -836,7 +836,7 @@
         "workText": "YOL BA\u011ELANTI M\u0130MAR\u0130 VE STAT\u0130K PROJELER\u0130 BELED\u0130YEDEN ALINACAK. RUHSAT ALINACAK M\u00B2 KONTROL ED\u0130LECEK. SA\u011ELIK G\u00DCVENL\u0130K PLANI M\u00DCTEAHH\u0130TTEN \u0130STENECEK.",
         "displayOrder": 3,
         "createdAt": "2026-04-17T18:14:16.7217718\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3591213\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:50.7402302\u002B03:00"
       },
       {
         "id": "8b844cdf-2a93-4011-914c-b2a4f7033599",
@@ -847,7 +847,7 @@
         "workText": "M\u00DCTEAHH\u0130TTEN SA\u011ELIK G\u00DCVENL\u0130K PLANI \u0130STENECEK.",
         "displayOrder": 4,
         "createdAt": "2026-04-17T18:17:48.6200995\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.359132\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:50.7402302\u002B03:00"
       },
       {
         "id": "d5bb60ff-ba5d-4a9c-bcd6-0b02599acd60",
@@ -858,7 +858,7 @@
         "workText": "PROJELER ALINACAK.",
         "displayOrder": 5,
         "createdAt": "2026-07-07T14:17:12.5601277\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3591424\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:50.7402303\u002B03:00"
       },
       {
         "id": "82f0a381-5ecd-4fee-9766-10920a372040",
@@ -869,7 +869,7 @@
         "workText": "06.08.2026 TAR\u0130HL\u0130 \u015E.\u015E. \u0130ST\u0130FA STTLER BELED\u0130YEDEN ALINACAK.",
         "displayOrder": 6,
         "createdAt": "2026-08-06T13:39:55.6814896\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3591547\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:50.7402303\u002B03:00"
       },
       {
         "id": "3c1d5399-dbfb-44e5-ab98-d1da53039a8d",
@@ -880,7 +880,7 @@
         "workText": "\u0130\u015E B\u0130T\u0130M\u0130 APL\u0130KASYONU BELED\u0130YEDEN ALINACAK.",
         "displayOrder": 7,
         "createdAt": "2026-08-31T13:03:42.3251141\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3591654\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:50.7402304\u002B03:00"
       },
       {
         "id": "5093af90-3d3b-4dd7-8952-946833719ba7",
@@ -891,7 +891,7 @@
         "workText": "RUHSAT PROJELER ALINACAK. \u0130\u015EYER\u0130 TESL\u0130M BELED\u0130YEYE VER\u0130L\u0130P GER\u0130 ALINACAK. SA\u011ELIK G\u00DCVENL\u0130K PLANI VE \u0130SG YAZISI ALINACAK.",
         "displayOrder": 8,
         "createdAt": "2026-09-03T16:52:19.0460137\u002B03:00",
-        "updatedAt": "2026-09-04T10:19:38.3591766\u002B03:00"
+        "updatedAt": "2026-09-04T10:26:50.7402304\u002B03:00"
       },
       {
         "id": "12788162-62e7-426f-9ef7-5cb93f0feab8",
@@ -958,6 +958,50 @@
         "displayOrder": 4,
         "createdAt": "2026-06-02T16:45:43.5954443\u002B03:00",
         "updatedAt": "2026-09-04T10:19:38.3592418\u002B03:00"
+      },
+      {
+        "id": "cdf4a764-0a94-4aa7-a11c-e50f73998697",
+        "projectId": null,
+        "category": 0,
+        "district": "BOYABAT",
+        "ownerParcelText": "TUTANAK",
+        "workText": "\u00D6ZLEM SEV\u0130N\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
+        "displayOrder": 12,
+        "createdAt": "2026-09-04T10:25:36.7397722\u002B03:00",
+        "updatedAt": "2026-09-04T10:26:07.6002667\u002B03:00"
+      },
+      {
+        "id": "61368a71-7141-4f03-99cf-a4a04a3a457e",
+        "projectId": null,
+        "category": 0,
+        "district": "BOYABAT OSB",
+        "ownerParcelText": "TUTANAK",
+        "workText": "\u00D6ZLEM SEV\u0130N\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
+        "displayOrder": 0,
+        "createdAt": "2026-09-04T10:25:51.042395\u002B03:00",
+        "updatedAt": "2026-09-04T10:26:09.7169397\u002B03:00"
+      },
+      {
+        "id": "b6f34ca3-0874-4c0b-bc9c-7467b2cc12c5",
+        "projectId": null,
+        "category": 0,
+        "district": "GERZE",
+        "ownerParcelText": "TUTANAK",
+        "workText": "\u00D6ZLEM SEV\u0130N\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
+        "displayOrder": 21,
+        "createdAt": "2026-09-04T10:26:40.256401\u002B03:00",
+        "updatedAt": "2026-09-04T10:26:40.2564826\u002B03:00"
+      },
+      {
+        "id": "c9bb09aa-e0b0-4b51-99a7-0356b98b37ac",
+        "projectId": null,
+        "category": 0,
+        "district": "MERKEZ",
+        "ownerParcelText": "TUTANAK",
+        "workText": "\u00D6ZLEM SEV\u0130N\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
+        "displayOrder": 9,
+        "createdAt": "2026-09-04T10:26:50.7401333\u002B03:00",
+        "updatedAt": "2026-09-04T10:26:50.7402304\u002B03:00"
       }
     ],
     "missingProjectEntries": [],
@@ -42588,6 +42632,96 @@
         "summarySnapshot": "570-34 SEBAHATT\u0130N \u00C7AKIR",
         "projectIdentitySnapshot": "570-34 SEBAHATT\u0130N \u00C7AKIR",
         "moduleLabelSnapshot": "Y\u0130BF \u0130\u015F Takibi"
+      },
+      {
+        "id": "f19cbe1e-118d-489c-be38-c6aa4e1e1264",
+        "personnelId": "62765a69-7a23-42c7-b492-d13f42961807",
+        "sourceModule": 2,
+        "sourceEntryId": "cdf4a764-0a94-4aa7-a11c-e50f73998697",
+        "sourceColumnKey": null,
+        "status": 0,
+        "assignedAt": "2026-09-04T10:25:40.6324644\u002B03:00",
+        "completedAt": null,
+        "prioritySnapshot": 0,
+        "fieldLabelSnapshot": "Aksiyon",
+        "summarySnapshot": "Aksiyon: \u00D6ZLEM SEVN\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
+        "projectIdentitySnapshot": "TUTANAK",
+        "moduleLabelSnapshot": "Aksiyon"
+      },
+      {
+        "id": "31271a6d-5010-4145-a46b-f6476d4a287d",
+        "personnelId": "c46f7213-3468-49a5-96a8-dc1d1251d15c",
+        "sourceModule": 2,
+        "sourceEntryId": "cdf4a764-0a94-4aa7-a11c-e50f73998697",
+        "sourceColumnKey": null,
+        "status": 0,
+        "assignedAt": "2026-09-04T10:25:40.6411147\u002B03:00",
+        "completedAt": null,
+        "prioritySnapshot": 0,
+        "fieldLabelSnapshot": "Aksiyon",
+        "summarySnapshot": "Aksiyon: \u00D6ZLEM SEVN\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
+        "projectIdentitySnapshot": "TUTANAK",
+        "moduleLabelSnapshot": "Aksiyon"
+      },
+      {
+        "id": "bbe7c18b-ae74-4176-bfd6-ef6063826f20",
+        "personnelId": "62765a69-7a23-42c7-b492-d13f42961807",
+        "sourceModule": 2,
+        "sourceEntryId": "61368a71-7141-4f03-99cf-a4a04a3a457e",
+        "sourceColumnKey": null,
+        "status": 0,
+        "assignedAt": "2026-09-04T10:26:13.8967892\u002B03:00",
+        "completedAt": null,
+        "prioritySnapshot": 0,
+        "fieldLabelSnapshot": "Aksiyon",
+        "summarySnapshot": "Aksiyon: \u00D6ZLEM SEV\u0130N\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
+        "projectIdentitySnapshot": "TUTANAK",
+        "moduleLabelSnapshot": "Aksiyon"
+      },
+      {
+        "id": "9a046af7-c776-49ba-8cb8-3b13dbf739fa",
+        "personnelId": "c46f7213-3468-49a5-96a8-dc1d1251d15c",
+        "sourceModule": 2,
+        "sourceEntryId": "61368a71-7141-4f03-99cf-a4a04a3a457e",
+        "sourceColumnKey": null,
+        "status": 0,
+        "assignedAt": "2026-09-04T10:26:13.9063764\u002B03:00",
+        "completedAt": null,
+        "prioritySnapshot": 0,
+        "fieldLabelSnapshot": "Aksiyon",
+        "summarySnapshot": "Aksiyon: \u00D6ZLEM SEV\u0130N\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
+        "projectIdentitySnapshot": "TUTANAK",
+        "moduleLabelSnapshot": "Aksiyon"
+      },
+      {
+        "id": "b1729495-dcd4-465a-b1c2-63bd9d2785fc",
+        "personnelId": "710cd990-29ab-4c2c-8f20-0ba862c589eb",
+        "sourceModule": 2,
+        "sourceEntryId": "b6f34ca3-0874-4c0b-bc9c-7467b2cc12c5",
+        "sourceColumnKey": null,
+        "status": 0,
+        "assignedAt": "2026-09-04T10:26:43.7256367\u002B03:00",
+        "completedAt": null,
+        "prioritySnapshot": 0,
+        "fieldLabelSnapshot": "Aksiyon",
+        "summarySnapshot": "Aksiyon: \u00D6ZLEM SEV\u0130N\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
+        "projectIdentitySnapshot": "TUTANAK",
+        "moduleLabelSnapshot": "Aksiyon"
+      },
+      {
+        "id": "e6cee1ec-c9a3-40de-b0a7-81fffcd6c042",
+        "personnelId": "62765a69-7a23-42c7-b492-d13f42961807",
+        "sourceModule": 2,
+        "sourceEntryId": "c9bb09aa-e0b0-4b51-99a7-0356b98b37ac",
+        "sourceColumnKey": null,
+        "status": 0,
+        "assignedAt": "2026-09-04T10:26:54.2875821\u002B03:00",
+        "completedAt": null,
+        "prioritySnapshot": 0,
+        "fieldLabelSnapshot": "Aksiyon",
+        "summarySnapshot": "Aksiyon: \u00D6ZLEM SEV\u0130N\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
+        "projectIdentitySnapshot": "TUTANAK",
+        "moduleLabelSnapshot": "Aksiyon"
       }
     ]
   },
@@ -50124,6 +50258,17 @@
     "personnelGorevItems": [
       {
         "personnelName": "ARSLAN ARSLAN",
+        "moduleLabel": "Aksiyon",
+        "summary": "Aksiyon: \u00D6ZLEM SEV\u0130N\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
+        "fieldLabel": "Aksiyon",
+        "projectIdentity": "TUTANAK",
+        "priorityLabel": "",
+        "statusLabel": "A\u00E7\u0131k",
+        "assignedAtText": "4.09.2026 10:26",
+        "isOpen": true
+      },
+      {
+        "personnelName": "ARSLAN ARSLAN",
         "moduleLabel": "Karot Takibi",
         "summary": "KarotAlinacak: ZEM\u0130N KAT KOLON VE TAVAN",
         "fieldLabel": "",
@@ -50630,6 +50775,39 @@
       },
       {
         "personnelName": "MERT MUTLU TA\u015EKIN",
+        "moduleLabel": "Aksiyon",
+        "summary": "Aksiyon: \u00D6ZLEM SEV\u0130N\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
+        "fieldLabel": "Aksiyon",
+        "projectIdentity": "TUTANAK",
+        "priorityLabel": "",
+        "statusLabel": "A\u00E7\u0131k",
+        "assignedAtText": "4.09.2026 10:26",
+        "isOpen": true
+      },
+      {
+        "personnelName": "MERT MUTLU TA\u015EKIN",
+        "moduleLabel": "Aksiyon",
+        "summary": "Aksiyon: \u00D6ZLEM SEV\u0130N\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
+        "fieldLabel": "Aksiyon",
+        "projectIdentity": "TUTANAK",
+        "priorityLabel": "",
+        "statusLabel": "A\u00E7\u0131k",
+        "assignedAtText": "4.09.2026 10:26",
+        "isOpen": true
+      },
+      {
+        "personnelName": "MERT MUTLU TA\u015EKIN",
+        "moduleLabel": "Aksiyon",
+        "summary": "Aksiyon: \u00D6ZLEM SEVN\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
+        "fieldLabel": "Aksiyon",
+        "projectIdentity": "TUTANAK",
+        "priorityLabel": "",
+        "statusLabel": "A\u00E7\u0131k",
+        "assignedAtText": "4.09.2026 10:25",
+        "isOpen": true
+      },
+      {
+        "personnelName": "MERT MUTLU TA\u015EKIN",
         "moduleLabel": "Y\u0130BF \u0130\u015F Takibi",
         "summary": "570-34 SEBAHATT\u0130N \u00C7AKIR",
         "fieldLabel": "Sat\u0131r",
@@ -50956,6 +51134,28 @@
         "priorityLabel": "",
         "statusLabel": "A\u00E7\u0131k",
         "assignedAtText": "4.09.2026 09:49",
+        "isOpen": true
+      },
+      {
+        "personnelName": "ZEYNEP \u00C7ELEN",
+        "moduleLabel": "Aksiyon",
+        "summary": "Aksiyon: \u00D6ZLEM SEV\u0130N\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
+        "fieldLabel": "Aksiyon",
+        "projectIdentity": "TUTANAK",
+        "priorityLabel": "",
+        "statusLabel": "A\u00E7\u0131k",
+        "assignedAtText": "4.09.2026 10:26",
+        "isOpen": true
+      },
+      {
+        "personnelName": "ZEYNEP \u00C7ELEN",
+        "moduleLabel": "Aksiyon",
+        "summary": "Aksiyon: \u00D6ZLEM SEVN\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
+        "fieldLabel": "Aksiyon",
+        "projectIdentity": "TUTANAK",
+        "priorityLabel": "",
+        "statusLabel": "A\u00E7\u0131k",
+        "assignedAtText": "4.09.2026 10:25",
         "isOpen": true
       },
       {
