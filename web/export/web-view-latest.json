@@ -1,14 +1,14 @@
 {
   "kind": "web-view",
   "schemaVersion": 1,
-  "exportedAt": "2026-09-04T10:27:05.329284+03:00",
+  "exportedAt": "2026-09-04T10:27:24.4704156+03:00",
   "appVersion": "1.0.0.0",
-  "checksum": "4373D7A21CDC31EE764DE0303FC622DFBA4115E6EA978A09514526654D3DF16A",
+  "checksum": "8CBEEADB9BA493CB873125E93DAC49CEE8A38305A9A08FE3CBE55D8E9E8D80B1",
   "data": {
     "schemaVersion": 4,
     "appVersion": "1.0.0.0",
-    "checksum": "8D0E3576498999220686E14E6CFF62BE07CB797EB6DFD99EB3CEEEC846A502CE",
-    "createdAt": "2026-09-04T10:27:05.2128606\u002B03:00",
+    "checksum": "1F3B43D9FD984A7D1B718847ADCBFF062375E9EEA6302C941884DEC73E841646",
+    "createdAt": "2026-09-04T10:27:24.3554533\u002B03:00",
     "tasks": [
       {
         "id": "5bc33a53-ecc5-407d-bcc3-fe2dd97b6229",
@@ -902,7 +902,7 @@
         "workText": "\u00D6NCEK\u0130 TAD\u0130LAT RUHSATI ALINACAK.  EN SON \u00C7IKAN RUHSATLAR ALINACAK. TAD\u0130LAT VE \u0130ST\u0130NAT PROJELER\u0130 ALINACAK. APL\u0130KASYON ALINACAK. \u0130ST\u0130NAT RUHSATI ALINACAK.",
         "displayOrder": 0,
         "createdAt": "2026-03-19T19:08:48.062283",
-        "updatedAt": "2026-09-04T10:19:38.3591876\u002B03:00"
+        "updatedAt": "2026-09-04T10:27:16.2204223\u002B03:00"
       },
       {
         "id": "2b99f8c3-32b9-4b99-b08e-a13b806f0378",
@@ -1002,6 +1002,17 @@
         "displayOrder": 9,
         "createdAt": "2026-09-04T10:26:50.7401333\u002B03:00",
         "updatedAt": "2026-09-04T10:26:50.7402304\u002B03:00"
+      },
+      {
+        "id": "01a5d476-aa8c-43b0-b070-5c2d9b1f1f3c",
+        "projectId": null,
+        "category": 0,
+        "district": "S\u0130NOP OSB",
+        "ownerParcelText": "TUTANAK",
+        "workText": "\u00D6ZLEM SEV\u0130N\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
+        "displayOrder": 1,
+        "createdAt": "2026-09-04T10:27:16.2202937\u002B03:00",
+        "updatedAt": "2026-09-04T10:27:16.2204224\u002B03:00"
       }
     ],
     "missingProjectEntries": [],
@@ -42722,6 +42733,21 @@
         "summarySnapshot": "Aksiyon: \u00D6ZLEM SEV\u0130N\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
         "projectIdentitySnapshot": "TUTANAK",
         "moduleLabelSnapshot": "Aksiyon"
+      },
+      {
+        "id": "0f3ed783-001f-43c4-ae47-01476b03c92d",
+        "personnelId": "78a337c6-b059-4b1c-8709-a749255f8212",
+        "sourceModule": 2,
+        "sourceEntryId": "01a5d476-aa8c-43b0-b070-5c2d9b1f1f3c",
+        "sourceColumnKey": null,
+        "status": 0,
+        "assignedAt": "2026-09-04T10:27:20.2392792\u002B03:00",
+        "completedAt": null,
+        "prioritySnapshot": 0,
+        "fieldLabelSnapshot": "Aksiyon",
+        "summarySnapshot": "Aksiyon: \u00D6ZLEM SEV\u0130N\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
+        "projectIdentitySnapshot": "TUTANAK",
+        "moduleLabelSnapshot": "Aksiyon"
       }
     ]
   },
@@ -50738,6 +50764,17 @@
         "priorityLabel": "",
         "statusLabel": "A\u00E7\u0131k",
         "assignedAtText": "15.08.2026 04:07",
+        "isOpen": true
+      },
+      {
+        "personnelName": "HAL\u0130L KILI\u00C7",
+        "moduleLabel": "Aksiyon",
+        "summary": "Aksiyon: \u00D6ZLEM SEV\u0130N\u00C7-RIZA CAN KILI\u00C7 DENET\u0130M ELEMANI DE\u011E\u0130\u015E\u0130KL\u0130\u011E\u0130 TUTANAKLARI BELED\u0130YEYE VER\u0130L\u0130P HAZIR OLUNCA GER\u0130 ALINACAK.",
+        "fieldLabel": "Aksiyon",
+        "projectIdentity": "TUTANAK",
+        "priorityLabel": "",
+        "statusLabel": "A\u00E7\u0131k",
+        "assignedAtText": "4.09.2026 10:27",
         "isOpen": true
       },
       {
